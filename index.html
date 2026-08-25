@@ -4888,6 +4888,66 @@
         window.manualLoadGame = manualLoadGame;
         window.manualResetGame = manualResetGame;
 
+        // ==============================
+// Automatic Save / Load System
+// ==============================
+
+const AUTO_SAVE_INTERVAL_MS = 5000; // Save every 5 seconds
+let autoSaveInProgress = false;
+let autoLoadCompleted = false;
+
+function autoSaveGame() {
+    if (autoSaveInProgress) return;
+    autoSaveInProgress = true;
+
+    try {
+        // Reuse the existing save system and existing save key.
+        manualSaveGame();
+    } catch (error) {
+        console.warn('Automatic save failed:', error);
+    } finally {
+        autoSaveInProgress = false;
+    }
+}
+
+function autoLoadGame() {
+    if (autoLoadCompleted) return;
+    autoLoadCompleted = true;
+
+    try {
+        const savedData = localStorage.getItem(MANUAL_SAVE_KEY);
+
+        // Do not overwrite the default game if no save exists.
+        if (savedData) {
+            manualLoadGame();
+        }
+    } catch (error) {
+        console.warn('Automatic load failed:', error);
+    }
+}
+
+// Load the most recent save once when the game starts.
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', autoLoadGame, { once: true });
+} else {
+    autoLoadGame();
+}
+
+// Save periodically while the game is open.
+const autoSaveTimer = setInterval(autoSaveGame, AUTO_SAVE_INTERVAL_MS);
+
+// Save when the tab becomes hidden, such as switching apps or minimizing.
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+        autoSaveGame();
+    }
+});
+
+// Save when the page is being closed, refreshed, or navigated away from.
+window.addEventListener('pagehide', autoSaveGame);
+window.addEventListener('beforeunload', autoSaveGame);
+
+        
         currencyDebugModal.addEventListener('click', e => { if (e.target === currencyDebugModal) window.closeCurrencyDebug(); });
 
         updateHomeUI();
@@ -5009,6 +5069,7 @@
         bey2.vx = 0; bey2.vy = 0;
 
         animate();
+        
     </script>
 </body>
 </html>
