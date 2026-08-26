@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-0XCKHNDNT7"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -67,6 +67,31 @@
   #F997B3 70% 100%
 ); }
         #arenaScreen.tower-arena #battleTimer { color:#f6d365; }
+        #arenaScreen.chronos-time-stop #arenaWrapper {
+            background: radial-gradient(
+                circle,
+                #D6D4BB 0% 55%,
+                #472000 55% 60%,
+                #B03700 62%,
+                #1A0200 63% 64%,
+                #B03700 65%,
+                #472000 67% 70%,
+                #604C33 70% 74%,
+                #472000 74% 90%,
+                #2C1204 90%,
+                #000 100%
+            );
+        }
+        #arenaScreen.chronos-time-stop #arena {
+            border: 5px solid #D2814C;
+            background: radial-gradient(
+                circle,
+                #C1BC9F 0% 10%,
+                #B7A986 30% 40%,
+                #A79968 60% 70%,
+                #9B8353 70% 100%
+            );
+        }
         #launchOccupationGuide {
             position: absolute;
             top: 4px;
@@ -1518,7 +1543,6 @@
             </div>
         </div>
     </div>
-
     <!-- ENEMY GARAGE MODAL -->
     <div id="enemyGarageModal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 200; flex-direction: column; justify-content: flex-start; align-items: center; padding: 15px; overflow-y: auto;">
         <div style="width: 100%; max-width: 500px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -1619,8 +1643,8 @@
         <div class="shop-dashboard">
             <div class="shop-content-shell">
                 <div class="placeholder-screen">
-                    <h2>Maintenance...</h2>
-                    <p>idk what i should put lol -henry030981</p>
+                    <h2>Beyblade Shop</h2>
+                    <p>Acquire rare parts and customize your arsenal.</p>
                 </div>
             </div>
         </div>
@@ -1768,27 +1792,31 @@
                 const PARTS = {
             battleCap: [
                 { id: "bc_test", rarity: "Normal", name: "Battle Cap", color: "#BFC1C2", type: "Balance", spinType: "right", atk: 10, def: 100, health: 10000, stamina: 100, weight: 10, interval: 5.0, desc: "For testing purpose.", effects: [] },      
-                { id: "bc_behemoth", rarity: "Normal", name: "Behemoth", color: "#f39c12", type: "Attack", spinType: "right", atk: 124, def: 17, health: 1469, stamina: 30, weight: 16.2, interval: 2.2, desc: "Ultimate: Launches a devastating Impact. Special effect: Grants extra charge to Ultimate through impact.", effects: [{ type: 'behemoth_ultimate', desc: 'Ultimate: Devastating Impact (500% dmg, 0.8-0.9s duration)' }] },
-                { id: "bc_kaguyahime", rarity: "Normal", name: "Kaguyahime", color: "#f1c40f", type: "Stamina", spinType: "right", atk: 110, def: 27, health: 2256, stamina: 40, weight: 12.5, interval: 3.4, desc: "Ultimate: Creates a zone in the center of the stadium that continuously recovers the Top's HP. Special effect: Speeds up automatic charging to charge Ultimate.", effects: [{ type: 'kaguyahime_ultimate', desc: 'Ultimate: Center Healing AOE (1% HP/s for 10s)' }] },
-                { id: "bc_athena", rarity: "Normal", name: "Athena", color: "#5dade2", type: "Defense", spinType: "right", atk: 92, def: 47, health: 2013, stamina: 32, weight: 21.6, interval: 2.7, desc: "Ultimate: Guarantees block for a set duration, and reduces damage taken. Special effect: Grants extra charge to Ultimate when blocking enemy's impacts.", effects: [{ type: 'athena_ultimate', desc: 'Ultimate: Guaranteed Block (100% Block chance) for 3s' }] },
-                { id: "bc_atlas", rarity: "Rare", name: "Atlas", color: "#f1c40f", type: "Defense", spinType: "right", atk: 112, def: 53, health: 2175, stamina: 29, weight: 24.8, interval: 3.0, desc: "Ultimate: Grants a shield equivalent to lost HP that gradually fades. Special effect: Grants extra charge to Ultimate when blocking enemy's impacts.", effects: [{ type: 'atlas_ultimate', desc: 'Ultimate: Shield = 100% Lost HP (fades over 6s)' }] },               
-                { id: "bc_atum", rarity: "Epic", name: "Atum", color: "#F9C07A", type: "Attack", spinType: "right", atk: 119, def: 19, health: 1598, stamina: 30, weight: 15, interval: 2.0, desc: "Ultimate: Launched slashes from all sides on normal opponent and double slashes on opponents inflicted with break. Special effect: Grants extra charge to Ultimate through impact.", effects: [{ type: 'atum_ultimate', desc: 'Ultimate: 4-Directional Sun Strike (4x 100% ATK guaranteed hits)' }] },
-                { id: "bc_beelzebub", rarity: "Legendary", name: "Beelzebub", color: "#c0392b", type: "Stamina", spinType: "left", atk: 133, def: 27, health: 1533, stamina: 52, weight: 15.5, interval: 0, desc: "Ultimate: Unleashes spines that pierce surrounding opponents and absorb their HP. Special effect: Cannot use Impacts. Grants a chance of absorbing HP and charging Ultimate when hitting opponents.", effects: [{ type: "beelzebub_absorb", chance: 0.30, gaugeGain: 25, desc: "No Impacts. 30% chance on collision to heal HP = damage dealt & gain +25 Ultimate Gauge." }, { type: "beelzebub_ultimate", desc: "Ultimate: Red Spine Tether (60% ATK damage/s for 4s, heals caster. Cuts off if too far.)" }] }
+                { id: "bc_behemoth", rarity: "Normal", name: "Behemoth", color: "#f39c12", type: "Attack", spinType: "right", atk: 124, def: 17, health: 1469, stamina: 30, weight: 16.0, interval: 2.2, desc: "Ultimate: Launches a devastating Impact. Special effect: Grants extra charge to Ultimate through impact.", effects: [{ type: 'behemoth_ultimate', desc: 'Ultimate: Devastating Impact (500% dmg, 0.8-0.9s duration)' }] },
+                { id: "bc_kaguyahime", rarity: "Normal", name: "Kaguyahime", color: "#f1c40f", type: "Stamina", spinType: "right", atk: 110, def: 27, health: 2256, stamina: 40, weight: 12.0, interval: 3.4, desc: "Ultimate: Creates a zone in the center of the stadium that continuously recovers the Top's HP. Special effect: Speeds up automatic charging to charge Ultimate.", effects: [{ type: 'kaguyahime_ultimate', desc: 'Ultimate: Center Healing AOE (1% HP/s for 10s)' }] },
+                { id: "bc_athena", rarity: "Normal", name: "Athena", color: "#5dade2", type: "Defense", spinType: "right", atk: 92, def: 47, health: 2013, stamina: 32, weight: 21.0, interval: 2.7, desc: "Ultimate: Guarantees block for a set duration, and reduces damage taken. Special effect: Grants extra charge to Ultimate when blocking enemy's impacts.", effects: [{ type: 'athena_ultimate', desc: 'Ultimate: Guaranteed Block (100% Block chance) for 3s' }] },
+                { id: "bc_atlas", rarity: "Rare", name: "Atlas", color: "#f1c40f", type: "Defense", spinType: "right", atk: 112, def: 53, health: 2175, stamina: 29, weight: 24.0, interval: 3.0, desc: "Ultimate: Grants a shield equivalent to lost HP that gradually fades. Special effect: Grants extra charge to Ultimate when blocking enemy's impacts.", effects: [{ type: 'atlas_ultimate', desc: 'Ultimate: Shield = 100% Lost HP (fades over 6s)' }] },
+                { id: "bc_hattori_hanzo", rarity: "Rare", name: "Hattori Hanzo", color: "#FDD035", type: "Attack", spinType: "right", atk: 102, def: 24, health: 1302, stamina: 32, weight: 13.0, interval: 1.8, desc: "Ultimate: When in effect, all impact deal a trippe combo. Special Effect: Grants extra charge to Ultimate through impact with the chance of double combo.", effects: [{ type: 'hattori_hanzo_ultimate', desc: 'Ultimate: Triple Impact Combo for 6s (3x Impact damage with three white claw marks)' }] },               
+                { id: "bc_atum", rarity: "Epic", name: "Atum", color: "#F9C07A", type: "Attack", spinType: "right", atk: 119, def: 19, health: 1598, stamina: 30, weight: 15.0, interval: 2.0, desc: "Ultimate: Launched slashes from all sides on normal opponent and double slashes on opponents inflicted with break. Special effect: Grants extra charge to Ultimate through impact.", effects: [{ type: 'atum_ultimate', desc: 'Ultimate: 4-Directional Sun Strike (4x 100% ATK guaranteed hits)' }] },
+                { id: "bc_beelzebub", rarity: "Legendary", name: "Beelzebub", color: "#c0392b", type: "Stamina", spinType: "left", atk: 133, def: 27, health: 1533, stamina: 52, weight: 15.0, interval: 0, desc: "Ultimate: Unleashes spines that pierce surrounding opponents and absorb their HP. Special effect: Cannot use Impacts. Grants a chance of absorbing HP and charging Ultimate when hitting opponents.", effects: [{ type: "beelzebub_absorb", chance: 0.30, gaugeGain: 25, desc: "No Impacts. 30% chance on collision to heal HP = damage dealt & gain +25 Ultimate Gauge." }, { type: "beelzebub_ultimate", desc: "Ultimate: Red Spine Tether (60% ATK damage/s for 4s, heals caster. Cuts off if too far.)" }] },
+                { id: "bc_chronos", rarity: "Legendary", name: "Chronos", color: "#FBDA79", type: "Balance", spinType: "right", atk: 140, def: 30, health: 1578, stamina: 43, weight: 13.0, interval: 4.0, desc: "Ultimate: Stops all opponents, creations, and Projectiles, and greatly speeds up the Bey's skill cooldown. Special Effect: Increases Ultimate charging and skill cooldown speed based on remaining HP percentage.", effects: [{ type: "chronos_time_stop", duration: 210, cooldownMultiplier: 0.50, desc: "Ultimate: Selective time stop for 3.5s. Opponent systems are paused while Chronos acts normally." }] },
+                { id: "bc_death_knight", rarity: "Epic", name: "Death Knight", color: "#F5DB8E", type: "Attack", spinType: "right", atk: 151, def: 27, health: 1597, stamina: 30, weight: 16.0, interval: 2.2, desc: "Ultimate: Enters Revelation mode, sacrificing all Defense for greater attack power, and launch an additional impact every time collide with outer wall of arena. Special Effect: Increases charging through impacts when not in Revelation mode.", effects: [{ type: "death_knight_revelation", defenseToAttackMultiplier: 2.0, wallImpact: true, desc: "Permanent Revelation mode: converts Defense into Attack and triggers an extra Impact on wall collision." }] },
+                { id: "bc_mermaid", rarity: "Epic", name: "Mermaid", color: "#FED058", type: "Balance", spinType: "right", atk: 153, def: 22, health: 1578, stamina: 43, weight: 13.0, interval: 3.0, desc: "Ultimate: Unleashes a slow-moving but large sonic wave Projectile. Special Effect: Speeds up automatic charging to charge Ultimate. Impacys become long-range sonic wave Projectiles.", effects: [{ type: "mermaid_sonic_impact", autoChargeMultiplier: 2.0, speed: 6, size: 15, shape: "note", color: "#FFFFFF", shadowColor: "#4B9DFF", attackRatio: 1.0, hitCooldownFrames: 45, lifetime: 600, desc: "Impacts become persistent music-note sonic waves." }, { type: "mermaid_ultimate", attackRatio: 1.80, speed: 3, size: 50, shape: "sonic_wave", color: "#FFFFFF", shadowColor: "#4B9DFF", hitCooldownFrames: 45, lifetime: 600, desc: "Ultimate: Large persistent two-arc sonic wave." }] },
             ],
             weightRing: [
                 { id: "wr_test", rarity: "Normal", name: "Weight Ring", color: "#EBECEC", type: "Balance", atk: 0, def: 0, health: 0, stamina: 0, weight: 0, interval: 0, desc: "For testing purpose.", effects: [] },                
                 { 
-                    id: "wr_devil", rarity: "Normal", name: "Devil", color: "#3E4C77", type: "Attack", atk: 84, def: 12, health: 920, stamina: 17, weight: 37.2, interval: 0, 
+                    id: "wr_devil", rarity: "Normal", name: "Devil", color: "#3E4C77", type: "Attack", atk: 84, def: 12, health: 920, stamina: 17, weight: 37.0, interval: 0, 
                     desc: "Increases Attack when HP is high.",
                     effects: [{ type: 'devil_atk', trigger: 'hp_above', threshold: 0.8, bonus: 0.3, desc: '+30% ATK when HP > 80%' }] 
                 },
                 { 
-                    id: "wr_divinestar", rarity: "Normal", name: "Divine Star", color: "#5dade2", type: "Stamina", atk: 46, def: 14, health: 1092, stamina: 21, weight: 25.3, interval: 0, 
+                    id: "wr_divinestar", rarity: "Normal", name: "Divine Star", color: "#5dade2", type: "Stamina", atk: 46, def: 14, health: 1092, stamina: 21, weight: 25.0, interval: 0, 
                     desc: "Creates starlight orbs in the stadium at regular intervals. Pick them up recover HP.",
                     effects: [{ type: 'divinestar_creation', trigger: 'creation_timer', interval: 300, healRatio: 0.5, desc: 'Regularly creates healing Creation orbs every 5s (Heal = 50% ATK)' }] 
                 },
                 { 
-                    id: "wr_guardian", rarity: "Normal", name: "Guardian", color: "#f1c40f", type: "Defense", atk: 53, def: 26, health: 975, stamina: 14, weight: 40.6, interval: 0, 
+                    id: "wr_guardian", rarity: "Normal", name: "Guardian", color: "#f1c40f", type: "Defense", atk: 53, def: 26, health: 975, stamina: 14, weight: 40.0, interval: 0, 
                     desc: "Increases Defense when blocking.",
                     effects: [{ type: 'guardian_block', trigger: 'block_occurred', desc: '+10% DEF per block (max +50%)' }] 
                 },
@@ -1798,9 +1826,34 @@
                     effects: [{ type: 'titan_scaling', desc: 'Shield Active: +30% Size & Weight' }] 
                 },
                 { 
-                    id: "wr_bladestorm", rarity: "Rare", name: "Bladestorm", color: "#57A8FF", type: "Attack", atk: 105, def: 12, health: 880, stamina: 15, weight: 22.3, interval: 0, 
+                    id: "wr_bladestorm", rarity: "Rare", name: "Bladestorm", color: "#57A8FF", type: "Attack", atk: 105, def: 12, health: 880, stamina: 15, weight: 22.0, interval: 0, 
                     desc: "Grants a chance of unleashing a whirlwind attack when a impact hits",
                     effects: [{ type: 'bladestorm_wind', trigger: 'impact_hit', chance: 0.5, ratio: 0.75, desc: 'Impact 50% chance +75% ATK extra damage & wind slash' }] 
+                },
+                { 
+                    id: "wr_shuriken", rarity: "Rare", name: "Shuriken", color: "#00C1F1", type: "Attack", atk: 90, def: 12, health: 905, stamina: 18, weight: 28.0, interval: 0, 
+                    desc: "Throws a shuriken Projectile at opponent after launching several impacts.",
+                    effects: [{ type: 'shuriken_volley', trigger: 'three_impacts', impactCount: 3, projectileCount: 3, interval: 15, attackRatio: 0.60, speed: 7.5, size: 8, shape: 'diamond', color: '#00C1F1', desc: 'After 3 Impacts: throws 3 Shuriken projectiles at 0.25s intervals (60% ATK each)' }] 
+                },
+                { 
+                    id: "wr_leo", rarity: "Rare", name: "Leo", color: "#FF7F34", type: "Defense", atk: 70, def: 25, health: 1399, stamina: 18, weight: 37, interval: 0, 
+                    desc: "Greatly reduces damage taken from Projectiles.",
+                    effects: [{ type: 'projectile_damage_reduction', reduction: 0.60, desc: 'Reduces incoming Projectile damage by 60%' }] 
+                },
+                { 
+                    id: "wr_hyperspace", rarity: "Legendary", name: "Hyperspace", color: "#01DEEA", type: "Balance", atk: 88, def: 30, health: 1380, stamina: 24, weight: 34.0, interval: 0, 
+                    desc: "Creates orbs at regular intervals that are launched as Projectiles at opponents after a short delay.",
+                    effects: [{ type: 'hyperspace_orbs', trigger: 'orb_cycle', cycleInterval: 360, orbInterval: 30, orbCount: 3, launchDelay: 90, attackRatio: 0.50, speed: 12, size: 20, knockbackForce: 12, color: '#000000', outlineColor: '#01DEEA', desc: 'Creates 3 idle orbs at 0.5s intervals every 6s; launches after 1.5s for 50% ATK and knockback' }] 
+                },
+                { 
+                    id: "wr_corona", rarity: "Rare", name: "Corona", color: "#F61324", type: "Attack", atk: 92, def: 12, health: 891, stamina: 13, weight: 22.0, interval: 0, 
+                    desc: "Grants extra charging and cooldown when projectiles hit an enemy.",
+                    effects: [{ type: 'corona_projectile_hit', ultimateGain: 5, cooldownMultiplier: 0.50, duration: 90, desc: 'Projectile hits grant 5 Ultimate charge and 50% Parts Skill cooldown reduction for 1.5s' }] 
+                },
+                { 
+                    id: "wr_surge", rarity: "Rare", name: "Surge", color: "#8564E0", type: "Balance", atk: 83, def: 14, health: 1076, stamina: 17, weight: 30.0, interval: 0, 
+                    desc: "Reduces Impact interval and skill cooldown, increases Stamina when opponent is inflicted with break.",
+                    effects: [{ type: 'surge_cooldown_stamina', impactReduction: 0.40, partsSkillReduction: 0.40, breakStaminaBonus: 0.40, desc: 'Reduces Impact interval and Parts Skill cooldown by 40%; +40% Stamina while opponent has Break' }] 
                 },
                 { 
                     id: "wr_sprint", rarity: "Normal", name: "Sprint", color: "#666FE7", type: "Stamina", atk: 41, def: 17, health: 1265, stamina: 21, weight: 25.3, interval: 0, 
@@ -1817,33 +1870,63 @@
                     desc: "Grants continuous HP recovery when HP is low.",
                     effects: [{ type: 'recover', trigger: 'hp_threshold', threshold: 0.5, rate: 0.05, interval: 90, desc: 'HP<50% Recover 5% of lost HP every 1.5s' }] 
                 },
+                {
+                    id: "wr_vengeance", rarity: "Rare", name: "Vengeance", color: "#8780D9", type: "Attack", atk: 105, def: 18, health: 980, stamina: 16, weight: 29.0, interval: 0,
+                    desc: "Increases impact knockback of both beys, inflict damage on enemy if it is knocked back against the outer wall.",
+                    effects: [{ type: 'vengeance_knockback', impactForce: 18, wallAttackRatio: 0.60, wallDamageCooldown: 90, desc: 'Impact force 18; wall knockback deals 60% ATK minus DEF' }]
+                },
             ],
             driver: [
                 { id: "drv_test", rarity: "Normal", type: "Balance", name: "Driver", color: "#D2D5D6", atk: 0, def: 0, health: 0, stamina: 0, weight: 0, interval: 0, tip: "flat", desc: "For testing purpose.", effects: [] },               
                 { 
-                    id: "drv_rage", rarity: "Normal", type: "Attack", name: "Rage", color: "#FF74B5", atk: 75, def: 10, health: 841, stamina: 13, weight: 11.5, interval: 0, tip: "ball",
+                    id: "drv_rage", rarity: "Normal", type: "Attack", name: "Rage", color: "#FF74B5", atk: 75, def: 10, health: 841, stamina: 13, weight: 11.0, interval: 0, tip: "ball",
                     desc: "Increases Ultimate charge gained through Impacts.",
                     effects: [{ type: 'rage_gauge', trigger: 'impact_hit', bonusGauge: 10, desc: '+10 Ultimate gauge on Impact hits' }] 
                 },
-                { 
+                {
                     id: "drv_moonlight", rarity: "Normal", type: "Stamina", name: "Moonlight", color: "#bdc3c7", atk: 44, def: 16, health: 1162, stamina: 21, weight: 10.0, interval: 0, tip: "sharp",
                     desc: "Extends the duration of the creations",
                     effects: [{ type: 'creation_duration_boost', multiplier: 2.0, desc: 'Increases Creation duration by 100% (2x)' }] 
                 },
                 { 
-                    id: "drv_warfare", rarity: "Normal", type: "Defense", name: "Warfare", color: "#2980b9", atk: 48, def: 23, health: 975, stamina: 18, weight: 13.8, interval: 0, tip: "sharp",
+                    id: "drv_warfare", rarity: "Normal", type: "Defense", name: "Warfare", color: "#2980b9", atk: 48, def: 23, health: 975, stamina: 18, weight: 13.0, interval: 0, tip: "sharp",
                     desc: "Immediately launch an impact after blocking.",
                     effects: [{ type: 'warfare_impact', trigger: 'block_occurred', desc: 'Immediately launch impact after blocking' }] 
                 },
                 { 
-                    id: "drv_shock", rarity: "Rare", type: "Defense", name: "Shock", color: "#f1c40f", atk: 55, def: 30, health: 920, stamina: 13, weight: 19, interval: 0, tip: "flat",
+                    id: "drv_shock", rarity: "Rare", type: "Defense", name: "Shock", color: "#f1c40f", atk: 55, def: 30, health: 920, stamina: 13, weight: 19.0, interval: 0, tip: "flat",
                     desc: "Inflict opponent with break when blocking.",
                     effects: [{ type: 'shock_break', trigger: 'block_occurred', desc: 'Inflicts Break ailment on successful block' }] 
                 },
                 { 
-                    id: "drv_ravager", rarity: "Rare", type: "Attack", name: "Ravager", color: "#8965B9", atk: 89, def: 12, health: 725, stamina: 16, weight: 11.5, interval: 0, tip: "ball",
+                    id: "drv_batter", rarity: "Rare", type: "Attack", name: "Batter", color: "#7C7EA7", atk: 82, def: 11, health: 796, stamina: 13, weight: 12.0, interval: 0, tip: "flat",
+                    desc: "Grants a chance of launching an extra impact after dealing damage.",
+                    effects: [{ type: 'batter_followup', trigger: 'impact_apply', chance: 0.50, cooldown: 240, desc: '50% chance to launch a Follow-up Impact (4s cooldown)' }] 
+                },
+                { 
+                    id: "drv_ravager", rarity: "Rare", type: "Attack", name: "Ravager", color: "#8965B9", atk: 89, def: 12, health: 725, stamina: 16, weight: 11.0, interval: 0, tip: "ball",
                     desc: "Inflict break when an impact hits an opponent.",
                     effects: [{ type: 'break', trigger: 'impact_apply', cooldown: 600, duration: 240, damageBonus: 1, desc: 'Impact causes Break' }] 
+                },
+                { 
+                    id: "drv_burst", rarity: "Epic", type: "Balance", name: "Burst", color: "#FFCC4B", atk: 82, def: 18, health: 980, stamina: 18, weight: 14.0, interval: 0, tip: "flat",
+                    desc: "Grants a chance of increasing the damage of projectilee enormously.",
+                    effects: [{ type: 'burst_projectile', trigger: 'projectile_hit', chance: 0.10, damageMultiplier: 3.0, desc: 'Projectiles have a 10% chance to deal 300% damage' }] 
+                },
+                { 
+                    id: "drv_shadow", rarity: "Epic", type: "Attack", name: "Shadow", color: "#8F0E20", atk: 128, def: 14, health: 1300, stamina: 16, weight: 11.0, interval: 0, tip: "flat",
+                    desc: "Project blades to attack enemies when your bey touch agaisnt the wall.",
+                    effects: [{ type: 'shadow_wall_projectile', trigger: 'wall_touch', cooldown: 90, attackRatio: 0.75, speed: 10.5, size: 8, shape: 'blade', color: '#050505', outlineColor: '#E53935', knockbackForce: 12, desc: 'Wall touch: launches a fast blade Projectile (75% ATK) with knockback; 1.5s cooldown' }] 
+                },
+                { 
+                    id: "drv_soprano", rarity: "Rare", type: "Balance", name: "Soprano", color: "#7658D2", atk: 68, def: 19, health: 1080, stamina: 20, weight: 13.0, interval: 0, tip: "flat",
+                    desc: "Inflicts break when a Projectile hits an opponent.",
+                    effects: [{ type: 'soprano_break_projectile', trigger: 'projectile_hit', cooldown: 300, duration: 240, desc: 'Projectile hits inflict Break; 5s cooldown' }] 
+                },
+                { 
+                    id: "drv_infusion", rarity: "Epic", type: "Defense", name: "Infusion", color: "#FCF1B1", atk: 62, def: 34, health: 1280, stamina: 18, weight: 15.0, interval: 0, tip: "sharp",
+                    desc: "Recover HP when the projectiles hit yout enemy",
+                    effects: [{ type: 'infusion_projectile_heal', trigger: 'projectile_hit', healRatio: 0.60, desc: 'Recover HP equal to 60% of damaging Projectile damage' }] 
                 },               
                 { 
                     id: "drv_megalith", rarity: "Normal", type: "Stamina", name: "Megalith", color: "#FF4D79", atk: 40, def: 16, health: 1178, stamina: 28, weight: 18.5, interval: 0, tip: "sharp",
@@ -1865,6 +1948,21 @@
                     desc: "Grants a shield at regular intervals. Automatic charging rate is increased while shield is active.",
                     effects: [{ type: 'piety_shield_timer', interval: 600, scaleStat: 'def', scaleFactor: 10, duration: 180, desc: 'Grants shield (1000% DEF) every 10s (3s duration). Double ultimate gauge gain when shielded.' }] 
                 },                                                
+                { 
+                    id: "drv_time", rarity: "Legendary", type: "Balance", name: "Time", color: "#FBD678", atk: 86, def: 21, health: 1677, stamina: 22, weight: 13.0, interval: 0, tip: "flat",
+                    desc: "Teleports the Bey to a previous location a few seconds ago, reverts its HP and RPM, and speeds up the cooldown of other skills.",
+                    effects: [{ type: 'time_rewind', activationInterval: 720, rewindFrames: 120, cooldownMultiplier: 0.50, buffDuration: 120, portalDuration: 120 }],
+                },
+                { 
+                    id: "drv_berserker", rarity: "Epic", type: "Attack", name: "Berserker", color: "#D1AA83", atk: 122, def: 14, health: 1189, stamina: 19, weight: 11.0, interval: 0, tip: "flat",
+                    desc: "Increases Attack every time the Bey deals damage.",
+                    effects: [{ type: 'berserker_attack_stack', trigger: 'damage_dealt', perStack: 0.03, maxStacks: 30, maxBonus: 0.90, desc: 'Gains +3% Attack whenever damage is dealt; maximum +90%' }] 
+                },
+                { 
+                    id: "drv_rampage", rarity: "Rare", type: "Attack", name: "Rampage", color: "#17FDD6", atk: 81, def: 12, health: 940, stamina: 14, weight: 13.0, interval: 0, tip: "erratic",
+                    desc: "Causes the Top to move erratically, and reduces the interval between impacts.",
+                    effects: [{ type: 'rampage_erratic', impactIntervalMultiplier: 0.75, desc: 'Erratic Flat-based movement; Impact interval -25%' }]
+                },
             ]
         };
 
@@ -1878,6 +1976,15 @@
             enemyUltimateAlwaysEmpty: false
         };
         let playerName = 'Player';
+        let projectiles = [];
+        const PROJECTILE_DEFAULT_CONFIG = {
+            attackRatio: 0.50,
+            speed: 9,
+            size: 9,
+            shape: 'circle',
+            color: '#FFE035',
+            lifetime: 180
+        };
         function updateDebugOverrideUI() {
             const controls = {
                 debugPlayerUnlimitedHealth: debugOverrides.playerUnlimitedHealth,
@@ -1975,8 +2082,66 @@
 
         let arenaZones = [];
         let arenaCreations = []; // Universal Creation entities array
-        let windGustVisuals = [];
+        let chronosTimeStopFrames = 0;
+        let chronosTimeStopOwner = null;
+        // Universal modifier for main cooldowns belonging to non-Ultimate part skills.
+        // Flat reduction is expressed in seconds and applied before the percentage multiplier.
+        let partsSkillCooldownFlatReductionSeconds = 0;
+        let partsSkillCooldownMultiplier = 1.0;
+        function getPartsSkillCooldownFrames(baseFrames, owner = null, excludeTimeBuff = false) {
+            const flatReducedFrames = Math.max(0, baseFrames - (partsSkillCooldownFlatReductionSeconds * 60));
+            let multiplier = partsSkillCooldownMultiplier;
+            if (owner && owner.parts && owner.parts.weightRing && owner.parts.weightRing.id === 'wr_surge') {
+                multiplier *= 0.60;
+            }
+            if (owner && owner.coronaCooldownBuffTimer > 0) {
+                const coronaEffect = owner.getAllEffects().find(eff => eff.type === 'corona_projectile_hit');
+                if (coronaEffect) multiplier *= coronaEffect.cooldownMultiplier;
+            }
+            if (!excludeTimeBuff && owner && owner.timeCooldownBuffTimer > 0) {
+                const timeEffect = owner.getAllEffects().find(eff => eff.type === 'time_rewind');
+                if (timeEffect) multiplier *= timeEffect.cooldownMultiplier;
+            }
+            if (owner && owner.parts && owner.parts.battleCap && owner.parts.battleCap.id === 'bc_chronos') {
+                const chronosHpRatio = Math.max(0, Math.min(1, owner.health / Math.max(1, owner.maxHealth)));
+                // Chronos reduces Parts Skill cooldown by 0.5% per 1% current HP.
+                multiplier *= Math.max(0.01, 1 - (chronosHpRatio * 0.50));
+            }
+            if (owner && chronosTimeStopFrames > 0 && owner === chronosTimeStopOwner) {
+                const chronosEffect = owner.getAllEffects().find(eff => eff.type === 'chronos_time_stop');
+                if (chronosEffect) multiplier *= chronosEffect.cooldownMultiplier;
+            }
+            return Math.max(1, Math.round(flatReducedFrames * multiplier));
+        }
+        function getImpactIntervalFrames(ownerOrParts, baseSeconds) {
+            const parts = ownerOrParts && ownerOrParts.parts ? ownerOrParts.parts : ownerOrParts;
+            const hasSurge = parts && parts.weightRing && parts.weightRing.id === 'wr_surge';
+            const hasRampage = parts && parts.driver && parts.driver.id === 'drv_rampage';
+            const reduction = (hasSurge ? 0.60 : 1.0) * (hasRampage ? 0.75 : 1.0);
+            return Math.max(120, Math.round((baseSeconds || 3) * 60 * reduction));
+        }
 
+        let hyperspaceOrbs = []; // Hyperspace idle orb entities
+        let windGustVisuals = [];
+        let hattoriClawVisuals = [];
+
+        function triggerHattoriClawVisual(target, clawCount = 3) {
+            if (!target) return;
+            hattoriClawVisuals.push({ target, life: 36, maxLife: 36, clawCount });
+        }
+        function tryTriggerBatterFollowUp(attacker, target) {
+            if (!attacker || !target || target.dead) return;
+            if (!attacker.parts.driver || attacker.parts.driver.id !== 'drv_batter') return;
+            if (attacker.batterFollowUpCooldownTimer > 0) return;
+            if (Math.random() >= 0.50) return;
+            attacker.batterFollowUpCooldownTimer = getPartsSkillCooldownFrames(240, attacker); // 4 seconds at 60 FPS
+            attacker.isImpact = true;
+            attacker.isUltimateImpact = false;
+            attacker.impactState = 'windup';
+            attacker.impactWindupTimer = 18;
+            attacker.impactTimer = 35 + Math.random() * 7;
+            addAilmentText(attacker.x, attacker.y, 'Follow-up', '#ffffff', '#000000');
+        }
         function triggerWindGustVisual(caster) {
             windGustVisuals.push({
                 caster: caster,
@@ -2094,7 +2259,7 @@
             if (arenaNav) arenaNav.click();
             resetArenaBattle();
             towerBattleMode = true; towerResultHandled = false;
-            document.getElementById('arenaScreen').classList.add('tower-arena');
+            getCachedElement('arenaScreen').classList.add('tower-arena');
             bey2.upgradeLevels = enemy.levels;
             bey2.updateParts(enemyEquipped);
             closeTowerDetails();
@@ -2175,7 +2340,15 @@
 
         const arenaContainer = document.getElementById('arenaContainer');
         const arenaWrapper = document.getElementById('arenaWrapper');
-        const flashOverlay = document.getElementById('flashOverlay');
+        // Performance: memoize DOM lookups used by the frame loop and UI paths.
+        const domElementCache = Object.create(null);
+        function getCachedElement(id) {
+            if (!domElementCache[id]) domElementCache[id] = document.getElementById(id);
+            return domElementCache[id];
+        }
+        // Defaults preserve the current visuals; low-power mode can disable expensive effects.
+        const renderQuality = { shadows: true, aura: true };
+        const flashOverlay = getCachedElement('flashOverlay');
         const cinematicOverlay = document.getElementById('cinematicOverlay');
         const preemptiveAttackOverlay = document.getElementById('preemptiveAttackOverlay');
 
@@ -2323,9 +2496,9 @@
             gameRunning = true;
             bey1.beginArenaOccupationTracking();
             bey2.beginArenaOccupationTracking();
-            const pMeter = document.getElementById('powerMeterBar');
-            const p1DOM = document.getElementById('p1LauncherDOM');
-            const enemyDOM = document.getElementById('enemyLauncherDOM');
+            const pMeter = getCachedElement('powerMeterBar');
+            const p1DOM = getCachedElement('p1LauncherDOM');
+            const enemyDOM = getCachedElement('enemyLauncherDOM');
             if (p1DOM) { p1DOM.classList.add('hidden'); p1DOM.style.display = 'none'; }
             if (enemyDOM) { enemyDOM.classList.add('hidden'); enemyDOM.style.display = 'none'; }
             if (pMeter) { pMeter.classList.add('hidden'); pMeter.style.display = 'none'; }
@@ -2396,9 +2569,9 @@
             gameRunning = true;
             bey1.beginArenaOccupationTracking();
             bey2.beginArenaOccupationTracking();
-            const pMeter = document.getElementById('powerMeterBar');
-            const p1DOM = document.getElementById('p1LauncherDOM');
-            const enemyDOM = document.getElementById('enemyLauncherDOM');
+            const pMeter = getCachedElement('powerMeterBar');
+            const p1DOM = getCachedElement('p1LauncherDOM');
+            const enemyDOM = getCachedElement('enemyLauncherDOM');
             if (p1DOM) { p1DOM.classList.add('hidden'); p1DOM.style.display = 'none'; }
             if (enemyDOM) { enemyDOM.classList.add('hidden'); enemyDOM.style.display = 'none'; }
             if (pMeter) { pMeter.classList.add('hidden'); pMeter.style.display = 'none'; }
@@ -2442,16 +2615,15 @@
             context.fill();
 
             // 2. Driver (Outer Ring - Single Color Outline)
+            if (isImpact) {
+                context.shadowColor = '#FFE035';
+                context.shadowBlur = radius * 0.25;
+            }
             context.beginPath();
             context.arc(0, 0, radius - 2.5, 0, Math.PI * 2);
             context.strokeStyle = parts.driver.color;
             context.lineWidth = 7;
-            if (isImpact) {
-                context.shadowBlur = 15;
-                context.shadowColor = parts.driver.color;
-            }
             context.stroke();
-            context.shadowBlur = 0;
 
             context.beginPath();
             context.arc(0, 0, radius - 2.5, Math.PI * 1.2, Math.PI * 1.8);
@@ -2461,10 +2633,13 @@
 
             context.beginPath();
             context.arc(0, 0, radius - 2.5, Math.PI * 0.2, Math.PI * 0.8);
-            context.strokeStyle = "rgba(0,0,0,0.3)";
+                        context.strokeStyle = "rgba(0,0,0,0.3)";
             context.lineWidth = 3;
             context.stroke();
-
+            if (isImpact) {
+                context.shadowBlur = 0;
+                context.shadowColor = 'transparent';
+            }
             // 3. Battle Cap (Inner Hexagon)
             const r = radius * 0.35;
             const sides = 6;
@@ -2629,15 +2804,29 @@
                 this.impactState = 'normal'; // 'normal', 'windup', 'dashing'
                 this.impactWindupTimer = 0;
                 this.impactTimer = 0;
-                this.impactCooldownTimer = Math.max(120, (parts.driver.interval || 3) * 60);
+                this.impactCooldownTimer = getImpactIntervalFrames(parts, parts.driver.interval || 3);
+                this.impactTrail = [];
+                this.trail = [];
+                // Calculated after parts and HP are initialized below so Chronos’s HP-based modifier applies.
+                this.hyperspaceCycleTimer = 360;
+                this.hyperspaceSpawnTimer = 0;
+                this.hyperspaceSpawnRemaining = 0;
+                this.shadowProjectileCooldownTimer = 0;
+                this.sopranoBreakCooldownTimer = 0;
+                this.coronaCooldownBuffTimer = 0;
                 this.collisionCooldown = 0;
+                this.vengeanceWallSource = null;
+                this.vengeanceWallTimer = 0;
+                this.berserkerAttackStacks = 0;
 
                 this.parts = parts;
+                this._effectCache = null;
                 this.side = side;
                 this.stats = this.calculateStats();
                 
                 this.maxHealth = this.stats.health;
                 this.health = this.maxHealth;
+                this.hyperspaceCycleTimer = getPartsSkillCooldownFrames(360, this);
                 
                 this.maxRpm = 3000;
                 this.rpm = this.maxRpm;
@@ -2650,12 +2839,11 @@
                 this.shieldTimer = 0;
                 this.athenaBlockTimer = 0;
                 this.beelzebubUltimateActive = false;
-                this.beelzebubTimer = 0;
-                this.beelzebubTickTimer = 0;
-                this.beelzebubUltimateActive = false;
-                this.beelzebubTimer = 0;
-                this.beelzebubTickTimer = 0;
-                this.beelzebubUltimateActive = false;
+                this.hattoriUltimateActive = false;
+                this.hattoriUltimateTimer = 0;
+                this.deathKnightRevelationActive = false;
+                this.deathKnightWallImpactWindup = false;
+                this.batterFollowUpCooldownTimer = 0;
                 this.beelzebubTimer = 0;
                 this.beelzebubTickTimer = 0;
                 this.atumUltimateActive = false;
@@ -2730,6 +2918,9 @@
                 if (this.guardianDefStacks) {
                     defMult += this.guardianDefStacks;
                 }
+                if (this.berserkerAttackStacks) {
+                    atkMult += Math.min(0.90, this.berserkerAttackStacks * 0.03);
+                }
                 const allEffects = this.getAllEffects ? this.getAllEffects() : [];
                 allEffects.forEach(eff => {
                     if (eff.type === 'devil_atk' && this.health && this.maxHealth && (this.health / this.maxHealth) >= (eff.threshold || 0.8)) {
@@ -2739,11 +2930,19 @@
 
                 s.atk = Math.round(s.atk * atkMult);
                 s.def = Math.round(s.def * defMult);
+                if (this.deathKnightRevelationActive) {
+                    s.atk = Math.round(s.atk + (s.def * 2.0));
+                    s.def = 0;
+                }
                 // Arena Occupation: landing zone grants one 20% combat-stat bonus.
                 if (this.arenaOccupation === 'inner') {
                     s.stamina *= 1.20;
                 } else if (this.arenaOccupation === 'outer') {
                     s.atk *= 1.20;
+                }
+                // Surge Weight Ring: +40% Stamina while the current opponent is Broken.
+                if (this.currentOpponent && this.currentOpponent.breakTimer > 0 && this.parts.weightRing && this.parts.weightRing.id === 'wr_surge') {
+                    s.stamina *= 1.40;
                 }
                 // Unbalance: reduce stamina to 60% (multiply stamina by 0.6)
                 if (this.unbalanceTimer && this.unbalanceTimer > 0) {
@@ -2774,14 +2973,14 @@
             }
 
             getAllEffects() {
-                let allEffects = [];
+                if (this._effectCache) return this._effectCache;
+                const allEffects = [];
                 ['battleCap', 'weightRing', 'driver'].forEach(slot => {
                     if (this.parts[slot] && this.parts[slot].effects) {
-                        this.parts[slot].effects.forEach(eff => {
-                            allEffects.push({ ...eff, slot });
-                        });
+                        this.parts[slot].effects.forEach(eff => allEffects.push({ ...eff, slot }));
                     }
                 });
+                this._effectCache = allEffects;
                 return allEffects;
             }
 
@@ -2799,6 +2998,10 @@
 
             updateParts(newParts) {
                 this.parts = newParts;
+                this._effectCache = null;
+                this.vengeanceWallSource = null;
+                this.vengeanceWallTimer = 0;
+                this.berserkerAttackStacks = 0;
                 this.arenaOccupation = null;
                 this.arenaOccupationPending = false;
                 this.arenaOccupationTimer = 0;
@@ -2806,6 +3009,7 @@
                 this.stats = this.calculateStats();
                 this.maxHealth = this.stats.health;
                 this.health = this.maxHealth;
+                this.hyperspaceCycleTimer = getPartsSkillCooldownFrames(360, this);
                 this.rpm = this.maxRpm;
                 this.ultimateGauge = 0;
                 this.shield = 0;
@@ -2813,15 +3017,31 @@
                 this.shieldTimer = 0;
                 this.athenaBlockTimer = 0;
                 this.beelzebubUltimateActive = false;
+                this.hattoriUltimateActive = false;
+                this.hattoriUltimateTimer = 0;
+                this.deathKnightRevelationActive = false;
+                this.batterFollowUpCooldownTimer = 0;
                 this.beelzebubTimer = 0;
                 this.beelzebubTickTimer = 0;
                 this.breakTimer = 0;
                 this.breakTickTimer = 0;
                 this.breakDmgPerTick = 0;
                 this.unbalanceTimer = 0;
-                this.bloomTimer = 300; // 5s base interval for Bloom driver
+                this.bloomTimer = getPartsSkillCooldownFrames(300, this); // 5s base interval for Bloom driver
                 this.bloomHealReductions = 0; // max -2s reduction (-120 frames)
                 this.effectCooldowns = {};
+                this.timeSkillTimer = getPartsSkillCooldownFrames(720, this);
+                this.timeCooldownBuffTimer = 0;
+                this.timePortalTimer = 0;
+                this.timeTeleportStage = 0;
+                this.timeDeparturePortalTimer = 0;
+                this.timeArrivalPortalTimer = 0;
+                this.timeDepartureX = 0;
+                this.timeDepartureY = 0;
+                this.timeArrivalX = 0;
+                this.timeArrivalY = 0;
+                this.timeStateHistory = [];
+                this.batterFollowUpCooldownTimer = 0;
                 this.guardianDefStacks = 0;
                 this.arenaOccupation = null;
                 this.arenaOccupationPending = false;
@@ -2894,16 +3114,33 @@
                 this.vx = (Math.random() - 0.5) * 3;
                 this.vy = (Math.random() - 0.5) * 3;
                 this.angle = 0;
+                this.impactTrail = [];
+                this.shurikenImpactCount = 0;
+                this.shurikenVolleyTimer = 0;
+                this.shurikenVolleyRemaining = 0;
+                // Calculated after parts and HP are initialized below so Chronos’s HP-based modifier applies.
+                this.hyperspaceCycleTimer = 360;
+                this.hyperspaceSpawnTimer = 0;
+                this.hyperspaceSpawnRemaining = 0;
+                this.shadowProjectileCooldownTimer = 0;
+                this.sopranoBreakCooldownTimer = 0;
+                this.coronaCooldownBuffTimer = 0;
                 this.isImpact = false;
                 this.impactState = 'normal';
                 this.impactWindupTimer = 0;
                 this.impactTimer = 0;
                 this.isUltimateImpact = false;
-                this.impactCooldownTimer = Math.max(120, (this.stats.interval || 3) * 60);
+                this.impactTrail = [];
+                this.impactCooldownTimer = getImpactIntervalFrames(this, this.stats.interval || 3);
+                this.impactTrail = [];
                 this.collisionCooldown = 0;
+                this.vengeanceWallSource = null;
+                this.vengeanceWallTimer = 0;
+                this.berserkerAttackStacks = 0;
                 this.stats = this.calculateStats();
                 this.maxHealth = this.stats.health;
                 this.health = this.maxHealth;
+                this.hyperspaceCycleTimer = getPartsSkillCooldownFrames(360, this);
                 this.rpm = this.maxRpm;
                 this.ultimateGauge = 0;
                 this.autoGaugeTickTimer = 0;
@@ -2912,6 +3149,10 @@
                 this.shieldTimer = 0;
                 this.athenaBlockTimer = 0;
                 this.beelzebubUltimateActive = false;
+                this.hattoriUltimateActive = false;
+                this.hattoriUltimateTimer = 0;
+                this.deathKnightRevelationActive = false;
+                this.batterFollowUpCooldownTimer = 0;
                 this.beelzebubTimer = 0;
                 this.beelzebubTickTimer = 0;
                 this.atumUltimateActive = false;
@@ -2926,9 +3167,21 @@
                 this.breakTickTimer = 0;
                 this.breakDmgPerTick = 0;
                 this.unbalanceTimer = 0;
-                this.bloomTimer = 300; // 5s base interval for Bloom driver
+                this.bloomTimer = getPartsSkillCooldownFrames(300, this); // 5s base interval for Bloom driver
                 this.bloomHealReductions = 0; // max -2s reduction (-120 frames)
                 this.effectCooldowns = {};
+                this.timeSkillTimer = getPartsSkillCooldownFrames(720, this);
+                this.timeCooldownBuffTimer = 0;
+                this.timePortalTimer = 0;
+                this.timeTeleportStage = 0;
+                this.timeDeparturePortalTimer = 0;
+                this.timeArrivalPortalTimer = 0;
+                this.timeDepartureX = 0;
+                this.timeDepartureY = 0;
+                this.timeArrivalX = 0;
+                this.timeArrivalY = 0;
+                this.timeStateHistory = [];
+                this.batterFollowUpCooldownTimer = 0;
                 this.guardianDefStacks = 0;
                 this.shield = 0;
                 this.maxShield = 0;
@@ -3010,6 +3263,20 @@
                         this.visible = true; // remain visible to show 4-directional dashes
                         let opponent = (this === bey1) ? bey2 : bey1;
                         this.atumTotalStrikes = (opponent && opponent.breakTimer > 0) ? 8 : 4;
+                    } else if (this.parts.battleCap.id === 'bc_hattori_hanzo') {
+                        this.hattoriUltimateActive = true;
+                        this.hattoriUltimateTimer = 360; // 6 seconds at 60fps
+                    } else if (this.parts.battleCap.id === 'bc_chronos') {
+                        const chronosEffect = this.getAllEffects().find(eff => eff.type === 'chronos_time_stop');
+                        chronosTimeStopOwner = this;
+                        chronosTimeStopFrames = chronosEffect ? chronosEffect.duration : 210;
+                    } else if (this.parts.battleCap.id === 'bc_mermaid') {
+                        // Queue the Ultimate wave; cinematicFrames must finish before it exists or moves.
+                        this.mermaidUltimatePending = true;
+                    } else if (this.parts.battleCap.id === 'bc_death_knight') {
+                        this.deathKnightRevelationActive = true;
+                        this.stats = this.calculateStats();
+                        this.updateUI();
                     } else if (this.parts.battleCap.id === 'bc_beelzebub') {
                         this.beelzebubUltimateActive = true;
                         this.beelzebubTimer = 240; // 4 seconds at 60fps
@@ -3023,18 +3290,89 @@
             }
 
             draw(ctx) {
-                if (!this.visible) return;
-
+                const drawTimePortal = (worldX, worldY, timer) => {
+                    if (timer <= 0) return;
+                    ctx.save();
+                    const progress = 1 - (timer / 30);
+                    const pulse = 1 + Math.sin(Date.now() * 0.012) * 0.08;
+                    const portalRadius = this.radius * (1.28 + progress * 0.22) * pulse * scale;
+                    ctx.beginPath();
+                    ctx.arc(worldX * scale, worldY * scale, portalRadius, 0, Math.PI * 2);
+                    ctx.lineWidth = Math.max(2, this.radius * 0.10 * scale);
+                    ctx.strokeStyle = '#FBD678';
+                    ctx.shadowColor = '#FBD678';
+                    ctx.shadowBlur = this.radius * 0.28 * scale;
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(worldX * scale, worldY * scale, portalRadius * 0.72, 0, Math.PI * 2);
+                    ctx.lineWidth = Math.max(1.5, this.radius * 0.055 * scale);
+                    ctx.strokeStyle = 'rgba(255, 246, 190, 0.9)';
+                    ctx.stroke();
+                    ctx.restore();
+                };
+                if (!this.visible) {
+                    if (this.timeTeleportStage === 2) drawTimePortal(this.timeDepartureX, this.timeDepartureY, this.timeDeparturePortalTimer);
+                    return;
+                }
+                if (this.timeTeleportStage === 1) drawTimePortal(this.timeDepartureX, this.timeDepartureY, this.timeDeparturePortalTimer);
+                if (this.timeTeleportStage === 3) drawTimePortal(this.timeArrivalX, this.timeArrivalY, this.timeArrivalPortalTimer);
+                if (this.deathKnightRevelationActive) {
+                    // Match Athena's Ultimate aura geometry exactly; only the color is different.
+                    ctx.save();
+                    // This aura is drawn before the bey-position translate, so use
+                    // world coordinates and scale the Athena-equivalent dimensions once.
+                    ctx.beginPath();
+                    ctx.arc(this.x * scale, this.y * scale, (this.radius + 8) * scale, 0, Math.PI * 2);
+                    ctx.lineWidth = 3 * scale;
+                    ctx.strokeStyle = 'rgba(255, 59, 48, 0.9)';
+                    ctx.shadowColor = '#FF3B30';
+                    ctx.shadowBlur = 12 * scale;
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(this.x * scale, this.y * scale, (this.radius + 12) * scale, 0, Math.PI * 2);
+                    ctx.lineWidth = 1.5 * scale;
+                    ctx.strokeStyle = 'rgba(255, 59, 48, 0.8)';
+                    ctx.stroke();
+                    ctx.restore();
+                }
                 const rpmRatio = Math.max(0.2, this.rpm / this.maxRpm);
                 const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
-                if (hitStopFrames === 0 && gameRunning && !gamePaused && cinematicFrames === 0 && this.impactState !== 'windup') {
+                const chronosEnemyTimeStoppedForRotation = chronosTimeStopFrames > 0 && chronosTimeStopOwner && this !== chronosTimeStopOwner;
+                if (hitStopFrames === 0 && gameRunning && !gamePaused && cinematicFrames === 0 && this.impactState !== 'windup' && !chronosEnemyTimeStoppedForRotation) {
                     let spinDir = (this.parts.battleCap && this.parts.battleCap.spinType === 'left') ? -1 : 1;
                     this.angle += spinDir * (0.04 + (speed * 0.03) + (rpmRatio * 0.08)) * gameSpeed;
                 }
                 
 
 
+                // Lightweight normal movement aura trail, rendered before the Bey.
+                // Points are stored in world coordinates and scaled exactly once here.
+                if (this.isImpact && this.trail && this.trail.length > 1 && speed > 0.03) {
+                    const visibleCount = Math.min(6, this.trail.length);
+                    const points = this.trail.slice(-visibleCount);
+                    const trailColor = '#FFE035';
+                    ctx.save();
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+                    for (let pass = 0; pass < 2; pass++) {
+                        for (let i = 1; i < points.length; i++) {
+                            const age = (i - 1) / Math.max(1, points.length - 2);
+                            const opacity = 1;
+                            const width = pass === 0 ? 0.25 + age * 26.75 : 0.1 + age * 14.9;
+                            ctx.beginPath();
+                            ctx.moveTo(points[i - 1].x * scale, points[i - 1].y * scale);
+                            ctx.lineTo(points[i].x * scale, points[i].y * scale);
+                            ctx.strokeStyle = trailColor;
+                            ctx.globalAlpha = opacity;
+                            ctx.lineWidth = width * scale;
+                            ctx.stroke();
+                        }
+                    }
+                    ctx.restore();
+                }
                 ctx.save();
+                const chronosEnemyTimeStopped = chronosTimeStopFrames > 0 && chronosTimeStopOwner && this !== chronosTimeStopOwner;
+                if (chronosEnemyTimeStopped) ctx.filter = 'invert(1)';
                 ctx.translate(this.x * scale, this.y * scale);
                 ctx.scale(scale, scale);
 
@@ -3043,8 +3381,31 @@
                 }
 
                 const renderRadius = this.arenaOccupationPending ? this.radius * 1.3 : this.radius;
-                drawBeyOnContext(ctx, 0, 0, renderRadius, this.parts, this.angle, this.isImpact && this.impactState === 'dashing', this.shieldTimer > 0, rpmRatio);
-
+                const impactDashing = this.isImpact && this.impactState === 'dashing';
+                if (impactDashing && renderQuality.aura) {
+                    const auraRadius = renderRadius * 1.20;
+                    if (!this._impactAuraGradient || this._impactAuraGradientRadius !== auraRadius) {
+                        this._impactAuraGradient = ctx.createRadialGradient(0, 0, renderRadius * 0.45, 0, 0, auraRadius);
+                        this._impactAuraGradient.addColorStop(0, '#FFF3A0');
+                        this._impactAuraGradient.addColorStop(0.55, '#FFE035');
+                        this._impactAuraGradient.addColorStop(1, '#D9A900');
+                        this._impactAuraGradientRadius = auraRadius;
+                    }
+                    const aura = this._impactAuraGradient;
+                    ctx.fillStyle = aura;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, auraRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                if (impactDashing && renderQuality.shadows) {
+                    ctx.shadowColor = '#FFE035';
+                    ctx.shadowBlur = renderRadius * 0.45;
+                }
+                drawBeyOnContext(ctx, 0, 0, renderRadius, this.parts, this.angle, impactDashing, this.shieldTimer > 0, rpmRatio);
+                if (impactDashing) {
+                    ctx.shadowBlur = 0;
+                    ctx.shadowColor = 'transparent';
+                }
                 // If Atum 4-directional ultimate dash is active, render blazing glow trail ghosts
                 if (this.atumUltimateActive && this.atumTrail && this.atumTrail.length > 0) {
                     ctx.save();
@@ -3125,6 +3486,15 @@
 
             update(target, forceUIUpdate = false) {
                 if (!gameRunning || gamePaused || hitStopFrames > 0 || cinematicFrames > 0) return;
+                if (this.vengeanceWallTimer > 0) this.vengeanceWallTimer -= gameSpeed;
+                if (this.vengeanceWallTimer <= 0) this.vengeanceWallSource = null;
+                // Collision recovery is a global combat timer; it must continue during Chronos time stop.
+                if (this.collisionCooldown > 0) this.collisionCooldown = Math.max(0, this.collisionCooldown - gameSpeed);
+                if (chronosTimeStopFrames > 0 && this !== chronosTimeStopOwner) return;
+                if (this === chronosTimeStopOwner && chronosTimeStopFrames > 0) {
+                    chronosTimeStopFrames = Math.max(0, chronosTimeStopFrames - gameSpeed);
+                    if (chronosTimeStopFrames <= 0) chronosTimeStopOwner = null;
+                }
                 const isPlayerBey = this.side === 'left';
                 const unlimitedHealth = isPlayerBey ? debugOverrides.playerUnlimitedHealth : debugOverrides.enemyUnlimitedHealth;
                 const unlimitedStamina = isPlayerBey ? debugOverrides.playerUnlimitedStamina : debugOverrides.enemyUnlimitedStamina;
@@ -3139,11 +3509,83 @@
                     if (this.deathTimer > 60) this.visible = false;
                     return;
                 }
-
+                const timeEffect = this.getAllEffects().find(eff => eff.type === 'time_rewind');
+                if (timeEffect) {
+                    // Defensive guard for first-battle/loadout initialization paths.
+                    if (!Array.isArray(this.timeStateHistory)) this.timeStateHistory = [];
+                    // Time’s cooldown and temporary buff continue counting during the visual teleport stages.
+                    if (this.timeSkillTimer > 0) this.timeSkillTimer -= gameSpeed;
+                    if (this.timeCooldownBuffTimer > 0) this.timeCooldownBuffTimer = Math.max(0, this.timeCooldownBuffTimer - gameSpeed);
+                    // Stage 1: portal opens while the bey remains visible at the departure point for 0.25s.
+                    if (this.timeTeleportStage === 1) {
+                        this.timeDeparturePortalTimer = Math.max(0, this.timeDeparturePortalTimer - gameSpeed);
+                        this.timeDepartureLingerTimer = Math.max(0, this.timeDepartureLingerTimer - gameSpeed);
+                        if (this.timeDepartureLingerTimer <= 0) {
+                            this.timeTeleportStage = 2;
+                            this.visible = false;
+                            this.timeDepartureLingerTimer = 15; // hidden interval: 0.25 seconds
+                        }
+                        return;
+                    }
+                    // Stage 2: the bey is gone for 0.25s while the departure portal stays fixed.
+                    if (this.timeTeleportStage === 2) {
+                        this.timeDeparturePortalTimer = Math.max(0, this.timeDeparturePortalTimer - gameSpeed);
+                        this.timeDepartureLingerTimer = Math.max(0, this.timeDepartureLingerTimer - gameSpeed);
+                        if (this.timeDepartureLingerTimer <= 0) {
+                            this.x = Math.max(-ARENA_RADIUS, Math.min(ARENA_RADIUS, this.timeArrivalX));
+                            this.y = Math.max(-ARENA_RADIUS, Math.min(ARENA_RADIUS, this.timeArrivalY));
+                            this.vx = this.timeArrivalVx;
+                            this.vy = this.timeArrivalVy;
+                            this.angle = this.timeArrivalAngle;
+                            this.health = Math.max(1, Math.min(this.maxHealth, this.timeArrivalHealth));
+                            this.rpm = Math.max(0, Math.min(this.maxRpm, this.timeArrivalRpm));
+                            this.visible = true;
+                            this.timeTeleportStage = 3;
+                            this.timeArrivalLingerTimer = 15; // visible arrival linger: 0.25 seconds
+                            this.timeArrivalPortalTimer = 30; // arrival portal remains stationary for 0.5 seconds
+                        }
+                        return;
+                    }
+                    // Stage 3: the bey remains visible at the rewinded point for 0.25s.
+                    if (this.timeTeleportStage === 3) {
+                        this.timeArrivalPortalTimer = Math.max(0, this.timeArrivalPortalTimer - gameSpeed);
+                        this.timeArrivalLingerTimer = Math.max(0, this.timeArrivalLingerTimer - gameSpeed);
+                        if (this.timeArrivalLingerTimer <= 0) this.timeTeleportStage = 0;
+                    }
+                    this.timeStateHistory.push({ x: this.x, y: this.y, vx: this.vx, vy: this.vy, angle: this.angle, health: this.health, rpm: this.rpm });
+                    const maxHistory = timeEffect.rewindFrames + 1;
+                    if (this.timeStateHistory.length > maxHistory) this.timeStateHistory.shift();
+                    if (this.timeSkillTimer <= 0 && this.timeStateHistory.length > timeEffect.rewindFrames && gameRunning && this.timeTeleportStage === 0) {
+                        const rewindState = this.timeStateHistory[this.timeStateHistory.length - 1 - timeEffect.rewindFrames];
+                        if (rewindState) {
+                            this.timeCooldownBuffTimer = timeEffect.buffDuration;
+                            const nextTimeCooldown = getPartsSkillCooldownFrames(timeEffect.activationInterval, this, true);
+                            this.timeDepartureX = this.x;
+                            this.timeDepartureY = this.y;
+                            this.timeArrivalX = rewindState.x;
+                            this.timeArrivalY = rewindState.y;
+                            this.timeArrivalVx = rewindState.vx;
+                            this.timeArrivalVy = rewindState.vy;
+                            this.timeArrivalAngle = rewindState.angle;
+                            this.timeArrivalHealth = rewindState.health;
+                            this.timeArrivalRpm = rewindState.rpm;
+                            this.timeDeparturePortalTimer = 45; // portal covers the 0.25s visible + 0.5s hidden sequence
+                            this.timeDepartureLingerTimer = 15; // visible departure linger: 0.25 seconds
+                            this.timeSkillTimer = nextTimeCooldown;
+                            this.timeTeleportStage = 1;
+                            this.visible = true;
+                            this.timeStateHistory.length = 0;
+                        }
+                    }
+                }
+                // Refresh conditional part stats, including Surge’s Break-based Stamina bonus.
+                this.currentOpponent = target;
+                this.stats = this.calculateStats();
                 this.updateArenaOccupation();
                 this.autoGaugeTickTimer += gameSpeed;
                 if (this.autoGaugeTickTimer >= 48) { // 0.8 seconds at 60fps
                     this.autoGaugeTickTimer = 0;
+                    if (!this.deathKnightRevelationActive) {
                     let addAmount = 1;
                     if (this.parts.battleCap.type === 'Stamina') {
                         addAmount += 2;
@@ -3160,10 +3602,18 @@
                             addAmount *= 3; // +200% speed increase
                         }
                     }
-
-                                        this.ultimateGauge = Math.min(100, this.ultimateGauge + addAmount);
+                    if (this.parts.battleCap && this.parts.battleCap.id === 'bc_chronos') {
+                        const chronosHpRatio = Math.max(0, Math.min(1, this.health / Math.max(1, this.maxHealth)));
+                        // Chronos gains 0.5% automatic Ultimate charge rate per 1% current HP.
+                        addAmount *= (1 + (chronosHpRatio * 0.50));
+                    }
+                    if (this.parts.battleCap && this.parts.battleCap.id === 'bc_mermaid') {
+                        addAmount *= 2.0; // Mermaid: +100% automatic Ultimate charging rate.
+                    }
+                    this.ultimateGauge = Math.min(100, this.ultimateGauge + addAmount);
                     if (!isPlayerBey && debugOverrides.enemyUltimateAlwaysEmpty) this.ultimateGauge = 0;
                     if (this.side === 'left') updateSkillHexagons();
+                    }
                 }
                 if (this.side === 'left' && autoUltimateToggle.checked && this.ultimateGauge >= 100) {
                     this.castUltimate();
@@ -3171,8 +3621,37 @@
                     this.castUltimate();
                 }
 
-                if (this.collisionCooldown > 0) {
-                    this.collisionCooldown -= gameSpeed;
+                if (this.shadowProjectileCooldownTimer > 0) {
+                    this.shadowProjectileCooldownTimer = Math.max(0, this.shadowProjectileCooldownTimer - gameSpeed);
+                }
+                if (this.sopranoBreakCooldownTimer > 0) {
+                    this.sopranoBreakCooldownTimer = Math.max(0, this.sopranoBreakCooldownTimer - gameSpeed);
+                }
+                const hyperspaceEffect = this.getAllEffects().find(eff => eff.type === 'hyperspace_orbs');
+                if (hyperspaceEffect && !this.dead && gameRunning) {
+                    if (this.hyperspaceSpawnRemaining > 0) {
+                        this.hyperspaceSpawnTimer -= gameSpeed;
+                        if (this.hyperspaceSpawnTimer <= 0) {
+                            hyperspaceOrbs.push({
+                                owner: this,
+                                x: this.x,
+                                y: this.y,
+                                radius: hyperspaceEffect.size,
+                                color: hyperspaceEffect.color,
+                                outlineColor: hyperspaceEffect.outlineColor,
+                                launchTimer: hyperspaceEffect.launchDelay
+                            });
+                            this.hyperspaceSpawnRemaining--;
+                            this.hyperspaceSpawnTimer = hyperspaceEffect.orbInterval;
+                        }
+                    } else {
+                        this.hyperspaceCycleTimer -= gameSpeed;
+                        if (this.hyperspaceCycleTimer <= 0) {
+                            this.hyperspaceCycleTimer = getPartsSkillCooldownFrames(hyperspaceEffect.cycleInterval, this);
+                            this.hyperspaceSpawnRemaining = hyperspaceEffect.orbCount;
+                            this.hyperspaceSpawnTimer = 0;
+                        }
+                    }
                 }
 
                 if (this.shieldTimer > 0) {
@@ -3186,6 +3665,14 @@
                     this.athenaBlockTimer -= gameSpeed;
                 }
 
+                // Hattori Hanzo Triple Impact Ultimate timer
+                if (this.hattoriUltimateActive) {
+                    this.hattoriUltimateTimer -= gameSpeed;
+                    if (this.hattoriUltimateTimer <= 0) {
+                        this.hattoriUltimateActive = false;
+                        this.hattoriUltimateTimer = 0;
+                    }
+                }
                 // Atum 4-directional Sun Strike Ultimate logic
                 if (this.beelzebubUltimateActive) {
                     this.beelzebubTimer -= gameSpeed;
@@ -3281,6 +3768,7 @@
                     }
                 }
                 if (this.unbalanceTimer > 0) this.unbalanceTimer -= gameSpeed;
+                if (this.coronaCooldownBuffTimer > 0) this.coronaCooldownBuffTimer -= gameSpeed;
 
                 // Bloom & Piety driver passive timer checks
                 const allEffectsList = this.getAllEffects();
@@ -3289,18 +3777,18 @@
                         let effectiveInterval = Math.max(180, eff.baseInterval + this.bloomHealReductions); // min 3s (180f)
                         this.bloomTimer -= gameSpeed;
                         if (this.bloomTimer <= 0) {
-                            this.bloomTimer = effectiveInterval;
+                            this.bloomTimer = getPartsSkillCooldownFrames(effectiveInterval, this);
                             let gain = eff.gaugeGain;
                             if (this.shieldTimer > 0) gain *= 2;
-                            this.ultimateGauge = Math.min(100, this.ultimateGauge + gain);
+                            if (!this.deathKnightRevelationActive) this.ultimateGauge = Math.min(100, this.ultimateGauge + gain);
                             if (this.side === 'left') updateSkillHexagons();
                         }
                     }
                     if (eff.type === 'piety_shield_timer') {
-                        if (!this.pietyTimer) this.pietyTimer = eff.interval;
+                        if (!this.pietyTimer) this.pietyTimer = getPartsSkillCooldownFrames(eff.interval, this);
                         this.pietyTimer -= gameSpeed;
                         if (this.pietyTimer <= 0) {
-                            this.pietyTimer = eff.interval;
+                            this.pietyTimer = getPartsSkillCooldownFrames(eff.interval, this);
                             let shieldVal = this.stats[eff.scaleStat] * eff.scaleFactor;
                             this.shield = Math.max(this.shield, shieldVal);
                             this.maxShield = Math.max(this.maxShield, this.shield);
@@ -3331,14 +3819,39 @@
                     }
                 });
 
+                // Universal Shuriken projectile system: after 3 launched Impacts,
+                // fire a three-projectile volley at 0.25 second intervals.
+                const shurikenEffect = this.getAllEffects().find(eff => eff.type === 'shuriken_volley');
+                if (shurikenEffect && target && !target.dead) {
+                    if (this.shurikenVolleyRemaining > 0) {
+                        this.shurikenVolleyTimer -= gameSpeed;
+                        if (this.shurikenVolleyTimer <= 0) {
+                            projectiles.push(new Projectile(this, target, {
+                                attackRatio: shurikenEffect.attackRatio,
+                                speed: shurikenEffect.speed,
+                                size: shurikenEffect.size,
+                                shape: shurikenEffect.shape,
+                                color: shurikenEffect.color,
+                                lifetime: 180
+                            }));
+                            this.shurikenVolleyRemaining--;
+                            this.shurikenVolleyTimer = shurikenEffect.interval;
+                        }
+                    } else if (this.shurikenImpactCount >= shurikenEffect.impactCount) {
+                        this.shurikenImpactCount -= shurikenEffect.impactCount;
+                        this.shurikenVolleyRemaining = shurikenEffect.projectileCount;
+                        this.shurikenVolleyTimer = 0;
+                    }
+                }
+
                 // Universal Creation System trigger for Divine Star or future creation parts
                 const beyEffects = this.getAllEffects();
                 beyEffects.forEach(eff => {
                     if (eff.type === 'divinestar_creation') {
-                        if (this.creationTimer === undefined) this.creationTimer = eff.interval;
+                        if (this.creationTimer === undefined) this.creationTimer = getPartsSkillCooldownFrames(eff.interval, this);
                         this.creationTimer -= gameSpeed;
                         if (this.creationTimer <= 0) {
-                            this.creationTimer = eff.interval;
+                            this.creationTimer = getPartsSkillCooldownFrames(eff.interval, this);
                             // Spawn a Creation orb at a random position within arena
                             let maxSpawnR = ARENA_RADIUS - 60;
                             let spawnAngle = Math.random() * Math.PI * 2;
@@ -3364,12 +3877,15 @@
                     }
                 });
 
+                                if (this.batterFollowUpCooldownTimer > 0) {
+                    this.batterFollowUpCooldownTimer = Math.max(0, this.batterFollowUpCooldownTimer - gameSpeed);
+                }
                 if (this.side === 'left') updateSkillHexagons();
-
                 if (!target.dead) {
+                    const chronosRpmStopped = chronosTimeStopFrames > 0 && this === chronosTimeStopOwner;
                     const staminaFactor = Math.max(20, this.stats.stamina);
                     let drainMult = 1.0;
-                    const rpmDrainRate = (100 / staminaFactor) * drainMult * gameSpeed;
+                    const rpmDrainRate = chronosRpmStopped ? 0 : (100 / staminaFactor) * drainMult * gameSpeed;
                     let oldRpmRatio = this.rpm / this.maxRpm;
                     this.rpm -= rpmDrainRate;
                     let newRpmRatio = this.rpm / this.maxRpm;
@@ -3436,6 +3952,31 @@
                             this.vy += (Math.random() - 0.5) * 0.08 * gameSpeed;
                         }
                     }
+                } else if (driverTip === 'erratic') {
+                    // Erratic tip: Flat-style orbit with stronger tangential motion and controlled wild sway.
+                    const normalizedWeight = Math.min(1.0, Math.max(0.05, (this.stats.weight - 40) / 130));
+                    const idealRadius = 135 - (normalizedWeight * 35);
+                    const radiusDiff = distToCenter - idealRadius;
+                    if (distToCenter > 0) {
+                        const nx = dx / distToCenter;
+                        const ny = dy / distToCenter;
+                        const centerForce = 0.8 * (radiusDiff / ARENA_RADIUS);
+                        this.vx -= nx * centerForce * gameSpeed;
+                        this.vy -= ny * centerForce * gameSpeed;
+                        if (!this.isImpact) {
+                            const spinDir = (this.parts.battleCap && this.parts.battleCap.spinType === 'left') ? -1 : 1;
+                            this.erraticPhase = (this.erraticPhase || 0) + 0.16 * gameSpeed;
+                            const sway = Math.sin(this.erraticPhase) * 0.22;
+                            const erraticSpeed = 1.25;
+                            const tangential = spinDir * (0.12 + sway) * gameSpeed * erraticSpeed;
+                            this.vx += (-ny) * tangential;
+                            this.vy += nx * tangential;
+                            this.vx += Math.cos(this.erraticPhase * 1.7) * 0.16 * gameSpeed * erraticSpeed;
+                            this.vy += Math.sin(this.erraticPhase * 1.3) * 0.16 * gameSpeed * erraticSpeed;
+                            this.vx += (Math.random() - 0.5) * 0.14 * gameSpeed * erraticSpeed;
+                            this.vy += (Math.random() - 0.5) * 0.14 * gameSpeed * erraticSpeed;
+                        }
+                    }
                 } else {
                     // Ball tip (Semi-flat): Wider outward circling, playing more in outer/mid arena
                     const normalizedWeight = Math.min(1.0, Math.max(0.05, (this.stats.weight - 40) / 130));
@@ -3457,25 +3998,41 @@
                     }
                 }
 
-                const intervalFrames = this.stats.interval * 60;
+                const intervalFrames = getImpactIntervalFrames(this, this.stats.interval);
 
                 if (this.isImpact) {
                     if (this.impactState === 'windup') {
                         // Windup pullback animation: briefly move slightly backward from target during windup
                         this.vx = 0;
                         this.vy = 0;
-                        const tdx = target.x - this.x;
-                        const tdy = target.y - this.y;
-                        const tdist = Math.hypot(tdx, tdy);
-                        if (tdist > 0) {
-                            // Pull back slightly (e.g. -0.8 px per frame away from target)
-                            const pullBackSpeed = 0.8;
-                            this.x -= (tdx / tdist) * pullBackSpeed * gameSpeed;
-                            this.y -= (tdy / tdist) * pullBackSpeed * gameSpeed;
+                        if (this.deathKnightWallImpactWindup) {
+                            // A wall-triggered Death Knight Impact must move inward during
+                            // windup. The normal Impact pullback moves away from the target;
+                            // at the outer wall that would pull the bey back into the wall
+                            // every frame and keep it embedded there.
+                            const wallDx = this.x - centerX;
+                            const wallDy = this.y - centerY;
+                            const wallDistance = Math.hypot(wallDx, wallDy);
+                            if (wallDistance > 0) {
+                                const inwardSpeed = 1.2;
+                                this.x -= (wallDx / wallDistance) * inwardSpeed * gameSpeed;
+                                this.y -= (wallDy / wallDistance) * inwardSpeed * gameSpeed;
+                            }
+                        } else {
+                            const tdx = target.x - this.x;
+                            const tdy = target.y - this.y;
+                            const tdist = Math.hypot(tdx, tdy);
+                            if (tdist > 0) {
+                                // Pull back slightly (e.g. -0.8 px per frame away from target)
+                                const pullBackSpeed = 0.8;
+                                this.x -= (tdx / tdist) * pullBackSpeed * gameSpeed;
+                                this.y -= (tdy / tdist) * pullBackSpeed * gameSpeed;
+                            }
                         }
                         this.impactWindupTimer -= gameSpeed;
                         if (this.impactWindupTimer <= 0) {
                             this.impactState = 'dashing';
+                            this.deathKnightWallImpactWindup = false;
                         }
                     } else if (this.impactState === 'dashing') {
                         const adx = target.x - this.x;
@@ -3490,18 +4047,35 @@
                         if (this.impactTimer <= 0) {
                             this.isImpact = false;
                             this.impactState = 'normal';
+                            this.impactTrail = [];
                             this.impactCooldownTimer = intervalFrames;
                         }
                     }
                 } else if (!isLowRpm && this.parts.battleCap.id !== 'bc_beelzebub') {
                     this.impactCooldownTimer -= gameSpeed;
                     if (this.impactCooldownTimer <= 0 && !target.dead) {
-                        this.isImpact = true;
-                        this.isUltimateImpact = false;
-                        this.impactState = 'windup';
-                        this.impactWindupTimer = 18; // 0.3 seconds at 60fps
-                        this.impactTimer = 35 + Math.random() * 7;
-                        addAilmentText(this.x, this.y, "IMPACT", '#000000', '#ffffff');
+                        const mermaidEffect = this.getAllEffects().find(eff => eff.type === 'mermaid_sonic_impact');
+                        if (mermaidEffect) {
+                            projectiles.push(new Projectile(this, target, {
+                                attackRatio: mermaidEffect.attackRatio,
+                                speed: mermaidEffect.speed,
+                                size: mermaidEffect.size,
+                                shape: mermaidEffect.shape,
+                                color: mermaidEffect.color,
+                                shadowColor: mermaidEffect.shadowColor,
+                                persistOnHit: true,
+                                hitCooldownFrames: mermaidEffect.hitCooldownFrames,
+                                lifetime: mermaidEffect.lifetime
+                            }));
+                            this.impactCooldownTimer = intervalFrames;
+                        } else {
+                            this.isImpact = true;
+                            this.isUltimateImpact = false;
+                            this.impactState = 'windup';
+                            this.impactWindupTimer = 18; // 0.3 seconds at 60fps
+                            this.impactTimer = 35 + Math.random() * 7;
+                            addAilmentText(this.x, this.y, "IMPACT", '#000000', '#ffffff');
+                        }
                     }
                 }
 
@@ -3520,18 +4094,63 @@
                     const restitution = (driverTip === 'flat') ? 1.05 : 0.85;
                     this.vx = (this.vx - 2 * dot * nx) * restitution;
                     this.vy = (this.vy - 2 * dot * ny) * restitution;
+                    if (this.deathKnightRevelationActive && !this.dead && !this.isImpact) {
+                        this.isImpact = true;
+                        this.isUltimateImpact = false;
+                        this.impactState = 'windup';
+                        this.impactWindupTimer = 12;
+                        this.impactTimer = 36;
+                        this.deathKnightWallImpactWindup = true;
+                        addAilmentText(this.x, this.y, "IMPACT", '#000000', '#ffffff');
+                    }
                     this.x -= nx * ((wallDist + this.radius) - ARENA_RADIUS);
                     this.y -= ny * ((wallDist + this.radius) - ARENA_RADIUS);
                     
+                    if (this.vengeanceWallTimer > 0 && this.vengeanceWallSource && !this.vengeanceWallSource.dead && !this.dead) {
+                        const vengeanceEffect = this.vengeanceWallSource.getAllEffects().find(eff => eff.type === 'vengeance_knockback');
+                        if (vengeanceEffect) {
+                            const rawWallDamage = (this.vengeanceWallSource.stats.atk * vengeanceEffect.wallAttackRatio) - this.stats.def;
+                            const wallVariance = 1 + (Math.random() - 0.5) * 0.10;
+                            const vengeanceWallDamage = Math.max(0, rawWallDamage * wallVariance);
+                            this.takeDamage(vengeanceWallDamage, true, true, this.vengeanceWallSource, true);
+                        }
+                        this.vengeanceWallSource = null;
+                        this.vengeanceWallTimer = 0;
+                    }
                     if (WALL_DAMAGE_ENABLED && !target.dead) {
                         const wallDmg = (driverTip === 'flat') ? 4 : 2;
                         this.takeDamage(wallDmg, false, false);
+                    }
+                    const shadowEffect = this.getAllEffects().find(eff => eff.type === 'shadow_wall_projectile');
+                    if (shadowEffect && target && !target.dead && this.shadowProjectileCooldownTimer <= 0) {
+                        projectiles.push(new Projectile(this, target, {
+                            attackRatio: shadowEffect.attackRatio,
+                            speed: shadowEffect.speed,
+                            size: shadowEffect.size,
+                            shape: shadowEffect.shape,
+                            color: shadowEffect.color,
+                            outlineColor: shadowEffect.outlineColor,
+                            knockbackForce: shadowEffect.knockbackForce,
+                            lifetime: 180
+                        }));
+                        this.shadowProjectileCooldownTimer = getPartsSkillCooldownFrames(shadowEffect.cooldown, this);
+                    }
+                }
+                // Record final post-collision positions only while Impact is active.
+                // When Impact is inactive, clear the history so the next Impact starts fresh.
+                if (!this.isImpact) {
+                    this.trail.length = 0;
+                } else if (Math.hypot(this.vx, this.vy) > 0.03) {
+                    const previousTrailPoint = this.trail[this.trail.length - 1];
+                    if (!previousTrailPoint || Math.hypot(this.x - previousTrailPoint.x, this.y - previousTrailPoint.y) >= 2) {
+                        this.trail.push({ x: this.x, y: this.y });
+                        if (this.trail.length > 6) this.trail.shift();
                     }
                 }
             }
 
             takeDamage(amount, showText = true, isBeyHit = true, attacker = null, forcedIsImpactHit = null) {
-                if (this.dead) return;
+                if (this.dead || this.timeTeleportStage === 2) return;
                 if ((this.side === 'left' && debugOverrides.playerUnlimitedHealth) || (this.side === 'right' && debugOverrides.enemyUnlimitedHealth)) {
                     this.health = this.maxHealth;
                     this.updateUI();
@@ -3592,7 +4211,7 @@
                         gaugeGain += 15;
                     }
                     if (attacker && gaugeGain > 0) {
-                        attacker.ultimateGauge = Math.min(100, attacker.ultimateGauge + gaugeGain);
+                        if (!attacker.deathKnightRevelationActive) attacker.ultimateGauge = Math.min(100, attacker.ultimateGauge + gaugeGain);
                     }
                     if (this.side === 'left') updateSkillHexagons();
 
@@ -3629,6 +4248,11 @@
                 if (amount <= 0) return;
 
                 this.health -= amount;
+                if (attacker && attacker !== this && attacker.parts && attacker.parts.driver && attacker.parts.driver.id === 'drv_berserker') {
+                    attacker.berserkerAttackStacks = Math.min(30, (attacker.berserkerAttackStacks || 0) + 1);
+                    attacker.stats = attacker.calculateStats();
+                    attacker.updateUI();
+                }
                 this.updateUI();
                 
                 if (showText) {
@@ -3744,7 +4368,7 @@
         }
 
         function checkBeyCollision(a, b) {
-            if (!a || !b || a.dead || b.dead) return;
+            if (!a || !b || a.dead || b.dead || a.timeTeleportStage === 2 || b.timeTeleportStage === 2) return;
             if (a.collisionCooldown > 0 || b.collisionCooldown > 0) return;
             
             const dx = b.x - a.x;
@@ -3776,7 +4400,11 @@
                     triggerPreemptiveAttack();
                 }
                 const impactCollision = (a.isImpact && a.impactState === 'dashing') || (b.isImpact && b.impactState === 'dashing');
-                const bounceForce = impactCollision ? 12.0 : 9.0;
+                const vengeanceImpact = impactCollision && (
+                    a.getAllEffects().some(eff => eff.type === 'vengeance_knockback') ||
+                    b.getAllEffects().some(eff => eff.type === 'vengeance_knockback')
+                );
+                const bounceForce = impactCollision ? (vengeanceImpact ? 12.0 : 10.0) : 9.0;
                 a.vx = -nx * bounceForce + (Math.random() - 0.5) * 2;
                 a.vy = -ny * bounceForce + (Math.random() - 0.5) * 2;
                 b.vx = nx * bounceForce + (Math.random() - 0.5) * 2;
@@ -3793,22 +4421,36 @@
 
                 let bWasImpact = (b.isImpact && b.impactState === 'dashing');
                 let aWasImpact = (a.isImpact && a.impactState === 'dashing');
+                if (bWasImpact && b.getAllEffects().some(eff => eff.type === 'vengeance_knockback')) {
+                    a.vengeanceWallSource = b;
+                    a.vengeanceWallTimer = 90;
+                }
+                if (aWasImpact && a.getAllEffects().some(eff => eff.type === 'vengeance_knockback')) {
+                    b.vengeanceWallSource = a;
+                    b.vengeanceWallTimer = 90;
+                }
 
                 // Impact damage uses attacker ATK minus defender DEF, with ±5% variance.
                 // Behemoth's Ultimate Impact deals 220% of this normal impact damage.
                 const calculateImpactDamage = (attacker, defender) => {
-                    const baseImpact = Math.max(0, attacker.stats.atk - (defender.stats.def || 0));
-                    const impactMultiplier = (attacker.parts.battleCap.id === 'bc_behemoth' && attacker.isUltimateImpact) ? 2.20 : 1.0;
+                    const isHattoriHanzo = attacker.parts.battleCap.id === 'bc_hattori_hanzo';
+                    const attackPower = isHattoriHanzo ? attacker.stats.atk * 0.60 : attacker.stats.atk;
+                    const baseImpact = Math.max(0, attackPower - (defender.stats.def || 0));
+                    const impactMultiplier = (!isHattoriHanzo && attacker.parts.battleCap.id === 'bc_behemoth' && attacker.isUltimateImpact) ? 2.20 : 1.0;
                     const variance = 1 + (Math.random() - 0.5) * 0.10;
                     return baseImpact * impactMultiplier * variance;
                 };
 
                 if (bWasImpact) {
+                    // Count Shuriken progress only when this Impact collision reaches the hit branch.
+                    if (b.getAllEffects().some(eff => eff.type === 'shuriken_volley')) {
+                        b.shurikenImpactCount = (b.shurikenImpactCount || 0) + 1;
+                    }
                     dmg1 = calculateImpactDamage(b, a);
                     b.isImpact = false;
                     b.isUltimateImpact = false;
                     b.impactState = 'normal';
-                    b.impactCooldownTimer = b.stats.interval * 60;
+                    b.impactCooldownTimer = getImpactIntervalFrames(b, b.stats.interval);
 
                     let gB = (b.parts.battleCap.type === 'Attack' ? 25 : 0) + (b.parts.driver && b.parts.driver.id === 'drv_rage' ? 15 : 0);
                     if (gB > 0) b.ultimateGauge = Math.min(100, b.ultimateGauge + gB);
@@ -3833,7 +4475,7 @@
                             if (eff.type === 'break') {
                                 if (!b.effectCooldowns[idx]) b.effectCooldowns[idx] = 0;
                                 if (b.effectCooldowns[idx] <= 0) {
-                                    b.effectCooldowns[idx] = eff.cooldown;
+                                    b.effectCooldowns[idx] = getPartsSkillCooldownFrames(eff.cooldown, b);
                                     a.breakTimer = eff.duration;
                                     a.breakDmgPerTick = b.stats.atk * 0.25;
                                     a.breakTickTimer = 60; // 1.0s (60 frames)
@@ -3850,11 +4492,15 @@
                 }
 
                 if (aWasImpact) {
+                    // Count Shuriken progress only when this Impact collision reaches the hit branch.
+                    if (a.getAllEffects().some(eff => eff.type === 'shuriken_volley')) {
+                        a.shurikenImpactCount = (a.shurikenImpactCount || 0) + 1;
+                    }
                     dmg2 = calculateImpactDamage(a, b);
                     a.isImpact = false;
                     a.isUltimateImpact = false;
                     a.impactState = 'normal';
-                    a.impactCooldownTimer = a.stats.interval * 60;
+                    a.impactCooldownTimer = getImpactIntervalFrames(a, a.stats.interval);
 
                     let gA = (a.parts.battleCap.type === 'Attack' ? 25 : 0) + (a.parts.driver && a.parts.driver.id === 'drv_rage' ? 15 : 0);
                     if (gA > 0) a.ultimateGauge = Math.min(100, a.ultimateGauge + gA);
@@ -3879,7 +4525,7 @@
                             if (eff.type === 'break') {
                                 if (!a.effectCooldowns[idx]) a.effectCooldowns[idx] = 0;
                                 if (a.effectCooldowns[idx] <= 0) {
-                                    a.effectCooldowns[idx] = eff.cooldown;
+                                    a.effectCooldowns[idx] = getPartsSkillCooldownFrames(eff.cooldown, a);
                                     b.breakTimer = eff.duration;
                                     b.breakDmgPerTick = a.stats.atk * 0.25;
                                     b.breakTickTimer = 60; // 1.0s (60 frames)
@@ -3915,7 +4561,14 @@
                 let finalDmg2 = aWasImpact ? dmg2 : (bWasImpact ? 0 : dmg2);
 
                 if (finalDmg1 > 0 && !a.dead) {
-                    a.takeDamage(finalDmg1, true, true, b, bWasImpact);
+                    const bIsHattoriImpact = bWasImpact && b.parts && b.parts.battleCap && b.parts.battleCap.id === 'bc_hattori_hanzo';
+                    const bComboCount = bIsHattoriImpact ? (b.hattoriUltimateActive ? 3 : 2) : 1;
+                    for (let comboHit = 0; comboHit < bComboCount; comboHit++) {
+                        if (a.dead) break;
+                        a.takeDamage(finalDmg1, true, true, b, bWasImpact);
+                    }
+                    if (bIsHattoriImpact) triggerHattoriClawVisual(a, bComboCount);
+                    if (bWasImpact) tryTriggerBatterFollowUp(b, a);
                     if (b.parts && b.parts.battleCap && b.parts.battleCap.id === 'bc_beelzebub') {
                         let eff = b.getAllEffects().find(e => e.type === 'beelzebub_absorb');
                         let chance = eff ? eff.chance : 0.30;
@@ -3930,7 +4583,14 @@
                     }
                 }
                 if (finalDmg2 > 0 && !b.dead) {
-                    b.takeDamage(finalDmg2, true, true, a, aWasImpact);
+                    const aIsHattoriImpact = aWasImpact && a.parts && a.parts.battleCap && a.parts.battleCap.id === 'bc_hattori_hanzo';
+                    const aComboCount = aIsHattoriImpact ? (a.hattoriUltimateActive ? 3 : 2) : 1;
+                    for (let comboHit = 0; comboHit < aComboCount; comboHit++) {
+                        if (b.dead) break;
+                        b.takeDamage(finalDmg2, true, true, a, aWasImpact);
+                    }
+                    if (aIsHattoriImpact) triggerHattoriClawVisual(b, aComboCount);
+                    if (aWasImpact) tryTriggerBatterFollowUp(a, b);
                     if (a.parts && a.parts.battleCap && a.parts.battleCap.id === 'bc_beelzebub') {
                         let eff = a.getAllEffects().find(e => e.type === 'beelzebub_absorb');
                         let chance = eff ? eff.chance : 0.30;
@@ -3956,6 +4616,7 @@
                 function updateZones() {
             for (let i = arenaZones.length - 1; i >= 0; i--) {
                 let zone = arenaZones[i];
+                if (chronosTimeStopFrames > 0 && chronosTimeStopOwner && zone.casterSide !== chronosTimeStopOwner.side) continue;
                 zone.duration -= gameSpeed;
                 zone.tickTimer -= gameSpeed;
                 if (zone.tickTimer <= 0) {
@@ -3978,6 +4639,7 @@
             // Update Creations (orbs)
             for (let i = arenaCreations.length - 1; i >= 0; i--) {
                 let c = arenaCreations[i];
+                if (chronosTimeStopFrames > 0 && chronosTimeStopOwner && c.casterSide !== chronosTimeStopOwner.side) continue;
                 c.duration -= gameSpeed;
                 if (c.duration <= 0) {
                     arenaCreations.splice(i, 1);
@@ -4023,10 +4685,303 @@
             });
         }
 
+        class Projectile {
+            constructor(owner, target, config = {}) {
+                this.owner = owner;
+                this.target = target;
+                this.config = { ...PROJECTILE_DEFAULT_CONFIG, ...config };
+                this.x = Number.isFinite(config.startX) ? config.startX : owner.x;
+                this.y = Number.isFinite(config.startY) ? config.startY : owner.y;
+                const dx = target.x - this.x;
+                const dy = target.y - this.y;
+                const distance = Math.hypot(dx, dy) || 1;
+                this.vx = (dx / distance) * this.config.speed;
+                this.vy = (dy / distance) * this.config.speed;
+                this.age = 0;
+                this.hitCooldownTimer = 0;
+                this.dead = false;
+            }
+            update() {
+                if (this.dead || !this.target || this.target.dead || this.target.timeTeleportStage === 2) {
+                    this.dead = true;
+                    return;
+                }
+                this.x += this.vx * gameSpeed;
+                this.y += this.vy * gameSpeed;
+                this.age += gameSpeed;
+                if (this.hitCooldownTimer > 0) {
+                    this.hitCooldownTimer = Math.max(0, this.hitCooldownTimer - gameSpeed);
+                }
+                const targetDistance = Math.hypot(this.x - this.target.x, this.y - this.target.y);
+                const arenaDistance = Math.hypot(this.x - centerX, this.y - centerY);
+                if (targetDistance <= this.target.radius + this.config.size && this.hitCooldownTimer <= 0) {
+                    const attackerAttack = this.owner.stats.atk || 0;
+                    const defenderDefense = this.target.stats.def || 0;
+                    const rawDamage = (attackerAttack * this.config.attackRatio) - defenderDefense;
+                    const varianceMultiplier = 1 + ((Math.random() * 2 - 1) * 0.05);
+                    let damage = Math.max(0, rawDamage * varianceMultiplier);
+                    const burstEffect = this.owner.getAllEffects().find(eff => eff.type === 'burst_projectile');
+                    if (burstEffect && Math.random() < burstEffect.chance) {
+                        damage *= burstEffect.damageMultiplier;
+                    }
+                    const projectileDefenseEffect = this.target.getAllEffects().find(eff => eff.type === 'projectile_damage_reduction');
+                    const projectileReduction = projectileDefenseEffect ? Math.max(0, Math.min(1, projectileDefenseEffect.reduction)) : 0;
+                    const mitigatedDamage = damage * (1 - projectileReduction);
+                    this.target.takeDamage(mitigatedDamage, true, true, this.owner, false);
+                    const coronaEffect = this.owner.getAllEffects().find(eff => eff.type === 'corona_projectile_hit');
+                    if (coronaEffect) {
+                        this.owner.ultimateGauge = Math.min(100, this.owner.ultimateGauge + coronaEffect.ultimateGain);
+                        this.owner.coronaCooldownBuffTimer = coronaEffect.duration;
+                        if (this.owner.side === 'left') updateSkillHexagons();
+                    }
+                    const infusionEffect = this.owner.getAllEffects().find(eff => eff.type === 'infusion_projectile_heal');
+                    if (infusionEffect && mitigatedDamage > 0) {
+                        this.owner.applyHeal(mitigatedDamage * infusionEffect.healRatio);
+                    }
+                    const sopranoEffect = this.owner.getAllEffects().find(eff => eff.type === 'soprano_break_projectile');
+                    if (sopranoEffect && this.owner.sopranoBreakCooldownTimer <= 0) {
+                        this.target.breakTimer = sopranoEffect.duration;
+                        this.target.breakDmgPerTick = this.owner.stats.atk * 0.25;
+                        this.target.breakTickTimer = 60;
+                        this.owner.sopranoBreakCooldownTimer = getPartsSkillCooldownFrames(sopranoEffect.cooldown, this.owner);
+                        addAilmentText(this.target.x, this.target.y, 'BREAK!');
+                    }
+                    if (this.config.knockbackForce > 0) {
+                        const knockbackDx = this.target.x - this.owner.x;
+                        const knockbackDy = this.target.y - this.owner.y;
+                        const knockbackDistance = Math.hypot(knockbackDx, knockbackDy) || 1;
+                        this.target.vx += (knockbackDx / knockbackDistance) * this.config.knockbackForce;
+                        this.target.vy += (knockbackDy / knockbackDistance) * this.config.knockbackForce;
+                    }
+                    if (this.config.persistOnHit) {
+                        this.hitCooldownTimer = this.config.hitCooldownFrames || 0;
+                    } else {
+                        this.dead = true;
+                        return;
+                    }
+                }
+                if (arenaDistance - this.config.size > ARENA_RADIUS || this.age >= this.config.lifetime) {
+                    this.dead = true;
+                }
+            }
+            draw(ctx) {
+                if (this.dead) return;
+                const px = this.x * scale;
+                const py = this.y * scale;
+                const radius = this.config.size * scale;
+                const angle = Math.atan2(this.vy, this.vx);
+                ctx.save();
+                ctx.translate(px, py);
+                ctx.rotate(angle);
+                ctx.fillStyle = this.config.color;
+                ctx.strokeStyle = this.config.outlineColor || '#111827';
+                ctx.lineWidth = this.config.outlineColor ? Math.max(2, 2.5 * scale) : Math.max(1, 1.5 * scale);
+                ctx.shadowColor = this.config.shadowColor || this.config.color;
+                ctx.shadowBlur = 8 * scale;
+                ctx.beginPath();
+                if (this.config.shape === 'blade') {
+                    const bladeLength = radius * 3.6;
+                    const bladeWidth = radius * 0.48;
+                    ctx.moveTo(bladeLength * 0.62, 0);
+                    ctx.lineTo(-bladeLength * 0.5, -bladeWidth);
+                    ctx.lineTo(-bladeLength * 0.30, 0);
+                    ctx.lineTo(-bladeLength * 0.5, bladeWidth);
+                    ctx.strokeStyle = this.config.outlineColor || '#E53935';
+                    ctx.lineWidth = Math.max(2, 2.5 * scale);
+                } else if (this.config.shape === 'triangle') {
+                    ctx.moveTo(radius * 1.5, 0);
+                    ctx.lineTo(-radius, -radius * 0.8);
+                    ctx.lineTo(-radius, radius * 0.8);
+                } else if (this.config.shape === 'diamond') {
+                    ctx.moveTo(radius * 1.35, 0);
+                    ctx.lineTo(0, -radius);
+                    ctx.lineTo(-radius * 1.35, 0);
+                    ctx.lineTo(0, radius);
+                } else if (this.config.shape === 'sonic_wave') {
+                    // Authentic Wi-Fi-style signal: two nested, rounded, right-facing arcs.
+                    // The projectile is rotated to its travel direction by the caller above.
+                    ctx.save();
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+                    ctx.strokeStyle = '#FFFFFF';
+                    ctx.shadowColor = this.config.shadowColor || '#4B9DFF';
+                    ctx.shadowBlur = 12 * scale;
+                    // Large outer Wi-Fi arc.
+                    ctx.beginPath();
+                    ctx.lineWidth = Math.max(6, radius * 0.25);
+                    ctx.arc(-radius * 0.85, 0, radius * 2.40, -0.55, 0.55);
+                    ctx.stroke();
+                    // Smaller inner arc, closer to the outer arc, flatter, and shifted backward.
+                    ctx.beginPath();
+                    ctx.lineWidth = Math.max(5, radius * 0.22);
+                    ctx.arc(-radius * 0.95, 0, radius * 1.80, -0.58, 0.58);
+                    ctx.stroke();
+                    ctx.restore();
+                    // This branch renders its own strokes and must bypass the generic fill path.
+                    ctx.restore();
+                    return;
+                } else if (this.config.shape === 'note') {
+                    // Solid double eighth-note silhouette, matching the requested "🎵" form.
+                    // Explicitly force a white stroke as well as a white fill so no dark
+                    // default outline makes any part of the note look non-white.
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.strokeStyle = '#FFFFFF';
+                    ctx.lineWidth = Math.max(1.5, 1.8 * scale);
+                    ctx.beginPath();
+                    ctx.ellipse(-radius * 0.55, radius * 0.62, radius * 0.42, radius * 0.27, -0.18, 0, Math.PI * 2);
+                    ctx.ellipse(radius * 0.55, radius * 0.34, radius * 0.42, radius * 0.27, -0.18, 0, Math.PI * 2);
+                    ctx.rect(-radius * 0.18, -radius * 1.15, radius * 0.18, radius * 1.72);
+                    ctx.rect(radius * 0.92, -radius * 1.45, radius * 0.18, radius * 1.72);
+                    ctx.moveTo(-radius * 0.18, -radius * 1.15);
+                    ctx.lineTo(radius * 1.10, -radius * 1.45);
+                    ctx.lineTo(radius * 1.10, -radius * 1.03);
+                    ctx.lineTo(-radius * 0.18, -radius * 0.73);
+                    ctx.closePath();
+                } else {
+                    ctx.arc(0, 0, radius, 0, Math.PI * 2);
+                }
+                ctx.closePath();
+                ctx.fill();
+                if (this.config.shape === 'circle' && this.config.outlineColor) {
+                    // Draw the configured outline as a dedicated outer ring so it cannot be hidden by the fill.
+                    ctx.save();
+                    ctx.shadowBlur = 0;
+                    ctx.strokeStyle = this.config.outlineColor;
+                    ctx.lineWidth = Math.max(3, 3.5 * scale);
+                    ctx.beginPath();
+                    ctx.arc(0, 0, radius + ctx.lineWidth * 0.5, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.restore();
+                } else if (this.config.shape !== 'circle') {
+                    ctx.stroke();
+                }
+                ctx.restore();
+            }
+        }
+        function updateProjectiles() {
+            for (let i = projectiles.length - 1; i >= 0; i--) {
+                if (chronosTimeStopFrames > 0 && chronosTimeStopOwner && projectiles[i].owner !== chronosTimeStopOwner) continue;
+                projectiles[i].update();
+                if (projectiles[i].dead) projectiles.splice(i, 1);
+            }
+        }
+        function updateHyperspaceOrbs() {
+            for (let i = hyperspaceOrbs.length - 1; i >= 0; i--) {
+                const orb = hyperspaceOrbs[i];
+                if (chronosTimeStopFrames > 0 && chronosTimeStopOwner && orb.owner !== chronosTimeStopOwner) continue;
+                if (!orb.owner || orb.owner.dead || !gameRunning) {
+                    hyperspaceOrbs.splice(i, 1);
+                    continue;
+                }
+                const hyperspaceEffect = orb.owner.getAllEffects().find(eff => eff.type === 'hyperspace_orbs');
+                if (!hyperspaceEffect) {
+                    hyperspaceOrbs.splice(i, 1);
+                    continue;
+                }
+                // The orb remains stationary at the exact position where it spawned.
+                const target = orb.owner === bey1 ? bey2 : bey1;
+                if (orb.launchTimer > 0 && target && !target.dead && target.timeTeleportStage !== 2) {
+                    const contactDistance = Math.hypot(orb.x - target.x, orb.y - target.y);
+                    if (contactDistance <= target.radius + orb.radius) {
+                        // Resolve the same 50% ATK - DEF projectile formula, variance, and projectile effects.
+                        const attackerAttack = orb.owner.stats.atk || 0;
+                        const defenderDefense = target.stats.def || 0;
+                        const rawDamage = (attackerAttack * 0.50) - defenderDefense;
+                        const varianceMultiplier = 1 + ((Math.random() * 2 - 1) * 0.05);
+                        let damage = Math.max(0, rawDamage * varianceMultiplier);
+                        const burstEffect = orb.owner.getAllEffects().find(eff => eff.type === 'burst_projectile');
+                        if (burstEffect && Math.random() < burstEffect.chance) damage *= burstEffect.damageMultiplier;
+                        const projectileDefenseEffect = target.getAllEffects().find(eff => eff.type === 'projectile_damage_reduction');
+                        const projectileReduction = projectileDefenseEffect ? Math.max(0, Math.min(1, projectileDefenseEffect.reduction)) : 0;
+                        const mitigatedDamage = damage * (1 - projectileReduction);
+                        target.takeDamage(mitigatedDamage, true, true, orb.owner, false);
+                        const coronaEffect = orb.owner.getAllEffects().find(eff => eff.type === 'corona_projectile_hit');
+                        if (coronaEffect) {
+                            if (!orb.owner.deathKnightRevelationActive) orb.owner.ultimateGauge = Math.min(100, orb.owner.ultimateGauge + coronaEffect.ultimateGain);
+                            orb.owner.coronaCooldownBuffTimer = coronaEffect.duration;
+                            if (orb.owner.side === 'left') updateSkillHexagons();
+                        }
+                        const infusionEffect = orb.owner.getAllEffects().find(eff => eff.type === 'infusion_projectile_heal');
+                        if (infusionEffect && mitigatedDamage > 0) orb.owner.applyHeal(mitigatedDamage * infusionEffect.healRatio);
+                        const sopranoEffect = orb.owner.getAllEffects().find(eff => eff.type === 'soprano_break_projectile');
+                        if (sopranoEffect && orb.owner.sopranoBreakCooldownTimer <= 0) {
+                            target.breakTimer = sopranoEffect.duration;
+                            target.breakDmgPerTick = orb.owner.stats.atk * 0.25;
+                            target.breakTickTimer = 60;
+                            orb.owner.sopranoBreakCooldownTimer = getPartsSkillCooldownFrames(sopranoEffect.cooldown, orb.owner);
+                            addAilmentText(target.x, target.y, 'BREAK!');
+                        }
+                        const knockbackDx = target.x - orb.owner.x;
+                        const knockbackDy = target.y - orb.owner.y;
+                        const knockbackDistance = Math.hypot(knockbackDx, knockbackDy) || 1;
+                        target.vx += (knockbackDx / knockbackDistance) * 12;
+                        target.vy += (knockbackDy / knockbackDistance) * 12;
+                        hyperspaceOrbs.splice(i, 1);
+                        continue;
+                    }
+                }
+                orb.launchTimer -= gameSpeed;
+                if (orb.launchTimer <= 0) {
+                    if (target && !target.dead) {
+                        projectiles.push(new Projectile(orb.owner, target, {
+                            attackRatio: 0.50,
+                            speed: hyperspaceEffect.speed,
+                            size: orb.radius * 0.85,
+                            shape: 'circle',
+                            color: orb.color,
+                            outlineColor: orb.outlineColor,
+                            startX: orb.x,
+                            startY: orb.y,
+                            knockbackForce: 12,
+                            lifetime: 180
+                        }));
+                    }
+                    hyperspaceOrbs.splice(i, 1);
+                }
+            }
+        }
+        function drawHyperspaceOrbs(ctx) {
+            for (const orb of hyperspaceOrbs) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(orb.x * scale, orb.y * scale, orb.radius * scale, 0, Math.PI * 2);
+                ctx.fillStyle = orb.color;
+                ctx.fill();
+                ctx.lineWidth = Math.max(2, 2.5 * scale);
+                ctx.strokeStyle = orb.outlineColor;
+                ctx.shadowColor = orb.outlineColor;
+                ctx.shadowBlur = 6 * scale;
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+        function drawProjectiles(ctx) {
+            for (const projectile of projectiles) projectile.draw(ctx);
+        }
+        function capTransientVisualArrays() {
+            const caps = [
+                [damageTexts, 80], [ailmentTexts, 40], [windGustVisuals, 24],
+                [hattoriClawVisuals, 24], [hyperspaceOrbs, 12], [projectiles, 48],
+                [arenaZones, 16], [arenaCreations, 24]
+            ];
+            for (const [list, max] of caps) {
+                if (list.length > max) list.splice(0, list.length - max);
+            }
+        }
+        function updateChronosArenaFilter() {
+            const chronosActive = chronosTimeStopFrames > 0 && chronosTimeStopOwner;
+            const arenaScreen = getCachedElement('arenaScreen');
+            const nextChronosClassState = !!chronosActive;
+            if (arenaScreen && arenaScreen._chronosTimeStopClassState !== nextChronosClassState) {
+                arenaScreen.classList.toggle('chronos-time-stop', nextChronosClassState);
+                arenaScreen._chronosTimeStopClassState = nextChronosClassState;
+            }
+        }
         function animate() {
+            updateChronosArenaFilter();
             if (gameRunning && !gamePaused && bey1 && bey2 && !bey1.dead && !bey2.dead) {
                 battleTimeSeconds += (1 / 60) * gameSpeed;
-                document.getElementById('battleTimer').textContent = formatTime(battleTimeSeconds);
+                getCachedElement('battleTimer').textContent = formatTime(battleTimeSeconds);
             }
 
             aCtx.clearRect(0, 0, arenaCanvas.width, arenaCanvas.height);
@@ -4047,6 +5002,25 @@
                     cinematicOverlay.classList.remove('active');
                     arenaContainer.style.transform = 'scale(1)';
                     arenaContainer.style.transformOrigin = 'center center';
+                    [bey1, bey2].forEach(mermaid => {
+                        if (!mermaid || !mermaid.mermaidUltimatePending) return;
+                        mermaid.mermaidUltimatePending = false;
+                        const mermaidUltimateEffect = mermaid.getAllEffects().find(eff => eff.type === 'mermaid_ultimate');
+                        const opponent = (mermaid === bey1) ? bey2 : bey1;
+                        if (mermaidUltimateEffect && opponent && !opponent.dead) {
+                            projectiles.push(new Projectile(mermaid, opponent, {
+                                attackRatio: mermaidUltimateEffect.attackRatio,
+                                speed: mermaidUltimateEffect.speed,
+                                size: mermaidUltimateEffect.size,
+                                shape: mermaidUltimateEffect.shape,
+                                color: mermaidUltimateEffect.color,
+                                shadowColor: mermaidUltimateEffect.shadowColor,
+                                persistOnHit: true,
+                                hitCooldownFrames: mermaidUltimateEffect.hitCooldownFrames,
+                                lifetime: mermaidUltimateEffect.lifetime
+                            }));
+                        }
+                    });
                 }
             }
 
@@ -4069,15 +5043,15 @@
             updateZones();
             drawZones(aCtx);
 
-            const powerMeter = document.getElementById('powerMeterBar');
+            const powerMeter = getCachedElement('powerMeterBar');
 
             if (launchingPhase) {
                 aCtx.save();
                 aCtx.scale(scale, scale);
 
                 // --- DOM LAUNCHER UPDATE (Outside arena frame layer) ---
-                const p1DOM = document.getElementById('p1LauncherDOM');
-                const enemyDOM = document.getElementById('enemyLauncherDOM');
+                const p1DOM = getCachedElement('p1LauncherDOM');
+                const enemyDOM = getCachedElement('enemyLauncherDOM');
 
                 if (p1DOM && bey1) {
                     p1DOM.classList.remove('hidden');
@@ -4090,7 +5064,7 @@
                     p1DOM.style.left = domX + 'px';
                     p1DOM.style.top = domY + 'px';
 
-                    const fingerDOM = document.getElementById('idleFingerDOM');
+                    const fingerDOM = getCachedElement('idleFingerDOM');
                     if (fingerDOM) {
                         if (!launchAimStart) {
                             fingerDOM.classList.remove('hidden');
@@ -4182,7 +5156,7 @@
                         powerMeter.classList.remove('hidden');
                         powerMeter.style.display = 'block';
                     }
-                    const indicatorArrow = document.getElementById('powerIndicatorArrow');
+                    const indicatorArrow = getCachedElement('powerIndicatorArrow');
                     if (indicatorArrow) indicatorArrow.style.top = (launchPowerProgress * 100) + '%';
                 } else {
                     if (powerMeter) {
@@ -4195,21 +5169,23 @@
 
                 aCtx.restore();
             } else {
-                const p1CardElemElem = document.getElementById('p1LauncherCard');
-                const enemyCardElem = document.getElementById('enemyLauncherCard');
+                const p1CardElemElem = getCachedElement('p1LauncherCard');
+                const enemyCardElem = getCachedElement('enemyLauncherCard');
                 if (p1CardElemElem) { p1CardElemElem.classList.add('hidden'); p1CardElemElem.style.display = 'none'; }
                 if (enemyCardElem) { enemyCardElem.classList.add('hidden'); enemyCardElem.style.display = 'none'; }
                 if (powerMeter) { powerMeter.classList.add('hidden'); powerMeter.style.display = 'none'; }
 
-                const fingerDOM = document.getElementById('idleFingerDOM');
+                const fingerDOM = getCachedElement('idleFingerDOM');
                 if (fingerDOM) { fingerDOM.classList.add('hidden'); fingerDOM.style.display = 'none'; }
             }
 
             // Draw white wind gust visuals attached to and rotating with caster bey
             for (let i = windGustVisuals.length - 1; i >= 0; i--) {
                 let wg = windGustVisuals[i];
+                // Freeze enemy wind-gust rotation and lifetime during Chronos time stop.
+                if (chronosTimeStopFrames > 0 && chronosTimeStopOwner && wg.caster !== chronosTimeStopOwner) continue;
                 wg.life -= gameSpeed;
-                if (wg.life <= 0 || !wg.caster || wg.caster.dead) {
+                if (wg.life <= 0 || !wg.caster || wg.caster.dead || wg.caster.timeTeleportStage === 2) {
                     windGustVisuals.splice(i, 1);
                     continue;
                 }
@@ -4246,11 +5222,47 @@
                 bey1.update(bey2, shouldUpdateUI);
                 bey2.update(bey1, shouldUpdateUI);
             }
-            
+                        if (!gamePaused) {
+                updateHyperspaceOrbs();
+                updateProjectiles();
+            }
             handleTowerBattleEnd();
+            updateChronosArenaFilter();
             bey1.draw(bCtx);
             bey2.draw(bCtx);
+            // Draw idle Hyperspace orbs above the Bey layer so they remain visible at their stored spawn spots.
+            drawHyperspaceOrbs(bCtx);
+            drawProjectiles(bCtx);
+            capTransientVisualArrays();
 
+            for (let i = hattoriClawVisuals.length - 1; i >= 0; i--) {
+                const claw = hattoriClawVisuals[i];
+                if (!claw.target || claw.target.dead || claw.target.timeTeleportStage === 2) {
+                    hattoriClawVisuals.splice(i, 1);
+                    continue;
+                }
+                claw.life -= gameSpeed;
+                const clawRatio = Math.max(0, claw.life / claw.maxLife);
+                bCtx.save();
+                bCtx.translate(claw.target.x * scale, claw.target.y * scale);
+                bCtx.scale(scale, scale);
+                bCtx.rotate(claw.target.angle - 0.35);
+                bCtx.lineCap = 'round';
+                const clawCount = claw.clawCount || 3;
+                for (let clawIndex = 0; clawIndex < clawCount; clawIndex++) {
+                    const offset = (clawIndex - (clawCount - 1) / 2) * 13;
+                    bCtx.beginPath();
+                    bCtx.moveTo(claw.target.radius * 0.35 + offset, -claw.target.radius - 15);
+                    bCtx.quadraticCurveTo(claw.target.radius + 18 + offset, 0, claw.target.radius * 0.35 + offset, claw.target.radius + 15);
+                    bCtx.lineWidth = 5;
+                    bCtx.strokeStyle = `rgba(255, 255, 255, ${clawRatio})`;
+                    bCtx.shadowColor = 'rgba(255,255,255,0.9)';
+                    bCtx.shadowBlur = 8;
+                    bCtx.stroke();
+                }
+                bCtx.restore();
+                if (claw.life <= 0) hattoriClawVisuals.splice(i, 1);
+            }
             for (let i = damageTexts.length - 1; i >= 0; i--) {
                 const dt = damageTexts[i];
                 dt.y -= 0.5;
@@ -4294,10 +5306,11 @@
             }
 
             if (flashFrames > 0) {
-                flashOverlay.style.backgroundColor = `rgba(255, 0, 0, ${0.4 * (flashFrames / 6)})`;
+                const flashColor = `rgba(255, 0, 0, ${0.4 * (flashFrames / 6)})`;
+                if (flashOverlay.style.backgroundColor !== flashColor) flashOverlay.style.backgroundColor = flashColor;
                 flashFrames--;
-            } else {
-                flashOverlay.style.backgroundColor = `rgba(255, 0, 0, 0)`;
+            } else if (flashOverlay.style.backgroundColor !== 'rgba(255, 0, 0, 0)') {
+                flashOverlay.style.backgroundColor = 'rgba(255, 0, 0, 0)';
             }
             requestAnimationFrame(animate);
         }
@@ -4633,18 +5646,21 @@
         function resetArenaBattle() {
             towerBattleMode = false;
             towerResultHandled = false;
-            document.getElementById('arenaScreen').classList.remove('tower-arena');
+            getCachedElement('arenaScreen').classList.remove('tower-arena');
             arenaZones = [];
             arenaCreations = [];
+            hyperspaceOrbs = [];
             gameRunning = false;
             launchingPhase = true;
             launchAimStart = null;
             launchAimCurrent = null;
             gamePaused = false;
             battleTimeSeconds = 0;
-            document.getElementById('battleTimer').textContent = '00:00';
+            getCachedElement('battleTimer').textContent = '00:00';
             hitStopFrames = 0; shakeFrames = 0; flashFrames = 0;
             cinematicFrames = 0;
+            chronosTimeStopFrames = 0;
+            chronosTimeStopOwner = null;
             preemptiveAttackFrames = 0;
             preemptiveAttackShown = false;
             if (preemptiveAttackOverlay) preemptiveAttackOverlay.classList.remove('active');
@@ -4652,7 +5668,9 @@
             arenaContainer.style.transform = 'scale(1)';
             arenaContainer.style.transformOrigin = 'center center';
             damageTexts = [];
+            hattoriClawVisuals = [];
             ailmentTexts = [];
+            projectiles = [];
             startIconSvg.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
             bey1.beelzebubUltimateActive = false;
             bey2.beelzebubUltimateActive = false;
@@ -4671,9 +5689,11 @@
             launchAimCurrent = null;
             gamePaused = false;
             battleTimeSeconds = 0;
-            document.getElementById('battleTimer').textContent = '00:00';
+            getCachedElement('battleTimer').textContent = '00:00';
             hitStopFrames = 0; shakeFrames = 0; flashFrames = 0;
             cinematicFrames = 0;
+            chronosTimeStopFrames = 0;
+            chronosTimeStopOwner = null;
             preemptiveAttackFrames = 0;
             preemptiveAttackShown = false;
             if (preemptiveAttackOverlay) preemptiveAttackOverlay.classList.remove('active');
@@ -4681,6 +5701,7 @@
             arenaContainer.style.transform = 'scale(1)';
             arenaContainer.style.transformOrigin = 'center center';
             damageTexts = [];
+            hattoriClawVisuals = [];
             ailmentTexts = [];
             
             startIconSvg.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
@@ -4888,6 +5909,7 @@
         window.manualLoadGame = manualLoadGame;
         window.manualResetGame = manualResetGame;
 
+
         // ==============================
 // Automatic Save / Load System
 // ==============================
@@ -4947,7 +5969,7 @@ document.addEventListener('visibilitychange', () => {
 window.addEventListener('pagehide', autoSaveGame);
 window.addEventListener('beforeunload', autoSaveGame);
 
-        
+
         currencyDebugModal.addEventListener('click', e => { if (e.target === currencyDebugModal) window.closeCurrencyDebug(); });
 
         updateHomeUI();
@@ -5051,13 +6073,14 @@ window.addEventListener('beforeunload', autoSaveGame);
         // Immediately enter launcher ready phase on load
         arenaZones = [];
         arenaCreations = [];
+        hyperspaceOrbs = [];
         launchingPhase = true;
         launchAimStart = null;
         launchAimCurrent = null;
         gameRunning = false;
         gamePaused = false;
         battleTimeSeconds = 0;
-        document.getElementById('battleTimer').textContent = '00:00';
+        getCachedElement('battleTimer').textContent = '00:00';
         startIconSvg.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
         
 
@@ -5069,7 +6092,6 @@ window.addEventListener('beforeunload', autoSaveGame);
         bey2.vx = 0; bey2.vy = 0;
 
         animate();
-        
     </script>
 </body>
 </html>
