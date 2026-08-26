@@ -1791,7 +1791,7 @@
 
                 const PARTS = {
             battleCap: [
-                { id: "bc_test", rarity: "Normal", name: "Battle Cap", color: "#BFC1C2", type: "Balance", spinType: "right", atk: 10, def: 100, health: 1000, stamina: 100, weight: 10, interval: 5.0, desc: "For testing purpose.", effects: [] },      
+                { id: "bc_test", rarity: "Normal", name: "Battle Cap", color: "#BFC1C2", type: "Balance", spinType: "right", atk: 10, def: 100, health: 10000, stamina: 100, weight: 10, interval: 5.0, desc: "For testing purpose.", effects: [] },      
                 { id: "bc_behemoth", rarity: "Normal", name: "Behemoth", color: "#f39c12", type: "Attack", spinType: "right", atk: 124, def: 17, health: 1469, stamina: 30, weight: 16.0, interval: 2.2, desc: "Ultimate: Launches a devastating Impact. Special effect: Grants extra charge to Ultimate through impact.", effects: [{ type: 'behemoth_ultimate', desc: 'Ultimate: Devastating Impact (500% dmg, 0.8-0.9s duration)' }] },
                 { id: "bc_kaguyahime", rarity: "Normal", name: "Kaguyahime", color: "#f1c40f", type: "Stamina", spinType: "right", atk: 110, def: 27, health: 2256, stamina: 40, weight: 12.0, interval: 3.4, desc: "Ultimate: Creates a zone in the center of the stadium that continuously recovers the Top's HP. Special effect: Speeds up automatic charging to charge Ultimate.", effects: [{ type: 'kaguyahime_ultimate', desc: 'Ultimate: Center Healing AOE (1% HP/s for 10s)' }] },
                 { id: "bc_athena", rarity: "Normal", name: "Athena", color: "#5dade2", type: "Defense", spinType: "right", atk: 92, def: 47, health: 2013, stamina: 32, weight: 21.0, interval: 2.7, desc: "Ultimate: Guarantees block for a set duration, and reduces damage taken. Special effect: Grants extra charge to Ultimate when blocking enemy's impacts.", effects: [{ type: 'athena_ultimate', desc: 'Ultimate: Guaranteed Block (100% Block chance) for 3s' }] },
@@ -1801,7 +1801,7 @@
                 { id: "bc_beelzebub", rarity: "Legendary", name: "Beelzebub", color: "#c0392b", type: "Stamina", spinType: "left", atk: 133, def: 27, health: 1533, stamina: 52, weight: 15.0, interval: 0, desc: "Ultimate: Unleashes spines that pierce surrounding opponents and absorb their HP. Special effect: Cannot use Impacts. Grants a chance of absorbing HP and charging Ultimate when hitting opponents.", effects: [{ type: "beelzebub_absorb", chance: 0.30, gaugeGain: 25, desc: "No Impacts. 30% chance on collision to heal HP = damage dealt & gain +25 Ultimate Gauge." }, { type: "beelzebub_ultimate", desc: "Ultimate: Red Spine Tether (60% ATK damage/s for 4s, heals caster. Cuts off if too far.)" }] },
                 { id: "bc_chronos", rarity: "Legendary", name: "Chronos", color: "#FBDA79", type: "Balance", spinType: "right", atk: 140, def: 30, health: 1578, stamina: 43, weight: 13.0, interval: 4.0, desc: "Ultimate: Stops all opponents, creations, and Projectiles, and greatly speeds up the Bey's skill cooldown. Special Effect: Increases Ultimate charging and skill cooldown speed based on remaining HP percentage.", effects: [{ type: "chronos_time_stop", duration: 210, cooldownMultiplier: 0.50, desc: "Ultimate: Selective time stop for 3.5s. Opponent systems are paused while Chronos acts normally." }] },
                 { id: "bc_death_knight", rarity: "Epic", name: "Death Knight", color: "#F5DB8E", type: "Attack", spinType: "right", atk: 151, def: 27, health: 1597, stamina: 30, weight: 16.0, interval: 2.2, desc: "Ultimate: Enters Revelation mode, sacrificing all Defense for greater attack power, and launch an additional impact every time collide with outer wall of arena. Special Effect: Increases charging through impacts when not in Revelation mode.", effects: [{ type: "death_knight_revelation", defenseToAttackMultiplier: 2.0, wallImpact: true, desc: "Permanent Revelation mode: converts Defense into Attack and triggers an extra Impact on wall collision." }] },
-                { id: "bc_mermaid", rarity: "Epic", name: "Mermaid", color: "#FED058", type: "Balance", spinType: "right", atk: 153, def: 22, health: 1578, stamina: 43, weight: 13.0, interval: 3.0, desc: "Ultimate: Unleashes a slow-moving but large sonic wave Projectile. Special Effect: Speeds up automatic charging to charge Ultimate. Impacys become long-range sonic wave Projectiles.", effects: [{ type: "mermaid_sonic_impact", autoChargeMultiplier: 2.0, speed: 6, size: 15, shape: "note", color: "#FFFFFF", shadowColor: "#4B9DFF", attackRatio: 1.0, hitCooldownFrames: 45, lifetime: 600, desc: "Impacts become persistent music-note sonic waves." }, { type: "mermaid_ultimate", attackRatio: 1.80, speed: 3, size: 50, shape: "sonic_wave", color: "#FFFFFF", shadowColor: "#4B9DFF", hitCooldownFrames: 45, lifetime: 600, desc: "Ultimate: Large persistent two-arc sonic wave." }] },
+                { id: "bc_mermaid", rarity: "Epic", name: "Mermaid", color: "#FED058", type: "Balance", spinType: "right", atk: 153, def: 22, health: 1578, stamina: 43, weight: 13.0, interval: 3.0, desc: "Ultimate: Unleashes a slow-moving but large sonic wave Projectile. Special Effect: Speeds up automatic charging to charge Ultimate. Impacts become long-range sonic wave Projectiles.", effects: [{ type: "mermaid_sonic_impact", autoChargeMultiplier: 2.0, speed: 6, size: 15, shape: "note", color: "#FFFFFF", shadowColor: "#4B9DFF", attackRatio: 1.0, hitCooldownFrames: 45, lifetime: 600, desc: "Impacts become persistent music-note sonic waves." }, { type: "mermaid_ultimate", attackRatio: 1.80, speed: 3, size: 50, shape: "sonic_wave", color: "#FFFFFF", shadowColor: "#4B9DFF", hitCooldownFrames: 45, lifetime: 600, desc: "Ultimate: Large persistent two-arc sonic wave." }] },
             ],
             weightRing: [
                 { id: "wr_test", rarity: "Normal", name: "Weight Ring", color: "#EBECEC", type: "Balance", atk: 0, def: 0, health: 0, stamina: 0, weight: 0, interval: 0, desc: "For testing purpose.", effects: [] },                
@@ -2111,14 +2111,21 @@
                 const chronosEffect = owner.getAllEffects().find(eff => eff.type === 'chronos_time_stop');
                 if (chronosEffect) multiplier *= chronosEffect.cooldownMultiplier;
             }
-            return Math.max(1, Math.round(flatReducedFrames * multiplier));
+            // Cap total Parts Skill cooldown reduction at -50%.
+            // Flat reduction is applied first, then percentage modifiers, but the
+            // final effective cooldown can never be less than half the base cooldown.
+            const cappedMultiplier = Math.max(0.50, multiplier);
+            const minimumCooldownFrames = Math.max(1, Math.round(baseFrames * 0.50));
+            return Math.max(minimumCooldownFrames, Math.max(1, Math.round(flatReducedFrames * cappedMultiplier)));
         }
         function getImpactIntervalFrames(ownerOrParts, baseSeconds) {
             const parts = ownerOrParts && ownerOrParts.parts ? ownerOrParts.parts : ownerOrParts;
             const hasSurge = parts && parts.weightRing && parts.weightRing.id === 'wr_surge';
             const hasRampage = parts && parts.driver && parts.driver.id === 'drv_rampage';
             const reduction = (hasSurge ? 0.60 : 1.0) * (hasRampage ? 0.75 : 1.0);
-            return Math.max(120, Math.round((baseSeconds || 3) * 60 * reduction));
+            // Cap total Impact interval reduction at -50%.
+            const cappedReduction = Math.max(0.50, reduction);
+            return Math.max(120, Math.round((baseSeconds || 3) * 60 * cappedReduction));
         }
 
         let hyperspaceOrbs = []; // Hyperspace idle orb entities
@@ -5909,8 +5916,7 @@
         window.manualLoadGame = manualLoadGame;
         window.manualResetGame = manualResetGame;
 
-
-        // ==============================
+// ==============================
 // Automatic Save / Load System
 // ==============================
 
