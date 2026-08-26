@@ -2223,9 +2223,13 @@
                 drawBeyOnContext(enemyCtx, 60, 60, 49, enemy.parts, 0.5, false, false, 1.0);
                 list.appendChild(row);
             }
-            // Floors are rendered from 100 down to 1. Start at the bottom so Floor 1
-            // is visible first; scrolling upward then climbs toward Floor 100.
-            list.scrollTop = list.scrollHeight;
+            // Automatically center the player’s current or most recently unlocked floor.
+            const focusFloor = Math.max(1, Math.min(100, towerCurrentFloor || towerUnlockedFloor || 1));
+            const focusRow = list.querySelector(`[data-tower-floor=\"${focusFloor}\"]`) ||
+                list.querySelector(`[data-tower-floor=\"${Math.max(1, Math.min(100, towerUnlockedFloor || 1))}\"]`);
+            if (focusRow) {
+                setTimeout(() => focusRow.scrollIntoView({ block: 'center', behavior: 'auto' }), 0);
+            }
         }
         function openTowerEnemyDetails(floor) {
             const enemy = getTowerEnemy(floor); const level = enemy.level;
@@ -5974,6 +5978,7 @@ document.addEventListener('visibilitychange', () => {
 // Save when the page is being closed, refreshed, or navigated away from.
 window.addEventListener('pagehide', autoSaveGame);
 window.addEventListener('beforeunload', autoSaveGame);
+
 
 
         currencyDebugModal.addEventListener('click', e => { if (e.target === currencyDebugModal) window.closeCurrencyDebug(); });
