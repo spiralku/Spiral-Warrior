@@ -1596,6 +1596,20 @@
         .championship-ranker-status { min-height:18px; padding:3px 14px 0; color:rgba(255,255,255,.78); font-size:11px; font-weight:800; text-align:center; }
         .championship-ranker-status.online { color:#b8ffd0; }
         .championship-ranker-status.error { color:#ffd0d0; }
+        .first-nickname-modal { position:fixed; inset:0; z-index:1200; display:flex; align-items:center; justify-content:center; padding:20px; background:rgba(0,0,0,.68); box-sizing:border-box; }
+        .first-nickname-modal.hidden { display:none; }
+        .first-nickname-box { width:min(360px, 100%); overflow:hidden; border:2px solid rgba(255,255,255,.82); border-radius:12px; background:#e4e5e8; box-shadow:0 12px 35px rgba(0,0,0,.5); color:#17202b; }
+        .first-nickname-title-row { padding:14px 16px; background:linear-gradient(135deg,#050711 0%,#101b49 100%); color:#fff; text-align:center; }
+        .first-nickname-title-row h3 { margin:0; font-size:20px; font-weight:1000; letter-spacing:.5px; }
+        .first-nickname-body { padding:20px 18px 18px; text-align:center; }
+        .first-nickname-description { margin:0 0 14px; color:#39414d; font-size:13px; font-weight:800; }
+        #firstNicknameInput { width:100%; box-sizing:border-box; padding:11px 12px; border:2px solid #89909a; border-radius:8px; background:#fff; color:#1b2430; font-size:16px; font-weight:700; text-align:center; outline:none; }
+        #firstNicknameInput:focus { border-color:#315b92; box-shadow:0 0 0 3px rgba(49,91,146,.18); }
+        .first-nickname-error { min-height:17px; margin-top:7px; color:#c52e38; font-size:11px; font-weight:900; }
+        #firstNicknameOkBtn { min-width:112px; margin-top:8px; padding:10px 24px; border:2px solid #fff; border-radius:9px; background:#f4c53e; color:#17100a; font-size:15px; font-weight:1000; cursor:pointer; box-shadow:0 3px 8px rgba(0,0,0,.25); }
+        #firstNicknameOkBtn:active { transform:translateY(1px); }
+        #firstNicknameOkBtn:disabled { opacity:.55; cursor:default; }
+        .championship-ranker-list { display:flex; flex-direction:column; gap:8px; margin:0 -14px; padding:0 14px 18px; }
         .championship-ranker-list { display:flex; flex-direction:column; gap:8px; margin:0 -14px; padding:0 14px 18px; }
         .championship-ranker-row { position:relative; display:grid; grid-template-columns:34px minmax(118px,1.25fr) minmax(155px,2fr) minmax(90px,.8fr) 78px; align-items:center; gap:8px; min-height:88px; padding:8px 9px; border-radius:10px; background:rgba(220,220,225,.48); color:#fff; box-sizing:border-box; }
         .championship-ranker-row.empty { background:rgba(150,150,155,.27); color:rgba(255,255,255,.42); }
@@ -2062,9 +2076,21 @@
             </div>
             <button id="closeCurrencyDebugBtn" type="button" onclick="var m=document.getElementById('currencyDebugModal');m.classList.add('hidden');m.classList.remove('is-open');m.style.display='none';" style="width:100%;margin-top:12px;">Close</button>
         </div>
+        </div>
+    <!-- FIRST-ENTRY NICKNAME POPUP -->
+    <div id="firstNicknameModal" class="first-nickname-modal hidden" role="dialog" aria-modal="true" aria-labelledby="firstNicknameTitle">
+        <div class="first-nickname-box">
+            <div class="first-nickname-title-row"><h3 id="firstNicknameTitle">Edit Nickname</h3></div>
+            <div class="first-nickname-body">
+                <p class="first-nickname-description">Please input 4 ~ 16 characters</p>
+                <input id="firstNicknameInput" type="text" minlength="4" maxlength="16" autocomplete="nickname" placeholder="Enter nickname">
+                <div id="firstNicknameError" class="first-nickname-error" role="alert" aria-live="polite"></div>
+                <button id="firstNicknameOkBtn" type="button">OK</button>
+            </div>
+        </div>
     </div>
-
     <!-- PART DETAIL POPUP MODAL -->
+
     <div id="partModal" class="hidden">
         <div class="modal-content">
             <div class="modal-row modal-title-row">
@@ -2382,6 +2408,52 @@
             const input = document.getElementById('playerNameInput');
             if (input && document.activeElement !== input) input.value = playerName || 'Player';
         }
+        const FIRST_NICKNAME_PROMPT_KEY = 'bey_first_nickname_prompt_completed_v1';
+        function closeFirstNicknamePrompt() {
+            const modal = document.getElementById('firstNicknameModal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+        }
+        function openFirstNicknamePrompt() {
+            let completed = false;
+            try { completed = localStorage.getItem(FIRST_NICKNAME_PROMPT_KEY) === '1'; } catch (e) {}
+            if (completed) return;
+            const modal = document.getElementById('firstNicknameModal');
+            const input = document.getElementById('firstNicknameInput');
+            const error = document.getElementById('firstNicknameError');
+            if (!modal || !input) return;
+            input.value = (playerName && playerName !== 'Player') ? playerName : '';
+            if (error) error.textContent = '';
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+            setTimeout(() => { input.focus(); input.select(); }, 30);
+        }
+        function confirmFirstNickname() {
+            const input = document.getElementById('firstNicknameInput');
+            const error = document.getElementById('firstNicknameError');
+            const nextName = input ? String(input.value || '').trim() : '';
+            if (nextName.length < 4 || nextName.length > 16) {
+                if (error) error.textContent = 'Nickname must be 4 ~ 16 characters.';
+                if (input) input.focus();
+                return;
+            }
+            playerName = nextName;
+            updateProfileNameUI();
+            try { localStorage.setItem(FIRST_NICKNAME_PROMPT_KEY, '1'); } catch (e) {}
+            closeFirstNicknamePrompt();
+            if (typeof manualSaveGame === 'function') manualSaveGame();
+            if (typeof scheduleChampionshipPlayerSync === 'function') scheduleChampionshipPlayerSync();
+        }
+        function initializeFirstNicknamePrompt() {
+            const show = () => setTimeout(openFirstNicknamePrompt, 0);
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', show, { once: true });
+            else show();
+        }
+        document.getElementById('firstNicknameOkBtn')?.addEventListener('click', confirmFirstNickname);
+        document.getElementById('firstNicknameInput')?.addEventListener('keydown', event => {
+            if (event.key === 'Enter') { event.preventDefault(); confirmFirstNickname(); }
+        });
         function updatePlayerUidUI() {
             const uidDisplay = document.getElementById('playerUidDisplay');
             if (uidDisplay) uidDisplay.textContent = `UID: ${playerUid}`;
@@ -7494,6 +7566,7 @@ window.addEventListener('beforeunload', autoSaveGame);
         updateHomeUI();
         updateEnemyGarageUI();
         renderTowerFloors();
+        initializeFirstNicknamePrompt();
 
         document.getElementById('enemyModalCancelBtn').addEventListener('click', () => {
             const modal = document.getElementById('enemyGarageModal');
