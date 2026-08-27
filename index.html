@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-0XCKHNDNT7"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -392,6 +390,20 @@
             top: 0;
             left: 0;
         }
+        .hp-damage-preview {
+            height: 100%;
+            width: 0%;
+            position: absolute;
+            top: 0;
+            z-index: 2;
+            background: #ff3030;
+            opacity: 0;
+            pointer-events: none;
+            transition: width 0.1s ease, left 0.1s ease, right 0.1s ease, opacity 0.25s ease;
+        }
+        #hp-damage-preview1 { right: 0; }
+        #hp-damage-preview2 { left: 0; }
+        #hp-damage-preview2 { background: #FBDF4D; }
         .shield-bar-fill {
             height: 100%;
             width: 0%;
@@ -1406,6 +1418,7 @@
             </div>
             <div class="bar-container hp-bar-container hp-player">
                 <div id="hp-fill1" class="hp-bar-fill"></div>
+                <div id="hp-damage-preview1" class="hp-damage-preview"></div>
                 <div id="shield-fill1" class="shield-bar-fill"></div>
                 <div id="hp-text1" class="hp-bar-label">500</div>
             </div>
@@ -1422,6 +1435,7 @@
             </div>
             <div class="bar-container hp-bar-container hp-enemy">
                 <div id="hp-fill2" class="hp-bar-fill"></div>
+                <div id="hp-damage-preview2" class="hp-damage-preview"></div>
                 <div id="shield-fill2" class="shield-bar-fill"></div>
                 <div id="hp-text2" class="hp-bar-label">500</div>
             </div>
@@ -2844,6 +2858,8 @@
 
                 this.ultimateGauge = 0;
                 this.autoGaugeTickTimer = 0;
+                this.damagePreviewAmount = 0;
+                this.damagePreviewTimer = 0;
 
                 this.shield = 0;
                 this.maxShield = 0;
@@ -3090,6 +3106,7 @@
                 if (stmEl) stmEl.textContent = Math.round(this.stats.stamina);
 
                 const hpFill = document.getElementById(`hp-fill${id}`);
+                const hpDamagePreview = document.getElementById(`hp-damage-preview${id}`);
                 const shieldFill = document.getElementById(`shield-fill${id}`);
                 const rpmFill = document.getElementById(`rpm-fill${id}`);
                 const hpText = document.getElementById(`hp-text${id}`);
@@ -3103,6 +3120,19 @@
                 const hpRatio = Math.max(0, this.health / this.maxHealth);
                 hpFill.style.width = (hpRatio * 100) + '%';
                 hpFill.style.background = isEnemyBar ? '#e53935' : '#7CFC00';
+
+                if (hpDamagePreview) {
+                    const previewRatio = Math.max(0, Math.min(1, this.damagePreviewAmount / Math.max(1, this.maxHealth)));
+                    hpDamagePreview.style.width = (previewRatio * 100) + '%';
+                    hpDamagePreview.style.opacity = this.damagePreviewTimer > 0 && previewRatio > 0 ? '1' : '0';
+                    if (isEnemyBar) {
+                        hpDamagePreview.style.left = (hpRatio * 100) + '%';
+                        hpDamagePreview.style.right = 'auto';
+                    } else {
+                        hpDamagePreview.style.right = (hpRatio * 100) + '%';
+                        hpDamagePreview.style.left = 'auto';
+                    }
+                }
 
                 if (this.shieldTimer > 0 && this.maxShield > 0) {
                     const shieldRatio = Math.min(1.0, this.shield / this.maxHealth);
@@ -3155,6 +3185,8 @@
                 this.rpm = this.maxRpm;
                 this.ultimateGauge = 0;
                 this.autoGaugeTickTimer = 0;
+                this.damagePreviewAmount = 0;
+                this.damagePreviewTimer = 0;
                 this.shield = 0;
                 this.maxShield = 0;
                 this.shieldTimer = 0;
@@ -3593,16 +3625,21 @@
                 this.currentOpponent = target;
                 this.stats = this.calculateStats();
                 this.updateArenaOccupation();
+                if (this.damagePreviewTimer > 0) {
+                    this.damagePreviewTimer -= gameSpeed;
+                    if (this.damagePreviewTimer <= 0) {
+                        this.damagePreviewTimer = 0;
+                        this.damagePreviewAmount = 0;
+                        this.updateUI();
+                    }
+                }
                 this.autoGaugeTickTimer += gameSpeed;
-                if (this.autoGaugeTickTimer >= 48) { // 0.8 seconds at 60fps
+                if (this.autoGaugeTickTimer >= 30) { // 0.5 seconds at 60fps
                     this.autoGaugeTickTimer = 0;
                     if (!this.deathKnightRevelationActive) {
                     let addAmount = 1;
-                    if (this.parts.battleCap.type === 'Stamina') {
-                        addAmount += 2;
-                    }
-                    if (this.shieldTimer > 0) {
-                        addAmount *= 2; // Shield active doubles ultimate charging rate
+                    if (this.parts.driver && this.parts.driver.id === 'drv_piety' && this.shieldTimer > 0) {
+                        addAmount *= 1.5; // Piety: +50% automatic Ultimate charging while its shield is active.
                     }
                     
                     // Check Sprint weight ring effect: if enemy ultimate gauge > self gauge, speed up auto charging rate by 200% (3x total)
@@ -3610,13 +3647,16 @@
                     let hasSprint = effectsList.some(e => e.type === 'sprint_gauge');
                     if (hasSprint && target && !target.dead) {
                         if (target.ultimateGauge > this.ultimateGauge) {
-                            addAmount *= 3; // +200% speed increase
+                            addAmount *= 2; // +100% speed increase
                         }
                     }
                     if (this.parts.battleCap && this.parts.battleCap.id === 'bc_chronos') {
                         const chronosHpRatio = Math.max(0, Math.min(1, this.health / Math.max(1, this.maxHealth)));
                         // Chronos gains 0.5% automatic Ultimate charge rate per 1% current HP.
                         addAmount *= (1 + (chronosHpRatio * 0.50));
+                    }
+                    if (this.parts.battleCap && this.parts.battleCap.id === 'bc_kaguyahime') {
+                        addAmount *= 2.20; // Kaguyahime: +120% automatic Ultimate charging rate.
                     }
                     if (this.parts.battleCap && this.parts.battleCap.id === 'bc_mermaid') {
                         addAmount *= 2.0; // Mermaid: +100% automatic Ultimate charging rate.
@@ -4076,7 +4116,8 @@
                                 shadowColor: mermaidEffect.shadowColor,
                                 persistOnHit: true,
                                 hitCooldownFrames: mermaidEffect.hitCooldownFrames,
-                                lifetime: mermaidEffect.lifetime
+                                lifetime: mermaidEffect.lifetime,
+                                countsAsImpact: true
                             }));
                             this.impactCooldownTimer = intervalFrames;
                         } else {
@@ -4172,7 +4213,10 @@
                 let isImpactHit = forcedIsImpactHit !== null ? forcedIsImpactHit : (attacker && attacker.isImpact && attacker.impactState === 'dashing');
                 let blockChance = 0.0;
                 if (this.parts.battleCap.type === 'Defense' && isImpactHit) {
-                    blockChance = 0.30;
+                    blockChance = 0.24;
+                }
+                if (this.parts.battleCap.id === 'bc_athena' && isImpactHit) {
+                    blockChance = 0.28;
                 }
                 if (this.parts.battleCap.id === 'bc_athena' && this.athenaBlockTimer > 0 && isImpactHit) {
                     blockChance = 1.0;
@@ -4213,8 +4257,8 @@
                     this.stats = this.calculateStats();
                     this.updateUI();
 
-                    // Blocker gains +25 ultimate gauge on successful block (plus extra if Defense type battle top / rage driver)
-                    let blockerGaugeGain = 25;
+                    // Blocker gains +20 Ultimate gauge on successful block.
+                    let blockerGaugeGain = 20;
                     this.ultimateGauge = Math.min(100, this.ultimateGauge + blockerGaugeGain);
 
                     let gaugeGain = 0;
@@ -4226,8 +4270,8 @@
                     }
                     if (this.side === 'left') updateSkillHexagons();
 
-                    if (attacker && Math.random() < 0.30) {
-                        const counterDmg = this.stats.def;
+                    if (attacker) {
+                        const counterDmg = this.stats.def * 2.0;
                         addAilmentText(this.x, this.y, "COUNTER!");
                         attacker.takeDamage(counterDmg, true, true, this);
                     }
@@ -4258,7 +4302,13 @@
 
                 if (amount <= 0) return;
 
+                const healthBeforeDamage = this.health;
                 this.health -= amount;
+                const actualHealthDamage = Math.max(0, healthBeforeDamage - this.health);
+                if (actualHealthDamage > 0) {
+                    this.damagePreviewAmount = actualHealthDamage;
+                    this.damagePreviewTimer = 18; // Keep the red damage segment visible briefly before fading.
+                }
                 if (attacker && attacker !== this && attacker.parts && attacker.parts.driver && attacker.parts.driver.id === 'drv_berserker') {
                     attacker.berserkerAttackStacks = Math.min(30, (attacker.berserkerAttackStacks || 0) + 1);
                     attacker.stats = attacker.calculateStats();
@@ -4457,13 +4507,14 @@
                     if (b.getAllEffects().some(eff => eff.type === 'shuriken_volley')) {
                         b.shurikenImpactCount = (b.shurikenImpactCount || 0) + 1;
                     }
+                    const bWasUltimateImpact = b.isUltimateImpact;
                     dmg1 = calculateImpactDamage(b, a);
                     b.isImpact = false;
                     b.isUltimateImpact = false;
                     b.impactState = 'normal';
                     b.impactCooldownTimer = getImpactIntervalFrames(b, b.stats.interval);
 
-                    let gB = (b.parts.battleCap.type === 'Attack' ? 25 : 0) + (b.parts.driver && b.parts.driver.id === 'drv_rage' ? 15 : 0);
+                    let gB = bWasUltimateImpact ? 0 : ((b.parts.battleCap.type === 'Attack' ? 25 : 20) + (b.parts.driver && b.parts.driver.id === 'drv_rage' ? 10 : 0));
                     if (gB > 0) b.ultimateGauge = Math.min(100, b.ultimateGauge + gB);
 
                     const b2Effects = b.getAllEffects();
@@ -4507,13 +4558,14 @@
                     if (a.getAllEffects().some(eff => eff.type === 'shuriken_volley')) {
                         a.shurikenImpactCount = (a.shurikenImpactCount || 0) + 1;
                     }
+                    const aWasUltimateImpact = a.isUltimateImpact;
                     dmg2 = calculateImpactDamage(a, b);
                     a.isImpact = false;
                     a.isUltimateImpact = false;
                     a.impactState = 'normal';
                     a.impactCooldownTimer = getImpactIntervalFrames(a, a.stats.interval);
 
-                    let gA = (a.parts.battleCap.type === 'Attack' ? 25 : 0) + (a.parts.driver && a.parts.driver.id === 'drv_rage' ? 15 : 0);
+                    let gA = aWasUltimateImpact ? 0 : ((a.parts.battleCap.type === 'Attack' ? 25 : 20) + (a.parts.driver && a.parts.driver.id === 'drv_rage' ? 10 : 0));
                     if (gA > 0) a.ultimateGauge = Math.min(100, a.ultimateGauge + gA);
 
                     const b1Effects = a.getAllEffects();
@@ -4739,6 +4791,14 @@
                     const projectileReduction = projectileDefenseEffect ? Math.max(0, Math.min(1, projectileDefenseEffect.reduction)) : 0;
                     const mitigatedDamage = damage * (1 - projectileReduction);
                     this.target.takeDamage(mitigatedDamage, true, true, this.owner, false);
+                    if (this.config.countsAsImpact && mitigatedDamage > 0) {
+                        const impactGaugeGain = this.owner.parts.battleCap.type === 'Attack' ? 25 : 20;
+                        const rageGaugeGain = this.owner.parts.driver && this.owner.parts.driver.id === 'drv_rage' ? 10 : 0;
+                        if (!this.owner.deathKnightRevelationActive) {
+                            this.owner.ultimateGauge = Math.min(100, this.owner.ultimateGauge + impactGaugeGain + rageGaugeGain);
+                            if (this.owner.side === 'left') updateSkillHexagons();
+                        }
+                    }
                     const coronaEffect = this.owner.getAllEffects().find(eff => eff.type === 'corona_projectile_hit');
                     if (coronaEffect) {
                         this.owner.ultimateGauge = Math.min(100, this.owner.ultimateGauge + coronaEffect.ultimateGain);
@@ -4966,6 +5026,68 @@
                 ctx.restore();
             }
         }
+        function drawMiniHealthBar(ctx, bey) {
+            if (!bey || launchingPhase || bey.visible === false || bey.timeTeleportStage === 2) return;
+            const barWidth = 86 * scale;
+            const barHeight = 11.2 * scale;
+            const x = bey.x * scale - barWidth / 2;
+            const renderRadius = bey.arenaOccupationPending ? bey.radius * 1.3 : bey.radius;
+            const y = bey.y * scale - (renderRadius + 22.5) * scale;
+            const maxHp = Math.max(1, bey.maxHealth || 1);
+            const hpRatio = Math.max(0, Math.min(1, (bey.health || 0) / maxHp));
+            const isEnemy = bey.side !== 'left';
+            const hpColor = isEnemy ? '#e53935' : '#7CFC00';
+            const previewRatio = Math.max(0, Math.min(1, (bey.damagePreviewAmount || 0) / maxHp));
+            const previewActive = (bey.damagePreviewTimer || 0) > 0 && previewRatio > 0;
+            const shieldRatio = (bey.shieldTimer > 0 && bey.maxShield > 0)
+                ? Math.max(0, Math.min(1, bey.shield / maxHp)) : 0;
+
+            ctx.save();
+            ctx.lineWidth = Math.max(1, 1.5 * scale);
+            ctx.strokeStyle = '#111';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.72)';
+            ctx.fillRect(x - 1 * scale, y - 1 * scale, barWidth + 2 * scale, barHeight + 2 * scale);
+            ctx.strokeRect(x - 1 * scale, y - 1 * scale, barWidth + 2 * scale, barHeight + 2 * scale);
+
+            // Empty/background portion.
+            ctx.fillStyle = isEnemy ? '#641e16' : '#145a32';
+            ctx.fillRect(x, y, barWidth, barHeight);
+
+            // Current HP fill, matching the main health-bar colors.
+            ctx.fillStyle = hpColor;
+            if (isEnemy) {
+                ctx.fillRect(x, y, barWidth * hpRatio, barHeight);
+            } else {
+                ctx.fillRect(x + barWidth * (1 - hpRatio), y, barWidth * hpRatio, barHeight);
+            }
+
+            // Temporary red damage-preview segment, positioned in the portion just lost.
+            if (previewActive) {
+                ctx.fillStyle = isEnemy ? '#FBDF4D' : '#ff3030';
+                if (isEnemy) {
+                    ctx.fillRect(x + barWidth * hpRatio, y, barWidth * previewRatio, barHeight);
+                } else {
+                    ctx.fillRect(x + barWidth * (1 - hpRatio - previewRatio), y, barWidth * previewRatio, barHeight);
+                }
+            }
+
+            // Shield overlay follows the current shield-fill convention.
+            if (shieldRatio > 0) {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+                if (isEnemy) {
+                    ctx.fillRect(x, y, barWidth * shieldRatio, barHeight);
+                } else {
+                    ctx.fillRect(x + barWidth * (1 - shieldRatio), y, barWidth * shieldRatio, barHeight);
+                }
+            }
+            ctx.restore();
+        }
+
+        function drawMiniHealthBars(ctx) {
+            drawMiniHealthBar(ctx, bey1);
+            drawMiniHealthBar(ctx, bey2);
+        }
+
         function drawProjectiles(ctx) {
             for (const projectile of projectiles) projectile.draw(ctx);
         }
@@ -5241,6 +5363,8 @@
             updateChronosArenaFilter();
             bey1.draw(bCtx);
             bey2.draw(bCtx);
+            // Mini HP bars remain screen-aligned and therefore do not rotate with either Bey.
+            drawMiniHealthBars(bCtx);
             // Draw idle Hyperspace orbs above the Bey layer so they remain visible at their stored spawn spots.
             drawHyperspaceOrbs(bCtx);
             drawProjectiles(bCtx);
