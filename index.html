@@ -225,6 +225,100 @@
 );
         }
 
+        #camusUltimateOverlay {
+            position: absolute;
+            inset: 0;
+            display: none;
+            background: rgba(65, 180, 255, 0.22);
+            z-index: 20;
+            pointer-events: none;
+        }
+        #camusUltimateOverlay.active { display: block; }
+
+        /* Hodur Ultimate scene overlay: stronger transparent red, below UI controls. */
+        #hodurUltimateOverlay {
+            position: absolute;
+            inset: 0;
+            display: none;
+            background: rgba(210, 28, 42, 0.34);
+            z-index: 20;
+            pointer-events: none;
+        }
+        #hodurUltimateOverlay.active { display: block; }
+        #hodurSwordSequence {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .hodur-ultimate-sword {
+            position: absolute;
+            width: 56px;
+            height: 184px;
+            transform: translate(-50%, -50%) rotate(var(--sword-angle, 0deg)) scale(var(--sword-scale, 1));
+            transform-origin: 50% 50%;
+            opacity: 0;
+            will-change: left, top, transform, opacity;
+            filter: drop-shadow(0 0 6px rgba(255, 45, 45, 0.9));
+        }
+        /* Enlarged Shadow-style blade projectile: white outer silhouette with red core. */
+        .hodur-ultimate-sword::before {
+            content: '';
+            position: absolute;
+            left: 2px;
+            top: 0;
+            width: 52px;
+            height: 184px;
+            background: #fff;
+            clip-path: polygon(50% 0%, 100% 86%, 68% 78%, 50% 100%, 32% 78%, 0% 86%);
+        }
+        .hodur-ultimate-sword::after {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 6px;
+            width: 40px;
+            height: 172px;
+            background: rgba(215, 25, 32, 0.9);
+            clip-path: polygon(50% 0%, 100% 86%, 68% 77%, 50% 100%, 32% 77%, 0% 86%);
+        }
+        /* Hodur post-delay Ultimate cross-slashes: large red lines with a white outline. */
+        #hodurSlashSequence {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 3;
+        }
+        .hodur-ultimate-slash {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 0;
+            height: 0;
+            transform: translate(-50%, -50%) scale(var(--slash-scale, 1));
+            transform-origin: 50% 50%;
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+        /* Each slash is two separate long red lines, rotated 90 degrees apart to form an X. */
+        .hodur-slash-line {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 220vw;
+            height: 16px;
+            transform-origin: 50% 50%;
+            background: #d71920;
+            filter: drop-shadow(0 0 10px rgba(215, 25, 32, 0.95));
+        }
+        .hodur-slash-line-a {
+            transform: translate(-50%, -50%) rotate(var(--slash-line-angle-a, 45deg));
+        }
+        .hodur-slash-line-b {
+            transform: translate(-50%, -50%) rotate(var(--slash-line-angle-b, 135deg));
+        }
         #arenaContainer {
             position: relative;
             width: min(100%, 90dvh, 90vw);
@@ -1402,7 +1496,159 @@
         .part-action-row > .equip-action-btn:hover { background:#6ed8f5; border-color:#126d89; }
         .part-action-row > .equip-action-btn.equipped { background:#2f849d; border-color:#1d5f75; color:#063b58; cursor:default; }
         .part-level { color:#fff; font-size:9px; font-weight:700; }
-    </style>
+    
+        /* Championship lobby and challenge placeholder */
+        #championshipLobbyScreen {
+            min-height: 100%;
+            justify-content: flex-start !important;
+            align-items: stretch !important;
+            overflow-y: auto !important;
+            background: linear-gradient(to bottom, #050508 10%, #101b49 30%, #A15F9D 80%, #8F7FA6 95%);
+            color: #fff;
+            padding-bottom: 92px;
+        }
+        #championshipLobbyScreen .championship-shell {
+            margin-top: 0 !important;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        #championshipLobbyScreen .championship-title-row,
+        #championshipLobbyScreen .championship-enter-row {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        #championshipLobbyScreen .championship-title-row,
+        #threeBeybladeSelect .championship-title-row {
+            width: 100vw;
+            margin-left: calc((100% - 100vw) / 2);
+            margin-right: calc((100% - 100vw) / 2);
+        }
+        .championship-lobby-back-btn {
+            position: absolute;
+            left: 14px;
+            bottom: 18px;
+            z-index: 5;
+            width: 44px;
+            height: 38px;
+            padding: 0;
+            border: 2px solid #fff;
+            border-radius: 9px;
+            background: rgba(70, 70, 78, .78);
+            color: #fff;
+            font-size: 27px;
+            font-weight: 900;
+            line-height: 30px;
+            cursor: pointer;
+        }
+        .championship-lobby-back-btn:active { transform: translateY(1px); background: rgba(50, 50, 58, .9); }
+        #challengeChampionshipScreen {
+            min-height: 100%;
+            justify-content: flex-start !important;
+            align-items: stretch !important;
+            overflow-y: auto;
+            background: linear-gradient(to bottom, #050508 10%, #101b49 30%, #A15F9D 80%, #8F7FA6 95%);
+            color: #fff;
+            padding-bottom: 92px;
+        }
+        .championship-shell { max-width: 760px; margin: 0 auto; padding: 0 14px 28px; }
+        .championship-title-row { margin: 0 -14px 12px; padding: 14px 16px 12px; background: #050505; border-bottom: 2px solid rgba(255,255,255,.22); }
+        .championship-title-row h2 { margin: 0; text-align: center; font-size: 20px; letter-spacing: 1.4px; color: #fff; }
+        .championship-player-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 14px; border-radius:12px; background:rgba(0,0,0,.42); border:1px solid rgba(255,255,255,.22); }
+        .championship-maintenance-row { width:100%; aspect-ratio:1 / 1; min-height:240px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:24px; border-radius:14px; background:rgba(80,80,88,.58); color:#fff; text-align:center; box-shadow:inset 0 1px 2px rgba(255,255,255,.12), 0 5px 14px rgba(8,14,45,.2); }
+        .championship-maintenance-row h3 { margin:0; font-size:25px; font-weight:900; letter-spacing:.5px; }
+        .championship-maintenance-row p { margin:0; font-size:15px; color:rgba(255,255,255,.86); }
+        .championship-player-name { font-size:19px; font-weight:900; }
+        .championship-uid { margin-top:3px; font-size:11px; color:#dce9ff; letter-spacing:.8px; }
+        .championship-section-label { margin:14px 2px 7px; font-size:11px; font-weight:900; letter-spacing:1.2px; color:#fff; text-transform:uppercase; }
+        .championship-cp { flex:0 0 auto; }
+        .championship-cp-label { display:block; font-size:10px; font-weight:900; letter-spacing:1px; }
+        .championship-cp-value { display:block; margin-top:2px; font-size:18px; font-weight:1000; }
+        .championship-menu-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .championship-menu-btn { min-height:42px; border-radius:10px; border:2px solid #fff; background:#777b84; color:#fff; font-size:14px; font-weight:900; letter-spacing:.7px; cursor:pointer; }
+        .championship-menu-btn:active { transform:translateY(1px); background:#62666e; }
+        .championship-loadouts { width:100vw; margin-left:calc((100% - 100vw) / 2); margin-right:calc((100% - 100vw) / 2); display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:9px; padding:12px 10px; border-radius:0; background:rgba(214, 214, 214, .9); border:0; box-shadow:none; }
+        .championship-loadout-card { position:relative; width:88%; min-width:0; justify-self:center; padding:5px 4px 6px; border-radius:10px; background:linear-gradient(to bottom,#6a4ab9 0%,#267dd3 100%); border:2px solid rgba(255,255,255,.75); box-shadow:0 4px 11px rgba(8,14,45,.28); text-align:center; }
+        .championship-loadout-type-icon { position:absolute; top:0; left:0; width:0; height:0; z-index:4; }
+        .championship-loadout-type-icon svg { top:-5px !important; left:-5px !important; }
+        .championship-loadout-selected-star { position:absolute; left:-5px; bottom:-5px; z-index:4; display:none; width:18px; height:18px; color:#f1c40f; font-size:18px; line-height:18px; text-shadow:0 1px 2px rgba(0,0,0,.8); }
+        .championship-loadout-selected-star.active { display:block; }
+        .championship-loadout-card canvas { display:block; width:100%; aspect-ratio:1; height:auto; }
+        .championship-loadout-name { min-height:0; margin:0; font-size:11px; line-height:1.05; font-weight:900; color:#fff; }
+        .championship-loadout-level { margin-top:5px; padding:3px 4px; border-radius:5px; background:rgba(90,90,90,.55); font-size:11px; font-weight:800; color:#fff; }
+        .championship-enter-row { display:flex; justify-content:center; margin-top:17px; }
+        .championship-enter-btn { min-width:140px; padding:11px 28px; border:2px solid #fff; border-radius:11px; background:#f4c53e; color:#17100a; font-size:16px; font-weight:1000; letter-spacing:1px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,.3); }
+        .championship-enter-btn:active { transform:translateY(1px); }
+        .championship-back-btn { margin-top:22px; min-width:110px; padding:9px 18px; border:2px solid #fff; border-radius:10px; background:#596172; color:#fff; font-weight:900; cursor:pointer; }
+        .championship-placeholder { min-height:48vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:25px; border-radius:14px; background:rgba(0,0,0,.28); border:1px solid rgba(255,255,255,.35); }
+        .championship-placeholder h3 { margin:0 0 8px; font-size:24px; }
+        .championship-placeholder p { margin:0; color:#e8e8ff; }
+        .championship-ranker-status { min-height:18px; padding:3px 14px 0; color:rgba(255,255,255,.78); font-size:11px; font-weight:800; text-align:center; }
+        .championship-ranker-status.online { color:#b8ffd0; }
+        .championship-ranker-status.error { color:#ffd0d0; }
+        .championship-ranker-list { display:flex; flex-direction:column; gap:8px; margin:0 -14px; padding:0 14px 18px; }
+        .championship-ranker-row { position:relative; display:grid; grid-template-columns:34px minmax(118px,1.25fr) minmax(155px,2fr) minmax(90px,.8fr) 78px; align-items:center; gap:8px; min-height:88px; padding:8px 9px; border-radius:10px; background:rgba(220,220,225,.48); color:#fff; box-sizing:border-box; }
+        .championship-ranker-row.empty { background:rgba(150,150,155,.27); color:rgba(255,255,255,.42); }
+        .championship-ranker-row.is-player { background:rgba(126,78,176,.58); }
+        .championship-ranker-row.is-player .championship-ranker-player { border-color:rgba(232,210,255,.95); }
+        .championship-rank-number { font-size:18px; font-weight:1000; text-align:center; }
+        .championship-ranker-player { min-width:0; min-height:52px; display:flex; flex-direction:column; justify-content:center; padding:6px 8px; border:2px solid rgba(255,255,255,.92); border-radius:7px; background:rgba(255,255,255,.08); box-sizing:border-box; }
+        .championship-ranker-player-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; font-weight:900; }
+        .championship-ranker-player-uid { margin-top:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:9px; letter-spacing:.5px; color:rgba(255,255,255,.78); }
+        .championship-ranker-loadouts { display:flex; justify-content:center; gap:4px; min-width:0; }
+        .championship-ranker-mini-loadout { width:50px; min-width:0; padding:2px; border-radius:5px; background:rgba(255,255,255,.2); text-align:center; box-sizing:border-box; }
+        .championship-ranker-mini-loadout canvas { display:block; width:44px; height:44px; margin:0 auto; }
+        .championship-ranker-mini-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:7px; font-weight:800; }
+        .championship-ranker-mini-level { margin-top:1px; font-size:8px; font-weight:900; }
+        .championship-ranker-stats { min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+        .championship-ranker-cp { min-width:0; transform:scale(.72); transform-origin:center; }
+        .championship-ranker-cp .combat-power-value { font-size:14px; }
+        .championship-ranker-wins { font-size:11px; font-weight:900; text-align:center; white-space:nowrap; }
+        .championship-ranker-challenge { justify-self:center; width:max-content; min-height:34px; padding:5px 9px; border:2px solid #fff; border-radius:7px; background:#f4c53e; color:#17100a; font-size:10px; font-weight:1000; cursor:pointer; }
+        .championship-ranker-challenge:disabled { border-color:rgba(255,255,255,.25); background:rgba(110,110,115,.45); color:rgba(255,255,255,.42); cursor:not-allowed; }
+        @media (max-width: 720px) { .championship-ranker-row { grid-template-columns:26px minmax(92px,1fr) minmax(145px,1.6fr) 58px 58px; gap:5px; padding:6px; } .championship-ranker-cp { transform:scale(.62); } .championship-ranker-wins { font-size:9px; } .championship-ranker-challenge { font-size:9px; padding-left:4px; padding-right:4px; } }
+        @media (max-width: 520px) { .championship-ranker-row { grid-template-columns:24px minmax(82px,1fr) minmax(126px,1.5fr) 52px 58px; } .championship-ranker-player-name { font-size:11px; } .championship-ranker-player-uid { font-size:8px; } .championship-ranker-mini-loadout { width:40px; } .championship-ranker-mini-loadout canvas { width:35px; height:35px; } .championship-ranker-mini-name { display:none; } }
+        #threeBeybladeSelect { background:linear-gradient(to bottom, #050508 0%, #5E262D 35%, #306A85 50%, #728798 80%, #AEB0B3 100%); overflow-y:auto; }
+        #threeBeybladeSelect .championship-shell { min-height:100%; }
+        .three-beyblade-select-content { display:flex; flex-direction:column; gap:14px; }
+        .three-beyblade-select-section { padding:10px; border-radius:12px; background:rgba(0,0,0,.28); }
+        .three-beyblade-select-player-section { width:100vw; margin-left:calc((100% - 100vw) / 2); margin-right:calc((100% - 100vw) / 2); box-sizing:border-box; border-radius:0; background:rgba(75,189,209,0.7); }
+        .three-beyblade-select-section h3 { margin:0 0 8px; text-align:center; font-size:14px; letter-spacing:1px; }
+        .three-beyblade-select-grid { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; }
+        .three-beyblade-select-card { position:relative; width:min(145px, calc((100vw - 60px) / 3)); height:180px; box-sizing:border-box; min-width:0; justify-self:center; padding:6px; border:2px solid rgba(255,255,255,.45); border-radius:10px; background:rgba(70,90,145,.42); color:#fff; text-align:center; cursor:pointer; }
+        .three-beyblade-select-card.selected { border-color:#f4c53e; box-shadow:0 0 0 2px rgba(244,197,62,.25); }
+        .three-beyblade-select-card.used { opacity:.28; filter:grayscale(1); pointer-events:none; cursor:not-allowed; }
+        .three-beyblade-select-player-section .three-beyblade-select-card { background:#308DAC; border-color:#145E77; }
+        .three-beyblade-select-player-section .three-beyblade-select-card.selected { border-color:#e9fbff; box-shadow:0 0 0 2px rgba(142,224,255,.9), 0 0 10px rgba(142,224,255,.6); }
+        .three-beyblade-select-card canvas { display:block; width:100%; max-width:130px; aspect-ratio:1; height:auto; margin:0 auto 4px; }
+        .three-beyblade-select-card-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; font-weight:900; }
+        .three-beyblade-select-card-level { margin-top:3px; font-size:10px; color:#e9e9ef; }
+        .three-beyblade-select-enemy-layout { position:relative; display:flex; align-items:center; justify-content:center; min-height:240px; }
+        .three-beyblade-select-mystery-wrap { width:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; }
+        .three-beyblade-select-opponent-panel { position:absolute; top:50%; left:calc((100vw - 0%) / 2); transform:translateY(-50%); }
+        .three-beyblade-select-mystery-label { color:#f06a6a; font-size:13px; font-weight:1000; letter-spacing:.5px; }
+        .three-beyblade-select-mystery-card { width:min(145px, calc((100vw - 60px) / 3)); height:180px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; border-color:#f06a6a; background:#b92f38; color:#fff; font-size:76px; line-height:1; font-weight:1000; text-shadow:2px 3px 0 rgba(70,0,0,.55); cursor:default; }
+        .three-beyblade-select-revealed-card { flex-direction:column; gap:2px; font-size:inherit; text-shadow:none; animation:threeBeybladeEnemyFadeIn .32s ease both; }
+        .three-beyblade-select-revealed-card canvas { flex:0 0 auto; width:100%; max-width:130px; aspect-ratio:1; height:auto; margin:0 auto 2px; }
+        .three-beyblade-select-mystery-card.three-beyblade-select-fade-out { animation:threeBeybladeEnemyFadeOut .26s ease both; }
+        @keyframes threeBeybladeEnemyFadeOut { from { opacity:1; transform:scale(1); } to { opacity:0; transform:scale(.96); } }
+        @keyframes threeBeybladeEnemyFadeIn { from { opacity:0; transform:scale(1.04); } to { opacity:1; transform:scale(1); } }
+        .three-beyblade-select-opponent-panel { width:clamp(74px, 22%, 112px); padding:8px; border:2px solid #d43d45; border-radius:10px; background:rgba(58,8,16,.82); }
+        .three-beyblade-select-opponent-panel h3 { margin:0 0 7px; color:#f06a6a; font-size:13px; }
+        .three-beyblade-select-opponent-stack { display:flex; flex-direction:column; align-items:center; gap:5px; }
+        .three-beyblade-select-opponent-panel .three-beyblade-select-card { width:52px; height:52px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; padding:0; border:1px solid rgba(255,150,150,.65); border-radius:5px; background:rgba(105,25,32,.72); cursor:default; }
+        .three-beyblade-select-opponent-panel .three-beyblade-select-card canvas { width:50px; height:50px; margin:0; }
+        .three-beyblade-select-opponent-panel .three-beyblade-select-card-name, .three-beyblade-select-opponent-panel .three-beyblade-select-card-level { display:none; }
+        @media (max-width: 420px) { .three-beyblade-select-enemy-layout { min-height:250px; } .three-beyblade-select-mystery-label { font-size:10px; } .three-beyblade-select-card { width:min(115px, calc((100vw - 60px) / 3)); height:150px; } .three-beyblade-select-mystery-card { width:min(115px, calc((100vw - 60px) / 3)); height:150px; font-size:64px; } .three-beyblade-select-opponent-panel { width:52px; padding:5px; } .three-beyblade-select-opponent-panel h3 { font-size:10px; } .three-beyblade-select-opponent-panel .three-beyblade-select-card { width:38px; height:38px; } .three-beyblade-select-opponent-panel .three-beyblade-select-card canvas { width:36px; height:36px; } }
+        .three-beyblade-select-actions { display:flex; justify-content:center; gap:12px; padding-bottom:18px; }
+        .three-beyblade-select-battle { min-width:132px; padding:11px 24px; border:2px solid #fff; border-radius:10px; background:#f4c53e; color:#17100a; font-size:16px; font-weight:1000; cursor:pointer; }
+        @media (max-width: 420px) { .championship-shell { padding-left:10px; padding-right:10px; } .championship-title-row { margin-left:-10px; margin-right:-10px; } .championship-player-name { font-size:16px; } .championship-loadouts { gap:6px; padding-top:8px; padding-bottom:8px; } .championship-loadout-card { padding-left:3px; padding-right:3px; } .three-beyblade-select-grid { gap:5px; } .three-beyblade-select-card { padding:4px 3px; } .three-beyblade-select-card-name { font-size:9px; } }
+
+    
+
+        #challengeChampionshipScreen .championship-enter-row { position:fixed; left:50%; bottom:14px; transform:translateX(-50%); z-index:40; margin:0; padding:0; pointer-events:none; }
+        #challengeChampionshipScreen .championship-enter-row .championship-back-btn { pointer-events:auto; }
+</style>
 </head>
 <body>
     <div id="flashOverlay"></div>
@@ -1446,6 +1692,21 @@
 
         <div id="container">
             <div id="arenaWrapper">
+                <div id="camusUltimateOverlay" aria-hidden="true"></div>
+                <div id="hodurUltimateOverlay" aria-hidden="true">
+                    <div id="hodurSwordSequence" aria-hidden="true">
+                        <span class="hodur-ultimate-sword" data-sword-index="0"></span>
+                        <span class="hodur-ultimate-sword" data-sword-index="1"></span>
+                        <span class="hodur-ultimate-sword" data-sword-index="2"></span>
+                        <span class="hodur-ultimate-sword" data-sword-index="3"></span>
+                        <span class="hodur-ultimate-sword" data-sword-index="4"></span>
+                        <span class="hodur-ultimate-sword" data-sword-index="5"></span>
+                        <span class="hodur-ultimate-sword" data-sword-index="6"></span>
+                        <span class="hodur-ultimate-sword" data-sword-index="7"></span>
+                        <span class="hodur-ultimate-sword" data-sword-index="8"></span>
+                    </div>
+                    <div id="hodurSlashSequence" aria-hidden="true"></div>
+                </div>
                 <div id="arenaContainer">
                     <canvas id="arena"></canvas>
                     <div id="cinematicOverlay"></div>
@@ -1646,9 +1907,49 @@
                 </div>
                 <div class="home-side-slots">
                     <div class="home-slot adventure-slot">ADVENTURE</div>
-                    <div class="home-slot championship-slot">CHAMPIONSHIP</div>
+                    <div id="championshipHomeButton" class="home-slot championship-slot" role="button" tabindex="0" aria-label="Open Championship Lobby" onclick="window.openChampionshipLobby();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.openChampionshipLobby();}">CHAMPIONSHIP</div>
                 </div>
             </div>
+        </div>
+    </div>
+
+
+    <!-- CHAMPIONSHIP LOBBY SCREEN -->
+    <div id="championshipLobbyScreen" class="screen hidden">
+        <div class="championship-shell">
+            <div class="championship-title-row"><h2>Lobby Championship</h2></div>
+            <div class="championship-player-row">
+                <div><div id="championshipPlayerName" class="championship-player-name">Player</div><div id="championshipPlayerUid" class="championship-uid">UID: —</div></div>
+                <div id="championshipCombatPower" class="combat-power-badge championship-cp" aria-label="Combat Power"></div>
+            </div>
+            <div class="championship-maintenance-row" aria-label="Maintenance placeholder">
+                <h3>Maintenance</h3>
+                <p>Coming soon...</p>
+            </div>
+            <div class="championship-menu-row"><button type="button" class="championship-menu-btn">Receive</button><button type="button" class="championship-menu-btn">Send</button></div>
+            <div id="championshipLoadoutCards" class="championship-loadouts">
+                <div class="championship-loadout-card"><span id="championshipLoadoutTypeIcon0" class="championship-loadout-type-icon" aria-hidden="true"></span><span id="championshipLoadoutSelectedStar0" class="championship-loadout-selected-star" aria-hidden="true">★</span><div id="championshipLoadoutName0" class="championship-loadout-name">Loadout 1</div><canvas id="championshipBeyCanvas0" width="180" height="180"></canvas><div id="championshipLoadoutLevel0" class="championship-loadout-level">Lv. 1</div></div>
+                <div class="championship-loadout-card"><span id="championshipLoadoutTypeIcon1" class="championship-loadout-type-icon" aria-hidden="true"></span><span id="championshipLoadoutSelectedStar1" class="championship-loadout-selected-star" aria-hidden="true">★</span><div id="championshipLoadoutName1" class="championship-loadout-name">Loadout 2</div><canvas id="championshipBeyCanvas1" width="180" height="180"></canvas><div id="championshipLoadoutLevel1" class="championship-loadout-level">Lv. 1</div></div>
+                <div class="championship-loadout-card"><span id="championshipLoadoutTypeIcon2" class="championship-loadout-type-icon" aria-hidden="true"></span><span id="championshipLoadoutSelectedStar2" class="championship-loadout-selected-star" aria-hidden="true">★</span><div id="championshipLoadoutName2" class="championship-loadout-name">Loadout 3</div><canvas id="championshipBeyCanvas2" width="180" height="180"></canvas><div id="championshipLoadoutLevel2" class="championship-loadout-level">Lv. 1</div></div>
+            </div>
+            <div class="championship-enter-row"><button id="championshipEnterButton" type="button" class="championship-enter-btn" onclick="window.openChallengeChampionship();">Enter</button></div>
+        </div>
+        <button type="button" class="championship-lobby-back-btn" aria-label="Back to Home" onclick="document.querySelectorAll('.screen').forEach(function(s){s.classList.add('hidden');}); document.getElementById('homeScreen').classList.remove('hidden'); document.querySelectorAll('.nav-item').forEach(function(n){n.classList.toggle('active', n.getAttribute('data-screen') === 'homeScreen');}); if(window.updateHomeUI) window.updateHomeUI();">&#8592;</button>
+    </div>
+    <!-- REUSABLE THREE-BEYBLADE SELECTION SCREEN -->
+    <div id="threeBeybladeSelect" class="screen hidden">
+        <div class="championship-shell">
+            <div class="championship-title-row"><h2>Match Starting...</h2></div>
+            <div id="threeBeybladeSelectContent" class="three-beyblade-select-content"></div>
+        </div>
+    </div>
+    <!-- CHALLENGE CHAMPIONSHIP RANKER SCREEN -->
+    <div id="challengeChampionshipScreen" class="screen hidden">
+        <div class="championship-shell">
+            <div class="championship-title-row"><h2>Challenge Championship</h2></div>
+            <div id="championshipRankerStatus" class="championship-ranker-status" role="status" aria-live="polite"></div>
+            <div id="championshipRankerList" class="championship-ranker-list" aria-label="Championship rankers"></div>
+            <div class="championship-enter-row"><button type="button" class="championship-back-btn" onclick="window.openChampionshipLobby();">Back</button></div>
         </div>
     </div>
 
@@ -1718,6 +2019,7 @@
     <div id="currencyDebugModal" class="currency-debug-modal hidden">
         <div class="currency-debug-box">
             <h3 style="font-size:15px;text-align:center;margin:0 0 8px;">Debug Menu</h3>
+            <div id="playerUidDisplay" style="font-size:11px;color:#f6d365;font-weight:800;margin:8px 0 4px;text-align:left;">UID: —</div>
             <div style="font-size:10px;color:#62DAF2;font-weight:800;text-transform:uppercase;margin:8px 0 4px;">Player</div>
             <label class="debug-toggle-row"><span>Unlimited Health</span><input id="debugPlayerUnlimitedHealth" type="checkbox" onchange="window.setDebugOverride('playerUnlimitedHealth', this.checked);"></label>
             <label class="debug-toggle-row"><span>Unlimited Stamina</span><input id="debugPlayerUnlimitedStamina" type="checkbox" onchange="window.setDebugOverride('playerUnlimitedStamina', this.checked);"></label>
@@ -1816,7 +2118,9 @@
                 { id: "bc_chronos", rarity: "Legendary", name: "Chronos", color: "#FBDA79", type: "Balance", spinType: "right", atk: 140, def: 30, health: 1578, stamina: 43, weight: 13.0, interval: 4.0, desc: "Ultimate: Stops all opponents, creations, and Projectiles, and greatly speeds up the Bey's skill cooldown. Special Effect: Increases Ultimate charging and skill cooldown speed based on remaining HP percentage.", effects: [{ type: "chronos_time_stop", duration: 210, cooldownMultiplier: 0.50, desc: "Ultimate: Selective time stop for 3.5s. Opponent systems are paused while Chronos acts normally." }] },
                 { id: "bc_death_knight", rarity: "Epic", name: "Death Knight", color: "#F5DB8E", type: "Attack", spinType: "right", atk: 151, def: 27, health: 1597, stamina: 30, weight: 16.0, interval: 2.2, desc: "Ultimate: Enters Revelation mode, sacrificing all Defense for greater attack power, and launch an additional impact every time collide with outer wall of arena. Special Effect: Increases charging through impacts when not in Revelation mode.", effects: [{ type: "death_knight_revelation", defenseToAttackMultiplier: 2.0, wallImpact: true, desc: "Permanent Revelation mode: converts Defense into Attack and triggers an extra Impact on wall collision." }] },
                 { id: "bc_mermaid", rarity: "Epic", name: "Mermaid", color: "#FED058", type: "Balance", spinType: "right", atk: 153, def: 22, health: 1578, stamina: 43, weight: 13.0, interval: 3.0, desc: "Ultimate: Unleashes a slow-moving but large sonic wave Projectile. Special Effect: Speeds up automatic charging to charge Ultimate. Impacts become long-range sonic wave Projectiles.", effects: [{ type: "mermaid_sonic_impact", autoChargeMultiplier: 2.0, speed: 6, size: 15, shape: "note", color: "#FFFFFF", shadowColor: "#4B9DFF", attackRatio: 1.0, hitCooldownFrames: 45, lifetime: 600, desc: "Impacts become persistent music-note sonic waves." }, { type: "mermaid_ultimate", attackRatio: 1.80, speed: 3, size: 50, shape: "sonic_wave", color: "#FFFFFF", shadowColor: "#4B9DFF", hitCooldownFrames: 45, lifetime: 600, desc: "Ultimate: Large persistent two-arc sonic wave." }] },
-            ],
+            { id: "bc_camus", rarity: "Legendary", name: "Camus", color: "#A4C1D2", type: "Balance", spinType: "right", atk: 136, def: 32, health: 1610, stamina: 44, weight: 14.0, interval: 3.5, desc: "Ultimate: Inflicts Seal on all Beys in the stadium for 6 seconds.", effects: [{ type: "camus_seal_ultimate", duration: 360, desc: "Ultimate: Seals every Bey in the stadium for 6s, preventing Ultimate charge and casting." }, { type: "camus_gauge_swap", cooldown: 1800, desc: "Special Effect: When the opponent's Ultimate gauge is full, swaps current Ultimate gauge with theirs. Cooldown: 30s." }] },
+                                            { id: "bc_hodur", rarity: "Ascended", name: "Hodur", color: "#FFD460", type: "Attack", spinType: "right", atk: 158, def: 24, health: 1625, stamina: 36, weight: 15.0, interval: 2.5, desc: "Ultimate: After a 0.75s post-cinematic delay, deals three all-enemy hits. Damage increases based on enemy HP lost.", effects: [{ type: "hodur_ultimate", delay: 30, hits: 3, attackRatio: 0.70, lostHpBonusPerPercent: 0.008, desc: "Ultimate: Three hits of 70% ATK minus Defense with variance; +0.8% damage per 1% enemy HP lost." }, { type: "hodur_follow_up", cooldown: 300, desc: "Special Effect: After hitting with an Impact, chance to launch a Follow-up Impact equal to current Ultimate charge percentage. Cooldown: 5s." }] },
+],
             weightRing: [
                 { id: "wr_test", rarity: "Normal", name: "Weight Ring", color: "#EBECEC", type: "Balance", atk: 0, def: 0, health: 0, stamina: 0, weight: 0, interval: 0, desc: "For testing purpose.", effects: [] },                
                 { 
@@ -1868,6 +2172,11 @@
                     id: "wr_surge", rarity: "Rare", name: "Surge", color: "#8564E0", type: "Balance", atk: 83, def: 14, health: 1076, stamina: 17, weight: 30.0, interval: 0, 
                     desc: "Reduces Impact interval and skill cooldown, increases Stamina when opponent is inflicted with break.",
                     effects: [{ type: 'surge_cooldown_stamina', impactReduction: 0.40, partsSkillReduction: 0.40, breakStaminaBonus: 0.40, desc: 'Reduces Impact interval and Parts Skill cooldown by 40%; +40% Stamina while opponent has Break' }] 
+                },
+                { 
+                    id: "wr_aquarius", rarity: "Legendary", name: "Aquarius", color: "#84E3F8", type: "Balance", atk: 94, def: 30, health: 1480, stamina: 22, weight: 32.0, interval: 0, 
+                    desc: "While in Impact state, reduces damage taken by 30% and destroys incoming Projectiles.",
+                    effects: [{ type: 'aquarius_impact_guard', damageReduction: 0.30, projectileImmunity: true, desc: 'Impact state: -30% damage taken and destroys incoming Projectiles' }]
                 },
                 { 
                     id: "wr_sprint", rarity: "Normal", name: "Sprint", color: "#666FE7", type: "Stamina", atk: 41, def: 17, health: 1265, stamina: 21, weight: 25.3, interval: 0, 
@@ -1977,6 +2286,11 @@
                     desc: "Causes the Top to move erratically, and reduces the interval between impacts.",
                     effects: [{ type: 'rampage_erratic', impactIntervalMultiplier: 0.75, desc: 'Erratic Flat-based movement; Impact interval -25%' }]
                 },
+                { 
+                    id: "drv_gush", rarity: "Legendary", type: "Balance", name: "Gush", color: "#95BDD4", atk: 96, def: 23, health: 1500, stamina: 22, weight: 14.0, interval: 0, tip: "flat",
+                    desc: "Reduces Impact interval by 10%, increased by 10% for each Bey with an active ailment.",
+                    effects: [{ type: 'gush_ailment_interval', baseReduction: 0.10, perAilmentedBey: 0.10, desc: 'Impact interval -10%, plus -10% for each top with an ailment; each top counts once' }]
+                },
             ]
         };
 
@@ -1989,7 +2303,18 @@
             enemyUnlimitedStamina: false,
             enemyUltimateAlwaysEmpty: false
         };
+        const PLAYER_UID_CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        function generatePlayerUid() {
+            let uid = '';
+            for (let i = 0; i < 12; i++) uid += PLAYER_UID_CHARACTERS[Math.floor(Math.random() * PLAYER_UID_CHARACTERS.length)];
+            return uid;
+        }
+        function isValidPlayerUid(value) {
+            return typeof value === 'string' && /^[A-Za-z0-9]{12}$/.test(value);
+        }
         let playerName = 'Player';
+        let playerUid = generatePlayerUid();
+        let playerChampionshipWins = 0;
         let projectiles = [];
         const PROJECTILE_DEFAULT_CONFIG = {
             attackRatio: 0.50,
@@ -2034,12 +2359,17 @@
             const input = document.getElementById('playerNameInput');
             if (input && document.activeElement !== input) input.value = playerName || 'Player';
         }
+        function updatePlayerUidUI() {
+            const uidDisplay = document.getElementById('playerUidDisplay');
+            if (uidDisplay) uidDisplay.textContent = `UID: ${playerUid}`;
+        }
         function changePlayerName() {
             const input = document.getElementById('playerNameInput');
             const nextName = input ? String(input.value || '').trim().slice(0, 20) : '';
             if (!nextName) return;
             playerName = nextName;
             updateProfileNameUI();
+            scheduleChampionshipPlayerSync();
         }
         window.changePlayerName = changePlayerName;
         // Currency is intentionally session-only until the user presses Save.
@@ -2133,10 +2463,24 @@
             return Math.max(minimumCooldownFrames, Math.max(1, Math.round(flatReducedFrames * cappedMultiplier)));
         }
         function getImpactIntervalFrames(ownerOrParts, baseSeconds) {
-            const parts = ownerOrParts && ownerOrParts.parts ? ownerOrParts.parts : ownerOrParts;
+            const owner = ownerOrParts && ownerOrParts.parts ? ownerOrParts : null;
+            const parts = owner ? owner.parts : ownerOrParts;
             const hasSurge = parts && parts.weightRing && parts.weightRing.id === 'wr_surge';
             const hasRampage = parts && parts.driver && parts.driver.id === 'drv_rampage';
-            const reduction = (hasSurge ? 0.60 : 1.0) * (hasRampage ? 0.75 : 1.0);
+            const hasGush = parts && parts.driver && parts.driver.id === 'drv_gush';
+            let gushReduction = 0;
+            if (hasGush && owner) {
+                // Count each active Bey once, even if it has multiple ailments.
+                const candidates = [owner];
+                if (typeof bey1 !== 'undefined' && bey1) candidates.push(bey1);
+                if (typeof bey2 !== 'undefined' && bey2) candidates.push(bey2);
+                const uniqueBeys = [...new Set(candidates)];
+                const ailmentedBeyCount = uniqueBeys.filter(bey => !bey.dead && (
+                    bey.breakTimer > 0 || bey.unbalanceTimer > 0 || bey.sealTimer > 0
+                )).length;
+                gushReduction = Math.min(0.30, 0.10 + (ailmentedBeyCount * 0.10));
+            }
+            const reduction = (hasSurge ? 0.60 : 1.0) * (hasRampage ? 0.75 : 1.0) * (hasGush ? (1 - gushReduction) : 1.0);
             // Cap total Impact interval reduction at -50%.
             const cappedReduction = Math.max(0.50, reduction);
             return Math.max(120, Math.round((baseSeconds || 3) * 60 * cappedReduction));
@@ -2156,6 +2500,24 @@
             if (attacker.batterFollowUpCooldownTimer > 0) return;
             if (Math.random() >= 0.50) return;
             attacker.batterFollowUpCooldownTimer = getPartsSkillCooldownFrames(240, attacker); // 4 seconds at 60 FPS
+            attacker.isImpact = true;
+            attacker.isUltimateImpact = false;
+            attacker.impactState = 'windup';
+            attacker.impactWindupTimer = 18;
+            attacker.impactTimer = 35 + Math.random() * 7;
+            addAilmentText(attacker.x, attacker.y, 'Follow-up', '#ffffff', '#000000');
+        }
+        function tryTriggerHodurFollowUp(attacker, target) {
+            if (!attacker || !target || target.dead) return;
+            const effects = attacker.getAllEffects();
+            const effectIndex = effects.findIndex(eff => eff.type === 'hodur_follow_up');
+            if (effectIndex < 0) return;
+            if (!attacker.effectCooldowns) attacker.effectCooldowns = {};
+            if (attacker.effectCooldowns[effectIndex] > 0) return;
+            const chance = Math.max(0, Math.min(1, Number(attacker.ultimateGauge || 0) / 100));
+            if (Math.random() >= chance) return;
+            const effect = effects[effectIndex];
+            attacker.effectCooldowns[effectIndex] = getPartsSkillCooldownFrames(effect.cooldown || 300, attacker);
             attacker.isImpact = true;
             attacker.isUltimateImpact = false;
             attacker.impactState = 'windup';
@@ -2271,7 +2633,14 @@
                 }
             }
             document.getElementById('towerDetailReward').textContent = getTowerReward(floor).toLocaleString();
-            const battle = document.getElementById('towerDetailBattle'); battle.disabled = floor > towerUnlockedFloor; battle.dataset.towerBattle = floor;
+            const battle = document.getElementById('towerDetailBattle');
+            battle.disabled = floor > towerUnlockedFloor;
+            battle.dataset.towerBattle = floor;
+            battle.onclick = (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                if (!battle.disabled) startTowerBattle(Number(battle.dataset.towerBattle));
+            };
             document.getElementById('towerDetailModal').classList.remove('hidden');
         }
         function closeTowerDetails() { document.getElementById('towerDetailModal').classList.add('hidden'); }
@@ -2279,16 +2648,10 @@
             if (floor > towerUnlockedFloor) return;
             const enemy = getTowerEnemy(floor);
             towerCurrentFloor = floor; towerActiveFloor = floor; towerBattleMode = true; towerResultHandled = false;
-            enemyEquipped = enemy.parts;
-            const arenaNav = document.querySelector('.nav-item[data-screen="arenaScreen"]');
-            if (arenaNav) arenaNav.click();
-            resetArenaBattle();
-            towerBattleMode = true; towerResultHandled = false;
-            getCachedElement('arenaScreen').classList.add('tower-arena');
-            bey2.upgradeLevels = enemy.levels;
-            bey2.updateParts(enemyEquipped);
+            const towerLoadout = { battleCap: { ...enemy.parts.battleCap, __rankerLevel: enemy.levels[enemy.parts.battleCap.id] }, weightRing: { ...enemy.parts.weightRing, __rankerLevel: enemy.levels[enemy.parts.weightRing.id] }, driver: { ...enemy.parts.driver, __rankerLevel: enemy.levels[enemy.parts.driver.id] } };
             closeTowerDetails();
-            setTowerStatus(`Floor ${floor} ready. Launch to battle.`, '#f6d365');
+            openThreeBeybladeSelect({ mode: 'tower', returnScreen: 'towerScreen', enemyLoadouts: [towerLoadout], towerFloor: floor, towerEnemyLevels: enemy.levels });
+            setTowerStatus(`Floor ${floor} ready. Select your Beyblade.`, '#f6d365');
         }
         function handleTowerBattleEnd() {
             if (!towerBattleMode || towerResultHandled || !bey1 || !bey2 || (!bey1.dead && !bey2.dead)) return;
@@ -2314,7 +2677,14 @@
         document.addEventListener('click', e => {
             const preview = e.target.closest && e.target.closest('.tower-floor-row[data-tower-floor]');
             const battle = e.target.closest && e.target.closest('[data-tower-battle]');
-            if (battle) { e.preventDefault(); e.stopPropagation(); startTowerBattle(Number(battle.dataset.towerBattle)); return; }
+            const challenge = e.target.closest && e.target.closest('[data-ranker-uid]');
+            if (battle) { e.preventDefault(); e.stopPropagation(); if (battle.id !== 'towerDetailBattle') startTowerBattle(Number(battle.dataset.towerBattle)); return; }
+            if (challenge) {
+                e.preventDefault(); e.stopPropagation();
+                const record = championshipRankerData.find(item => String(item.uid) === String(challenge.dataset.rankerUid));
+                if (record) openThreeBeybladeSelect({ mode: 'championship', returnScreen: 'challengeChampionshipScreen', rankerUid: record.uid, enemyLoadouts: (record.loadouts || []).map(normalizeRankerLoadout).filter(Boolean) });
+                return;
+            }
             if (preview) { const floor = Number(preview.dataset.towerFloor); if (floor <= towerUnlockedFloor) openTowerEnemyDetails(floor); }
         });
         document.getElementById('towerDetailClose').addEventListener('click', closeTowerDetails);
@@ -2353,6 +2723,7 @@
             updateGarageUI();
             if (typeof updateHomeUI === 'function') updateHomeUI();
             if (typeof updateSkillHexagons === 'function') updateSkillHexagons();
+            scheduleChampionshipPlayerSync();
         }
         document.querySelectorAll('.loadout-btn').forEach(btn => {
             btn.addEventListener('click', () => selectLoadout(Number(btn.dataset.loadout)));
@@ -2386,6 +2757,515 @@
                 startIconSvg.innerHTML = '<polygon points="5,3 19,12 5,21"></polygon>';
             }
         }
+
+
+        function updateChampionshipLobby() {
+            const nameEl = document.getElementById('championshipPlayerName');
+            const uidEl = document.getElementById('championshipPlayerUid');
+            const cpEl = document.getElementById('championshipCombatPower');
+            if (nameEl) nameEl.textContent = playerName || 'Player';
+            if (uidEl) uidEl.textContent = `UID: ${playerUid}`;
+            const homeCombatPower = document.getElementById('homeCombatPower');
+            const championshipCombatPower = document.getElementById('championshipCombatPower');
+            if (homeCombatPower && championshipCombatPower && !championshipCombatPower.dataset.visualReady) {
+                championshipCombatPower.innerHTML = homeCombatPower.innerHTML;
+                const copiedValue = championshipCombatPower.querySelector('#homeCombatPowerValue');
+                if (copiedValue) copiedValue.id = 'championshipCombatPowerValue';
+                championshipCombatPower.dataset.visualReady = 'true';
+            }
+            const championshipCombatPowerValue = document.getElementById('championshipCombatPowerValue');
+            if (championshipCombatPowerValue) championshipCombatPowerValue.textContent = getPlayerCombatPower().toLocaleString();
+            playerLoadouts.forEach((loadout, index) => {
+                const canvas = document.getElementById(`championshipBeyCanvas${index}`);
+                if (canvas && loadout) {
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 180; canvas.height = 180;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    drawBeyOnContext(ctx, 90, 90, 68, loadout, 0.5, false, false, 1.0);
+                }
+                const name = document.getElementById(`championshipLoadoutName${index}`);
+                const level = document.getElementById(`championshipLoadoutLevel${index}`);
+                const typeIcon = document.getElementById(`championshipLoadoutTypeIcon${index}`);
+                const selectedStar = document.getElementById(`championshipLoadoutSelectedStar${index}`);
+                if (typeIcon) typeIcon.innerHTML = loadout && loadout.battleCap ? getTypeIconSvg(loadout.battleCap.type) : '';
+                if (selectedStar) selectedStar.classList.toggle('active', index === activeLoadoutIndex);
+                if (name && loadout) name.textContent = loadout.battleCap ? loadout.battleCap.name : `Loadout ${index + 1}`;
+                if (level && loadout) {
+                    const parts = [loadout.battleCap, loadout.weightRing, loadout.driver].filter(Boolean);
+                    const average = parts.length ? parts.reduce((sum, part) => sum + getPartLevel(part), 0) / parts.length : 1;
+                    level.textContent = `Lv. ${average % 1 ? average.toFixed(1) : average}`;
+                }
+            });
+        }
+        // Supabase-ready public ranker shape: snake_case fields mirror a future table/API payload.
+        let championshipRankerData = [{
+            uid: '000',
+            player_name: 'Dummy',
+            loadouts: [
+                { battle_cap: { id: 'bc_behemoth', level: 15 }, weight_ring: { id: 'wr_devil', level: 9 }, driver: { id: 'drv_rage', level: 15 } },
+                { battle_cap: { id: 'bc_kaguyahime', level: 14 }, weight_ring: { id: 'wr_divinestar', level: 13 }, driver: { id: 'drv_moonlight', level: 10 } },
+                { battle_cap: { id: 'bc_athena', level: 15 }, weight_ring: { id: 'wr_guardian', level: 14 }, driver: { id: 'drv_warfare', level: 14 } }
+            ],
+            total_wins: 9
+        }];
+        const championshipRankerFallbackData = JSON.parse(JSON.stringify(championshipRankerData));
+        const SUPABASE_CHAMPIONSHIP_CONFIG = Object.freeze({
+            projectUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co',
+            playersUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co/rest/v1/championship_players',
+            loadoutsUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co/rest/v1/championship_loadouts',
+            publicKey: 'sb_publishable_9vExJ6KsV1wwlF4PbVrZag_eDAIb4Ih'
+        });
+        let championshipRankerLoaded = false;
+        let championshipFetchPromise = null;
+        let championshipSyncTimer = null;
+        let championshipSyncInProgress = false;
+        let championshipSyncQueued = false;
+        let championshipOnlineError = false;
+
+        function setChampionshipOnlineStatus(message, tone) {
+            const status = document.getElementById('championshipRankerStatus');
+            if (!status) return;
+            status.textContent = message || '';
+            status.classList.remove('online', 'error');
+            if (tone) status.classList.add(tone);
+        }
+
+        function getSupabaseChampionshipHeaders(extraHeaders = {}) {
+            return {
+                apikey: SUPABASE_CHAMPIONSHIP_CONFIG.publicKey,
+                Authorization: `Bearer ${SUPABASE_CHAMPIONSHIP_CONFIG.publicKey}`,
+                'Content-Type': 'application/json',
+                ...extraHeaders
+            };
+        }
+
+        async function fetchSupabaseChampionshipJson(url, options = {}, timeoutMs = 10000) {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                const body = await response.text();
+                let data = null;
+                try { data = body ? JSON.parse(body) : null; } catch (parseError) { data = body; }
+                if (!response.ok) {
+                    const detail = data && data.message ? data.message : `HTTP ${response.status}`;
+                    throw new Error(detail);
+                }
+                return data;
+            } finally {
+                clearTimeout(timeout);
+            }
+        }
+
+        function normalizeSupabaseRankerData(playerRows, loadoutRows) {
+            const loadoutsByUid = new Map();
+            (Array.isArray(loadoutRows) ? loadoutRows : []).forEach(row => {
+                const uid = String(row && row.player_uid != null ? row.player_uid : '').trim();
+                const index = Number(row && row.loadout_index);
+                if (!uid || !Number.isInteger(index) || index < 0 || index > 2) return;
+                const loadouts = loadoutsByUid.get(uid) || [];
+                loadouts[index] = {
+                    battle_cap: row.battle_cap_id ? { id: String(row.battle_cap_id), level: Number(row.battle_cap_level) || 1 } : null,
+                    weight_ring: row.weight_ring_id ? { id: String(row.weight_ring_id), level: Number(row.weight_ring_level) || 1 } : null,
+                    driver: row.driver_id ? { id: String(row.driver_id), level: Number(row.driver_level) || 1 } : null
+                };
+                loadoutsByUid.set(uid, loadouts);
+            });
+            return (Array.isArray(playerRows) ? playerRows : []).map(row => {
+                const uid = String(row && row.uid != null ? row.uid : '').trim();
+                return {
+                    uid,
+                    player_name: String(row && row.player_name != null ? row.player_name : 'Player').trim() || 'Player',
+                    loadouts: (loadoutsByUid.get(uid) || []).filter(Boolean),
+                    total_wins: Math.max(0, Math.floor(Number(row && row.total_wins) || 0)),
+                    combat_power: Math.max(0, Math.floor(Number(row && row.combat_power) || 0))
+                };
+            }).filter(record => record.uid);
+        }
+
+        async function loadChampionshipRankerData({ force = false } = {}) {
+            if (championshipFetchPromise) return championshipFetchPromise;
+            if (championshipRankerLoaded && !force) return championshipRankerData;
+            championshipFetchPromise = (async () => {
+                setChampionshipOnlineStatus('Loading online ranker...', '');
+                try {
+                    const [playerRows, loadoutRows] = await Promise.all([
+                        fetchSupabaseChampionshipJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.playersUrl}?select=uid,player_name,total_wins,combat_power` , { headers: getSupabaseChampionshipHeaders() }),
+                        fetchSupabaseChampionshipJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.loadoutsUrl}?select=player_uid,loadout_index,battle_cap_id,battle_cap_level,weight_ring_id,weight_ring_level,driver_id,driver_level` , { headers: getSupabaseChampionshipHeaders() })
+                    ]);
+                    const onlineRecords = normalizeSupabaseRankerData(playerRows, loadoutRows);
+                    if (!onlineRecords.length) throw new Error('No player records were returned.');
+                    championshipRankerData = onlineRecords;
+                    championshipRankerLoaded = true;
+                    championshipOnlineError = false;
+                    setChampionshipOnlineStatus(`Online ranker loaded: ${onlineRecords.length} player${onlineRecords.length === 1 ? '' : 's'}.`, 'online');
+                    if (!document.getElementById('challengeChampionshipScreen')?.classList.contains('hidden')) updateChallengeChampionship();
+                    return onlineRecords;
+                } catch (error) {
+                    championshipOnlineError = true;
+                    championshipRankerData = JSON.parse(JSON.stringify(championshipRankerFallbackData));
+                    setChampionshipOnlineStatus('Online ranker unavailable. Showing local fallback data.', 'error');
+                    console.warn('Supabase Championship ranker load failed:', error);
+                    if (!document.getElementById('challengeChampionshipScreen')?.classList.contains('hidden')) updateChallengeChampionship();
+                    return championshipRankerData;
+                } finally {
+                    championshipFetchPromise = null;
+                }
+            })();
+            return championshipFetchPromise;
+        }
+
+        function getPlayerRankerLoadouts() {
+            return playerLoadouts.map(loadout => ({
+                battle_cap: loadout && loadout.battleCap ? { id: loadout.battleCap.id, level: getPartLevel(loadout.battleCap) } : null,
+                weight_ring: loadout && loadout.weightRing ? { id: loadout.weightRing.id, level: getPartLevel(loadout.weightRing) } : null,
+                driver: loadout && loadout.driver ? { id: loadout.driver.id, level: getPartLevel(loadout.driver) } : null
+            }));
+        }
+
+        async function syncPlayerChampionshipData() {
+            if (championshipSyncInProgress) {
+                championshipSyncQueued = true;
+                return;
+            }
+            championshipSyncInProgress = true;
+            try {
+                const now = new Date().toISOString();
+                const playerPayload = {
+                    uid: String(playerUid),
+                    player_name: String(playerName || 'Player').trim().slice(0, 20) || 'Player',
+                    total_wins: Math.max(0, Math.floor(Number(playerChampionshipWins) || 0)),
+                    combat_power: Math.max(0, Math.floor(Number(getPlayerCombatPower()) || 0)),
+                    updated_at: now
+                };
+                await fetchSupabaseChampionshipJson(SUPABASE_CHAMPIONSHIP_CONFIG.playersUrl, {
+                    method: 'POST',
+                    headers: getSupabaseChampionshipHeaders({ Prefer: 'resolution=merge-duplicates,return=minimal' }),
+                    body: JSON.stringify(playerPayload)
+                });
+                const loadoutRows = getPlayerRankerLoadouts().map((loadout, index) => ({
+                    player_uid: String(playerUid),
+                    loadout_index: index,
+                    battle_cap_id: loadout.battle_cap ? loadout.battle_cap.id : null,
+                    battle_cap_level: loadout.battle_cap ? loadout.battle_cap.level : 1,
+                    weight_ring_id: loadout.weight_ring ? loadout.weight_ring.id : null,
+                    weight_ring_level: loadout.weight_ring ? loadout.weight_ring.level : 1,
+                    driver_id: loadout.driver ? loadout.driver.id : null,
+                    driver_level: loadout.driver ? loadout.driver.level : 1,
+                    updated_at: now
+                }));
+                await fetchSupabaseChampionshipJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.loadoutsUrl}?on_conflict=player_uid%2Cloadout_index`, {
+                    method: 'POST',
+                    headers: getSupabaseChampionshipHeaders({ Prefer: 'resolution=merge-duplicates,return=minimal' }),
+                    body: JSON.stringify(loadoutRows)
+                });
+                championshipOnlineError = false;
+                if (!document.getElementById('challengeChampionshipScreen')?.classList.contains('hidden')) updateChallengeChampionship();
+            } catch (error) {
+                championshipOnlineError = true;
+                console.warn('Supabase Championship player sync failed:', error);
+            } finally {
+                championshipSyncInProgress = false;
+                if (championshipSyncQueued) {
+                    championshipSyncQueued = false;
+                    scheduleChampionshipPlayerSync(1000);
+                }
+            }
+        }
+
+        function scheduleChampionshipPlayerSync(delayMs = 1200) {
+            clearTimeout(championshipSyncTimer);
+            championshipSyncTimer = setTimeout(() => {
+                championshipSyncTimer = null;
+                syncPlayerChampionshipData();
+            }, Math.max(0, Number(delayMs) || 0));
+        }
+
+        function findChampionshipPart(partId) {
+            for (const category of Object.keys(PARTS || {})) {
+                const found = (PARTS[category] || []).find(part => part && part.id === partId);
+                if (found) return found;
+            }
+            return null;
+        }
+        function getRankerPartCombatPower(part, level) {
+            if (!part) return 0;
+            const safeLevel = Math.max(1, Math.min(15, Number(level) || 1));
+            const multiplier = Math.pow(1.10, safeLevel - 1);
+            return Math.max(0, Math.round((part.atk || 0) * multiplier * 1.5 + (part.def || 0) * multiplier * 0.8 + (part.stamina || 0) * 1.2 + (part.health || 0) * multiplier * 0.3));
+        }
+        function normalizeRankerLoadout(rawLoadout) {
+            if (!rawLoadout) return null;
+            const cap = rawLoadout.battle_cap || rawLoadout.battleCap;
+            const ring = rawLoadout.weight_ring || rawLoadout.weightRing;
+            const driver = rawLoadout.driver;
+            const battleCap = findChampionshipPart(cap && cap.id);
+            const weightRing = findChampionshipPart(ring && ring.id);
+            const driverPart = findChampionshipPart(driver && driver.id);
+            return {
+                battleCap: battleCap ? { ...battleCap, __rankerLevel: Math.max(1, Math.min(15, Number(cap.level) || 1)) } : null,
+                weightRing: weightRing ? { ...weightRing, __rankerLevel: Math.max(1, Math.min(15, Number(ring.level) || 1)) } : null,
+                driver: driverPart ? { ...driverPart, __rankerLevel: Math.max(1, Math.min(15, Number(driver.level) || 1)) } : null
+            };
+        }
+        function getRankerLoadoutCombatPower(loadout) {
+            if (!loadout) return 0;
+            return ['battleCap', 'weightRing', 'driver'].reduce((sum, key) => sum + getRankerPartCombatPower(loadout[key], loadout[key] && loadout[key].__rankerLevel), 0);
+        }
+        function escapeChampionshipText(value) {
+            return String(value == null ? '' : value).replace(/[&<>\"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '\"':'&quot;', "'":'&#39;' }[char]));
+        }
+        function updateChallengeChampionship() {
+            const list = document.getElementById('championshipRankerList');
+            if (!list) return;
+            const playerRankerLoadouts = playerLoadouts.map(loadout => ({
+                battle_cap: loadout && loadout.battleCap ? { id: loadout.battleCap.id, level: partUpgradeLevels[loadout.battleCap.id] || 1 } : null,
+                weight_ring: loadout && loadout.weightRing ? { id: loadout.weightRing.id, level: partUpgradeLevels[loadout.weightRing.id] || 1 } : null,
+                driver: loadout && loadout.driver ? { id: loadout.driver.id, level: partUpgradeLevels[loadout.driver.id] || 1 } : null
+            }));
+            const localPlayerRecord = { uid: playerUid, player_name: playerName || 'Player', loadouts: playerRankerLoadouts, total_wins: playerChampionshipWins, isPlayer: true };
+            const populated = championshipRankerData
+                .filter(record => String(record.uid) !== String(playerUid))
+                .concat(localPlayerRecord)
+                .map(record => {
+                    const loadouts = (record.loadouts || []).map(normalizeRankerLoadout).filter(Boolean);
+                    const combatPower = loadouts.reduce((sum, loadout) => sum + getRankerLoadoutCombatPower(loadout), 0);
+                    return { ...record, loadouts, combatPower };
+                }).sort((a, b) => Number(b.total_wins || 0) - Number(a.total_wins || 0) || b.combatPower - a.combatPower);
+            const rows = [];
+            for (let index = 0; index < 100; index++) {
+                const record = populated[index] || null;
+                const rank = index + 1;
+                if (!record) {
+                    rows.push(`<div class="championship-ranker-row empty"><div class="championship-rank-number">${rank}</div><div class="championship-ranker-player"><div class="championship-ranker-player-name">Empty Rank</div><div class="championship-ranker-player-uid">No player data</div></div><div class="championship-ranker-loadouts"><div class="championship-ranker-mini-loadout">—</div><div class="championship-ranker-mini-loadout">—</div><div class="championship-ranker-mini-loadout">—</div></div><div class="championship-ranker-stats"><div class="championship-ranker-cp">—</div><div class="championship-ranker-wins">Wins: —</div></div><button type="button" class="championship-ranker-challenge" disabled>Challenge</button></div>`);
+                    continue;
+                }
+                const loadoutCards = record.loadouts.map(loadout => {
+                    const parts = [loadout.battleCap, loadout.weightRing, loadout.driver];
+                    const average = parts.length ? parts.reduce((sum, part) => sum + (part ? part.__rankerLevel : 0), 0) / parts.length : 0;
+                    const labels = parts.map(part => part ? part.name : '—').join(' / ');
+                    return `<div class="championship-ranker-mini-loadout" title="${escapeChampionshipText(labels)}"><canvas data-ranker-preview="true" width="44" height="44"></canvas><div class="championship-ranker-mini-name">${escapeChampionshipText(loadout.battleCap ? loadout.battleCap.name : 'Loadout')}</div><div class="championship-ranker-mini-level">Lv. ${average % 1 ? average.toFixed(1) : average}</div></div>`;
+                }).join('');
+                const playerClass = record.isPlayer ? ' is-player' : '';
+                const challengeButton = record.isPlayer ? '' : `<button type="button" class="championship-ranker-challenge" data-ranker-uid="${escapeChampionshipText(record.uid)}">Challenge</button>`;
+                rows.push(`<div class="championship-ranker-row${playerClass}"><div class="championship-rank-number">${rank}</div><div class="championship-ranker-player"><div class="championship-ranker-player-name">${escapeChampionshipText(record.player_name)}</div><div class="championship-ranker-player-uid">UID: ${escapeChampionshipText(record.uid)}</div></div><div class="championship-ranker-loadouts">${loadoutCards}</div><div class="championship-ranker-stats"><div class="championship-ranker-cp combat-power-badge" data-ranker-cp="${record.combatPower}"></div><div class="championship-ranker-wins">Wins: ${Number(record.total_wins || 0)}</div></div>${challengeButton}</div>`);
+            }
+            list.innerHTML = rows.join('');
+            const homeCombatPower = document.getElementById('homeCombatPower');
+            list.querySelectorAll('[data-ranker-cp]').forEach(badge => {
+                if (homeCombatPower) badge.innerHTML = homeCombatPower.innerHTML.replace(/id="homeCombatPowerValue"/g, '');
+                const value = badge.querySelector('#homeCombatPowerValue');
+                if (value) value.removeAttribute('id');
+                const text = badge.querySelector('[id$="CombatPowerValue"], span:last-child');
+                if (text) text.textContent = Number(badge.dataset.rankerCp || 0).toLocaleString();
+            });
+            list.querySelectorAll('canvas[data-ranker-preview]').forEach(canvas => {
+                const row = canvas.closest('.championship-ranker-row');
+                const rank = Number(row && row.querySelector('.championship-rank-number') && row.querySelector('.championship-rank-number').textContent) - 1;
+                const record = populated[rank];
+                const rowCanvases = row ? Array.from(row.querySelectorAll('canvas[data-ranker-preview]')) : [];
+                const loadout = record && record.loadouts[rowCanvases.indexOf(canvas)];
+                if (loadout && typeof drawBeyOnContext === 'function') {
+                    const ctx = canvas.getContext('2d');
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    drawBeyOnContext(ctx, 22, 22, 18, loadout, 0.5, false, false, 1.0);
+                }
+            });
+        }
+        let threeBeybladeSelectContext = null;
+        let threeBeybladeSelectedIndex = 0;
+        let threeBeybladeBattleResultHandled = false;
+        let threeBeybladeRevealTimer = null;
+        function getLoadoutLevelMap(loadout) {
+            const map = {};
+            if (!loadout) return map;
+            [['battleCap','battle_cap'], ['weightRing','weight_ring'], ['driver','driver']].forEach(([key, rawKey]) => {
+                const part = loadout[key];
+                if (part && part.id) map[part.id] = Math.max(1, Math.min(15, Number(part.__rankerLevel || part.level || (partUpgradeLevels[part.id] || 1))));
+            });
+            return map;
+        }
+        function getLoadoutAverageLevel(loadout) {
+            const parts = loadout ? [loadout.battleCap, loadout.weightRing, loadout.driver].filter(Boolean) : [];
+            if (!parts.length) return 1;
+            const total = parts.reduce((sum, part) => sum + Math.max(1, Math.min(15, Number(part.__rankerLevel || part.level || (partUpgradeLevels[part.id] || 1)))), 0);
+            const average = total / parts.length;
+            return average % 1 ? average.toFixed(1) : average;
+        }
+        function drawThreeBeybladeSelectCard(canvas, loadout) {
+            if (!canvas || !loadout || typeof drawBeyOnContext !== 'function') return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBeyOnContext(ctx, canvas.width / 2, canvas.height / 2, canvas.width * .36, loadout, 0.5, false, false, 1.0);
+        }
+        function renderThreeBeybladeSelect() {
+            const content = document.getElementById('threeBeybladeSelectContent');
+            if (!content || !threeBeybladeSelectContext) return;
+            const usedPlayerIndices = new Set(threeBeybladeSelectContext.usedPlayerIndices || []);
+            const usedEnemyIndices = new Set(threeBeybladeSelectContext.usedEnemyIndices || []);
+            const selectedPlayerIsUsed = usedPlayerIndices.has(threeBeybladeSelectedIndex);
+            const playerCards = playerLoadouts.map((loadout, index) => {
+                const used = usedPlayerIndices.has(index);
+                const disabled = used || !!threeBeybladeSelectContext.selectedEnemy ? ' disabled' : '';
+                return `<button type="button" class="three-beyblade-select-card${index === threeBeybladeSelectedIndex && !used ? ' selected' : ''}${used ? ' used' : ''}" data-select-player-loadout="${index}"${disabled}>${getTypeIconSvg(loadout && loadout.battleCap ? loadout.battleCap.type : 'Attack')}<canvas width="130" height="130"></canvas><div class="three-beyblade-select-card-name">${escapeChampionshipText(loadout && loadout.battleCap ? loadout.battleCap.name : `Loadout ${index + 1}`)}</div><div class="three-beyblade-select-card-level">Lv. ${getLoadoutAverageLevel(loadout)}</div></button>`;
+            }).join('');
+            const selectedEnemy = threeBeybladeSelectContext.selectedEnemy || null;
+            const enemyCards = threeBeybladeSelectContext.enemyLoadouts.slice(0, 3).map((loadout, index) => `<div class="three-beyblade-select-card${usedEnemyIndices.has(index) ? ' used' : ''}">${getTypeIconSvg(loadout && loadout.battleCap ? loadout.battleCap.type : 'Attack')}<canvas width="52" height="52"></canvas></div>`).join('');
+            const enemyDisplay = selectedEnemy ? `<div class="three-beyblade-select-card three-beyblade-select-mystery-card three-beyblade-select-revealed-card">${getTypeIconSvg(selectedEnemy && selectedEnemy.battleCap ? selectedEnemy.battleCap.type : 'Attack')}<canvas data-select-revealed-enemy width="130" height="130"></canvas><div class="three-beyblade-select-card-name">${escapeChampionshipText(selectedEnemy && selectedEnemy.battleCap ? selectedEnemy.battleCap.name : 'Opponent')}</div><div class="three-beyblade-select-card-level">Lv. ${getLoadoutAverageLevel(selectedEnemy)}</div></div>` : `<div class="three-beyblade-select-card three-beyblade-select-mystery-card">?</div>`;
+            const availablePlayerCount = playerLoadouts.filter((_, index) => !usedPlayerIndices.has(index)).length;
+            const availableEnemyCount = threeBeybladeSelectContext.enemyLoadouts.filter((_, index) => !usedEnemyIndices.has(index)).length;
+            const battleDisabled = selectedEnemy || selectedPlayerIsUsed || !availablePlayerCount || !availableEnemyCount ? ' disabled' : '';
+            content.innerHTML = `<div class="three-beyblade-select-enemy-layout"><div class="three-beyblade-select-mystery-wrap"><div class="three-beyblade-select-mystery-label">Opponent sent</div>${enemyDisplay}</div><div class="three-beyblade-select-opponent-panel"><h3>Opponent</h3><div class="three-beyblade-select-opponent-stack">${enemyCards}</div></div></div><section class="three-beyblade-select-section three-beyblade-select-player-section"><h3>Tap to select</h3><div class="three-beyblade-select-grid">${playerCards}</div></section><div class="three-beyblade-select-actions"><button type="button" class="three-beyblade-select-battle" onclick="window.beginThreeBeybladeBattle();"${battleDisabled}>Battle</button></div>`;
+            content.querySelectorAll('[data-select-player-loadout]').forEach(button => button.addEventListener('click', () => {
+                const nextIndex = Number(button.dataset.selectPlayerLoadout) || 0;
+                if ((threeBeybladeSelectContext.usedPlayerIndices || []).includes(nextIndex) || threeBeybladeSelectContext.selectedEnemy) return;
+                threeBeybladeSelectedIndex = nextIndex;
+                renderThreeBeybladeSelect();
+            }));
+            content.querySelectorAll('.three-beyblade-select-opponent-stack canvas').forEach((canvas, index) => drawThreeBeybladeSelectCard(canvas, threeBeybladeSelectContext.enemyLoadouts[index]));
+            const revealedEnemyCanvas = content.querySelector('[data-select-revealed-enemy]');
+            if (revealedEnemyCanvas && selectedEnemy) drawThreeBeybladeSelectCard(revealedEnemyCanvas, selectedEnemy);
+            content.querySelectorAll('section canvas').forEach((canvas, index) => drawThreeBeybladeSelectCard(canvas, playerLoadouts[index]));
+        }
+        function openThreeBeybladeSelect(context) {
+            const enemyLoadouts = context && Array.isArray(context.enemyLoadouts) && context.enemyLoadouts.length ? context.enemyLoadouts : [enemyEquipped];
+            threeBeybladeSelectContext = {
+                mode: context && context.mode ? context.mode : 'generic',
+                enemyLoadouts,
+                returnScreen: context && context.returnScreen ? context.returnScreen : 'homeScreen',
+                rankerUid: context && context.rankerUid ? context.rankerUid : null,
+                towerFloor: context && context.towerFloor ? context.towerFloor : null,
+                towerEnemyLevels: context && context.towerEnemyLevels ? context.towerEnemyLevels : null,
+                bestOfThree: enemyLoadouts.length >= 3,
+                round: 1,
+                playerWins: 0,
+                enemyWins: 0,
+                usedPlayerIndices: [],
+                usedEnemyIndices: []
+            };
+            threeBeybladeSelectedIndex = activeLoadoutIndex;
+            screens.forEach(screen => screen.classList.add('hidden'));
+            hideChampionshipScreens();
+            document.getElementById('threeBeybladeSelect').classList.remove('hidden');
+            navItems.forEach(nav => nav.classList.remove('active'));
+            renderThreeBeybladeSelect();
+        }
+        function closeThreeBeybladeSelect() {
+            const returnScreen = threeBeybladeSelectContext && threeBeybladeSelectContext.returnScreen;
+            threeBeybladeSelectContext = null;
+            document.getElementById('threeBeybladeSelect')?.classList.add('hidden');
+            if (returnScreen === 'challengeChampionshipScreen') openChallengeChampionship();
+            else if (returnScreen === 'towerScreen') { const towerNav = document.querySelector('.nav-item[data-screen="towerScreen"]'); if (towerNav) towerNav.click(); }
+            else { document.querySelectorAll('.screen').forEach(screen => screen.classList.add('hidden')); document.getElementById('homeScreen')?.classList.remove('hidden'); if (typeof updateHomeUI === 'function') updateHomeUI(); }
+        }
+        function beginThreeBeybladeBattle() {
+            if (!threeBeybladeSelectContext || threeBeybladeSelectContext.selectedEnemy || threeBeybladeRevealTimer) return;
+            const context = threeBeybladeSelectContext;
+            const chosenPlayer = playerLoadouts[threeBeybladeSelectedIndex] || playerLoadouts[0];
+            const enemyLoadouts = Array.isArray(context.enemyLoadouts) && context.enemyLoadouts.length ? context.enemyLoadouts : [enemyEquipped];
+            const usedPlayerIndices = new Set(context.usedPlayerIndices || []);
+            const usedEnemyIndices = new Set(context.usedEnemyIndices || []);
+            const chosenPlayerIndex = playerLoadouts.indexOf(chosenPlayer);
+            if (usedPlayerIndices.has(chosenPlayerIndex)) return;
+            const availableEnemyIndices = enemyLoadouts.map((_, index) => index).filter(index => !usedEnemyIndices.has(index));
+            if (!availableEnemyIndices.length) return;
+            const chosenEnemyIndex = enemyLoadouts.length === 1 ? 0 : availableEnemyIndices[Math.floor(Math.random() * availableEnemyIndices.length)];
+            const chosenEnemy = enemyLoadouts[chosenEnemyIndex];
+            threeBeybladeSelectContext = { ...context, selectedPlayer: chosenPlayer, selectedPlayerIndex: chosenPlayerIndex, selectedEnemy: chosenEnemy, selectedEnemyIndex: chosenEnemyIndex };
+            const mysteryCard = document.querySelector('#threeBeybladeSelect .three-beyblade-select-mystery-card');
+            if (mysteryCard) mysteryCard.classList.add('three-beyblade-select-fade-out');
+            threeBeybladeRevealTimer = setTimeout(() => {
+                renderThreeBeybladeSelect();
+                threeBeybladeRevealTimer = setTimeout(() => {
+                    threeBeybladeRevealTimer = null;
+                    const activeContext = threeBeybladeSelectContext;
+                    if (!activeContext || !activeContext.selectedEnemy) return;
+                    const selectedPlayer = activeContext.selectedPlayer || chosenPlayer;
+                    const selectedEnemy = activeContext.selectedEnemy;
+                    activeLoadoutIndex = Math.max(0, playerLoadouts.indexOf(selectedPlayer));
+                    playerEquipped = selectedPlayer;
+                    enemyEquipped = selectedEnemy;
+                    threeBeybladeBattleResultHandled = false;
+                    towerBattleMode = activeContext.mode === 'tower';
+                    towerResultHandled = false;
+                    screens.forEach(screen => screen.classList.add('hidden'));
+                    document.getElementById('arenaScreen').classList.remove('hidden');
+                    resizeCanvas();
+                    resetArenaBattle();
+                    towerBattleMode = activeContext.mode === 'tower';
+                    towerResultHandled = false;
+                    if (towerBattleMode) getCachedElement('arenaScreen').classList.add('tower-arena');
+                    playerEquipped = selectedPlayer;
+                    enemyEquipped = selectedEnemy;
+                    bey1.upgradeLevels = getLoadoutLevelMap(selectedPlayer);
+                    bey2.upgradeLevels = getLoadoutLevelMap(selectedEnemy);
+                    bey1.updateParts(playerEquipped);
+                    bey2.updateParts(enemyEquipped);
+                    updateSkillHexagons();
+                }, 1740);
+            }, 260);
+        }
+        function handleReusableBattleEnd() {
+            const context = threeBeybladeSelectContext;
+            if (!context || !context.bestOfThree || threeBeybladeBattleResultHandled || !bey1 || !bey2 || (!bey1.dead && !bey2.dead)) return;
+            threeBeybladeBattleResultHandled = true;
+            gameRunning = false;
+            launchingPhase = false;
+            const playerWon = !!bey2.dead && !bey1.dead;
+            const enemyWon = !!bey1.dead && !bey2.dead;
+            const usedPlayerIndices = Array.from(new Set([...(context.usedPlayerIndices || []), context.selectedPlayerIndex]));
+            const usedEnemyIndices = Array.from(new Set([...(context.usedEnemyIndices || []), context.selectedEnemyIndex]));
+            const playerWins = (context.playerWins || 0) + (playerWon ? 1 : 0);
+            const enemyWins = (context.enemyWins || 0) + (enemyWon ? 1 : 0);
+            setTimeout(() => {
+                resetArenaBattle();
+                if (playerWins >= 2 || enemyWins >= 2 || usedPlayerIndices.length >= 3 || usedEnemyIndices.length >= 3) {
+                    if (context.mode === 'championship' && playerWins >= 2) {
+                        playerChampionshipWins += 1;
+                        try { localStorage.setItem(MANUAL_SAVE_KEY, JSON.stringify(getUniversalSaveData())); } catch (e) {}
+                        syncPlayerChampionshipData();
+                    }
+                    if (context.mode === 'championship') openChallengeChampionship();
+                    else if (context.returnScreen === 'towerScreen') { const towerNav = document.querySelector('.nav-item[data-screen="towerScreen"]'); if (towerNav) towerNav.click(); }
+                    else closeThreeBeybladeSelect();
+                    threeBeybladeSelectContext = null;
+                    return;
+                }
+                threeBeybladeSelectContext = { ...context, selectedPlayer: null, selectedEnemy: null, selectedPlayerIndex: null, selectedEnemyIndex: null, round: (context.round || 1) + 1, playerWins, enemyWins, usedPlayerIndices, usedEnemyIndices };
+                threeBeybladeSelectedIndex = playerLoadouts.findIndex((_, index) => !usedPlayerIndices.includes(index));
+                if (threeBeybladeSelectedIndex < 0) threeBeybladeSelectedIndex = 0;
+                screens.forEach(screen => screen.classList.add('hidden'));
+                hideChampionshipScreens();
+                document.getElementById('threeBeybladeSelect')?.classList.remove('hidden');
+                renderThreeBeybladeSelect();
+            }, 500);
+        }
+        window.openThreeBeybladeSelect = openThreeBeybladeSelect;
+        window.closeThreeBeybladeSelect = closeThreeBeybladeSelect;
+        window.beginThreeBeybladeBattle = beginThreeBeybladeBattle;
+        function hideChampionshipScreens() {
+            document.getElementById('championshipLobbyScreen')?.classList.add('hidden');
+            document.getElementById('challengeChampionshipScreen')?.classList.add('hidden');
+        }
+        function openChampionshipLobby() {
+            if (gameRunning || towerBattleMode) resetArenaBattle();
+            screens.forEach(screen => screen.classList.add('hidden'));
+            hideChampionshipScreens();
+            document.getElementById('championshipLobbyScreen').classList.remove('hidden');
+            navItems.forEach(nav => nav.classList.remove('active'));
+            updateChampionshipLobby();
+        }
+        function openChallengeChampionship() {
+            screens.forEach(screen => screen.classList.add('hidden'));
+            hideChampionshipScreens();
+            document.getElementById('challengeChampionshipScreen').classList.remove('hidden');
+            navItems.forEach(nav => nav.classList.remove('active'));
+            updateChallengeChampionship();
+            loadChampionshipRankerData();
+        }
+        window.updateChampionshipLobby = updateChampionshipLobby;
+        window.openChampionshipLobby = openChampionshipLobby;
+        window.openChallengeChampionship = openChallengeChampionship;
 
         navItems.forEach(item => {
             item.addEventListener('click', () => {
@@ -2804,6 +3684,10 @@
             }
 
             const pct = Math.min(100, Math.max(0, bey1.ultimateGauge));
+            const sealed = typeof bey1.hasSeal === 'function' && bey1.hasSeal();
+            hexCenter.disabled = sealed;
+            hexCenter.title = sealed ? 'Ultimate Skill sealed' : 'Battle Top Ultimate Skill (Click to Cast)';
+            hexCenter.style.opacity = sealed ? '0.4' : '1.0';
             ultimateFill.style.height = pct + '%';
             ultimateFill.style.backgroundColor = playerEquipped.battleCap.color;
             
@@ -2868,6 +3752,10 @@
                 this.beelzebubUltimateActive = false;
                 this.hattoriUltimateActive = false;
                 this.hattoriUltimateTimer = 0;
+                this.hodurUltimateTimer = 0;
+                this.hodurUltimateActive = false;
+                this.hodurHitIndex = 0;
+                this.hodurHitTimer = 0;
                 this.deathKnightRevelationActive = false;
                 this.deathKnightWallImpactWindup = false;
                 this.batterFollowUpCooldownTimer = 0;
@@ -2885,6 +3773,7 @@
                 this.breakTickTimer = 0;
                 this.breakDmgPerTick = 0;
                 this.unbalanceTimer = 0;
+                this.sealTimer = 0;
                 
                 this.effectCooldowns = {};
                 
@@ -2896,6 +3785,24 @@
                 this.arenaOccupationPending = false;
                 this.arenaOccupationTimer = 0;
                 this.preemptiveAttack = false;
+                this.timeSkillTimer = 0;
+                this.timeCooldownBuffTimer = 0;
+                this.timePortalTimer = 0;
+                this.timeTeleportStage = 0;
+                this.timeDeparturePortalTimer = 0;
+                this.timeArrivalPortalTimer = 0;
+                this.timeDepartureLingerTimer = 0;
+                this.timeArrivalLingerTimer = 0;
+                this.timeDepartureX = this.x;
+                this.timeDepartureY = this.y;
+                this.timeArrivalX = this.x;
+                this.timeArrivalY = this.y;
+                this.timeArrivalVx = this.vx;
+                this.timeArrivalVy = this.vy;
+                this.timeArrivalAngle = this.angle;
+                this.timeArrivalHealth = 0;
+                this.timeArrivalRpm = 0;
+                this.timeStateHistory = [];
                 this.initUI();
             }
 
@@ -3054,6 +3961,7 @@
                 this.breakTickTimer = 0;
                 this.breakDmgPerTick = 0;
                 this.unbalanceTimer = 0;
+                this.sealTimer = 0;
                 this.bloomTimer = getPartsSkillCooldownFrames(300, this); // 5s base interval for Bloom driver
                 this.bloomHealReductions = 0; // max -2s reduction (-120 frames)
                 this.effectCooldowns = {};
@@ -3068,6 +3976,21 @@
                 this.timeArrivalX = 0;
                 this.timeArrivalY = 0;
                 this.timeStateHistory = [];
+                this.camusUltimateTimer = 0;
+                this.hodurUltimateTimer = 0;
+                this.hodurUltimateActive = false;
+                this.hodurHitIndex = 0;
+                this.hodurHitTimer = 0;
+                this.camusTeleportTimer = 0;
+                this.camusTeleportStage = 0;
+                this.camusDeparturePortalTimer = 0;
+                this.camusDepartureLingerTimer = 0;
+                this.camusArrivalPortalTimer = 0;
+                this.camusArrivalLingerTimer = 0;
+                this.camusDepartureX = 0;
+                this.camusDepartureY = 0;
+                this.camusArrivalX = 0;
+                this.camusArrivalY = 0;
                 this.batterFollowUpCooldownTimer = 0;
                 this.guardianDefStacks = 0;
                 this.arenaOccupation = null;
@@ -3210,6 +4133,7 @@
                 this.breakTickTimer = 0;
                 this.breakDmgPerTick = 0;
                 this.unbalanceTimer = 0;
+                this.sealTimer = 0;
                 this.bloomTimer = getPartsSkillCooldownFrames(300, this); // 5s base interval for Bloom driver
                 this.bloomHealReductions = 0; // max -2s reduction (-120 frames)
                 this.effectCooldowns = {};
@@ -3255,7 +4179,50 @@
                 addAilmentText(this.x, this.y, `+${Math.round(actualHeal)} HP`, '#3FFFA2', '#000000');
             }
 
+            hasSeal() {
+                return this.sealTimer > 0;
+            }
+
+            applySeal(duration) {
+                const sealDuration = Math.max(0, Number(duration) || 0);
+                if (sealDuration <= 0) return;
+                this.sealTimer = Math.max(this.sealTimer, sealDuration);
+                addAilmentText(this.x, this.y, 'SEAL!');
+                if (this.side === 'left') updateSkillHexagons();
+            }
+
+            gainUltimateCharge(amount) {
+                if (this.hasSeal() || this.deathKnightRevelationActive) return false;
+                const gain = Math.max(0, Number(amount) || 0);
+                this.ultimateGauge = Math.min(100, this.ultimateGauge + gain);
+                if (this.side === 'left') updateSkillHexagons();
+                return gain > 0;
+            }
+
+            tryCamusGaugeSwap(opponent) {
+                const camus = this.parts && this.parts.battleCap && this.parts.battleCap.id === 'bc_camus'
+                    ? this
+                    : (opponent && opponent.parts && opponent.parts.battleCap && opponent.parts.battleCap.id === 'bc_camus' ? opponent : null);
+                if (!camus) return false;
+                const other = camus === this ? opponent : this;
+                if (!other || other.dead || other.ultimateGauge < 100) return false;
+                const effects = camus.getAllEffects();
+                const effectIndex = effects.findIndex(eff => eff.type === 'camus_gauge_swap');
+                if (effectIndex < 0) return false;
+                const effect = effects[effectIndex];
+                if (camus.effectCooldowns[effectIndex] === undefined) camus.effectCooldowns[effectIndex] = 0;
+                if (camus.effectCooldowns[effectIndex] > 0) return false;
+                const camusGauge = Math.max(0, Math.min(100, camus.ultimateGauge));
+                const opponentGauge = Math.max(0, Math.min(100, other.ultimateGauge));
+                camus.ultimateGauge = opponentGauge;
+                other.ultimateGauge = camusGauge;
+                camus.effectCooldowns[effectIndex] = getPartsSkillCooldownFrames(effect.cooldown, camus);
+                if (camus.side === 'left' || other.side === 'left') updateSkillHexagons();
+                return true;
+            }
+
             castUltimate() {
+                if (this.hasSeal()) return;
                 if (this.ultimateGauge >= 100 && cinematicFrames === 0) {
                     this.ultimateGauge = 0;
 
@@ -3313,6 +4280,23 @@
                         const chronosEffect = this.getAllEffects().find(eff => eff.type === 'chronos_time_stop');
                         chronosTimeStopOwner = this;
                         chronosTimeStopFrames = chronosEffect ? chronosEffect.duration : 210;
+                    } else if (this.parts.battleCap.id === 'bc_camus') {
+                        const camusEffect = this.getAllEffects().find(eff => eff.type === 'camus_seal_ultimate');
+                        const sealDuration = camusEffect ? camusEffect.duration : 360;
+                        [bey1, bey2].forEach(bey => {
+                            if (bey && !bey.dead) bey.applySeal(sealDuration);
+                        });
+                        this.camusUltimateTimer = sealDuration;
+                        this.camusTeleportTimer = 90; // first random teleport after 1.5 seconds
+                        this.camusTeleportStage = 0;
+                this.hodurUltimateTimer = 0;
+                this.hodurUltimateActive = false;
+                    } else if (this.parts.battleCap.id === 'bc_hodur') {
+                        const hodurEffect = this.getAllEffects().find(eff => eff.type === 'hodur_ultimate');
+                        this.hodurUltimateActive = true;
+                        this.hodurUltimateTimer = hodurEffect ? hodurEffect.delay : 30;
+                        this.hodurHitIndex = 0;
+                        this.hodurHitTimer = 0;
                     } else if (this.parts.battleCap.id === 'bc_mermaid') {
                         // Queue the Ultimate wave; cinematicFrames must finish before it exists or moves.
                         this.mermaidUltimatePending = true;
@@ -3333,7 +4317,7 @@
             }
 
             draw(ctx) {
-                const drawTimePortal = (worldX, worldY, timer) => {
+                const drawTimePortal = (worldX, worldY, timer, portalColor = '#FBD678') => {
                     if (timer <= 0) return;
                     ctx.save();
                     const progress = 1 - (timer / 30);
@@ -3342,23 +4326,26 @@
                     ctx.beginPath();
                     ctx.arc(worldX * scale, worldY * scale, portalRadius, 0, Math.PI * 2);
                     ctx.lineWidth = Math.max(2, this.radius * 0.10 * scale);
-                    ctx.strokeStyle = '#FBD678';
-                    ctx.shadowColor = '#FBD678';
+                    ctx.strokeStyle = portalColor;
+                    ctx.shadowColor = portalColor;
                     ctx.shadowBlur = this.radius * 0.28 * scale;
                     ctx.stroke();
                     ctx.beginPath();
                     ctx.arc(worldX * scale, worldY * scale, portalRadius * 0.72, 0, Math.PI * 2);
                     ctx.lineWidth = Math.max(1.5, this.radius * 0.055 * scale);
-                    ctx.strokeStyle = 'rgba(255, 246, 190, 0.9)';
+                    ctx.strokeStyle = portalColor === '#A4C1D2' ? 'rgba(235, 249, 255, 0.95)' : 'rgba(255, 246, 190, 0.9)';
                     ctx.stroke();
                     ctx.restore();
                 };
                 if (!this.visible) {
-                    if (this.timeTeleportStage === 2) drawTimePortal(this.timeDepartureX, this.timeDepartureY, this.timeDeparturePortalTimer);
+                    if ((this.timeTeleportStage === 2 || this.camusTeleportStage === 2)) drawTimePortal(this.timeDepartureX, this.timeDepartureY, this.timeDeparturePortalTimer);
+                    if (this.camusTeleportStage === 2) drawTimePortal(this.camusDepartureX, this.camusDepartureY, this.camusDeparturePortalTimer, '#A4C1D2');
                     return;
                 }
                 if (this.timeTeleportStage === 1) drawTimePortal(this.timeDepartureX, this.timeDepartureY, this.timeDeparturePortalTimer);
                 if (this.timeTeleportStage === 3) drawTimePortal(this.timeArrivalX, this.timeArrivalY, this.timeArrivalPortalTimer);
+                if (this.camusTeleportStage === 1) drawTimePortal(this.camusDepartureX, this.camusDepartureY, this.camusDeparturePortalTimer, '#A4C1D2');
+                if (this.camusTeleportStage === 3) drawTimePortal(this.camusArrivalX, this.camusArrivalY, this.camusArrivalPortalTimer, '#A4C1D2');
                 if (this.deathKnightRevelationActive) {
                     // Match Athena's Ultimate aura geometry exactly; only the color is different.
                     ctx.save();
@@ -3545,13 +4532,107 @@
                 const ultimateAlwaysEmpty = !isPlayerBey && debugOverrides.enemyUltimateAlwaysEmpty;
                 if (unlimitedHealth) { this.health = this.maxHealth; this.dead = false; }
                 if (unlimitedStamina) this.rpm = this.maxRpm;
-                if (ultimateAlwaysFull) this.ultimateGauge = 100;
+                if (ultimateAlwaysFull && !this.hasSeal()) this.ultimateGauge = 100;
                 if (ultimateAlwaysEmpty) this.ultimateGauge = 0;
                 if (this.dead) {
                     this.deathTimer++;
                     if (this.deathTimer > 60) this.visible = false;
                     return;
                 }
+                // Hodur Ultimate: the delay starts at cast but is paused by cinematicFrames above.
+                if (this.hodurUltimateActive) {
+                    if (this.hodurUltimateTimer > 0) {
+                        this.hodurUltimateTimer = Math.max(0, this.hodurUltimateTimer - gameSpeed);
+                    } else {
+                        this.hodurHitTimer = Math.max(0, this.hodurHitTimer - gameSpeed);
+                        const hodurEffect = this.getAllEffects().find(eff => eff.type === 'hodur_ultimate');
+                        const hodurHits = hodurEffect ? Math.max(1, Math.floor(hodurEffect.hits || 3)) : 3;
+                        if (this.hodurHitTimer <= 0 && this.hodurHitIndex < hodurHits) {
+                            const hodurRatio = hodurEffect ? Number(hodurEffect.attackRatio) || 0.70 : 0.70;
+                            const lostHpBonus = hodurEffect ? Number(hodurEffect.lostHpBonusPerPercent) || 0.008 : 0.008;
+                            [bey1, bey2].forEach(enemy => {
+                                if (!enemy || enemy === this || enemy.dead) return;
+                                const lostHpPercent = Math.max(0, Math.min(1, (enemy.maxHealth - enemy.health) / Math.max(1, enemy.maxHealth)));
+                                const rawDamage = (this.stats.atk * hodurRatio) - enemy.stats.def;
+                                const scalingMultiplier = 1 + ((lostHpPercent * 100) * lostHpBonus);
+                                const varianceMultiplier = 1 + (Math.random() - 0.5) * 0.10;
+                                const hodurDamage = Math.max(0, rawDamage * scalingMultiplier * varianceMultiplier);
+                                if (hodurDamage > 0) {
+                                    enemy.takeDamage(hodurDamage, true, true, this, false);
+                                    // Small knockback after each damaging Hodur hit.
+                                    let knockbackDx = enemy.x - this.x;
+                                    let knockbackDy = enemy.y - this.y;
+                                    let knockbackDistance = Math.hypot(knockbackDx, knockbackDy);
+                                    if (knockbackDistance < 0.001) {
+                                        knockbackDx = 1;
+                                        knockbackDy = 0;
+                                        knockbackDistance = 1;
+                                    }
+                                    const hodurKnockbackForce = 4;
+                                    enemy.vx += (knockbackDx / knockbackDistance) * hodurKnockbackForce;
+                                    enemy.vy += (knockbackDy / knockbackDistance) * hodurKnockbackForce;
+                                }
+                            });
+                            this.hodurHitIndex += 1;
+                            this.hodurHitTimer = this.hodurHitIndex < hodurHits ? 15 : 0;
+                            if (this.hodurHitIndex >= hodurHits) {
+                                this.hodurUltimateActive = false;
+                                this.hodurUltimateTimer = 0;
+                            }
+                        }
+                    }
+                }
+
+                // Camus Ultimate: random, purely positional teleports for the Seal duration.
+                if (this.camusUltimateTimer > 0 || this.camusTeleportStage > 0) {
+                    if (this.camusUltimateTimer > 0) this.camusUltimateTimer = Math.max(0, this.camusUltimateTimer - gameSpeed);
+                    if (this.camusTeleportStage === 1) {
+                        this.camusDeparturePortalTimer = Math.max(0, this.camusDeparturePortalTimer - gameSpeed);
+                        this.camusDepartureLingerTimer = Math.max(0, this.camusDepartureLingerTimer - gameSpeed);
+                        if (this.camusDepartureLingerTimer <= 0) {
+                            this.camusTeleportStage = 2;
+                            this.visible = false;
+                            this.camusDepartureLingerTimer = 15;
+                        }
+                        return;
+                    }
+                    if (this.camusTeleportStage === 2) {
+                        this.camusDeparturePortalTimer = Math.max(0, this.camusDeparturePortalTimer - gameSpeed);
+                        this.camusDepartureLingerTimer = Math.max(0, this.camusDepartureLingerTimer - gameSpeed);
+                        if (this.camusDepartureLingerTimer <= 0) {
+                            this.x = this.camusArrivalX;
+                            this.y = this.camusArrivalY;
+                            this.visible = true;
+                            this.camusTeleportStage = 3;
+                            this.camusArrivalLingerTimer = 15;
+                            this.camusArrivalPortalTimer = 30;
+                        }
+                        return;
+                    }
+                    if (this.camusTeleportStage === 3) {
+                        this.camusArrivalPortalTimer = Math.max(0, this.camusArrivalPortalTimer - gameSpeed);
+                        this.camusArrivalLingerTimer = Math.max(0, this.camusArrivalLingerTimer - gameSpeed);
+                        if (this.camusArrivalLingerTimer <= 0) this.camusTeleportStage = 0;
+                    }
+                    if (this.camusTeleportStage === 0 && this.camusUltimateTimer > 0) {
+                        this.camusTeleportTimer -= gameSpeed;
+                        if (this.camusTeleportTimer <= 0) {
+                            const maxDistance = Math.max(0, ARENA_RADIUS - this.radius - 1);
+                            const randomAngle = Math.random() * Math.PI * 2;
+                            const randomDistance = Math.sqrt(Math.random()) * maxDistance;
+                            this.camusDepartureX = this.x;
+                            this.camusDepartureY = this.y;
+                            this.camusArrivalX = centerX + Math.cos(randomAngle) * randomDistance;
+                            this.camusArrivalY = centerY + Math.sin(randomAngle) * randomDistance;
+                            this.camusDeparturePortalTimer = 45;
+                            this.camusDepartureLingerTimer = 15;
+                            this.camusTeleportStage = 1;
+                            this.visible = true;
+                            this.camusTeleportTimer = 90;
+                        }
+                    }
+                }
+
                 const timeEffect = this.getAllEffects().find(eff => eff.type === 'time_rewind');
                 if (timeEffect) {
                     // Defensive guard for first-battle/loadout initialization paths.
@@ -3571,17 +4652,28 @@
                         return;
                     }
                     // Stage 2: the bey is gone for 0.25s while the departure portal stays fixed.
-                    if (this.timeTeleportStage === 2) {
+                    if ((this.timeTeleportStage === 2 || this.camusTeleportStage === 2)) {
                         this.timeDeparturePortalTimer = Math.max(0, this.timeDeparturePortalTimer - gameSpeed);
                         this.timeDepartureLingerTimer = Math.max(0, this.timeDepartureLingerTimer - gameSpeed);
                         if (this.timeDepartureLingerTimer <= 0) {
-                            this.x = Math.max(-ARENA_RADIUS, Math.min(ARENA_RADIUS, this.timeArrivalX));
-                            this.y = Math.max(-ARENA_RADIUS, Math.min(ARENA_RADIUS, this.timeArrivalY));
-                            this.vx = this.timeArrivalVx;
-                            this.vy = this.timeArrivalVy;
-                            this.angle = this.timeArrivalAngle;
-                            this.health = Math.max(1, Math.min(this.maxHealth, this.timeArrivalHealth));
-                            this.rpm = Math.max(0, Math.min(this.maxRpm, this.timeArrivalRpm));
+                            let arrivalX = Number.isFinite(this.timeArrivalX) ? this.timeArrivalX : this.timeDepartureX;
+                            let arrivalY = Number.isFinite(this.timeArrivalY) ? this.timeArrivalY : this.timeDepartureY;
+                            const maxArrivalDistance = Math.max(0, ARENA_RADIUS - this.radius - 1);
+                            const dx = arrivalX - centerX;
+                            const dy = arrivalY - centerY;
+                            const distance = Math.hypot(dx, dy);
+                            if (distance > maxArrivalDistance) {
+                                const scale = maxArrivalDistance / (distance || 1);
+                                arrivalX = centerX + dx * scale;
+                                arrivalY = centerY + dy * scale;
+                            }
+                            this.x = arrivalX;
+                            this.y = arrivalY;
+                            this.vx = Number.isFinite(this.timeArrivalVx) ? this.timeArrivalVx : 0;
+                            this.vy = Number.isFinite(this.timeArrivalVy) ? this.timeArrivalVy : 0;
+                            this.angle = Number.isFinite(this.timeArrivalAngle) ? this.timeArrivalAngle : this.angle;
+                            this.health = Math.max(1, Math.min(this.maxHealth, Number.isFinite(this.timeArrivalHealth) ? this.timeArrivalHealth : this.health));
+                            this.rpm = Math.max(0, Math.min(this.maxRpm, Number.isFinite(this.timeArrivalRpm) ? this.timeArrivalRpm : this.rpm));
                             this.visible = true;
                             this.timeTeleportStage = 3;
                             this.timeArrivalLingerTimer = 15; // visible arrival linger: 0.25 seconds
@@ -3600,7 +4692,7 @@
                     if (this.timeStateHistory.length > maxHistory) this.timeStateHistory.shift();
                     if (this.timeSkillTimer <= 0 && this.timeStateHistory.length > timeEffect.rewindFrames && gameRunning && this.timeTeleportStage === 0) {
                         const rewindState = this.timeStateHistory[this.timeStateHistory.length - 1 - timeEffect.rewindFrames];
-                        if (rewindState) {
+                        if (rewindState && Number.isFinite(rewindState.x) && Number.isFinite(rewindState.y)) {
                             this.timeCooldownBuffTimer = timeEffect.buffDuration;
                             const nextTimeCooldown = getPartsSkillCooldownFrames(timeEffect.activationInterval, this, true);
                             this.timeDepartureX = this.x;
@@ -3661,11 +4753,12 @@
                     if (this.parts.battleCap && this.parts.battleCap.id === 'bc_mermaid') {
                         addAmount *= 2.0; // Mermaid: +100% automatic Ultimate charging rate.
                     }
-                    this.ultimateGauge = Math.min(100, this.ultimateGauge + addAmount);
+                    this.gainUltimateCharge(addAmount);
                     if (!isPlayerBey && debugOverrides.enemyUltimateAlwaysEmpty) this.ultimateGauge = 0;
                     if (this.side === 'left') updateSkillHexagons();
                     }
                 }
+                this.tryCamusGaugeSwap(target);
                 if (this.side === 'left' && autoUltimateToggle.checked && this.ultimateGauge >= 100) {
                     this.castUltimate();
                 } else if (this.side === 'right' && this.ultimateGauge >= 100) {
@@ -3819,6 +4912,10 @@
                     }
                 }
                 if (this.unbalanceTimer > 0) this.unbalanceTimer -= gameSpeed;
+                if (this.sealTimer > 0) {
+                    this.sealTimer = Math.max(0, this.sealTimer - gameSpeed);
+                    if (this.side === 'left') updateSkillHexagons();
+                }
                 if (this.coronaCooldownBuffTimer > 0) this.coronaCooldownBuffTimer -= gameSpeed;
 
                 // Bloom & Piety driver passive timer checks
@@ -3831,7 +4928,7 @@
                             this.bloomTimer = getPartsSkillCooldownFrames(effectiveInterval, this);
                             let gain = eff.gaugeGain;
                             if (this.shieldTimer > 0) gain *= 2;
-                            if (!this.deathKnightRevelationActive) this.ultimateGauge = Math.min(100, this.ultimateGauge + gain);
+                            this.gainUltimateCharge(gain);
                             if (this.side === 'left') updateSkillHexagons();
                         }
                     }
@@ -3852,6 +4949,18 @@
                 effects.forEach((eff, idx) => {
                     if (this.effectCooldowns[idx] > 0) {
                         this.effectCooldowns[idx] -= gameSpeed;
+                    }
+
+                    if (eff.type === 'camus_gauge_swap' && target && !target.dead && target.ultimateGauge >= 100) {
+                        if (this.effectCooldowns[idx] === undefined) this.effectCooldowns[idx] = 0;
+                        if (this.effectCooldowns[idx] <= 0) {
+                            const ownGauge = Math.max(0, Math.min(100, this.ultimateGauge));
+                            const opponentGauge = Math.max(0, Math.min(100, target.ultimateGauge));
+                            this.ultimateGauge = opponentGauge;
+                            target.ultimateGauge = ownGauge;
+                            this.effectCooldowns[idx] = getPartsSkillCooldownFrames(eff.cooldown, this);
+                            if (this.side === 'left' || target.side === 'left') updateSkillHexagons();
+                        }
                     }
 
                     if (eff.trigger === 'hp_threshold' && eff.type === 'recover') {
@@ -4202,7 +5311,7 @@
             }
 
             takeDamage(amount, showText = true, isBeyHit = true, attacker = null, forcedIsImpactHit = null) {
-                if (this.dead || this.timeTeleportStage === 2) return;
+                if (this.dead || (this.timeTeleportStage === 2 || this.camusTeleportStage === 2)) return;
                 if ((this.side === 'left' && debugOverrides.playerUnlimitedHealth) || (this.side === 'right' && debugOverrides.enemyUnlimitedHealth)) {
                     this.health = this.maxHealth;
                     this.updateUI();
@@ -4211,6 +5320,9 @@
 
                 const isLowRpm = (this.rpm <= 0);
                 let isImpactHit = forcedIsImpactHit !== null ? forcedIsImpactHit : (attacker && attacker.isImpact && attacker.impactState === 'dashing');
+                if (this.parts.weightRing && this.parts.weightRing.id === 'wr_aquarius' && this.isImpact) {
+                    amount *= 0.70;
+                }
                 let blockChance = 0.0;
                 if (this.parts.battleCap.type === 'Defense' && isImpactHit) {
                     blockChance = 0.24;
@@ -4259,14 +5371,14 @@
 
                     // Blocker gains +20 Ultimate gauge on successful block.
                     let blockerGaugeGain = 20;
-                    this.ultimateGauge = Math.min(100, this.ultimateGauge + blockerGaugeGain);
+                    this.gainUltimateCharge(blockerGaugeGain);
 
                     let gaugeGain = 0;
                     if (attacker && attacker.parts.driver && attacker.parts.driver.id === 'drv_rage') {
                         gaugeGain += 15;
                     }
                     if (attacker && gaugeGain > 0) {
-                        if (!attacker.deathKnightRevelationActive) attacker.ultimateGauge = Math.min(100, attacker.ultimateGauge + gaugeGain);
+                        attacker.gainUltimateCharge(gaugeGain);
                     }
                     if (this.side === 'left') updateSkillHexagons();
 
@@ -4429,7 +5541,7 @@
         }
 
         function checkBeyCollision(a, b) {
-            if (!a || !b || a.dead || b.dead || a.timeTeleportStage === 2 || b.timeTeleportStage === 2) return;
+            if (!a || !b || a.dead || b.dead || (a.timeTeleportStage === 2 || a.camusTeleportStage === 2) || (b.timeTeleportStage === 2 || b.camusTeleportStage === 2)) return;
             if (a.collisionCooldown > 0 || b.collisionCooldown > 0) return;
             
             const dx = b.x - a.x;
@@ -4515,7 +5627,7 @@
                     b.impactCooldownTimer = getImpactIntervalFrames(b, b.stats.interval);
 
                     let gB = bWasUltimateImpact ? 0 : ((b.parts.battleCap.type === 'Attack' ? 25 : 20) + (b.parts.driver && b.parts.driver.id === 'drv_rage' ? 10 : 0));
-                    if (gB > 0) b.ultimateGauge = Math.min(100, b.ultimateGauge + gB);
+                    if (gB > 0) b.gainUltimateCharge(gB);
 
                     const b2Effects = b.getAllEffects();
                     b2Effects.forEach((eff, idx) => {
@@ -4548,6 +5660,8 @@
                                     a.unbalanceTimer = eff.duration;
                                     addAilmentText(a.x, a.y, "UNBALANCE!");
                                 }
+                            } else if (eff.type === 'seal') {
+                                if (Math.random() < (eff.chance === undefined ? 1 : eff.chance)) a.applySeal(eff.duration);
                             }
                         }
                     });
@@ -4566,7 +5680,7 @@
                     a.impactCooldownTimer = getImpactIntervalFrames(a, a.stats.interval);
 
                     let gA = aWasUltimateImpact ? 0 : ((a.parts.battleCap.type === 'Attack' ? 25 : 20) + (a.parts.driver && a.parts.driver.id === 'drv_rage' ? 10 : 0));
-                    if (gA > 0) a.ultimateGauge = Math.min(100, a.ultimateGauge + gA);
+                    if (gA > 0) a.gainUltimateCharge(gA);
 
                     const b1Effects = a.getAllEffects();
                     b1Effects.forEach((eff, idx) => {
@@ -4599,6 +5713,8 @@
                                     b.unbalanceTimer = eff.duration;
                                     addAilmentText(b.x, b.y, "UNBALANCE!");
                                 }
+                            } else if (eff.type === 'seal') {
+                                if (Math.random() < (eff.chance === undefined ? 1 : eff.chance)) b.applySeal(eff.duration);
                             }
                         }
                     });
@@ -4631,7 +5747,10 @@
                         a.takeDamage(finalDmg1, true, true, b, bWasImpact);
                     }
                     if (bIsHattoriImpact) triggerHattoriClawVisual(a, bComboCount);
-                    if (bWasImpact) tryTriggerBatterFollowUp(b, a);
+                    if (bWasImpact) {
+                        tryTriggerBatterFollowUp(b, a);
+                        tryTriggerHodurFollowUp(b, a);
+                    }
                     if (b.parts && b.parts.battleCap && b.parts.battleCap.id === 'bc_beelzebub') {
                         let eff = b.getAllEffects().find(e => e.type === 'beelzebub_absorb');
                         let chance = eff ? eff.chance : 0.30;
@@ -4640,7 +5759,7 @@
                             if (b.health < b.maxHealth) {
                                 b.applyHeal(finalDmg1);
                             }
-                            b.ultimateGauge = Math.min(100, b.ultimateGauge + gGain);
+                            b.gainUltimateCharge(gGain);
                             if (b.side === 'left') updateSkillHexagons();
                         }
                     }
@@ -4653,7 +5772,10 @@
                         b.takeDamage(finalDmg2, true, true, a, aWasImpact);
                     }
                     if (aIsHattoriImpact) triggerHattoriClawVisual(b, aComboCount);
-                    if (aWasImpact) tryTriggerBatterFollowUp(a, b);
+                    if (aWasImpact) {
+                        tryTriggerBatterFollowUp(a, b);
+                        tryTriggerHodurFollowUp(a, b);
+                    }
                     if (a.parts && a.parts.battleCap && a.parts.battleCap.id === 'bc_beelzebub') {
                         let eff = a.getAllEffects().find(e => e.type === 'beelzebub_absorb');
                         let chance = eff ? eff.chance : 0.30;
@@ -4662,7 +5784,7 @@
                             if (a.health < a.maxHealth) {
                                 a.applyHeal(finalDmg2);
                             }
-                            a.ultimateGauge = Math.min(100, a.ultimateGauge + gGain);
+                            a.gainUltimateCharge(gGain);
                             if (a.side === 'left') updateSkillHexagons();
                         }
                     }
@@ -4765,7 +5887,7 @@
                 this.dead = false;
             }
             update() {
-                if (this.dead || !this.target || this.target.dead || this.target.timeTeleportStage === 2) {
+                if (this.dead || !this.target || this.target.dead || (this.target.timeTeleportStage === 2 || this.target.camusTeleportStage === 2)) {
                     this.dead = true;
                     return;
                 }
@@ -4778,6 +5900,10 @@
                 const targetDistance = Math.hypot(this.x - this.target.x, this.y - this.target.y);
                 const arenaDistance = Math.hypot(this.x - centerX, this.y - centerY);
                 if (targetDistance <= this.target.radius + this.config.size && this.hitCooldownTimer <= 0) {
+                    if (this.target.parts.weightRing && this.target.parts.weightRing.id === 'wr_aquarius' && this.target.isImpact) {
+                        this.dead = true;
+                        return;
+                    }
                     const attackerAttack = this.owner.stats.atk || 0;
                     const defenderDefense = this.target.stats.def || 0;
                     const rawDamage = (attackerAttack * this.config.attackRatio) - defenderDefense;
@@ -4795,13 +5921,13 @@
                         const impactGaugeGain = this.owner.parts.battleCap.type === 'Attack' ? 25 : 20;
                         const rageGaugeGain = this.owner.parts.driver && this.owner.parts.driver.id === 'drv_rage' ? 10 : 0;
                         if (!this.owner.deathKnightRevelationActive) {
-                            this.owner.ultimateGauge = Math.min(100, this.owner.ultimateGauge + impactGaugeGain + rageGaugeGain);
+                            this.owner.gainUltimateCharge(impactGaugeGain + rageGaugeGain);
                             if (this.owner.side === 'left') updateSkillHexagons();
                         }
                     }
                     const coronaEffect = this.owner.getAllEffects().find(eff => eff.type === 'corona_projectile_hit');
                     if (coronaEffect) {
-                        this.owner.ultimateGauge = Math.min(100, this.owner.ultimateGauge + coronaEffect.ultimateGain);
+                        this.owner.gainUltimateCharge(coronaEffect.ultimateGain);
                         this.owner.coronaCooldownBuffTimer = coronaEffect.duration;
                         if (this.owner.side === 'left') updateSkillHexagons();
                     }
@@ -4968,7 +6094,7 @@
                         target.takeDamage(mitigatedDamage, true, true, orb.owner, false);
                         const coronaEffect = orb.owner.getAllEffects().find(eff => eff.type === 'corona_projectile_hit');
                         if (coronaEffect) {
-                            if (!orb.owner.deathKnightRevelationActive) orb.owner.ultimateGauge = Math.min(100, orb.owner.ultimateGauge + coronaEffect.ultimateGain);
+                            orb.owner.gainUltimateCharge(coronaEffect.ultimateGain);
                             orb.owner.coronaCooldownBuffTimer = coronaEffect.duration;
                             if (orb.owner.side === 'left') updateSkillHexagons();
                         }
@@ -5027,7 +6153,7 @@
             }
         }
         function drawMiniHealthBar(ctx, bey) {
-            if (!bey || launchingPhase || bey.visible === false || bey.timeTeleportStage === 2) return;
+            if (!bey || launchingPhase || bey.visible === false || (bey.timeTeleportStage === 2 || bey.camusTeleportStage === 2)) return;
             const barWidth = 86 * scale;
             const barHeight = 11.2 * scale;
             const x = bey.x * scale - barWidth / 2;
@@ -5110,8 +6236,165 @@
                 arenaScreen._chronosTimeStopClassState = nextChronosClassState;
             }
         }
+        let hodurSwordVisualPhase = 'inactive';
+        let hodurSwordSequenceFrame = 0;
+        let hodurSwordConvergeFrame = 0;
+        let hodurSwordFloatFrame = 0;
+        let hodurSlashVisuals = [];
+        let hodurSlashVisualScheduleIndex = 0;
+        function triggerHodurSlashVisual() {
+            hodurSlashVisuals.push({
+                life: 10,
+                maxLife: 10,
+                angleA: Math.random() * 360,
+                angleB: Math.random() * 360,
+                centerX: 35 + Math.random() * 30,
+                centerY: 35 + Math.random() * 30
+            });
+            if (hodurSlashVisuals.length > 3) hodurSlashVisuals.splice(0, hodurSlashVisuals.length - 3);
+        }
+        function updateHodurSlashSequence(hodurOverlay, active) {
+            const slashLayer = hodurOverlay ? hodurOverlay.querySelector('#hodurSlashSequence') : null;
+            if (!slashLayer) return;
+            if (!active) {
+                hodurSlashVisuals = [];
+                slashLayer.replaceChildren();
+                return;
+            }
+            while (slashLayer.children.length < hodurSlashVisuals.length) {
+                const slashElement = document.createElement('span');
+                slashElement.innerHTML = '<span class="hodur-slash-line hodur-slash-line-a"></span><span class="hodur-slash-line hodur-slash-line-b"></span>';
+                slashLayer.appendChild(slashElement);
+            }
+            while (slashLayer.children.length > hodurSlashVisuals.length) {
+                slashLayer.lastElementChild.remove();
+            }
+            hodurSlashVisuals.forEach((slash, index) => {
+                slash.life -= gameSpeed;
+                const element = slashLayer.children[index];
+                const progress = Math.max(0, Math.min(1, 1 - slash.life / slash.maxLife));
+                const scale = 0.78 + Math.sin(progress * Math.PI) * 0.28;
+                element.className = 'hodur-ultimate-slash';
+                element.style.left = `${slash.centerX}%`;
+                element.style.top = `${slash.centerY}%`;
+                element.style.setProperty('--slash-line-angle-a', `${slash.angleA}deg`);
+                element.style.setProperty('--slash-line-angle-b', `${slash.angleB}deg`);
+                element.style.setProperty('--slash-scale', String(scale));
+                element.style.transform = `translate(-50%, -50%) scale(${scale})`;
+                element.style.opacity = '1';
+            });
+            hodurSlashVisuals = hodurSlashVisuals.filter(slash => slash.life > 0);
+        }
+        function updateHodurSwordSequence(hodurOverlay, active) {
+            const swords = hodurOverlay ? hodurOverlay.querySelectorAll('.hodur-ultimate-sword') : [];
+            if (!swords.length) return;
+            const swordPositions = [
+                // Deliberately hardcoded scatter with mixed radial distances from center.
+                // Outer positions sit far from center; inner positions sit noticeably closer.
+                [0, 0, 150], [30, 10, 165], [88, 12, 225],
+                [115, 43, 260], [88, 66, 290], [90, 82, 320],
+                [22, 78, 35], [0, 68, 70], [7, 32, 115]
+            ];
+            if (!active) {
+                hodurSwordVisualPhase = 'inactive';
+                hodurSwordSequenceFrame = 0;
+                hodurSwordConvergeFrame = 0;
+                hodurSwordFloatFrame = 0;
+                hodurSlashVisualScheduleIndex = 0;
+                swords.forEach(sword => {
+                    sword.style.opacity = '0';
+                    delete sword.dataset.hodurDisappearProgress;
+                });
+                return;
+            }
+            // Visual timing is independent from Hodur's gameplay delay:
+            // 30 frames = 0.5s idle, followed by a 0.5s convergence window.
+            if (hodurSwordVisualPhase === 'inactive') {
+                hodurSwordVisualPhase = 'delay';
+                hodurSwordSequenceFrame = 0;
+                hodurSwordConvergeFrame = 0;
+            }
+            hodurSwordSequenceFrame += gameSpeed;
+            // The nine blades finish convergence at frame 105: 75 idle + 16 stagger + 14 movement.
+            // Start the three X-slashes 9 frames (0.15s) before that endpoint and finish them before center.
+            const hodurBladeConvergenceEndFrame = 105;
+            const hodurSlashLeadFrames = 20;
+            const hodurSlashStartFrame = hodurBladeConvergenceEndFrame - hodurSlashLeadFrames;
+            const hodurSlashSpacingFrames = 12;
+            while (
+                hodurSlashVisualScheduleIndex < 3 &&
+                hodurSwordSequenceFrame >= hodurSlashStartFrame + (hodurSlashVisualScheduleIndex * hodurSlashSpacingFrames)
+            ) {
+                triggerHodurSlashVisual();
+                hodurSlashVisualScheduleIndex += 1;
+            }
+            if (hodurSwordSequenceFrame < 75) {
+                hodurSwordVisualPhase = 'delay';
+                hodurSwordFloatFrame += gameSpeed;
+            } else {
+                if (hodurSwordVisualPhase !== 'converge') {
+                    hodurSwordVisualPhase = 'converge';
+                    hodurSwordConvergeFrame = 0;
+                    swords.forEach(sword => {
+                        // Each blade disappears at a different 80–90% point of its own path.
+                        sword.dataset.hodurDisappearProgress = String(0.8 + Math.random() * 0.1);
+                    });
+                }
+                hodurSwordConvergeFrame = hodurSwordSequenceFrame - 75;
+            }
+            swords.forEach((sword, index) => {
+                const [baseX, baseY, angle] = swordPositions[index];
+                sword.style.setProperty('--sword-angle', `${angle}deg`);
+                let x = baseX;
+                let y = baseY;
+                // Floating blades start at 0.9 opacity during the idle scatter.
+                let opacity = 0.9;
+                let scale = 1;
+                if (hodurSwordVisualPhase === 'delay') {
+                    const floatOffset = Math.sin((hodurSwordFloatFrame * 0.08) + index * 0.8) * 1.2;
+                    const floatOffsetY = Math.cos((hodurSwordFloatFrame * 0.065) + index * 0.65) * 1.2;
+                    x += floatOffset;
+                    y += floatOffsetY;
+                } else if (hodurSwordVisualPhase === 'converge') {
+                    const startFrame = index * 2;
+                    const moveFrames = 14;
+                    const progress = Math.max(0, Math.min(1, (hodurSwordConvergeFrame - startFrame) / moveFrames));
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    x = baseX + (50 - baseX) * eased;
+                    y = baseY + (50 - baseY) * eased;
+                    // Shrink from full size to 30% as the blade reaches the center.
+                    scale = 1 - (0.7 * eased);
+                    // Fade each blade gradually to zero at its own randomized 80–90% endpoint.
+                    const disappearProgress = Number(sword.dataset.hodurDisappearProgress) || 0.85;
+                    opacity = 0.9 * Math.max(0, 1 - (progress / disappearProgress));
+                }
+                sword.style.left = `${x}%`;
+                sword.style.top = `${y}%`;
+                sword.style.setProperty('--sword-scale', String(scale));
+                sword.style.opacity = String(opacity);
+            });
+        }
         function animate() {
             updateChronosArenaFilter();
+            const camusUltimateActive = !!(
+                (bey1 && bey1.parts && bey1.parts.battleCap && bey1.parts.battleCap.id === 'bc_camus' && bey1.camusUltimateTimer > 0) ||
+                (bey2 && bey2.parts && bey2.parts.battleCap && bey2.parts.battleCap.id === 'bc_camus' && bey2.camusUltimateTimer > 0)
+            );
+            const camusOverlay = getCachedElement('camusUltimateOverlay');
+            if (camusOverlay) camusOverlay.classList.toggle('active', camusUltimateActive);
+            const hodurUltimateActive = !!(
+                (bey1 && bey1.hodurUltimateActive) ||
+                (bey2 && bey2.hodurUltimateActive)
+            );
+            const hodurOverlay = getCachedElement('hodurUltimateOverlay');
+            if (hodurOverlay) {
+                const hodurVisualSequenceActive = hodurUltimateActive || (
+                    hodurSwordVisualPhase !== 'inactive' && hodurSwordSequenceFrame <= 120
+                );
+                hodurOverlay.classList.toggle('active', hodurUltimateActive || hodurVisualSequenceActive);
+                updateHodurSwordSequence(hodurOverlay, hodurVisualSequenceActive);
+                updateHodurSlashSequence(hodurOverlay, hodurVisualSequenceActive);
+            }
             if (gameRunning && !gamePaused && bey1 && bey2 && !bey1.dead && !bey2.dead) {
                 battleTimeSeconds += (1 / 60) * gameSpeed;
                 getCachedElement('battleTimer').textContent = formatTime(battleTimeSeconds);
@@ -5318,7 +6601,7 @@
                 // Freeze enemy wind-gust rotation and lifetime during Chronos time stop.
                 if (chronosTimeStopFrames > 0 && chronosTimeStopOwner && wg.caster !== chronosTimeStopOwner) continue;
                 wg.life -= gameSpeed;
-                if (wg.life <= 0 || !wg.caster || wg.caster.dead || wg.caster.timeTeleportStage === 2) {
+                if (wg.life <= 0 || !wg.caster || wg.caster.dead || (wg.caster.timeTeleportStage === 2 || wg.caster.camusTeleportStage === 2)) {
                     windGustVisuals.splice(i, 1);
                     continue;
                 }
@@ -5360,6 +6643,7 @@
                 updateProjectiles();
             }
             handleTowerBattleEnd();
+            handleReusableBattleEnd();
             updateChronosArenaFilter();
             bey1.draw(bCtx);
             bey2.draw(bCtx);
@@ -5372,7 +6656,7 @@
 
             for (let i = hattoriClawVisuals.length - 1; i >= 0; i--) {
                 const claw = hattoriClawVisuals[i];
-                if (!claw.target || claw.target.dead || claw.target.timeTeleportStage === 2) {
+                if (!claw.target || claw.target.dead || (claw.target.timeTeleportStage === 2 || claw.target.camusTeleportStage === 2)) {
                     hattoriClawVisuals.splice(i, 1);
                     continue;
                 }
@@ -5558,7 +6842,7 @@
             let totalAtk = upgradedCap.atk + upgradedRing.atk + upgradedDriver.atk;
             let totalDef = upgradedCap.def + upgradedRing.def + upgradedDriver.def;
             let totalStm = upgradedCap.stamina + upgradedRing.stamina + upgradedDriver.stamina;
-            let totalHealth = playerEquipped.battleCap.health + playerEquipped.weightRing.health + playerEquipped.driver.health;
+            let totalHealth = upgradedCap.health + upgradedRing.health + upgradedDriver.health;
 
             document.getElementById('previewName').textContent = playerEquipped.battleCap.name;
             document.getElementById('previewPartsDesc').textContent = `${playerEquipped.weightRing.name} + ${playerEquipped.driver.name}`;
@@ -5716,6 +7000,7 @@
             currencyState.gold -= cost;
             partUpgradeLevels[part.id] = level + 1;
             updateCurrencyUI();
+            scheduleChampionshipPlayerSync();
             bey1.updateParts(playerEquipped);
             updateGarageUI();
             if (typeof updateHomeUI === 'function') updateHomeUI();
@@ -5740,6 +7025,7 @@
                     playerEquipped[type] = part;
                     playerLoadouts[activeLoadoutIndex] = playerEquipped;
                     bey1.updateParts(playerEquipped);
+                    scheduleChampionshipPlayerSync();
                 }
                 partModal.classList.add('hidden');
                 updateGarageUI();
@@ -5876,7 +7162,7 @@
         });
 
         hexCenter.addEventListener('click', () => {
-            if (bey1 && gameRunning) {
+            if (bey1 && gameRunning && !bey1.hasSeal()) {
                 bey1.castUltimate();
             }
         });
@@ -5920,6 +7206,7 @@
 
         updateCurrencyUI();
         updateProfileNameUI();
+        updatePlayerUidUI();
         updateDebugOverrideUI();
         updateDebugSeedInput();
         const MANUAL_SAVE_KEY = 'bey_manual_universal_save';
@@ -5930,6 +7217,8 @@
                 tower: { currentFloor: towerCurrentFloor, unlockedFloor: towerUnlockedFloor },
                 currency: { gold: Math.max(0, Math.floor(currencyState.gold || 0)), gems: Math.max(0, Math.floor(currencyState.gems || 0)) },
                 playerName,
+                playerUid,
+                playerChampionshipWins,
                 debugOverrides: { ...debugOverrides },
                 upgrades: { ...partUpgradeLevels },
                 activeLoadoutIndex,
@@ -5971,12 +7260,14 @@
 
             updateCurrencyUI();
             updateProfileNameUI();
+            updatePlayerUidUI();
             updateDebugOverrideUI();
             updateGarageUI();
             if (typeof updateEnemyGarageUI === 'function') updateEnemyGarageUI();
             if (typeof renderTowerFloors === 'function') renderTowerFloors();
             if (typeof updateSkillHexagons === 'function') updateSkillHexagons();
             if (typeof updateHomeUI === 'function') updateHomeUI();
+            scheduleChampionshipPlayerSync();
         }
         function manualLoadGame() {
             try {
@@ -5989,6 +7280,8 @@
                 towerUnlockedFloor = Math.max(1, Math.min(100, Number(data.tower && data.tower.unlockedFloor) || 1));
                 currencyState = { gold: Math.max(0, Number(data.currency && data.currency.gold) || 0), gems: Math.max(0, Number(data.currency && data.currency.gems) || 0) };
                 playerName = String(data.playerName || 'Player').trim().slice(0, 20) || 'Player';
+                playerUid = isValidPlayerUid(data.playerUid) ? data.playerUid : playerUid;
+                playerChampionshipWins = Math.max(0, Math.floor(Number(data.playerChampionshipWins) || 0));
                 debugOverrides = { ...debugOverrides, ...(data.debugOverrides || {}) };
                 partUpgradeLevels = { ...(data.upgrades || {}) };
                 const savedLoadouts = Array.isArray(data.loadouts) && data.loadouts.length >= 3 ? data.loadouts : [data.playerLoadout || {}];
@@ -6004,11 +7297,14 @@
                 activeLoadoutIndex = Math.max(0, Math.min(2, Number(data.activeLoadoutIndex) || 0));
                 playerEquipped = playerLoadouts[activeLoadoutIndex];
                 refreshAfterManualDataChange();
+                scheduleChampionshipPlayerSync();
                 setManualSaveStatus('Game loaded.');
             } catch (e) { setManualSaveStatus('Load failed.', '#ff7777'); }
         }
         function manualResetGame() {
             playerName = 'Player';
+            playerUid = generatePlayerUid();
+            playerChampionshipWins = 0;
             debugOverrides = { playerUnlimitedHealth:false, playerUnlimitedStamina:false, playerUltimateAlwaysFull:false, enemyUnlimitedHealth:false, enemyUnlimitedStamina:false, enemyUltimateAlwaysEmpty:false };
             currencyState = { gold: 0, gems: 0 };
             partUpgradeLevels = {};
@@ -6020,6 +7316,7 @@
             playerEquipped = playerLoadouts[activeLoadoutIndex];
             try { localStorage.removeItem(MANUAL_SAVE_KEY); } catch (e) {}
             refreshAfterManualDataChange();
+            scheduleChampionshipPlayerSync();
             setManualSaveStatus('Progress reset.');
         }
 
@@ -6089,6 +7386,12 @@ if (document.readyState === 'loading') {
     autoLoadGame();
 }
 
+// Start online Championship sync after the local state and initial UI are ready.
+setTimeout(() => {
+    syncPlayerChampionshipData();
+    loadChampionshipRankerData();
+}, 1200);
+
 // Save periodically while the game is open.
 const autoSaveTimer = setInterval(autoSaveGame, AUTO_SAVE_INTERVAL_MS);
 
@@ -6102,7 +7405,6 @@ document.addEventListener('visibilitychange', () => {
 // Save when the page is being closed, refreshed, or navigated away from.
 window.addEventListener('pagehide', autoSaveGame);
 window.addEventListener('beforeunload', autoSaveGame);
-
 
 
         currencyDebugModal.addEventListener('click', e => { if (e.target === currencyDebugModal) window.closeCurrencyDebug(); });
