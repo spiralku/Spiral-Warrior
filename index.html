@@ -156,6 +156,16 @@
         .tower-reward-detail .tower-reward-icon { display:block; width:24px; height:24px; flex:0 0 24px; position:static; transform:translateY(-1px); }
         .tower-reward-amount { display:block; color:#5c6670; font-size:10px; line-height:1; white-space:nowrap; transform:translateY(2px); }
         .tower-detail-battle-btn { position:absolute; left:50%; bottom:14px; transform:translateX(-50%); display:block; width:auto !important; min-width:112px; margin:0; padding:6px 18px; }
+        .ranker-loadout-detail-box { min-height:0; }
+        .ranker-loadout-detail-box .tower-detail-details-row { min-height:0; align-items:start; padding:10px 8px 12px; }
+        .ranker-loadout-detail-box #rankerLoadoutDetailCanvas { width:min(128px,100%); height:auto; display:block; }
+        .ranker-loadout-detail-box .tower-detail-info { gap:5px; }
+        .ranker-loadout-detail-parts { display:flex; flex-direction:column; gap:3px; }
+        .ranker-loadout-detail-part { display:flex; justify-content:space-between; align-items:center; gap:5px; padding:4px 5px; border-radius:3px; background:rgba(0,0,0,.28); color:#62b7e8; font-size:9px; font-weight:800; line-height:1.1; }
+        .ranker-loadout-detail-part strong { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#fff; font-size:9px; font-weight:800; }
+        .ranker-loadout-detail-part span { flex:0 0 auto; color:#62b7e8; font-size:9px; font-weight:900; }
+        .championship-ranker-mini-loadout[data-ranker-loadout] { cursor:pointer; transition:transform .15s ease, background .15s ease; }
+        .championship-ranker-mini-loadout[data-ranker-loadout]:hover { transform:translateY(-1px); background:rgba(255,255,255,.32); }
         .tower-seed-debug { display:flex; gap:5px; align-items:center; margin:8px 0; }
         .tower-seed-debug input { flex:1; min-width:0; background:#151f2d; color:#fff; border:1px solid #526679; border-radius:4px; padding:6px; }
         .tower-seed-debug button { background:#9dd8f9; color:#12304a; border:1px solid #477e9d; border-radius:4px; padding:6px 8px; font-weight:800; }
@@ -1990,6 +2000,19 @@
             </div>
         </div>
     </div>
+    <div id="rankerLoadoutDetailModal" class="tower-detail-modal hidden">
+        <div class="tower-detail-box ranker-loadout-detail-box">
+            <div class="tower-detail-title-row"><h3 id="rankerLoadoutDetailName">Beyblade</h3><button id="rankerLoadoutDetailClose" class="tower-detail-close" type="button">X</button></div>
+            <div class="tower-detail-details-row">
+                <div class="tower-detail-enemy-visual"><canvas id="rankerLoadoutDetailCanvas" width="180" height="180" aria-label="Ranker Beyblade preview"></canvas></div>
+                <div class="tower-detail-info">
+                    <div id="rankerLoadoutDetailParts" class="ranker-loadout-detail-parts"></div>
+                    <div class="tower-detail-stats"><div class="tower-detail-stat">Attack<strong id="rankerLoadoutDetailAtk">0</strong></div><div class="tower-detail-stat">Defense<strong id="rankerLoadoutDetailDef">0</strong></div><div class="tower-detail-stat">Stamina<strong id="rankerLoadoutDetailStamina">0</strong></div><div class="tower-detail-stat">Health<strong id="rankerLoadoutDetailHp">0</strong></div></div>
+                    <div id="rankerLoadoutDetailCategory" class="tower-detail-category" aria-label="Battle Cap category"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- BOTTOM NAVIGATION BAR -->
     <nav id="bottomNav">
@@ -2678,7 +2701,16 @@
             const preview = e.target.closest && e.target.closest('.tower-floor-row[data-tower-floor]');
             const battle = e.target.closest && e.target.closest('[data-tower-battle]');
             const challenge = e.target.closest && e.target.closest('[data-ranker-uid]');
+            const rankerLoadout = e.target.closest && e.target.closest('[data-ranker-loadout]');
             if (battle) { e.preventDefault(); e.stopPropagation(); if (battle.id !== 'towerDetailBattle') startTowerBattle(Number(battle.dataset.towerBattle)); return; }
+            if (rankerLoadout) {
+                e.preventDefault(); e.stopPropagation();
+                const record = championshipRankerRenderedRecords.find(item => String(item.uid) === String(rankerLoadout.dataset.rankerUid)) || championshipRankerData.find(item => String(item.uid) === String(rankerLoadout.dataset.rankerUid));
+                const loadoutIndex = Number(rankerLoadout.dataset.rankerLoadout);
+                const loadout = record && Array.isArray(record.loadouts) ? normalizeRankerLoadout(record.loadouts[loadoutIndex]) : null;
+                if (record && loadout) openRankerLoadoutDetails(record, loadout);
+                return;
+            }
             if (challenge) {
                 e.preventDefault(); e.stopPropagation();
                 const record = championshipRankerData.find(item => String(item.uid) === String(challenge.dataset.rankerUid));
@@ -2689,6 +2721,8 @@
         });
         document.getElementById('towerDetailClose').addEventListener('click', closeTowerDetails);
         document.getElementById('towerDetailModal').addEventListener('click', e => { if (e.target.id === 'towerDetailModal') closeTowerDetails(); });
+        document.getElementById('rankerLoadoutDetailClose').addEventListener('click', closeRankerLoadoutDetails);
+        document.getElementById('rankerLoadoutDetailModal').addEventListener('click', e => { if (e.target.id === 'rankerLoadoutDetailModal') closeRankerLoadoutDetails(); });
 
         function randomizeEnemy() {
             arenaZones = [];
@@ -2816,6 +2850,7 @@
             publicKey: 'sb_publishable_9vExJ6KsV1wwlF4PbVrZag_eDAIb4Ih'
         });
         let championshipRankerLoaded = false;
+        let championshipRankerRenderedRecords = [];
         let championshipFetchPromise = null;
         let championshipSyncTimer = null;
         let championshipSyncInProgress = false;
@@ -2898,7 +2933,7 @@
                     championshipRankerData = onlineRecords;
                     championshipRankerLoaded = true;
                     championshipOnlineError = false;
-                    setChampionshipOnlineStatus(`Online ranker loaded: ${onlineRecords.length} player${onlineRecords.length === 1 ? '' : 's'}.`, 'online');
+                    setChampionshipOnlineStatus(`Online: ${onlineRecords.length} player${onlineRecords.length === 1 ? '' : 's'}.`, 'online');
                     if (!document.getElementById('challengeChampionshipScreen')?.classList.contains('hidden')) updateChallengeChampionship();
                     return onlineRecords;
                 } catch (error) {
@@ -3003,9 +3038,9 @@
             const weightRing = findChampionshipPart(ring && ring.id);
             const driverPart = findChampionshipPart(driver && driver.id);
             return {
-                battleCap: battleCap ? { ...battleCap, __rankerLevel: Math.max(1, Math.min(15, Number(cap.level) || 1)) } : null,
-                weightRing: weightRing ? { ...weightRing, __rankerLevel: Math.max(1, Math.min(15, Number(ring.level) || 1)) } : null,
-                driver: driverPart ? { ...driverPart, __rankerLevel: Math.max(1, Math.min(15, Number(driver.level) || 1)) } : null
+                battleCap: battleCap ? { ...battleCap, __rankerLevel: Math.max(1, Math.min(15, Number(cap.__rankerLevel || cap.level) || 1)) } : null,
+                weightRing: weightRing ? { ...weightRing, __rankerLevel: Math.max(1, Math.min(15, Number(ring.__rankerLevel || ring.level) || 1)) } : null,
+                driver: driverPart ? { ...driverPart, __rankerLevel: Math.max(1, Math.min(15, Number(driver.__rankerLevel || driver.level) || 1)) } : null
             };
         }
         function getRankerLoadoutCombatPower(loadout) {
@@ -3032,6 +3067,7 @@
                     const combatPower = loadouts.reduce((sum, loadout) => sum + getRankerLoadoutCombatPower(loadout), 0);
                     return { ...record, loadouts, combatPower };
                 }).sort((a, b) => Number(b.total_wins || 0) - Number(a.total_wins || 0) || b.combatPower - a.combatPower);
+            championshipRankerRenderedRecords = populated;
             const rows = [];
             for (let index = 0; index < 100; index++) {
                 const record = populated[index] || null;
@@ -3040,11 +3076,11 @@
                     rows.push(`<div class="championship-ranker-row empty"><div class="championship-rank-number">${rank}</div><div class="championship-ranker-player"><div class="championship-ranker-player-name">Empty Rank</div><div class="championship-ranker-player-uid">No player data</div></div><div class="championship-ranker-loadouts"><div class="championship-ranker-mini-loadout">—</div><div class="championship-ranker-mini-loadout">—</div><div class="championship-ranker-mini-loadout">—</div></div><div class="championship-ranker-stats"><div class="championship-ranker-cp">—</div><div class="championship-ranker-wins">Wins: —</div></div><button type="button" class="championship-ranker-challenge" disabled>Challenge</button></div>`);
                     continue;
                 }
-                const loadoutCards = record.loadouts.map(loadout => {
+                const loadoutCards = record.loadouts.map((loadout, loadoutIndex) => {
                     const parts = [loadout.battleCap, loadout.weightRing, loadout.driver];
                     const average = parts.length ? parts.reduce((sum, part) => sum + (part ? part.__rankerLevel : 0), 0) / parts.length : 0;
                     const labels = parts.map(part => part ? part.name : '—').join(' / ');
-                    return `<div class="championship-ranker-mini-loadout" title="${escapeChampionshipText(labels)}"><canvas data-ranker-preview="true" width="44" height="44"></canvas><div class="championship-ranker-mini-name">${escapeChampionshipText(loadout.battleCap ? loadout.battleCap.name : 'Loadout')}</div><div class="championship-ranker-mini-level">Lv. ${average % 1 ? average.toFixed(1) : average}</div></div>`;
+                    return `<div class="championship-ranker-mini-loadout" role="button" tabindex="0" data-ranker-loadout="${loadoutIndex}" data-ranker-uid="${escapeChampionshipText(record.uid)}" title="View ${escapeChampionshipText(labels)} details"><canvas data-ranker-preview="true" width="44" height="44"></canvas><div class="championship-ranker-mini-name">${escapeChampionshipText(loadout.battleCap ? loadout.battleCap.name : 'Loadout')}</div><div class="championship-ranker-mini-level">Lv. ${average % 1 ? average.toFixed(1) : average}</div></div>`;
                 }).join('');
                 const playerClass = record.isPlayer ? ' is-player' : '';
                 const challengeButton = record.isPlayer ? '' : `<button type="button" class="championship-ranker-challenge" data-ranker-uid="${escapeChampionshipText(record.uid)}">Challenge</button>`;
@@ -3071,6 +3107,48 @@
                     drawBeyOnContext(ctx, 22, 22, 18, loadout, 0.5, false, false, 1.0);
                 }
             });
+        }
+        function openRankerLoadoutDetails(record, loadout) {
+            if (!record || !loadout) return;
+            const parts = [
+                ['Battle Cap', loadout.battleCap],
+                ['Weight Ring', loadout.weightRing],
+                ['Driver', loadout.driver]
+            ];
+            const detailParts = document.getElementById('rankerLoadoutDetailParts');
+            if (detailParts) {
+                detailParts.innerHTML = parts.map(([label, part]) => {
+                    const level = part ? Math.max(1, Math.min(15, Number(part.__rankerLevel) || 1)) : 1;
+                    return `<div class="ranker-loadout-detail-part"><strong>${escapeChampionshipText(part ? part.name : '—')}</strong><span>Lv. ${level}</span></div>`;
+                }).join('');
+            }
+            const title = document.getElementById('rankerLoadoutDetailName');
+            if (title) title.textContent = `${loadout.battleCap ? loadout.battleCap.name : 'Beyblade'} · ${record.player_name || 'Player'}`;
+            const category = document.getElementById('rankerLoadoutDetailCategory');
+            if (category) category.innerHTML = getTypeIconSvg(loadout.battleCap ? loadout.battleCap.type : 'Attack');
+            const statParts = parts.map(([, part]) => part).filter(Boolean);
+            const statTotal = key => statParts.reduce((sum, part) => sum + towerStat(part, Number(part.__rankerLevel) || 1, key), 0);
+            const stamina = statParts.reduce((sum, part) => sum + (part.stamina || 0), 0);
+            const atk = document.getElementById('rankerLoadoutDetailAtk');
+            const def = document.getElementById('rankerLoadoutDetailDef');
+            const hp = document.getElementById('rankerLoadoutDetailHp');
+            const staminaEl = document.getElementById('rankerLoadoutDetailStamina');
+            if (atk) atk.textContent = statTotal('atk');
+            if (def) def.textContent = statTotal('def');
+            if (hp) hp.textContent = statTotal('health');
+            if (staminaEl) staminaEl.textContent = stamina;
+            const detailCanvas = document.getElementById('rankerLoadoutDetailCanvas');
+            if (detailCanvas) {
+                const detailCtx = detailCanvas.getContext('2d');
+                if (detailCtx) {
+                    detailCtx.clearRect(0, 0, detailCanvas.width, detailCanvas.height);
+                    drawBeyOnContext(detailCtx, detailCanvas.width / 2, detailCanvas.height / 2, 70, loadout, 0.5, false, false, 1.0);
+                }
+            }
+            document.getElementById('rankerLoadoutDetailModal')?.classList.remove('hidden');
+        }
+        function closeRankerLoadoutDetails() {
+            document.getElementById('rankerLoadoutDetailModal')?.classList.add('hidden');
         }
         let threeBeybladeSelectContext = null;
         let threeBeybladeSelectedIndex = 0;
@@ -3187,12 +3265,14 @@
                     enemyEquipped = selectedEnemy;
                     threeBeybladeBattleResultHandled = false;
                     towerBattleMode = activeContext.mode === 'tower';
+                    championshipBattleMode = activeContext.mode === 'championship';
                     towerResultHandled = false;
                     screens.forEach(screen => screen.classList.add('hidden'));
                     document.getElementById('arenaScreen').classList.remove('hidden');
                     resizeCanvas();
                     resetArenaBattle();
                     towerBattleMode = activeContext.mode === 'tower';
+                    championshipBattleMode = activeContext.mode === 'championship';
                     towerResultHandled = false;
                     if (towerBattleMode) getCachedElement('arenaScreen').classList.add('tower-arena');
                     playerEquipped = selectedPlayer;
@@ -3308,6 +3388,7 @@
 
         let gameRunning = false;
         let towerBattleMode = false;
+        let championshipBattleMode = false;
         let towerResultHandled = false;
         let launchingPhase = false;
         let launchAimStart = null;
@@ -7066,6 +7147,7 @@
 
         function resetArenaBattle() {
             towerBattleMode = false;
+            championshipBattleMode = false;
             towerResultHandled = false;
             getCachedElement('arenaScreen').classList.remove('tower-arena');
             arenaZones = [];
@@ -7175,7 +7257,7 @@
         const statsLeft = document.getElementById('stats-left');
         statsLeft.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (towerBattleMode) {
+            if (towerBattleMode || championshipBattleMode) {
                 e.preventDefault();
                 return;
             }
@@ -7190,7 +7272,7 @@
         const statsRight = document.getElementById('stats-right');
         statsRight.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (towerBattleMode) {
+            if (towerBattleMode || championshipBattleMode) {
                 e.preventDefault();
                 return;
             }
