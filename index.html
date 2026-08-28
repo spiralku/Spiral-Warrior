@@ -1321,7 +1321,7 @@
         .home-slot.chest-slot { color: #b8c8d8; }
         .home-slot.adventure-slot { background:linear-gradient(to right, #C038FF 0%, #441355 100%); color: #fff; border-color: #441355;  }
         .home-slot.championship-slot { background:linear-gradient(to right, #20B3F1 0%, #033057 100%); color: #fff; border-color: #033059; }
-      .home-bey-panel {
+        .home-bey-panel {
             min-height: 0;
             flex: 1 1 auto;
             width: 100%;
@@ -2596,6 +2596,7 @@
             if (Math.random() >= 0.50) return;
             attacker.batterFollowUpCooldownTimer = getPartsSkillCooldownFrames(240, attacker); // 4 seconds at 60 FPS
             attacker.isImpact = true;
+            playGameSfx('./sfx_rush.mp3');
             attacker.isUltimateImpact = false;
             attacker.impactState = 'windup';
             attacker.impactWindupTimer = 18;
@@ -2614,6 +2615,7 @@
             const effect = effects[effectIndex];
             attacker.effectCooldowns[effectIndex] = getPartsSkillCooldownFrames(effect.cooldown || 300, attacker);
             attacker.isImpact = true;
+            playGameSfx('./sfx_rush.mp3');
             attacker.isUltimateImpact = false;
             attacker.impactState = 'windup';
             attacker.impactWindupTimer = 18;
@@ -2832,7 +2834,10 @@
             scheduleChampionshipPlayerSync();
         }
         document.querySelectorAll('.loadout-btn').forEach(btn => {
-            btn.addEventListener('click', () => selectLoadout(Number(btn.dataset.loadout)));
+            btn.addEventListener('click', () => {
+                playGameSfx('./menu_sfx_click_gear.mp3');
+                selectLoadout(Number(btn.dataset.loadout));
+            });
         });
 
         const arenaCanvas = document.getElementById('arena');
@@ -3278,6 +3283,8 @@
             content.querySelectorAll('section canvas').forEach((canvas, index) => drawThreeBeybladeSelectCard(canvas, playerLoadouts[index]));
         }
         function openThreeBeybladeSelect(context) {
+            // The selection screen is intentionally silent. Stop any active BGM before it becomes visible.
+            if (typeof stopGameBgm === 'function') stopGameBgm();
             const enemyLoadouts = context && Array.isArray(context.enemyLoadouts) && context.enemyLoadouts.length ? context.enemyLoadouts : [enemyEquipped];
             threeBeybladeSelectContext = {
                 mode: context && context.mode ? context.mode : 'generic',
@@ -3326,6 +3333,7 @@
             if (mysteryCard) mysteryCard.classList.add('three-beyblade-select-fade-out');
             threeBeybladeRevealTimer = setTimeout(() => {
                 renderThreeBeybladeSelect();
+                playGameSfx('./menu_sfx_enemychosen.mp3');
                 threeBeybladeRevealTimer = setTimeout(() => {
                     threeBeybladeRevealTimer = null;
                     const activeContext = threeBeybladeSelectContext;
@@ -3341,6 +3349,7 @@
                     towerResultHandled = false;
                     screens.forEach(screen => screen.classList.add('hidden'));
                     document.getElementById('arenaScreen').classList.remove('hidden');
+                    updateGameBgmForScreen('arenaScreen');
                     resizeCanvas();
                     resetArenaBattle();
                     towerBattleMode = activeContext.mode === 'tower';
@@ -3386,6 +3395,7 @@
                 threeBeybladeSelectContext = { ...context, selectedPlayer: null, selectedEnemy: null, selectedPlayerIndex: null, selectedEnemyIndex: null, round: (context.round || 1) + 1, playerWins, enemyWins, usedPlayerIndices, usedEnemyIndices };
                 threeBeybladeSelectedIndex = playerLoadouts.findIndex((_, index) => !usedPlayerIndices.includes(index));
                 if (threeBeybladeSelectedIndex < 0) threeBeybladeSelectedIndex = 0;
+                if (typeof stopGameBgm === 'function') stopGameBgm();
                 screens.forEach(screen => screen.classList.add('hidden'));
                 hideChampionshipScreens();
                 document.getElementById('threeBeybladeSelect')?.classList.remove('hidden');
@@ -3404,6 +3414,7 @@
             screens.forEach(screen => screen.classList.add('hidden'));
             hideChampionshipScreens();
             document.getElementById('championshipLobbyScreen').classList.remove('hidden');
+            updateGameBgmForScreen('championshipLobbyScreen');
             navItems.forEach(nav => nav.classList.remove('active'));
             updateChampionshipLobby();
         }
@@ -3411,6 +3422,7 @@
             screens.forEach(screen => screen.classList.add('hidden'));
             hideChampionshipScreens();
             document.getElementById('challengeChampionshipScreen').classList.remove('hidden');
+            updateGameBgmForScreen('challengeChampionshipScreen');
             navItems.forEach(nav => nav.classList.remove('active'));
             updateChallengeChampionship();
             loadChampionshipRankerData();
@@ -3418,6 +3430,197 @@
         window.updateChampionshipLobby = updateChampionshipLobby;
         window.openChampionshipLobby = openChampionshipLobby;
         window.openChallengeChampionship = openChallengeChampionship;
+
+        const BGM_TRACKS = {
+            home: './bgm_home.mp3',
+            tower: './bgm_tower.mp3',
+            championship: './bgm_championship.mp3',
+            arena_1: './arena_1.mp3',
+            arena_2: './arena_2.mp3',
+            arena_3: './arena_3.mp3',
+            arena_4: './arena_4.mp3',
+            arena_5: './arena_5.mp3',
+            arena_6: './arena_6.mp3',
+            arena_7: './arena_7.mp3'
+        };
+        const ARENA_BGM_KEYS = ['arena_1', 'arena_2', 'arena_3', 'arena_4', 'arena_5', 'arena_6', 'arena_7'];
+        let currentBgmAudio = null;
+        let currentBgmKey = '';
+        let bgmAudioUnlocked = false;
+        let bgmPausedByPageLifecycle = false;
+        function playGameBgm(trackKey) {
+            const source = BGM_TRACKS[trackKey];
+            if (!source) return;
+            const previousBgmKey = currentBgmKey;
+            currentBgmKey = trackKey;
+            if (!bgmAudioUnlocked) return;
+            if (currentBgmAudio && previousBgmKey === trackKey) {
+                currentBgmAudio.play().catch(() => {});
+                return;
+            }
+            if (currentBgmAudio) {
+                currentBgmAudio.pause();
+                currentBgmAudio.currentTime = 0;
+            }
+            currentBgmAudio = new Audio(source);
+            currentBgmAudio.loop = true;
+            currentBgmAudio.preload = 'auto';
+            currentBgmAudio.volume = 0.45;
+            currentBgmAudio.play().catch(() => {});
+        }
+        function unlockGameBgm() {
+            if (bgmAudioUnlocked) return;
+            bgmAudioUnlocked = true;
+            playBgmAndPreloadAfterFirstTap();
+        }
+        function playBgmAndPreloadAfterFirstTap() {
+            playGameBgm(currentBgmKey || 'home');
+            if (typeof requestIdleCallback === 'function') {
+                requestIdleCallback(() => preloadAllGameAudio(), { timeout: 1500 });
+            } else {
+                setTimeout(preloadAllGameAudio, 0);
+            }
+        }
+        const GAME_AUDIO_MANIFEST = [
+            './bgm_home.mp3',
+            './bgm_tower.mp3',
+            './bgm_championship.mp3',
+            './arena_1.mp3',
+            './arena_2.mp3',
+            './arena_3.mp3',
+            './arena_4.mp3',
+            './arena_5.mp3',
+            './arena_6.mp3',
+            './arena_7.mp3',
+            './menu_sfx_enemychosen.mp3',
+            './sfx_launcher.mp3',
+            './sfx_collide.mp3',
+            './sfx_impact.mp3',
+            './sfx_preemptive_attack.mp3',
+            './sfx_rush.mp3',
+            './sfx_launch.mp3',
+            './sfx_projectile_hit.mp3',
+            './menu_sfx_click.mp3',
+            './menu_sfx_click_gear.mp3',
+            './menu_sfx_upgrade.mp3',
+            './bc_behemoth_1.mp3',
+            './bc_behemoth_2.mp3',
+            './bc_kaguyahime_1.mp3',
+            './bc_athena_1.mp3',
+            './bc_atlas_1.mp3',
+            './bc_atum_1.mp3',
+            './bc_atum_2.mp3',
+            './bc_beelzebub_1.mp3',
+            './bc_beelzebub_2.mp3',
+            './bc_chronos_1.mp3',
+            './bc_mermaid_1.mp3'
+        ];
+        const gameAudioPreloadCache = new Map();
+        const ULTIMATE_CAST_SFX = {
+            bc_behemoth: ['./bc_behemoth_1.mp3', './bc_behemoth_2.mp3'],
+            bc_kaguyahime: ['./bc_kaguyahime_1.mp3'],
+            bc_athena: ['./bc_athena_1.mp3'],
+            bc_atlas: ['./bc_atlas_1.mp3'],
+            bc_atum: ['./bc_atum_1.mp3', './bc_atum_2.mp3'],
+            bc_beelzebub: ['./bc_beelzebub_1.mp3', './bc_beelzebub_2.mp3'],
+            bc_chronos: ['./bc_chronos_1.mp3'],
+            bc_mermaid: ['./bc_mermaid_1.mp3']
+        };
+        function playUltimateCastSfx(battleCapId) {
+            const choices = ULTIMATE_CAST_SFX[battleCapId];
+            if (!choices || !choices.length) return;
+            const source = choices[Math.floor(Math.random() * choices.length)];
+            playGameSfx(source);
+        }
+        let gameAudioPreloadStarted = false;
+        function preloadAllGameAudio() {
+            if (gameAudioPreloadStarted) return;
+            gameAudioPreloadStarted = true;
+            GAME_AUDIO_MANIFEST.forEach(source => {
+                const audio = new Audio();
+                audio.preload = 'auto';
+                audio.src = source;
+                gameAudioPreloadCache.set(source, audio);
+                audio.load();
+            });
+        }
+        const gameSfxPools = new Map();
+        function playGameSfx(source, volume = 0.7) {
+            if (!source) return;
+            let pool = gameSfxPools.get(source);
+            if (!pool) {
+                pool = [];
+                gameSfxPools.set(source, pool);
+            }
+            let sfx = pool.find(audio => audio.paused || audio.ended);
+            if (!sfx) {
+                if (pool.length < 6) {
+                    sfx = new Audio(source);
+                    sfx.loop = false;
+                    sfx.preload = 'auto';
+                    pool.push(sfx);
+                } else {
+                    sfx = pool.shift();
+                    pool.push(sfx);
+                }
+            }
+            sfx.pause();
+            sfx.currentTime = 0;
+            sfx.volume = volume;
+            const playPromise = sfx.play();
+            if (playPromise && typeof playPromise.catch === 'function') playPromise.catch(() => {});
+        }
+        document.addEventListener('click', e => {
+            const arenaScreen = document.getElementById('arenaScreen');
+            if (!arenaScreen || arenaScreen.classList.contains('hidden')) {
+                const garageGearTarget = e.target && e.target.closest && e.target.closest('.loadout-btn, .part-card, #modalEquipBtn');
+                if (!garageGearTarget) playGameSfx('./menu_sfx_click.mp3', 0.28);
+            }
+        }, true);
+        function stopGameBgm() {
+            if (currentBgmAudio) {
+                currentBgmAudio.pause();
+                currentBgmAudio.currentTime = 0;
+            }
+            currentBgmAudio = null;
+            currentBgmKey = '';
+            bgmPausedByPageLifecycle = false;
+        }
+        function pauseGameBgmForPageLifecycle() {
+            if (!currentBgmAudio) return;
+            if (!currentBgmAudio.paused) {
+                currentBgmAudio.pause();
+                bgmPausedByPageLifecycle = true;
+            }
+        }
+        function resumeGameBgmAfterPageLifecycle() {
+            if (!bgmAudioUnlocked || !currentBgmAudio || !bgmPausedByPageLifecycle) return;
+            bgmPausedByPageLifecycle = false;
+            currentBgmAudio.play().catch(() => {});
+        }
+        function playRandomArenaBgm() {
+            const randomKey = ARENA_BGM_KEYS[Math.floor(Math.random() * ARENA_BGM_KEYS.length)];
+            playGameBgm(randomKey);
+        }
+        function updateGameBgmForScreen(screenId) {
+            if (screenId === 'threeBeybladeSelect') stopGameBgm();
+            else if (screenId === 'arenaScreen') {
+                playRandomArenaBgm();
+                playGameSfx('./sfx_launcher.mp3');
+            }
+            else if (screenId === 'towerScreen') playGameBgm('tower');
+            else if (screenId === 'championshipLobbyScreen' || screenId === 'challengeChampionshipScreen') playGameBgm('championship');
+            else if (screenId === 'homeScreen' || screenId === 'garageScreen' || screenId === 'shopScreen') playGameBgm('home');
+        }
+        document.addEventListener('pointerdown', unlockGameBgm, { once: true, capture: true });
+        document.addEventListener('touchstart', unlockGameBgm, { once: true, capture: true });
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') pauseGameBgmForPageLifecycle();
+            else resumeGameBgmAfterPageLifecycle();
+        });
+        window.addEventListener('pagehide', pauseGameBgmForPageLifecycle);
+        window.addEventListener('beforeunload', pauseGameBgmForPageLifecycle);
+        updateGameBgmForScreen(document.querySelector('.screen:not(.hidden)')?.id || 'homeScreen');
 
         navItems.forEach(item => {
             item.addEventListener('click', () => {
@@ -3428,6 +3631,7 @@
 
                 screens.forEach(s => s.classList.add('hidden'));
                 document.getElementById(targetScreenId).classList.remove('hidden');
+                updateGameBgmForScreen(targetScreenId);
 
                 navItems.forEach(n => n.classList.remove('active'));
                 item.classList.add('active');
@@ -3552,6 +3756,7 @@
             launchAimStart = null;
             launchAimCurrent = null;
             gameRunning = true;
+            playGameSfx('./sfx_launch.mp3');
             bey1.beginArenaOccupationTracking();
             bey2.beginArenaOccupationTracking();
             const pMeter = getCachedElement('powerMeterBar');
@@ -3625,6 +3830,7 @@
             launchAimStart = null;
             launchAimCurrent = null;
             gameRunning = true;
+            playGameSfx('./sfx_launch.mp3');
             bey1.beginArenaOccupationTracking();
             bey2.beginArenaOccupationTracking();
             const pMeter = getCachedElement('powerMeterBar');
@@ -4388,9 +4594,11 @@
                     const offsetY = ((this.y - centerY) / ARENA_RADIUS) * 50;
                     arenaContainer.style.transformOrigin = `${50 + offsetX}% ${50 + offsetY}%`;
                     arenaContainer.style.transform = 'scale(1.8)';
+                    playUltimateCastSfx(this.parts.battleCap.id);
 
                     if (this.parts.battleCap.id === 'bc_behemoth') {
                         this.isImpact = true;
+                        playGameSfx('./sfx_rush.mp3');
                         this.isUltimateImpact = true;
                         this.impactState = 'windup';
                         this.impactWindupTimer = 18;
@@ -5384,6 +5592,7 @@
                             this.impactCooldownTimer = intervalFrames;
                         } else {
                             this.isImpact = true;
+                            playGameSfx('./sfx_rush.mp3');
                             this.isUltimateImpact = false;
                             this.impactState = 'windup';
                             this.impactWindupTimer = 18; // 0.3 seconds at 60fps
@@ -5410,6 +5619,7 @@
                     this.vy = (this.vy - 2 * dot * ny) * restitution;
                     if (this.deathKnightRevelationActive && !this.dead && !this.isImpact) {
                         this.isImpact = true;
+                        playGameSfx('./sfx_rush.mp3');
                         this.isUltimateImpact = false;
                         this.impactState = 'windup';
                         this.impactWindupTimer = 12;
@@ -5501,6 +5711,7 @@
                     // Warfare driver: immediately launch impact after blocking
                     if (this.parts.driver && this.parts.driver.id === 'drv_warfare') {
                         this.isImpact = true;
+                        playGameSfx('./sfx_rush.mp3');
                         this.isUltimateImpact = false;
                         this.impactState = 'windup';
                         this.impactWindupTimer = 18;
@@ -5676,6 +5887,7 @@
         function triggerPreemptiveAttack() {
             if (preemptiveAttackShown) return;
             preemptiveAttackShown = true;
+            playGameSfx('./sfx_preemptive_attack.mp3');
             preemptiveAttackFrames = 60;
             gamePaused = true;
             startIconSvg.innerHTML = '<polygon points="5,3 19,12 5,21"></polygon>';
@@ -5747,6 +5959,7 @@
 
                 let bWasImpact = (b.isImpact && b.impactState === 'dashing');
                 let aWasImpact = (a.isImpact && a.impactState === 'dashing');
+                playGameSfx(impactCollision ? './sfx_impact.mp3' : './sfx_collide.mp3');
                 if (bWasImpact && b.getAllEffects().some(eff => eff.type === 'vengeance_knockback')) {
                     a.vengeanceWallSource = b;
                     a.vengeanceWallTimer = 90;
@@ -6070,6 +6283,8 @@
                     const projectileReduction = projectileDefenseEffect ? Math.max(0, Math.min(1, projectileDefenseEffect.reduction)) : 0;
                     const mitigatedDamage = damage * (1 - projectileReduction);
                     this.target.takeDamage(mitigatedDamage, true, true, this.owner, false);
+                    // Shared projectile contact SFX, including Mermaid's persistent sonic-wave projectiles.
+                    playGameSfx('./sfx_projectile_hit.mp3');
                     if (this.config.countsAsImpact && mitigatedDamage > 0) {
                         const impactGaugeGain = this.owner.parts.battleCap.type === 'Attack' ? 25 : 20;
                         const rageGaugeGain = this.owner.parts.driver && this.owner.parts.driver.id === 'drv_rage' ? 10 : 0;
@@ -7040,6 +7255,7 @@
                 drawPartIcon(cctx, 25, 25, 22, activeTab, part);
 
                 card.addEventListener('click', () => {
+                    playGameSfx('./menu_sfx_click_gear.mp3');
                     openPartModal(activeTab, part);
                 });
 
@@ -7158,6 +7374,7 @@
             updateGarageUI();
             if (typeof updateHomeUI === 'function') updateHomeUI();
             openPartModal(modalTargetPart.type, part);
+            playGameSfx('./menu_sfx_upgrade.mp3');
         });
 
         closeModalBtn.addEventListener('click', () => {
@@ -7183,6 +7400,7 @@
                 partModal.classList.add('hidden');
                 updateGarageUI();
                 if (typeof updateHomeUI === 'function') updateHomeUI();
+                playGameSfx('./menu_sfx_click_gear.mp3');
             }
         });
 
