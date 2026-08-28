@@ -3516,18 +3516,6 @@
             './bc_mermaid_1.mp3'
         ];
         const gameAudioPreloadCache = new Map();
-        // GitHub Pages/HTTP only: file:// pages cannot register service workers.
-        if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.protocol === 'http:')) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./beyblade-audio-cache-sw.js', { scope: './' })
-                    .then(registration => {
-                        console.info('[Beyblade] Audio cache worker registered.', registration.scope);
-                    })
-                    .catch(error => {
-                        console.warn('[Beyblade] Audio cache worker registration failed.', error);
-                    });
-            }, { once: true });
-        }
         const ULTIMATE_CAST_SFX = {
             bc_behemoth: ['./bc_behemoth_1.mp3', './bc_behemoth_2.mp3'],
             bc_kaguyahime: ['./bc_kaguyahime_1.mp3'],
