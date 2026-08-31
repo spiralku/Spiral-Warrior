@@ -3370,7 +3370,7 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
         }];
         const championshipRankerFallbackData = JSON.parse(JSON.stringify(championshipRankerData));
         // TEMPORARY OFFLINE MODE: disable Supabase network reads and writes while testing the game.
-        const SUPABASE_CHAMPIONSHIP_ENABLED = false;
+        const SUPABASE_CHAMPIONSHIP_ENABLED = true;
         const SUPABASE_CHAMPIONSHIP_CONFIG = Object.freeze({
             projectUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co',
             playersUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co/rest/v1/championship_players',
