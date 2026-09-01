@@ -2391,7 +2391,7 @@
     <!-- ENEMY GARAGE MODAL -->
     <div id="enemyGarageModal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 200; flex-direction: column; justify-content: flex-start; align-items: center; padding: 15px; overflow-y: auto;">
         <div style="width: 100%; max-width: 500px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h2 id="enemyModalTitle" style="font-size: 16px; color: #fff;">Enemy Temporary</h2>
+            <h2 id="enemyModalTitle" style="font-size: 16px; color: #fff;">Enemy Bey Customization</h2>
             <div style="display: flex; gap: 8px;">
                 <button id="enemyModalCancelBtn" style="background: #c0392b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px;">Cancel</button>
                 <button id="enemyModalConfirmBtn" style="background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px;">Confirm</button>
@@ -3740,6 +3740,7 @@ const parts = {
 
         let activeTab = 'battleCap';
         let modalTargetPart = null;
+        let modalShopOfferIndex = null;
         function updateLoadoutSelector() {
             document.querySelectorAll('.loadout-btn').forEach(btn => {
                 btn.classList.toggle('active', Number(btn.dataset.loadout) === activeLoadoutIndex);
@@ -4777,6 +4778,13 @@ arena_7: './arena_7.mp3'
                         amountBar.querySelector('.part-amount-label').textContent = partLevel >= 15 ? 'Max' : `${currentAmount.toLocaleString()} / ${requiredAmount.toLocaleString()}`;
                     }
                     if (amountRow) amountRow.classList.toggle('completed', amountComplete && partLevel < 15);
+                }
+                const innerPartCard = card.querySelector('.shop-inner-part-card');
+                if (innerPartCard && !isDailyGold) {
+                    innerPartCard.addEventListener('click', event => {
+                        event.stopPropagation();
+                        openShopPartDetail(index);
+                    });
                 }
                 const button = card.querySelector('.shop-buy-button');
                 const balance = Number(currencyState[offer.currency] || 0);
@@ -9439,6 +9447,10 @@ arena_7: './arena_7.mp3'
             });
         });
         function openPartModal(type, part) {
+            modalShopOfferIndex = null;
+            modalEquipBtn.style.display = '';
+            upgradePartBtn.style.flex = '';
+            upgradePartBtn.innerHTML = 'Upgrade<span class="upgrade-cost"></span>';
             modalTargetPart = { type, part };
             const isAcquired = isPartAcquired(part);
             const abilityTab = document.querySelector('.modal-content-tab[data-tab="ability"]');
@@ -9532,7 +9544,31 @@ arena_7: './arena_7.mp3'
             partModal.classList.remove('hidden');
         }
 
+        function openShopPartDetail(index) {
+            const offer = shopOffers[index];
+            if (!offer || offer.kind === 'gold' || !offer.part) return;
+            openPartModal(offer.type, offer.part);
+            modalShopOfferIndex = index;
+            document.getElementById('modalActionsRow').style.display = '';
+            modalEquipBtn.style.display = 'none';
+            upgradePartBtn.style.flex = '1 1 100%';
+            upgradePartBtn.textContent = 'Purchase';
+            const balance = Number(currencyState[offer.currency] || 0);
+            upgradePartBtn.disabled = offer.soldOut || balance < offer.price;
+        }
+
         upgradePartBtn.addEventListener('click', () => {
+            if (modalShopOfferIndex !== null) {
+                const shopIndex = modalShopOfferIndex;
+                partModal.classList.add('hidden');
+                modalShopOfferIndex = null;
+                modalTargetPart = null;
+                modalEquipBtn.style.display = '';
+                upgradePartBtn.style.flex = '';
+                upgradePartBtn.innerHTML = 'Upgrade<span class="upgrade-cost"></span>';
+                purchaseShopOffer(shopIndex);
+                return;
+            }
             if (!modalTargetPart) return;
             const part = modalTargetPart.part;
             const level = getPartLevel(part);
@@ -9554,11 +9590,19 @@ arena_7: './arena_7.mp3'
 
         closeModalBtn.addEventListener('click', () => {
             partModal.classList.add('hidden');
+            modalShopOfferIndex = null;
+                        modalEquipBtn.style.display = '';
+            upgradePartBtn.style.flex = '';
+            upgradePartBtn.innerHTML = 'Upgrade<span class="upgrade-cost"></span>';
         });
 
         partModal.addEventListener('click', (e) => {
             if (e.target === partModal) {
                 partModal.classList.add('hidden');
+                modalShopOfferIndex = null;
+                modalEquipBtn.style.display = '';
+                upgradePartBtn.style.flex = '';
+                upgradePartBtn.innerHTML = 'Upgrade<span class="upgrade-cost"></span>';
             }
         });
 
@@ -9743,7 +9787,7 @@ arena_7: './arena_7.mp3'
                 b.classList.toggle('active', b.getAttribute('data-tab') === enemyActiveTab);
             });
             const modal = document.getElementById('enemyGarageModal');
-            document.getElementById('enemyModalTitle').textContent = 'Player Temporary';
+            document.getElementById('enemyModalTitle').textContent = 'Player Bey Customization';
             modal.classList.remove('hidden');
             modal.style.display = 'flex';
             updateEnemyGarageUI();
@@ -9763,7 +9807,7 @@ arena_7: './arena_7.mp3'
                 b.classList.toggle('active', b.getAttribute('data-tab') === enemyActiveTab);
             });
             const modal = document.getElementById('enemyGarageModal');
-            document.getElementById('enemyModalTitle').textContent = 'Enemy Temporary';
+            document.getElementById('enemyModalTitle').textContent = 'Enemy Bey Customization';
             modal.classList.remove('hidden');
             modal.style.display = 'flex';
             updateEnemyGarageUI();
@@ -10040,7 +10084,7 @@ window.addEventListener('beforeunload', autoSaveGame);
 
         document.getElementById('enemyModalCancelBtn').addEventListener('click', () => {
             arenaPlayerSelectionMode = false;
-            document.getElementById('enemyModalTitle').textContent = 'Enemy Temporary';
+            document.getElementById('enemyModalTitle').textContent = 'Enemy Bey Customization';
             const modal = document.getElementById('enemyGarageModal');
             modal.classList.add('hidden');
             modal.style.display = 'none';
