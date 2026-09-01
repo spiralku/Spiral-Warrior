@@ -3104,7 +3104,7 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
             updateSkillHexagons();
         }
         window.setDebugOverride = setDebugOverride;
-        let currencyState = { gold: 0, gems: 0 };
+        let currencyState = { gold: 5000, gems: 100 };
         function updateProfileNameUI() {
             document.querySelectorAll('.profile-name').forEach(element => { element.textContent = playerName || 'Player'; });
             const input = document.getElementById('playerNameInput');
