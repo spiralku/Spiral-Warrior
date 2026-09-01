@@ -3402,13 +3402,81 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
         }
 
         function towerPartLevelForFloor(floor) { return Math.max(1, Math.min(15, Math.ceil(floor / 10))); }
-        function getTowerEnemy(floor) {
-            const rng = makeSeededRandom((universalSeed ^ Math.imul(floor, 2654435761)) >>> 0);
-            const pick = list => list[Math.floor(rng() * list.length)];
-            const parts = { battleCap: pick(PARTS.battleCap), weightRing: pick(PARTS.weightRing), driver: pick(PARTS.driver) };
-            const level = towerPartLevelForFloor(floor);
-            return { parts, level, name: `Floor ${floor} Challenger`, levels: { [parts.battleCap.id]: level, [parts.weightRing.id]: level, [parts.driver.id]: level } };
+        const TOWER_HARDCODED_FLOORS = {
+    1: { battleCap: 'bc_behemoth', weightRing: 'wr_devil', driver: 'drv_rage', level: 1 },
+    2: { battleCap: 'bc_kaguyahime', weightRing: 'wr_divinestar', driver: 'drv_moonlight', level: 1 },
+    3: { battleCap: 'bc_athena', weightRing: 'wr_guardian', driver: 'drv_warfare', level: 1 },
+    4: { battleCap: 'bc_hattori_hanzo', weightRing: 'wr_shuriken', driver: 'drv_batter', level: 1 },
+    5: { battleCap: 'bc_venus', weightRing: 'wr_heal', driver: 'drv_bloom', level: 1 },
+    6: { battleCap: 'bc_atlas', weightRing: 'wr_titan', driver: 'drv_shock', level: 1 },
+    7: { battleCap: 'bc_himiko', weightRing: 'wr_paper_doll', driver: 'drv_curse', level: 1 },
+    
+};
+
+function getPartById(type, id) {
+    return (PARTS[type] || []).find(part => part.id === id) || PARTS[type][0];
+}
+
+function getTowerAllowedRarities(floor) {
+    if (floor < 50) {
+        return ['Normal', 'Rare', 'Epic'];
+    }
+    if (floor < 80) {
+        return ['Normal', 'Rare', 'Epic', 'Legendary'];
+    }
+    return ['Normal', 'Rare', 'Epic', 'Legendary', 'Ascended'];
+}
+
+
+function getTowerEnemy(floor) {
+    const hardcoded = TOWER_HARDCODED_FLOORS[floor];
+    if (hardcoded) {
+        const parts = {
+            battleCap: getPartById('battleCap', hardcoded.battleCap),
+            weightRing: getPartById('weightRing', hardcoded.weightRing),
+            driver: getPartById('driver', hardcoded.driver)
+        };
+        const level = hardcoded.level;
+        return {
+            parts,
+            level,
+            name: `Floor ${floor} Challenger`,
+            levels: {
+                [parts.battleCap.id]: level,
+                [parts.weightRing.id]: level,
+                [parts.driver.id]: level
+            }
+        };
+    }
+
+    // Floors 11–100 remain seeded and procedurally generated.
+    const rng = makeSeededRandom((universalSeed ^ Math.imul(floor, 2654435761)) >>> 0);
+const allowedRarities = getTowerAllowedRarities(floor);
+
+const pick = list => {
+    const eligibleParts = list.filter(part => allowedRarities.includes(part.rarity));
+    return eligibleParts[Math.floor(rng() * eligibleParts.length)];
+};
+
+const parts = {
+    battleCap: pick(PARTS.battleCap),
+    weightRing: pick(PARTS.weightRing),
+    driver: pick(PARTS.driver)
+};
+
+    const level = towerPartLevelForFloor(floor);
+    return {
+        parts,
+        level,
+        name: `Floor ${floor} Challenger`,
+        levels: {
+            [parts.battleCap.id]: level,
+            [parts.weightRing.id]: level,
+            [parts.driver.id]: level
         }
+    };
+}
+
         function towerStat(part, level, key) { return Math.round((part[key] || 0) * Math.pow(1.10, level - 1)); }
         function getTowerReward(floor) { return Math.round(1000 * Math.pow(1.054, floor - 1)); }
         function getTowerPartDrop(floor) {
