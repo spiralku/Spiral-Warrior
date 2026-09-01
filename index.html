@@ -152,6 +152,7 @@
         .tower-detail-category svg { width:22px !important; height:22px !important; top:0 !important; left:0 !important; }
         .tower-detail-rewards-row { flex:1; min-height:137px; display:flex; flex-direction:column; align-items:stretch; padding:12px 14px 58px; background:#fff; }
         .tower-detail-reward-label { width:max-content; padding:5px 8px; background:#3b4147; color:#fff; border-radius:3px; text-align:left; font-size:11px; font-weight:900; }
+        .tower-detail-reward-items { display:flex; align-items:flex-start; gap:8px; }
         .tower-reward-detail { align-self:flex-start; width:58px; height:62px; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:3px; padding:16px 4px 4px; background:#fff; border:1px solid #202020; border-radius:2px; color:#5c6670; font-weight:900; margin:12px 0 4px; box-sizing:border-box; }
         .tower-reward-detail .tower-reward-icon { display:block; width:24px; height:24px; flex:0 0 24px; position:static; transform:translateY(-1px); }
         .tower-reward-amount { display:block; color:#5c6670; font-size:10px; line-height:1; white-space:nowrap; transform:translateY(2px); }
@@ -254,6 +255,13 @@
         #winnerAnnouncementScreen.visible {
             opacity: 1;
         }
+        #initialBattleCapUnlockOverlay { position: fixed; inset: 0; z-index: 6000; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; opacity:0; pointer-events:none; background:linear-gradient(to bottom, #211847 0%, #190828 50%, #47BFCF 100%); transition:opacity .35s ease; }
+        #initialBattleCapUnlockOverlay.visible { opacity:1; pointer-events:auto; }
+        #initialBattleCapUnlockOverlay .initial-unlock-content { width:min(100%, 420px); min-height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px 16px 34px; }
+        #initialBattleCapUnlockOverlay .initial-unlock-canvas-wrap { width:min(70vw, 270px); height:min(70vw, 270px); display:flex; align-items:center; justify-content:center; }
+        #initialBattleCapUnlockOverlay canvas { width:100%; height:100%; display:block; }
+        #initialBattleCapUnlockOverlay .initial-unlock-name { width:100%; margin-top:18px; padding:10px 0; color:#352200; background:linear-gradient(to right, transparent 0%, #FCDF53 18%, #FCDF53 82%, transparent 100%); font-size:clamp(21px, 6vw, 30px); font-weight:1000; line-height:1; text-align:center; text-shadow:0 1px 0 rgba(255,255,255,.25); }
+        #initialBattleCapUnlockOverlay .initial-unlock-tap { position:absolute; left:0; right:0; bottom:22px; color:#fff; font-size:clamp(14px, 4vw, 19px); font-weight:900; text-align:center; text-shadow:0 2px 3px rgba(0,0,0,.55); }
         #winnerAnnouncementScreen.round-result {
             background: rgba(0, 0, 0, 0.42);
             cursor: pointer;
@@ -341,6 +349,9 @@
             justify-content: flex-start;
             transform: translateY(-5vh);
         }
+        .winner-announcement-reward-tiles { display:flex; align-items:flex-start; justify-content:center; gap:18px; width:100%; }
+        .winner-announcement-reward-entry { display:flex; flex-direction:column; align-items:center; }
+        .winner-announcement-reward-entry.hidden { display:none !important; }
         .winner-announcement-reward-tile {
             width: 62px;
             height: 62px;
@@ -354,7 +365,8 @@
             line-height: 0;
             overflow: hidden;
         }
-        .winner-announcement-reward-tile > .currency-gold-icon {
+        .winner-announcement-reward-tile > .currency-gold-icon,
+        .winner-announcement-reward-tile > .currency-gem-icon {
             position: static !important;
             top: auto !important;
             right: auto !important;
@@ -993,7 +1005,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(180deg, #0b1524 0%, #526f8c 100%);
+            background: linear-gradient(180deg, #122835 0%, #253E4D 100%);
             border: none;
             color: #fff;
             cursor: pointer;
@@ -1020,7 +1032,7 @@
         .nav-item svg { color: #fff; fill: #fff; }
         .nav-item.active {
             color: #6b3d00;
-            background: #f2b233;
+            background: #F6C63E;
             border-color: #b97812;
             border: none;
         }
@@ -1028,31 +1040,28 @@
 
         /* Garage Screen Styling */
         #garageScreen {
-            background: linear-gradient(to bottom, #1b2a3c 0%, #3e5268 100%);
-            padding: clamp(10px, 2vh, 20px);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            max-width: 600px;
-            margin: 0 auto;
-            width: 100%;
-            height: 100%;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: #555 transparent;
-        }
+    background: linear-gradient(to bottom, #02172A 0%, #3e5268 100%);
+    padding: clamp(10px, 2vh, 20px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #555 transparent;
+}
 
         .garage-preview {
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: #222;
+            background: linear-gradient(to bottom, #001528 0%, #416484 50%, #8CA0BB 100%);
             padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            border: 1px solid #333;
+            border-radius: 0px;                      
             width: 100%;
         }
 
@@ -1183,21 +1192,23 @@
             display: flex;
             background: #081827;
             border-radius: 8px;
-            padding: 4px;
-            margin-bottom: 10px;
+            padding: 0px;
+            
             width: 100%;
         }
 
         .tab-btn {
             flex: 1;
             padding: 8px;
-            background: #081827;
-            border: none;
+            border: 2px solid #1C2E3C;
+            background: #1C2E3C;
+            
             color: #d8e7f5;
             font-weight: bold;
             font-size: 12px;
             cursor: pointer;
-            border-radius: 6px;
+            border-radius: 0px;
+            
             transition: all 0.2s ease;
         }
 
@@ -1206,8 +1217,8 @@
         }
 
         .tab-btn.active {
-            background: #ffd21f;
-            border: none;
+            background: #FFD817;
+            
             color: #6b3d00;
         }
 
@@ -1215,15 +1226,26 @@
         #inventoryList {
             grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
         }
+        #inventoryList .garage-equipped-row-break {
+            width: 100%;
+            height: 0;
+            min-height: 0;
+            padding: 0;
+            margin: 0 0 -20px;
+            pointer-events: none;
+        }
+        #inventoryList .garage-section-label { grid-column: 1 / -1; width: 100%; box-sizing: border-box; margin: 4px 0 0; padding: 5px 8px; border-radius: 4px; background: rgba(20, 35, 55, .78); color: #fff; font-size: 11px; font-weight: 900; text-align: left; letter-spacing: .4px; }
+        #inventoryList .unacquired-part-card .part-visual-preview { opacity: .28; filter: grayscale(1); }
+        #inventoryList .unacquired-part-card .part-visual-preview canvas { opacity: .8; filter: grayscale(1); }
 
         .inventory-container {
             width: 100%;
             flex: 1;
-            background: linear-gradient(to bottom, #1b2a3c 0%, #3e5268 100%);
-            border-radius: 10px;
+            background: linear-gradient(to bottom, #465E80 0%, #679AB5 100%);
+            border-radius: 0px;
             padding: 6px;
             overflow-y: auto;
-            border: 1px solid #333;
+            border: 1px solid #465E80;
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
                         column-gap: 6px;
@@ -1247,6 +1269,9 @@
         }
 
         .part-card:hover { box-shadow: 0 1px 0 #000; transform: translateY(-2px); }
+        #garageScreen .part-card { justify-content: flex-start; }
+        #garageScreen .part-card > .part-level { margin-top: 1px; }
+        #garageScreen .part-card > .part-visual-preview { margin-top: 8px; }
 
         .part-name { font-size: 9px; font-weight: bold; color: #fff; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
         
@@ -1284,7 +1309,7 @@
         .details-text { font-size: 9px; color: #3498db; font-weight: bold; }
 
         /* Garage equipped-bey overview background */
-        #garageScreen .garage-preview {
+        #garageScreen {
             background: linear-gradient(to bottom, #354F70 0%, #7A8EAF 50%, #D4DCE7 100%);
         }
         #garageScreen .preview-stats {
@@ -1432,6 +1457,65 @@
             position: relative;
             margin-bottom: 15px;
         }
+        .modal-part-upgrade-row {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 7px 10px 9px;
+            background: #6179A5;
+        }
+        .modal-part-upgrade-title {
+            display: table;
+            margin: 0 auto 5px;
+            padding: 3px 12px;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            line-height: 1.1;
+            text-align: center;
+            border-radius: 2px;
+            background: #d4e6f1;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.55);
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.40);
+        }
+        .modal-part-upgrade-title.common { background: #7BE5E1; }
+        .modal-part-upgrade-title.rare { background: #1F73E7; }
+        .modal-part-upgrade-title.epic { background: #C222E8; }
+        .modal-part-upgrade-title.legendary { background: #EABA34; }
+        .modal-part-upgrade-title.ascended { background: linear-gradient(45deg, #E09D94 0%, #D2C692 30%, #A1BEA0 50%, #9EC8CA 70%,  #A221A2 100%);  }       
+ .modal-part-upgrade-bar {
+            position: relative;
+            width: 50%;
+            margin: 0 auto;
+
+            height: 17px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 2px solid #000;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.24);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 800;
+            line-height: 1;
+            white-space: nowrap;
+        }
+        .modal-part-upgrade-fill {
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 0;
+            background: #FFCE4E;
+            transition: width 0.2s ease, background 0.2s ease;
+        }
+        .modal-part-upgrade-bar.complete .modal-part-upgrade-fill { background: linear-gradient(to right, #9AFD3E 0%, #56CD01 40%, #57CE02 100%); }
+        .modal-part-upgrade-label {
+            position: relative;
+            z-index: 1;
+            color: #fff;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.65), 0 0 4px rgba(0, 0, 0, 0.35);
+        }
 
         .modal-stats {
             width: 100%;
@@ -1469,7 +1553,7 @@
         #homeScreen, #shopScreen, #garageScreen {
             justify-content: flex-start;
             overflow: hidden;
-            background: linear-gradient(to bottom, #1b2a3c 0%, #3e5268 100%);
+            background: linear-gradient(to bottom, #001528 0%, #6CA2CE 100%);
             padding: clamp(14px, 3vh, 28px) clamp(12px, 4vw, 28px) 10px;
             box-sizing: border-box;
         }
@@ -1479,22 +1563,11 @@
             min-height: 0;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: clamp(8px, 2vh, 16px);
-            padding-top: clamp(34px, 6vh, 60px);
+            align-items: center;            
+            padding-top: clamp(10px, 6vh, 30px);
             box-sizing: border-box;
         }
-        .shop-dashboard, .garage-dashboard {
-            width: min(620px, 100%);
-            height: 100%;
-            min-height: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: clamp(8px, 2vh, 16px);
-            padding-top: clamp(34px, 6vh, 60px);
-            box-sizing: border-box;
-        }
+        
         .shop-content-shell {
             width: 100%;
             min-height: 0;
@@ -1508,6 +1581,132 @@
             width: 100%;
             box-sizing: border-box;
         }
+        #shopScreen {
+            background: linear-gradient(to bottom, #8A4B00 0%, #F6C844 48%, #433C5E 70%, #433C5E 100%);
+        }
+        #shopScreen .shop-dashboard {
+            justify-content: flex-start;
+            gap: 8px;
+        }
+        .shop-banner-row {
+            width: 100%;
+            min-height: 180px;
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 14px 12px 8px;            
+            border-radius: 0px;
+            background: linear-gradient(110deg, #FBD931 0%, #F0AF39 40% 65%, #AF5217 65%, #C6612A 100%);
+            color: #fff;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 2px 4px rgba(90,45,0,.32);
+        }
+        .shop-banner-row h2 { margin-bottom: 30%; font-size: clamp(21px, 6vw, 30px); font-weight: 1000; letter-spacing: 1px; text-shadow: 0 1px 0 #FFEFA3; }
+        .shop-refresh-label { margin-top: 8px; align-self: flex-end; padding: 6px 9px; border-radius: 3px; background: #9A440B; color: #fff; font-size: 10px; font-weight: 900; white-space: nowrap; }
+        .shop-items-row {
+            width: 100%;
+            min-height: 0;
+            flex: 1 1 auto;
+            overflow-y: auto;
+            padding: 8px;
+            border: 1px solid #7A3C05;
+            border-radius: 0px;
+            background: #39180F;
+            scrollbar-width: thin;
+            scrollbar-color: #D18A28 transparent;
+        }
+        .shop-item-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-content: start; grid-auto-rows: max-content; }
+        .shop-item-shell { min-width: 0; height: max-content; align-self: start; display: flex; flex-direction: column; align-items: stretch; }
+        .shop-item-card { min-width: 0; height: max-content; position: relative; display: flex; flex-direction: column; align-items: stretch; gap: 2px; padding: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,.78); border-radius: 5px 5px 0 0; background: linear-gradient(
+  to bottom,
+  rgba(255, 255, 255, 0.2) 0%,
+  rgba(255, 255, 255, 0.2) 60%,
+  rgba(255, 255, 255, 0.4) 90%,
+  rgba(255, 255, 255, 0.8) 100%
+); box-shadow: 0 2px 3px rgba(40,15,0,.28); }
+        .shop-item-card.shop-sold-out > *:not(.shop-sold-overlay) { filter: grayscale(.55); opacity: .48; }
+        .shop-item-shell.shop-sold-out-shell .shop-buy-button { filter: grayscale(.55); opacity: .48; }
+        .shop-sold-overlay { position: absolute; inset: 0; z-index: 8; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 1; filter: none; }
+        .shop-sold-overlay span { padding: 8px 11px; border: 3px solid #fff; border-radius: 5px; background: #C62828; color: #fff; font-size: 13px; font-weight: 1000; line-height: 1; text-align: center; text-shadow: 0 1px 1px rgba(0,0,0,.45); }
+        .shop-part-name { width: 100%; min-height: 14px; overflow: hidden; padding: 0 2px; color: #fff; font-size: 9px; font-weight: 900; line-height: 14px; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+        .shop-inner-part-card {
+            width: 70%;
+            max-width: 100px;
+            height: 95px;
+            min-height: 0;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            overflow: hidden;
+            padding: 4px;
+            border: 1px solid rgba(255,255,255,.84);
+            border-radius: 4px;
+            box-shadow: 0 1px 0 rgba(0,0,0,.38);
+        }
+        .shop-inner-part-card .shop-item-type { position: absolute; top: 4px; left: 4px; width: 18px; height: 18px; opacity: .9; }
+        .shop-inner-part-card .shop-item-type svg { width: 18px !important; height: 18px !important; }
+        .shop-inner-part-card .part-name { width: 100%; overflow: hidden; margin-top: 1px; color: #fff; font-size: 9px; font-weight: bold; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+        .shop-inner-part-card .part-visual-preview {
+            width: 32px;
+            height: 32px;
+            margin-top: 15px;
+            margin-bottom: 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .shop-inner-part-card .part-visual-preview canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .shop-inner-part-card .card-footer-info {
+            width: 100%;
+            margin-top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+        .shop-inner-part-card .shop-piece-label { color: #fff; font-size: 8px; font-weight: 900; line-height: 1; }
+        .shop-inner-part-card .part-amount-row { width: 100%; height: 17px; position: relative; }
+        .shop-inner-part-card .part-amount-arrow { width: 19px; height: 19px; right: 76%; }
+        .shop-inner-part-card .part-amount-bar { min-height: 15px; height: 15px; border-width: 1px; border-radius: 3px; font-size: 8px; }
+        .shop-gold-preview { width: 32px; height: 32px; margin-top: 15px; display: flex; align-items: center; justify-content: center; }
+        .shop-gold-preview .currency-gold-icon { position: static; width: 28px; height: 28px; transform: none; flex: 0 0 28px; }
+        .shop-claim-label { font-size: 10px; font-weight: 1000; }
+        .shop-refresh-controls { width: 100%; margin-top: 8px; display: flex; align-items: center; justify-content: flex-end; gap: 5px; }
+        .shop-refresh-label { margin-top: 0; align-self: auto; }
+        .shop-refresh-button { width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 3px solid #9A440B; border-radius: 2px; background: #9A440B; color: #F6C441; cursor: pointer; box-sizing: border-box; }
+        .shop-refresh-button svg { width: 16px; height: 16px; fill: currentColor; }
+        .shop-refresh-button:disabled { opacity: .45; cursor: not-allowed; }
+        .shop-confirm-modal { position: fixed; inset: 0; z-index: 500; display: flex; align-items: center; justify-content: center; padding: 14px; background: rgba(0,0,0,.72); }
+        .shop-confirm-modal.hidden { display: none !important; }
+        .shop-confirm-box { width: min(320px, calc(100vw - 28px)); overflow: hidden; border: 2px solid #F5B82E; border-radius: 2px; background: linear-gradient(to bottom, #FFF0A0 0%, #F7C640 38%, #8D4B05 100%); color: #4A2500; box-shadow: 0 5px 18px rgba(0,0,0,.55); }
+        .shop-confirm-title { margin: 0; padding: 10px 14px; border-bottom: 1px solid rgba(99,48,0,.4); background: #A85F08; color: #FFE9A2; font-size: 15px; font-weight: 1000; text-align: center; }
+        .shop-confirm-message { min-height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 12px 14px; color: #4A2500; font-size: 11px; font-weight: 900; line-height: 1.35; text-align: center; }
+        .shop-confirm-main { display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
+        .shop-confirm-message .currency-symbol { position: static; width: 18px; height: 18px; transform: none; flex: 0 0 18px; }
+        .shop-confirm-message .currency-gem-icon { width: 18px; height: 18px; }
+        .shop-confirm-warning { color: #B21717; font-size: 10px; font-weight: 1000; }
+        .shop-confirm-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 12px 12px; }
+        .shop-confirm-actions button { min-height: 32px; border: 1px solid #7A3C05; border-radius: 5px; font-family: inherit; font-size: 11px; font-weight: 1000; cursor: pointer; }
+        #shopConfirmCancel { background: #6E320B; color: #FFE9A2; }
+        #shopConfirmConfirm { background: #FFF; color: #000; }
+        #shopConfirmConfirm:disabled { opacity: .45; cursor: not-allowed; }
+        .shop-buy-strip { width: 100%; min-height: 28px; margin-top: 0; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: 3px; padding: 2px 3px; border: 1px solid #B77B0A; border-top: 0; border-radius: 0 0 5px 5px; background: #fff; color: #000; font-family: inherit; font-size: 9px; font-weight: 1000; text-align: center; cursor: pointer; }
+        .shop-buy-button { width: 100%; min-height: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; gap: 3px; padding: 2px; border: 0; border-radius: 0; background: #fff; color: #000; font-family: inherit; font-size: 9px; font-weight: 1000; cursor: pointer; }
+        .shop-buy-button:disabled { opacity: .45; cursor: not-allowed; }
+        .shop-buy-button .currency-gold-icon, .shop-buy-button .currency-gem-icon { position: static; width: 14px; height: 14px; transform: none; flex: 0 0 14px; }
+        .shop-merchant-row { margin-top: 10px; width: 100%; flex: 0 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .shop-merchant-button { min-height: 38px; border: 1px solid #FFE87E; border-radius: 5px; background: #D2AC57; color: #FFF1B2; font-size: 11px; font-weight: 900; cursor: pointer; }
+        .shop-merchant-button:hover { background: #8C4A04; }
+        @media (max-width: 360px) { .shop-item-grid { gap: 5px; } .shop-items-row { padding: 5px; } }
         .home-slot-layout {
             width: 100%;
             display: grid;
@@ -1738,8 +1937,108 @@
         .part-action-row > .equip-action-btn { width:auto; border:2px solid #1683a5; background:#47C8F0; color:#063b58; }
         .part-action-row > .equip-action-btn:hover { background:#6ed8f5; border-color:#126d89; }
         .part-action-row > .equip-action-btn.equipped { background:#2f849d; border-color:#1d5f75; color:#063b58; cursor:default; }
-        .part-level { color:#fff; font-size:9px; font-weight:700; }
-    
+                .part-level { color:#fff; font-size:9px; font-weight:700; }
+        .card-footer-info {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            width: 100%;
+        }
+        .card-footer-info .equipped-text {
+            order: 1;
+            position: static;
+            min-height: 11px;
+            padding: 0;
+            transform: none;
+            border-radius: 0;
+            background: transparent;
+            color: #fff;
+            font-size: 9px;
+            font-weight: 800;
+            line-height: 1;
+        }
+        .part-amount-bar {
+            order: 2;
+            position: relative;
+            width: 100%;
+            min-height: 17px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 2px 5px;
+            border: 2px solid #fff;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 800;
+            line-height: 1;
+            white-space: nowrap;
+        }
+        .part-amount-fill {
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 0;
+            background: #FFCE4E;
+            transition: width 0.2s ease, background 0.2s ease;
+        }
+        .part-amount-bar.amount-complete .part-amount-fill { background: linear-gradient(to right, #9AFD3E 0%, #56CD01 40%, #57CE02 100%); }
+        .part-amount-bar.amount-complete .part-amount-label { text-shadow: 0 0 2px rgba(0, 0, 0, 0.65), 0 0 4px rgba(0, 0, 0, 0.35); }
+        .part-amount-bar.max-level {
+            min-height: 17px;
+            height: 17px;
+            padding: 2px 5px;
+            border-width: 2px;
+            border-radius: 4px;
+            background: transparent;
+        }
+        .part-amount-bar.max-level .part-amount-fill { display: none; }
+        .part-amount-bar.max-level .part-amount-label { display: block; }
+        .part-amount-bar.max-level.common { background: #fff; }
+        .part-amount-bar.max-level.rare { background: #b9e7ff; }
+        .part-amount-bar.max-level.epic { background: #e4c6ff; }
+        .part-amount-bar.max-level.legendary { background: #ffe0a3; }
+        .part-amount-bar.max-level.ascended { background: #fff; }
+        .part-amount-label {
+            position: relative;
+            z-index: 1;
+            color: #fff;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.65), 0 0 4px rgba(0, 0, 0, 0.35);
+        }
+        .part-amount-row {
+            order: 2;
+            position: relative;
+            width: 100%;
+            height: 17px;
+        }
+        .part-amount-arrow {
+            display: none;
+            position: absolute;
+            right: 80%;
+            top: 45%;
+            z-index: 3;
+            width: 24px;
+            height: 24px;
+            overflow: visible;
+            transform: translateY(-50%);
+            pointer-events: none;
+            filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.75));
+        }
+        .part-amount-row.completed .part-amount-arrow { display: block; }
+        .part-amount-bar.common { border-color: #fff; }
+        .part-amount-bar.rare { border-color: #b9e7ff; }
+        .part-amount-bar.epic { border-color: #e4c6ff; }
+        .part-amount-bar.legendary { border-color: #ffe0a3; }
+        .part-amount-bar.ascended { border-color: #fff; }
+        .part-amount-bar.not-upgradeable { color: #fff; }
+        .part-amount-bar.upgradeable { color: #fff; }
         /* Championship lobby and challenge placeholder */
         #championshipLobbyScreen {
             min-height: 100%;
@@ -1905,6 +2204,19 @@
 
         #challengeChampionshipScreen .championship-enter-row { position:fixed; left:50%; bottom:14px; transform:translateX(-50%); z-index:40; margin:0; padding:0; pointer-events:none; }
         #challengeChampionshipScreen .championship-enter-row .championship-back-btn { pointer-events:auto; }
+
+/* GARAGE: exact screen-edge sections */
+#garageScreen .garage-preview,
+#garageScreen .garage-tabs,
+#garageScreen .inventory-container, 
+#shopScreen .shop-items-row,
+#shopScreen .shop-banner-row {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc((100% - 100vw) / 2);
+    margin-right: calc((100% - 100vw) / 2);
+    box-sizing: border-box;
+}
 </style>
 </head>
 <body>
@@ -2111,7 +2423,7 @@
     </div>
 
     <!-- GARAGE SCREEN -->
-    <div id="garageScreen" class="screen hidden"><div class="screen-top-row"><div class="profile-block"><div class="profile-avatar" role="button" tabindex="0" aria-label="Open Debug Menu" onclick="if(window.openCurrencyDebug) window.openCurrencyDebug(event);" onkeydown="if((event.key==='Enter'||event.key===' ')&&window.openCurrencyDebug){event.preventDefault();window.openCurrencyDebug(event);}"></div><div class="profile-details"><div class="profile-name">Player</div><div class="profile-level"><span class="profile-level-label">GP</span><span class="profile-level-value">1</span><span class="profile-level-end" aria-hidden="true"></span></div><div class="profile-exp" aria-label="Experience placeholder"></div></div></div></div><div class="currency-hud"><span class="currency-item currency-gold"><span class="currency-symbol currency-gold-icon" aria-hidden="true"></span><span id="garageGold">0</span></span><span class="currency-item currency-gem"><span class="currency-symbol currency-gem-icon" aria-hidden="true"></span><span id="garageGems">0</span></span></div><button class="debug-currency-btn" id="garageDebugCurrencyBtn" onclick="var m=document.getElementById('currencyDebugModal');m.classList.remove('hidden');m.classList.add('is-open');m.style.display='flex';"><svg class="debug-gear-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.02-.66-.07-.98l2.11-1.65-2-3.46-2.49 1a7.7 7.7 0 0 0-1.69-.98L15 3h-4l-.36 2.93c-.61.25-1.18.58-1.69.98l-2.49-1-2 3.46 2.11 1.65c-.04.32-.08.65-.08.98s.03.66.08.98l-2.11 1.65 2 3.46 2.49-1c.51.4 1.08.73 1.69.98L11 21h4l.36-2.93c.61-.25 1.18-.58 1.69-.98l2.49 1 2-3.46-2.11-1.65zM13 15.5A3.5 3.5 0 1 1 13 8a3.5 3.5 0 0 1 0 7.5z"/></svg></button>
+    <div id="garageScreen" class="screen hidden"><div class="screen-top-row"><div class="profile-block"><div class="profile-avatar" role="button" tabindex="0" aria-label="Edit Nickname" onclick="if(window.handleProfileAvatarClick) window.handleProfileAvatarClick(event);" onkeydown="if((event.key==='Enter'||event.key===' ')&&window.handleProfileAvatarClick){event.preventDefault();window.handleProfileAvatarClick(event);}"></div><div class="profile-details"><div class="profile-name">Player</div><div class="profile-level"><span class="profile-level-label">GP</span><span class="profile-level-value">1</span><span class="profile-level-end" aria-hidden="true"></span></div><div class="profile-exp" aria-label="Experience placeholder"></div></div></div></div><div class="currency-hud"><span class="currency-item currency-gold"><span class="currency-symbol currency-gold-icon" aria-hidden="true"></span><span id="garageGold">0</span></span><span class="currency-item currency-gem"><span class="currency-symbol currency-gem-icon" aria-hidden="true"></span><span id="garageGems">0</span></span></div><button class="debug-currency-btn" id="garageDebugCurrencyBtn" onclick="var m=document.getElementById('currencyDebugModal');m.classList.remove('hidden');m.classList.add('is-open');m.style.display='flex';"><svg class="debug-gear-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.02-.66-.07-.98l2.11-1.65-2-3.46-2.49 1a7.7 7.7 0 0 0-1.69-.98L15 3h-4l-.36 2.93c-.61.25-1.18.58-1.69.98l-2.49-1-2 3.46 2.11 1.65c-.04.32-.08.65-.08.98s.03.66.08.98l-2.11 1.65 2 3.46 2.49-1c.51.4 1.08.73 1.69.98L11 21h4l.36-2.93c.61-.25 1.18-.58 1.69-.98l2.49 1 2-3.46-2.11-1.65zM13 15.5A3.5 3.5 0 1 1 13 8a3.5 3.5 0 0 1 0 7.5z"/></svg></button>
         <div class="garage-dashboard">
             <div class="garage-preview">
             <div id="loadoutSelector" class="loadout-selector" aria-label="Loadout selection">
@@ -2147,7 +2459,7 @@
     </div>
 
     <!-- HOME SCREEN -->
-    <div id="homeScreen" class="screen"><div class="screen-top-row"><div class="profile-block"><div class="profile-avatar" role="button" tabindex="0" aria-label="Open Debug Menu" onclick="if(window.openCurrencyDebug) window.openCurrencyDebug(event);" onkeydown="if((event.key==='Enter'||event.key===' ')&&window.openCurrencyDebug){event.preventDefault();window.openCurrencyDebug(event);}"></div><div class="profile-details"><div class="profile-name">Player</div><div class="profile-level"><span class="profile-level-label">GP</span><span class="profile-level-value">1</span><span class="profile-level-end" aria-hidden="true"></span></div><div class="profile-exp" aria-label="Experience placeholder"></div></div></div></div><div class="currency-hud"><span class="currency-item currency-gold"><span class="currency-symbol currency-gold-icon" aria-hidden="true"></span><span id="homeGold">0</span></span><span class="currency-item currency-gem"><span class="currency-symbol currency-gem-icon" aria-hidden="true"></span><span id="homeGems">0</span></span></div><button class="debug-currency-btn" id="homeDebugCurrencyBtn" onclick="var m=document.getElementById('currencyDebugModal');m.classList.remove('hidden');m.classList.add('is-open');m.style.display='flex';"><svg class="debug-gear-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.02-.66-.07-.98l2.11-1.65-2-3.46-2.49 1a7.7 7.7 0 0 0-1.69-.98L15 3h-4l-.36 2.93c-.61.25-1.18.58-1.69.98l-2.49-1-2 3.46 2.11 1.65c-.04.32-.08.65-.08.98s.03.66.08.98l-2.11 1.65 2 3.46 2.49-1c.51.4 1.08.73 1.69.98L11 21h4l.36-2.93c.61-.25 1.18-.58 1.69-.98l2.49 1 2-3.46-2.11-1.65zM13 15.5A3.5 3.5 0 1 1 13 8a3.5 3.5 0 0 1 0 7.5z"/></svg></button>
+    <div id="homeScreen" class="screen"><div class="screen-top-row"><div class="profile-block"><div class="profile-avatar" role="button" tabindex="0" aria-label="Edit Nickname" onclick="if(window.handleProfileAvatarClick) window.handleProfileAvatarClick(event);" onkeydown="if((event.key==='Enter'||event.key===' ')&&window.handleProfileAvatarClick){event.preventDefault();window.handleProfileAvatarClick(event);}"></div><div class="profile-details"><div class="profile-name">Player</div><div class="profile-level"><span class="profile-level-label">GP</span><span class="profile-level-value">1</span><span class="profile-level-end" aria-hidden="true"></span></div><div class="profile-exp" aria-label="Experience placeholder"></div></div></div></div><div class="currency-hud"><span class="currency-item currency-gold"><span class="currency-symbol currency-gold-icon" aria-hidden="true"></span><span id="homeGold">0</span></span><span class="currency-item currency-gem"><span class="currency-symbol currency-gem-icon" aria-hidden="true"></span><span id="homeGems">0</span></span></div><button class="debug-currency-btn" id="homeDebugCurrencyBtn" onclick="var m=document.getElementById('currencyDebugModal');m.classList.remove('hidden');m.classList.add('is-open');m.style.display='flex';"><svg class="debug-gear-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.02-.66-.07-.98l2.11-1.65-2-3.46-2.49 1a7.7 7.7 0 0 0-1.69-.98L15 3h-4l-.36 2.93c-.61.25-1.18.58-1.69.98l-2.49-1-2 3.46 2.11 1.65c-.04.32-.08.65-.08.98s.03.66.08.98l-2.11 1.65 2 3.46 2.49-1c.51.4 1.08.73 1.69.98L11 21h4l.36-2.93c.61-.25 1.18-.58 1.69-.98l2.49 1 2-3.46-2.11-1.65zM13 15.5A3.5 3.5 0 1 1 13 8a3.5 3.5 0 0 1 0 7.5z"/></svg></button>
         <div class="home-dashboard">
             <div class="home-bey-panel">
                 <canvas id="homeActiveSilhouetteCanvas" width="360" height="360" aria-label="Active Beyblade silhouette"></canvas>
@@ -2225,21 +2537,47 @@
             <div id="winnerAnnouncementScore" class="winner-announcement-score" aria-live="polite"></div>
             <div id="winnerAnnouncementRewardLabel" class="winner-announcement-reward-label">Reward</div>
             <div id="winnerAnnouncementRewardBox" class="winner-announcement-reward-box" aria-label="Reward details">
-                <div class="winner-announcement-reward-tile"><span class="currency-symbol currency-gold-icon" aria-hidden="true"></span></div>
-                <div id="winnerAnnouncementRewardAmount" class="winner-announcement-reward-amount"></div>
+                <div class="winner-announcement-reward-tiles">
+                    <div id="winnerAnnouncementGoldEntry" class="winner-announcement-reward-entry">
+                        <div class="winner-announcement-reward-tile"><span class="currency-symbol currency-gold-icon" aria-hidden="true"></span></div>
+                        <div id="winnerAnnouncementRewardAmount" class="winner-announcement-reward-amount"></div>
+                    </div>
+                    <div id="winnerAnnouncementGemEntry" class="winner-announcement-reward-entry" style="display:none;">
+                        <div class="winner-announcement-reward-tile"><span class="currency-symbol currency-gem-icon" aria-hidden="true"></span></div>
+                        <div id="winnerAnnouncementGemRewardAmount" class="winner-announcement-reward-amount"></div>
+                    </div>
+                </div>
             </div>
             <button id="winnerAnnouncementBack" type="button" class="winner-announcement-back">Back</button>
             <button id="winnerAnnouncementNext" type="button" class="winner-announcement-next">Tap to start next round</button>
         </div>
     </div>
 
+    <div id="initialBattleCapUnlockOverlay" class="hidden" role="dialog" aria-modal="true" aria-label="Battle Cap unlocked">
+        <div class="initial-unlock-content">
+            <div class="initial-unlock-canvas-wrap"><canvas id="initialBattleCapUnlockCanvas" width="270" height="270" aria-label="Unlocked Battle Cap"></canvas></div>
+            <div id="initialBattleCapUnlockName" class="initial-unlock-name">Battle Cap</div>
+            <div class="initial-unlock-tap">Tap to continue</div>
+        </div>
+    </div>
+
     <!-- SHOP SCREEN -->
-    <div id="shopScreen" class="screen hidden"><div class="screen-top-row"><div class="profile-block"><div class="profile-avatar" role="button" tabindex="0" aria-label="Open Debug Menu" onclick="if(window.openCurrencyDebug) window.openCurrencyDebug(event);" onkeydown="if((event.key==='Enter'||event.key===' ')&&window.openCurrencyDebug){event.preventDefault();window.openCurrencyDebug(event);}"></div><div class="profile-details"><div class="profile-name">Player</div><div class="profile-level"><span class="profile-level-label">GP</span><span class="profile-level-value">1</span><span class="profile-level-end" aria-hidden="true"></span></div><div class="profile-exp" aria-label="Experience placeholder"></div></div></div></div><div class="currency-hud"><span class="currency-item currency-gold"><span class="currency-symbol currency-gold-icon" aria-hidden="true"></span><span id="shopGold">0</span></span><span class="currency-item currency-gem"><span class="currency-symbol currency-gem-icon" aria-hidden="true"></span><span id="shopGems">0</span></span></div><button class="debug-currency-btn" id="shopDebugCurrencyBtn" onclick="var m=document.getElementById('currencyDebugModal');m.classList.remove('hidden');m.classList.add('is-open');m.style.display='flex';"><svg class="debug-gear-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.02-.66-.07-.98l-2.11-1.65-2-3.46-2.49 1a7.7 7.7 0 0 0-1.69-.98L15 3h-4l-.36 2.93c-.61.25-1.18.58-1.69.98l-2.49-1-2 3.46 2.11 1.65c-.04.32-.08.65-.08.98s.03.66.08.98l-2.11 1.65 2 3.46c.51.4 1.08.73 1.69.98L11 21h4l.36-2.93c.61-.25 1.18-.58 1.69-.98l2.49 1 2-3.46-2.11-1.65zM13 15.5A3.5 3.5 0 1 1 13 8a3.5 3.5 0 0 1 0 7.5z"/></svg></button>
+    <div id="shopScreen" class="screen hidden"><div class="screen-top-row"><div class="profile-block"><div class="profile-avatar" role="button" tabindex="0" aria-label="Edit Nickname" onclick="if(window.handleProfileAvatarClick) window.handleProfileAvatarClick(event);" onkeydown="if((event.key==='Enter'||event.key===' ')&&window.handleProfileAvatarClick){event.preventDefault();window.handleProfileAvatarClick(event);}"></div><div class="profile-details"><div class="profile-name">Player</div><div class="profile-level"><span class="profile-level-label">GP</span><span class="profile-level-value">1</span><span class="profile-level-end" aria-hidden="true"></span></div><div class="profile-exp" aria-label="Experience placeholder"></div></div></div></div><div class="currency-hud"><span class="currency-item currency-gold"><span class="currency-symbol currency-gold-icon" aria-hidden="true"></span><span id="shopGold">0</span></span><span class="currency-item currency-gem"><span class="currency-symbol currency-gem-icon" aria-hidden="true"></span><span id="shopGems">0</span></span></div><button class="debug-currency-btn" id="shopDebugCurrencyBtn" onclick="var m=document.getElementById('currencyDebugModal');m.classList.remove('hidden');m.classList.add('is-open');m.style.display='flex';"><svg class="debug-gear-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.02-.66-.07-.98l-2.11-1.65-2-3.46-2.49 1a7.7 7.7 0 0 0-1.69-.98L15 3h-4l-.36 2.93c-.61.25-1.18.58-1.69.98l-2.49-1-2 3.46 2.11 1.65c-.04.32-.08.65-.08.98s.03.66.08.98l-2.11 1.65 2 3.46c.51.4 1.08.73 1.69.98L11 21h4l.36-2.93c.61-.25 1.18-.58 1.69-.98l2.49 1 2-3.46-2.11-1.65zM13 15.5A3.5 3.5 0 1 1 13 8a3.5 3.5 0 0 1 0 7.5z"/></svg></button>
         <div class="shop-dashboard">
             <div class="shop-content-shell">
-                <div class="placeholder-screen">
-                    <h2>Coming soon...</h2>
-                    <p>idk what i want to put haha</p>
+                <div class="shop-banner-row">
+                    <h2>Merchant</h2>
+                    <div class="shop-refresh-controls">
+                        <div id="shopRefreshLabel" class="shop-refresh-label">Next batch of goods: 23h 59m</div>
+                        <button type="button" id="shopRefreshButton" class="shop-refresh-button" aria-label="Refresh shop for 100 gems" title="Refresh shop for 100 gems"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"/></svg></button>
+                    </div>
+                </div>
+                <div class="shop-items-row" aria-label="Part amount shop items">
+                    <div id="shopItemGrid" class="shop-item-grid"></div>
+                </div>
+                <div class="shop-merchant-row">
+                    <button type="button" class="shop-merchant-button" disabled>World Merchant</button>
+                    <button type="button" class="shop-merchant-button" disabled>Event Merchant</button>
                 </div>
             </div>
         </div>
@@ -2265,7 +2603,10 @@
             </div>
             <div class="tower-detail-rewards-row">
                 <div class="tower-detail-reward-label">Reward</div>
-                <div class="tower-reward-detail" aria-label="Tower reward"><span class="tower-reward-icon currency-symbol currency-gold-icon" aria-hidden="true"></span><span class="tower-reward-amount">x<span id="towerDetailReward">0</span></span></div>
+                <div class="tower-detail-reward-items">
+                    <div class="tower-reward-detail" aria-label="Tower gold reward"><span class="tower-reward-icon currency-symbol currency-gold-icon" aria-hidden="true"></span><span class="tower-reward-amount">x<span id="towerDetailReward">0</span></span></div>
+                    <div id="towerDetailGemRewardEntry" class="tower-reward-detail" aria-label="Tower gem first-clear reward"><span class="tower-reward-icon currency-symbol currency-gem-icon" aria-hidden="true"></span><span class="tower-reward-amount">x<span id="towerDetailGemReward">50</span></span></div>
+                </div>
                 <button id="towerDetailBattle" class="tower-battle-btn tower-detail-battle-btn">BATTLE</button>
             </div>
         </div>
@@ -2333,6 +2674,16 @@
             <button id="closeCurrencyDebugBtn" type="button" onclick="var m=document.getElementById('currencyDebugModal');m.classList.add('hidden');m.classList.remove('is-open');m.style.display='none';" style="width:100%;margin-top:12px;">Close</button>
         </div>
         </div>
+    <div id="shopConfirmModal" class="shop-confirm-modal hidden" role="dialog" aria-modal="true" aria-labelledby="shopConfirmTitle">
+        <div class="shop-confirm-box">
+            <h3 id="shopConfirmTitle" class="shop-confirm-title">Confirm Purchase</h3>
+            <div id="shopConfirmMessage" class="shop-confirm-message"></div>
+            <div class="shop-confirm-actions">
+                <button id="shopConfirmCancel" type="button">Cancel</button>
+                <button id="shopConfirmConfirm" type="button">Confirm</button>
+            </div>
+        </div>
+    </div>
     <!-- FIRST-ENTRY NICKNAME POPUP -->
     <div id="firstNicknameModal" class="first-nickname-modal hidden" role="dialog" aria-modal="true" aria-labelledby="firstNicknameTitle">
         <div class="first-nickname-box">
@@ -2360,6 +2711,10 @@
                     <canvas id="modalPartCanvas" width="70" height="70" style="width:100%; height:100%; display:block;"></canvas>
                 </div>
             </div>
+            <div class="modal-part-upgrade-row">
+                <div id="modalPartUpgradeTitle" class="modal-part-upgrade-title common">Common</div>
+                <div id="modalPartUpgradeBar" class="modal-part-upgrade-bar"><span id="modalPartUpgradeFill" class="modal-part-upgrade-fill"></span><span id="modalPartUpgradeLabel" class="modal-part-upgrade-label"></span></div>
+            </div>
             <div class="modal-content-tabs" role="tablist" aria-label="Part information sections">
                 <button class="modal-content-tab active" type="button" data-tab="ability" role="tab" aria-selected="true">Ability</button>
                 <button class="modal-content-tab" type="button" data-tab="microchip" role="tab" aria-selected="false">Microchip</button>
@@ -2378,7 +2733,7 @@
             <div id="modalMicrochipPanel" class="modal-tab-panel modal-placeholder-panel" data-panel="microchip" hidden>Microchip information placeholder</div>
             <div id="modalSourcePanel" class="modal-tab-panel modal-placeholder-panel" data-panel="source" hidden>Source information placeholder</div>
             <div id="modalUnknownPanel" class="modal-tab-panel modal-placeholder-panel" data-panel="unknown" hidden>Placeholder information</div>
-            <div class="modal-row modal-actions-row">
+            <div id="modalActionsRow" class="modal-row modal-actions-row">
                 <div id="upgradeInfo" class="upgrade-info" style="display:none;"></div>
                 <div class="part-action-row">
                     <button id="upgradePartBtn" type="button">Upgrade<span class="upgrade-cost"></span></button>
@@ -2445,7 +2800,6 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
 
                 const PARTS = {
             battleCap: [
-                { id: "bc_test", rarity: "Normal", name: "Battle Cap", color: "#BFC1C2", type: "Balance", spinType: "right", atk: 10, def: 100, health: 10000, stamina: 100, weight: 10, interval: 5.0, desc: "For testing purpose.", effects: [] },      
                 { id: "bc_behemoth", rarity: "Normal", name: "Behemoth", color: "#f39c12", type: "Attack", spinType: "right", atk: 124, def: 17, health: 1469, stamina: 30, weight: 16.0, interval: 2.2, desc: "Ultimate: Launches a devastating Impact. Special effect: Grants extra charge to Ultimate through impact.", effects: [{ type: 'behemoth_ultimate', desc: 'Ultimate: Devastating Impact (500% dmg, 0.8-0.9s duration)' }] },
                 { id: "bc_kaguyahime", rarity: "Normal", name: "Kaguyahime", color: "#f1c40f", type: "Stamina", spinType: "right", atk: 110, def: 27, health: 2256, stamina: 40, weight: 12.0, interval: 3.4, desc: "Ultimate: Creates a zone in the center of the stadium that continuously recovers the Bey's HP. Special effect: Speeds up automatic charging to charge Ultimate.", effects: [{ type: 'kaguyahime_ultimate', desc: 'Ultimate: Center Healing AOE (1% HP/s for 10s)' }] },
                 { id: "bc_athena", rarity: "Normal", name: "Athena", color: "#5dade2", type: "Defense", spinType: "right", atk: 92, def: 47, health: 2013, stamina: 32, weight: 21.0, interval: 2.7, desc: "Ultimate: Guarantees block for a set duration, and reduces damage taken. Special effect: Grants extra charge to Ultimate when blocking enemy's impacts.", effects: [{ type: 'athena_ultimate', desc: 'Ultimate: Guaranteed Block (100% Block chance) for 3s' }] },
@@ -2466,7 +2820,6 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
                 { id: "bc_valkyrie", rarity: "Legendary", name: "Valkyrie", color: "#CF261F", type: "Attack", spinType: "right", atk: 158, def: 30, health: 1640, stamina: 34, weight: 15.0, interval: 2.4, desc: "Ultimate: Unleashes an ultimate attack after a short delay, dealing damage to all opponents. Special effect: Grants extta charge to Ultimate through impacts. Continuously increase Attack by moving until colliding with an opponent.", effects: [{ type: "valkyrie_delayed_ultimate", preDelay: 180, attackRatio: 3.0, flashDuration: 60, desc: "Ultimate: 3s pre-delay, then standard Ultimate pause/wind-up, followed by a 300% Attack all-opponent strike with a 1s white flash." }, { type: "valkyrie_attack_charging", distance: 100, bonusPerMilestone: 0.01, maxBonus: 1.0, desc: "Special Effect: Attack Charging — gains 1% Attack for every 100 distance traveled, up to 100%; resets on collision." }] },
             ],
             weightRing: [
-                { id: "wr_test", rarity: "Normal", name: "Weight Ring", color: "#EBECEC", type: "Balance", atk: 0, def: 0, health: 0, stamina: 0, weight: 0, interval: 0, desc: "For testing purpose.", effects: [] },                
                 { 
                     id: "wr_devil", rarity: "Normal", name: "Devil", color: "#3E4C77", type: "Attack", atk: 84, def: 12, health: 920, stamina: 17, weight: 37.0, interval: 0, 
                     desc: "Increases Attack when HP is high.",
@@ -2565,7 +2918,6 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
                 },
             ],
             driver: [
-                { id: "drv_test", rarity: "Normal", type: "Balance", name: "Driver", color: "#D2D5D6", atk: 0, def: 0, health: 0, stamina: 0, weight: 0, interval: 0, tip: "flat", desc: "For testing purpose.", effects: [] },               
                 { 
                     id: "drv_rage", rarity: "Normal", type: "Attack", name: "Rage", color: "#FF74B5", atk: 75, def: 10, health: 841, stamina: 13, weight: 11.0, interval: 0, tip: "ball",
                     desc: "Increases Ultimate charge gained through Impacts.",
@@ -2765,10 +3117,10 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
             modal.classList.add('hidden');
             modal.style.display = 'none';
         }
-        function openFirstNicknamePrompt() {
+        function openFirstNicknamePrompt(force = false) {
             let completed = false;
             try { completed = localStorage.getItem(FIRST_NICKNAME_PROMPT_KEY) === '1'; } catch (e) {}
-            if (completed) return;
+            if (completed && !force) return;
             const modal = document.getElementById('firstNicknameModal');
             const input = document.getElementById('firstNicknameInput');
             const error = document.getElementById('firstNicknameError');
@@ -2795,6 +3147,15 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
             if (typeof manualSaveGame === 'function') manualSaveGame();
             if (typeof scheduleChampionshipPlayerSync === 'function') scheduleChampionshipPlayerSync();
         }
+        const PROFILE_DEBUG_MENU_ENABLED = false;
+        window.handleProfileAvatarClick = function(event) {
+            if (event) { event.preventDefault(); event.stopPropagation(); }
+            if (PROFILE_DEBUG_MENU_ENABLED && window.openCurrencyDebug) {
+                window.openCurrencyDebug(event);
+            } else {
+                openFirstNicknamePrompt(true);
+            }
+        };
         function initializeFirstNicknamePrompt() {
             const show = () => setTimeout(openFirstNicknamePrompt, 0);
             if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', show, { once: true });
@@ -2831,7 +3192,28 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
 
 
         const UPGRADE_COSTS = [0, 20, 40, 100, 200, 400, 700, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000];
+        const PART_AMOUNT_REQUIREMENTS = [0, 2, 4, 8, 20, 40, 80, 200, 400, 1000, 2000, 5000, 10000, 20000, 40000, 100000];
         let partUpgradeLevels = {};
+        let partAmounts = {};
+        let acquiredPartIds = {};
+        const INITIAL_UNLOCKED_PART_IDS = new Set(Object.values(PARTS).flatMap(parts => (parts || []).slice(0, 3).map(part => part.id)));
+        function isPartAcquired(part) { return !!part && (INITIAL_UNLOCKED_PART_IDS.has(part.id) || acquiredPartIds[part.id] === true || getPartAmount(part) > 0); }
+        // Upgrade levels and part amounts are intentionally session-only until the user presses Save.
+        function getPartAmount(part) { return Math.max(0, Math.floor(Number(partAmounts[part.id] || 0))); }
+        function getUpgradePartAmount(part) { const level = getPartLevel(part); return level >= 15 ? 0 : PART_AMOUNT_REQUIREMENTS[level]; }
+        function addPartAmount(partId, amount) {
+            const n = Math.max(0, Math.floor(Number(amount) || 0));
+            if (!partId || n <= 0) return;
+            const catalogEntry = Object.entries(PARTS).map(([type, parts]) => ({ type, part: (parts || []).find(candidate => candidate.id === partId) })).find(entry => entry.part);
+            const wasAcquired = catalogEntry ? isPartAcquired(catalogEntry.part) : true;
+            partAmounts[partId] = Math.max(0, Math.floor(Number(partAmounts[partId] || 0))) + n;
+            acquiredPartIds[partId] = true;
+            if (modalTargetPart && modalTargetPart.part && modalTargetPart.part.id === partId) openPartModal(modalTargetPart.type, modalTargetPart.part);
+            if (typeof updateGarageUI === 'function') updateGarageUI();
+            if (!wasAcquired && catalogEntry && catalogEntry.type === 'battleCap' && typeof showInitialBattleCapUnlock === 'function') {
+                setTimeout(() => showInitialBattleCapUnlock(catalogEntry.part), 0);
+            }
+        }
         // Upgrade levels are intentionally session-only until the user presses Save.
         function savePartUpgradeLevels() { /* Manual save only; no automatic persistence. */ }
         function getPartLevel(part) { return Math.max(1, Math.min(15, Number(partUpgradeLevels[part.id] || 1))); }
@@ -2854,9 +3236,9 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
         }
         function createDefaultLoadouts() {
             return [
+                { battleCap: PARTS.battleCap[0], weightRing: PARTS.weightRing[0], driver: PARTS.driver[0] },
                 { battleCap: PARTS.battleCap[1], weightRing: PARTS.weightRing[1], driver: PARTS.driver[1] },
-                { battleCap: PARTS.battleCap[2], weightRing: PARTS.weightRing[2], driver: PARTS.driver[2] },
-                { battleCap: PARTS.battleCap[3], weightRing: PARTS.weightRing[3], driver: PARTS.driver[3] }
+                { battleCap: PARTS.battleCap[2], weightRing: PARTS.weightRing[2], driver: PARTS.driver[2] }
             ];
         }
         let playerLoadouts = createDefaultLoadouts();
@@ -2864,9 +3246,9 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
         let playerEquipped = playerLoadouts[activeLoadoutIndex];
 
         let enemyEquipped = {
-            battleCap: PARTS.battleCap[1],
-            weightRing: PARTS.weightRing[4],
-            driver: PARTS.driver[3]
+            battleCap: PARTS.battleCap[0],
+            weightRing: PARTS.weightRing[3],
+            driver: PARTS.driver[2]
         };
 
         let arenaZones = [];
@@ -2986,6 +3368,8 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
         let towerCurrentFloor = 1;
         let towerUnlockedFloor = 1;
         let towerActiveFloor = null;
+        const TOWER_FIRST_CLEAR_GEMS = 50;
+        let towerFirstClearGems = {};
         function normalizeSeed(value) {
             let text = String(value ?? '').trim();
             if (!text) return null;
@@ -3027,6 +3411,10 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
         }
         function towerStat(part, level, key) { return Math.round((part[key] || 0) * Math.pow(1.10, level - 1)); }
         function getTowerReward(floor) { return Math.round(1000 * Math.pow(1.054, floor - 1)); }
+        function getTowerPartDrop(floor) {
+            // Tower floors no longer grant Beyblade part amounts.
+            return null;
+        }
         function setTowerStatus() { /* Tower announcements are intentionally hidden. */ }
         function renderTowerFloors() {
             const list = document.getElementById('towerFloorList');
@@ -3082,6 +3470,10 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
                 }
             }
             document.getElementById('towerDetailReward').textContent = getTowerReward(floor).toLocaleString();
+            const towerDetailGemReward = document.getElementById('towerDetailGemReward');
+            if (towerDetailGemReward) towerDetailGemReward.textContent = TOWER_FIRST_CLEAR_GEMS.toLocaleString();
+            const towerDetailGemRewardEntry = document.getElementById('towerDetailGemRewardEntry');
+            if (towerDetailGemRewardEntry) towerDetailGemRewardEntry.style.display = towerFirstClearGems[floor] ? 'none' : 'flex';
             const battle = document.getElementById('towerDetailBattle');
             battle.disabled = floor > towerUnlockedFloor;
             battle.dataset.towerBattle = floor;
@@ -3108,13 +3500,15 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
             if (bey2.dead && !bey1.dead) return bey2;
             return bey1.dead ? bey1 : bey2;
         }
-        function showWinnerAnnouncement(title, won, finalMatch, continueAction, backAction, roundScore, rewardAmount = 0) {
+        function showWinnerAnnouncement(title, won, finalMatch, continueAction, backAction, roundScore, rewardAmount = 0, rewardGemAmount = 0) {
             const winnerScreen = document.getElementById('winnerAnnouncementScreen');
             const titleEl = document.getElementById('winnerAnnouncementTitle');
             const scoreEl = document.getElementById('winnerAnnouncementScore');
             const rewardLabelEl = document.getElementById('winnerAnnouncementRewardLabel');
             const rewardBoxEl = document.getElementById('winnerAnnouncementRewardBox');
             const rewardAmountEl = document.getElementById('winnerAnnouncementRewardAmount');
+            const rewardGemEntry = document.getElementById('winnerAnnouncementGemEntry');
+            const rewardGemAmountEl = document.getElementById('winnerAnnouncementGemRewardAmount');
             const backBtn = document.getElementById('winnerAnnouncementBack');
             const nextBtn = document.getElementById('winnerAnnouncementNext');
             if (!winnerScreen || !titleEl || !scoreEl || !backBtn || !nextBtn) return;
@@ -3123,10 +3517,16 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
             winnerScreen.classList.toggle('final-result', finalMatch);
             scoreEl.textContent = roundScore || '';
             scoreEl.style.display = roundScore ? 'block' : 'none';
-            const hasReward = finalMatch && Number(rewardAmount) > 0;
+            const hasGoldReward = finalMatch && Number(rewardAmount) > 0;
+            const hasGemReward = finalMatch && Number(rewardGemAmount) > 0;
+            const hasReward = hasGoldReward || hasGemReward;
             if (rewardLabelEl) rewardLabelEl.style.display = hasReward ? 'block' : 'none';
             if (rewardBoxEl) rewardBoxEl.style.display = hasReward ? 'flex' : 'none';
-            if (rewardAmountEl) rewardAmountEl.textContent = hasReward ? `x${Number(rewardAmount).toLocaleString()}` : '';
+            if (rewardAmountEl) rewardAmountEl.textContent = hasGoldReward ? `x${Number(rewardAmount).toLocaleString()}` : '';
+            const goldEntry = document.getElementById('winnerAnnouncementGoldEntry');
+            if (goldEntry) goldEntry.style.display = hasGoldReward ? 'flex' : 'none';
+            if (rewardGemEntry) rewardGemEntry.style.display = hasGemReward ? 'flex' : 'none';
+            if (rewardGemAmountEl) rewardGemAmountEl.textContent = hasGemReward ? `x${Number(rewardGemAmount).toLocaleString()}` : '';
             titleEl.textContent = title;
             titleEl.className = `winner-announcement-title ${won ? (finalMatch ? 'victory' : 'round-win') : (finalMatch ? 'defeated' : 'round-lose')}`;
             backBtn.style.display = finalMatch ? 'block' : 'none';
@@ -3145,7 +3545,7 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
                 requestAnimationFrame(() => winnerScreen.classList.add('visible'));
             });
         }
-        function showBattleResultSequence(won, finalMatch, title, continueAction, backAction, roundScore, showWinnerScreen = true, rewardAmount = 0) {
+        function showBattleResultSequence(won, finalMatch, title, continueAction, backAction, roundScore, showWinnerScreen = true, rewardAmount = 0, rewardGemAmount = 0) {
             const announcement = document.getElementById('battleResultAnnouncement');
             const announcementPanel = announcement ? announcement.querySelector('.battle-result-announcement-panel') : null;
             const announcementText = document.getElementById('battleResultAnnouncementText');
@@ -3170,7 +3570,7 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
                 announcement.classList.remove('active');
                 announcement.onclick = null;
                 if (showWinnerScreen) {
-                    showWinnerAnnouncement(title, won, finalMatch, continueAction, backAction, roundScore, rewardAmount);
+                    showWinnerAnnouncement(title, won, finalMatch, continueAction, backAction, roundScore, rewardAmount, rewardGemAmount);
                 } else {
                     announcement.classList.remove('active');
                 }
@@ -3203,8 +3603,15 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
             towerResultHandled = true;
             const won = !bey1.dead && bey2.dead;
             const reward = won ? getTowerReward(towerActiveFloor) : 0;
+            const firstClearGemReward = won && !towerFirstClearGems[towerActiveFloor] ? TOWER_FIRST_CLEAR_GEMS : 0;
+            const partDrop = won ? getTowerPartDrop(towerActiveFloor) : null;
             if (won) {
                 addCurrency('gold', reward);
+                if (firstClearGemReward > 0) {
+                    addCurrency('gems', firstClearGemReward);
+                    towerFirstClearGems[towerActiveFloor] = true;
+                }
+                if (partDrop) addPartAmount(partDrop.partId, partDrop.amount);
                 towerUnlockedFloor = Math.max(towerUnlockedFloor, Math.min(100, towerActiveFloor + 1));
                 towerCurrentFloor = Math.min(100, towerActiveFloor + 1);
                 setTowerStatus(`Floor ${towerActiveFloor} cleared! +${reward} Gold.`, '#7dff9b');
@@ -3212,7 +3619,8 @@ const BC_VALKYRIE_1 = 'data:audio/mpeg;base64,SUQzAwAAAAAAMFRYWFgAAAADAAAAAABUU1
                 setTowerStatus(`Floor ${towerActiveFloor} failed. Try again.`, '#ff8b8b');
             }
             updateCurrencyUI(); renderTowerFloors();
-            showBattleResultSequence(won, true, won ? 'VICTORY' : 'DEFEATED', null, () => returnFromFinalBattle({ returnScreen: 'towerScreen' }), won ? '1:0' : '0:1', true, reward);
+            if (won && typeof manualSaveGame === 'function') manualSaveGame();
+            showBattleResultSequence(won, true, won ? 'VICTORY' : 'DEFEATED', null, () => returnFromFinalBattle({ returnScreen: 'towerScreen' }), won ? '1:0' : '0:1', true, reward, firstClearGemReward);
         }
         function handleStandardBattleEnd() {
             const context = threeBeybladeSelectContext;
@@ -4109,6 +4517,308 @@ arena_7: './arena_7.mp3'
         window.addEventListener('beforeunload', pauseGameBgmForPageLifecycle);
         updateGameBgmForScreen(document.querySelector('.screen:not(.hidden)')?.id || 'homeScreen');
 
+        const SHOP_SAVE_KEY = 'bey_shop_state_v2';
+        // Release reset: increment GAME_DATA_VERSION for a future one-time wipe.
+        // Set GAME_DATA_RESET_ENABLED to false during testing to disable the wipe.
+        const GAME_DATA_RESET_ENABLED = true;
+        const GAME_DATA_VERSION = 3;
+        const GAME_DATA_VERSION_KEY = 'bey_game_data_version';
+        const GAME_OWNED_STORAGE_KEYS = [
+            'bey_manual_universal_save',
+            'bey_shop_state_v2',
+            'bey_first_nickname_prompt_completed_v1',
+            'initial_battle_cap_unlock_seen_v1'
+        ];
+        function runOneTimeGameDataReset() {
+            if (!GAME_DATA_RESET_ENABLED) return;
+            try {
+                const storedVersion = Number(localStorage.getItem(GAME_DATA_VERSION_KEY) || 0);
+                if (storedVersion >= GAME_DATA_VERSION) return;
+                GAME_OWNED_STORAGE_KEYS.forEach(key => localStorage.removeItem(key));
+                localStorage.setItem(GAME_DATA_VERSION_KEY, String(GAME_DATA_VERSION));
+            } catch (e) {}
+        }
+        runOneTimeGameDataReset();
+        let shopRefreshCost = 100;
+        const SHOP_AMOUNT_OPTIONS = [10, 20, 50, 100];
+        const SHOP_RARITY_WEIGHTS = { Normal: 60, Rare: 35, Epic: 10, Legendary: 4, Ascended: 1 };
+        const SHOP_GOLD_BASE_PRICES = { Normal: 100, Rare: 1000, Epic: 8000, Legendary: 20000, Ascended: 100000 };
+        const SHOP_GEM_BASE_PRICES = { Legendary: 200, Ascended: 1000 };
+        let shopOffers = [];
+        let shopBatchExpiresAt = 0;
+        let shopBatchTimer = null;
+
+        function getNextShopResetTimestamp(now = Date.now()) {
+            const nextMidnight = new Date(now);
+            nextMidnight.setHours(24, 0, 0, 0);
+            return nextMidnight.getTime();
+        }
+        function getShopCatalogParts() {
+            return Object.entries(PARTS).flatMap(([type, parts]) => (parts || []).map(part => ({ type, part })));
+        }
+        function chooseShopRarity(allowAscended = false, allowedRarities = null) {
+            const entries = Object.entries(SHOP_RARITY_WEIGHTS).filter(([rarity]) => (allowAscended || rarity !== 'Ascended') && (!allowedRarities || allowedRarities.includes(rarity)));
+            const total = entries.reduce((sum, [, weight]) => sum + weight, 0);
+            let roll = Math.random() * total;
+            for (const [rarity, weight] of entries) {
+                roll -= weight;
+                if (roll < 0) return rarity;
+            }
+            return 'Normal';
+        }
+        function createShopOffer(index, usedIds) {
+            if (index === 0) {
+                const rareGold = Math.random() < 0.10;
+                return { kind: 'gold', type: 'gold', part: null, name: 'Daily Gold', rarity: rareGold ? 'Rare' : 'Normal', goldAmount: rareGold ? 10000 : 1000, amount: 1, currency: 'gold', price: 0, soldOut: false };
+            }
+            const catalog = getShopCatalogParts();
+            const protectedPartSlot = index === 1 || index === 2;
+            const rarity = chooseShopRarity(index === 11, protectedPartSlot ? ['Normal', 'Rare'] : null);
+            let candidates = catalog.filter(entry => (entry.part.rarity || 'Normal') === rarity && !usedIds.has(entry.part.id));
+            if (!candidates.length) candidates = catalog.filter(entry => (entry.part.rarity || 'Normal') === rarity);
+            if (!candidates.length) candidates = catalog.filter(entry => !usedIds.has(entry.part.id));
+            if (!candidates.length) candidates = catalog;
+            const selected = candidates[Math.floor(Math.random() * candidates.length)];
+            const amount = SHOP_AMOUNT_OPTIONS[Math.floor(Math.random() * SHOP_AMOUNT_OPTIONS.length)];
+            const selectedRarity = selected.part.rarity || 'Normal';
+            let currency = 'gold';
+            if (!protectedPartSlot && (selectedRarity === 'Legendary' || selectedRarity === 'Ascended') && Math.random() < 0.5) currency = 'gems';
+            const basePrice = currency === 'gems' ? SHOP_GEM_BASE_PRICES[selectedRarity] : SHOP_GOLD_BASE_PRICES[selectedRarity];
+            const fixedPrice = index === 1 ? 1 : index === 2 ? 10 : null;
+            usedIds.add(selected.part.id);
+            return { ...selected, kind: 'part', amount, currency, price: fixedPrice ?? Math.round(basePrice * amount / 10), soldOut: false };
+        }
+        function generateShopOffers(startIndex = 0, preservedOffers = []) {
+            const usedIds = new Set(preservedOffers.filter(offer => offer && offer.part).map(offer => offer.part.id));
+            const offers = preservedOffers.slice(0, startIndex);
+            for (let index = startIndex; index < 12; index += 1) offers[index] = createShopOffer(index, usedIds);
+            return offers;
+        }
+        function serializeShopOffers() {
+            return shopOffers.map(offer => ({ kind: offer.kind || 'part', type: offer.type, partId: offer.part ? offer.part.id : null, name: offer.name || null, rarity: offer.rarity || null, goldAmount: offer.goldAmount || 0, amount: offer.amount, currency: offer.currency, price: offer.price, soldOut: !!offer.soldOut }));
+        }
+        function saveShopState() {
+            try {
+                localStorage.setItem(SHOP_SAVE_KEY, JSON.stringify({ version: 2, expiresAt: shopBatchExpiresAt, refreshCost: shopRefreshCost, offers: serializeShopOffers() }));
+            } catch (e) {}
+        }
+        function loadShopState() {
+            try {
+                const raw = localStorage.getItem(SHOP_SAVE_KEY);
+                if (!raw) return false;
+                const data = JSON.parse(raw);
+                if (data.version !== 2) return false;
+                const catalog = getShopCatalogParts();
+                const restoredOffers = Array.isArray(data.offers) ? data.offers.map(saved => {
+                    if (saved.kind === 'gold') return { kind: 'gold', type: 'gold', part: null, name: 'Daily Gold', rarity: saved.rarity === 'Rare' ? 'Rare' : 'Normal', goldAmount: Number(saved.goldAmount) === 10000 ? 10000 : 1000, amount: 1, currency: 'gold', price: 0, soldOut: saved.soldOut === true };
+                    const entry = catalog.find(candidate => candidate.type === saved.type && candidate.part.id === saved.partId);
+                    if (!entry) return null;
+                    return { ...entry, kind: 'part', amount: SHOP_AMOUNT_OPTIONS.includes(Number(saved.amount)) ? Number(saved.amount) : 10, currency: saved.currency === 'gems' ? 'gems' : 'gold', price: Math.max(0, Math.floor(Number(saved.price) || 0)), soldOut: saved.soldOut === true };
+                }).filter(Boolean) : [];
+                if (restoredOffers.length !== 12) return false;
+                shopOffers = restoredOffers;
+                shopBatchExpiresAt = Math.max(0, Number(data.expiresAt) || 0);
+                shopRefreshCost = Math.max(100, Math.floor(Number(data.refreshCost) || 100));
+                return true;
+            } catch (e) { return false; }
+        }
+        function startShopBatchTimer() {
+            if (shopBatchTimer) clearInterval(shopBatchTimer);
+            shopBatchTimer = setInterval(() => {
+                if (shopBatchExpiresAt <= Date.now()) refreshShopBatch(true);
+                else updateShopRefreshLabel();
+            }, 1000);
+            updateShopRefreshLabel();
+        }
+        function initializeShopState() {
+            if (!loadShopState() || shopBatchExpiresAt <= Date.now()) {
+                shopRefreshCost = 100;
+                shopOffers = generateShopOffers();
+                shopBatchExpiresAt = getNextShopResetTimestamp();
+                saveShopState();
+            }
+            renderShopOffers();
+            startShopBatchTimer();
+        }
+        function getShopCurrencyMarkup(currency) {
+            return `<span class="currency-symbol currency-${currency === 'gems' ? 'gem' : 'gold'}-icon" aria-hidden="true"></span>`;
+        }
+        function updateShopRefreshLabel() {
+            const label = document.getElementById('shopRefreshLabel');
+            if (!label) return;
+            const remaining = Math.max(0, shopBatchExpiresAt - Date.now());
+            const totalMinutes = Math.ceil(remaining / 60000);
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            label.textContent = `Next batch of goods: ${hours}h ${String(minutes).padStart(2, '0')}m`;
+            const refreshButton = document.getElementById('shopRefreshButton');
+            if (refreshButton) {
+                refreshButton.disabled = false;
+                refreshButton.setAttribute('aria-label', `Refresh shop for ${shopRefreshCost.toLocaleString()} gems`);
+                refreshButton.title = `Refresh shop for ${shopRefreshCost.toLocaleString()} gems`;
+            }
+        }
+        function renderShopOffers() {
+            const grid = document.getElementById('shopItemGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            shopOffers.forEach((offer, index) => {
+                const isDailyGold = offer.kind === 'gold';
+                const part = offer.part;
+                const partName = isDailyGold ? 'Daily Gold' : part.name;
+                const rarity = offer.rarity || (part ? part.rarity : 'Normal') || 'Normal';
+                const card = document.createElement('div');
+                card.className = `shop-item-shell${offer.soldOut ? ' shop-sold-out-shell' : ''}`;
+                card.innerHTML = `
+                    <div class="shop-item-card${offer.soldOut ? ' shop-sold-out' : ''}">
+                        <div class="shop-part-name" style="color:${getRarityNameColor(rarity)};">${partName}</div>
+                        <div class="shop-inner-part-card part-card" style="background:${getRarityBackground(rarity)};">
+                        <div class="shop-item-type">${isDailyGold ? getShopCurrencyMarkup('gold') : getTypeIconSvg(part.type)}</div>
+                        <div class="part-visual-preview${isDailyGold ? ' shop-gold-preview' : ''}" data-shop-visual="${index}"></div>
+                        <div class="card-footer-info">
+                            <span class="shop-piece-label">${isDailyGold ? `${getShopCurrencyMarkup('gold')}${offer.goldAmount.toLocaleString()}` : `X${offer.amount}`}</span>
+                            ${isDailyGold ? '' : `<span class="part-amount-row" data-shop-amount-row="${index}"><svg class="part-amount-arrow" aria-hidden="true" viewBox="0 0 128 128" preserveAspectRatio="xMidYMid meet"><defs><linearGradient id="shopPartArrowGradient_${index}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#31EC1F"/><stop offset="100%" stop-color="#28B028"/></linearGradient></defs><path d="m 35.975002,118.14842 c -0.762327,-0.0747 -1.343711,-0.71537 -1.344231,-1.48129 l 0,-39.994663 -23.290841,-0.02743 C 10.76112,76.647631 10.242715,76.318083 9.9956916,75.79467 9.7486683,75.271254 9.8177637,74.648766 10.187726,74.20366 L 63.325972,10.371309 c 0.287001,-0.341957 0.705774,-0.526518 1.152197,-0.521194 0.446423,0.00531 0.87342,0.199921 1.152198,0.548621 l 52.205523,63.832356 c 0.35289,0.445601 0.40944,1.05061 0.16459,1.563578 -0.24484,0.512966 -0.74839,0.844443 -1.31679,0.850366 l -23.290854,0.02743 0.02743,39.994664 c -0.0021,0.39697 -0.155639,0.76426 -0.438932,1.04239 -0.283293,0.27812 -0.67292,0.44405 -1.069898,0.4389 l -55.799271,0 c -0.0457,0.002 -0.09147,0.002 -0.137166,0 z" fill="url(#shopPartArrowGradient_${index})" fill-rule="evenodd"/></svg><span class="part-amount-bar ${(rarity || 'Normal').toLowerCase()}" data-shop-amount-bar="${index}"><span class="part-amount-fill"></span><span class="part-amount-label"></span></span></span>`}
+                        </div>
+                        </div>
+                        ${offer.soldOut ? '<div class="shop-sold-overlay" aria-label="Sold out"><span>Sold out</span></div>' : ''}
+                    </div>
+                    <button type="button" class="shop-buy-button shop-buy-strip" data-shop-offer="${index}" aria-label="${isDailyGold ? 'Claim Daily Gold' : `Buy ${offer.amount} ${partName} pieces for ${offer.price} ${offer.currency}`}" >${isDailyGold ? '<span class="shop-claim-label">Claim</span>' : `${getShopCurrencyMarkup(offer.currency)}<span>${offer.price.toLocaleString()}</span>`}</button>
+                `;
+                const visualContainer = card.querySelector(`[data-shop-visual="${index}"]`);
+                if (isDailyGold) {
+                    visualContainer.innerHTML = getShopCurrencyMarkup('gold');
+                } else {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 42;
+                    canvas.height = 42;
+                    canvas.style.width = '100%';
+                    canvas.style.height = '100%';
+                    visualContainer.appendChild(canvas);
+                    const context = canvas.getContext('2d');
+                    if (context) drawPartIcon(context, 21, 21, 19, offer.type, part);
+                    const partLevel = getPartLevel(part);
+                    const currentAmount = getPartAmount(part);
+                    const requiredAmount = getUpgradePartAmount(part);
+                    const amountComplete = partLevel >= 15 || currentAmount >= requiredAmount;
+                    const fillRatio = partLevel >= 15 || requiredAmount <= 0 ? 1 : Math.min(1, currentAmount / requiredAmount);
+                    const amountBar = card.querySelector(`[data-shop-amount-bar="${index}"]`);
+                    const amountRow = card.querySelector(`[data-shop-amount-row="${index}"]`);
+                    if (amountBar) {
+                        amountBar.className = `part-amount-bar ${(rarity || 'Normal').toLowerCase()} ${amountComplete ? 'amount-complete' : 'amount-incomplete'}${partLevel >= 15 ? ' max-level' : ''}`;
+                        amountBar.querySelector('.part-amount-fill').style.width = `${fillRatio * 100}%`;
+                        amountBar.querySelector('.part-amount-label').textContent = partLevel >= 15 ? 'Max' : `${currentAmount.toLocaleString()} / ${requiredAmount.toLocaleString()}`;
+                    }
+                    if (amountRow) amountRow.classList.toggle('completed', amountComplete && partLevel < 15);
+                }
+                const button = card.querySelector('.shop-buy-button');
+                const balance = Number(currencyState[offer.currency] || 0);
+                button.disabled = offer.soldOut || balance < offer.price;
+                button.addEventListener('click', event => {
+                    event.stopPropagation();
+                    purchaseShopOffer(index);
+                });
+                grid.appendChild(card);
+            });
+            updateShopRefreshLabel();
+        }
+        function refreshShopBatch(force = false, preserveProtectedSlots = false) {
+            if (!force && shopOffers.length && shopBatchExpiresAt > Date.now()) {
+                renderShopOffers();
+                return;
+            }
+            if (!preserveProtectedSlots) shopRefreshCost = 100;
+            shopOffers = preserveProtectedSlots ? generateShopOffers(3, shopOffers.slice(0, 3)) : generateShopOffers();
+            shopBatchExpiresAt = getNextShopResetTimestamp();
+            saveShopState();
+            renderShopOffers();
+            startShopBatchTimer();
+        }
+        let shopConfirmationAction = null;
+        function closeShopConfirmation() {
+            const modal = document.getElementById('shopConfirmModal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            shopConfirmationAction = null;
+        }
+        function openShopConfirmation(title, message, canConfirm, action) {
+            const modal = document.getElementById('shopConfirmModal');
+            const titleEl = document.getElementById('shopConfirmTitle');
+            const messageEl = document.getElementById('shopConfirmMessage');
+            const confirmButton = document.getElementById('shopConfirmConfirm');
+            if (!modal || !titleEl || !messageEl || !confirmButton) return;
+            titleEl.textContent = title;
+            messageEl.innerHTML = message;
+            confirmButton.disabled = !canConfirm;
+            shopConfirmationAction = canConfirm ? action : null;
+            modal.classList.remove('hidden');
+        }
+        function refreshShopWithGems() {
+            const balance = Number(currencyState.gems || 0);
+            const canConfirm = balance >= shopRefreshCost;
+            const message = `<span class="shop-confirm-main">Refresh for ${shopRefreshCost.toLocaleString()}${getShopCurrencyMarkup('gems')}?</span><span class="shop-confirm-warning">Double cost for the next refresh</span>${canConfirm ? '' : `<span class="shop-confirm-warning">Not enough gems</span>`}`;
+            openShopConfirmation('Refresh Shop', message, canConfirm, () => {
+                const currentBalance = Number(currencyState.gems || 0);
+                if (currentBalance < shopRefreshCost) return;
+                currencyState.gems = currentBalance - shopRefreshCost;
+                shopRefreshCost *= 2;
+                updateCurrencyUI();
+                refreshShopBatch(true, true);
+                updateShopRefreshLabel();
+                saveShopState();
+            });
+        }
+        function purchaseShopOffer(index) {
+            const offer = shopOffers[index];
+            if (!offer || offer.soldOut) return;
+            if (offer.kind === 'gold') {
+                const message = `<span class="shop-confirm-main">Claim ${offer.goldAmount.toLocaleString()}${getShopCurrencyMarkup('gold')} Daily Gold?</span>`;
+                openShopConfirmation('Daily Gold', message, true, () => {
+                    addCurrency('gold', offer.goldAmount);
+                    offer.soldOut = true;
+                    renderShopOffers();
+                    if (typeof manualSaveGame === 'function') manualSaveGame();
+                    saveShopState();
+                    playGameSfx(MENU_SFX_CLICK_GEAR);
+                });
+                return;
+            }
+            const balance = Number(currencyState[offer.currency] || 0);
+            const currencyName = offer.currency === 'gems' ? 'gems' : 'gold';
+            const canConfirm = balance >= offer.price;
+            const message = `<span class="shop-confirm-main">Purchase ${offer.part.name} x${offer.amount} for ${offer.price.toLocaleString()}${getShopCurrencyMarkup(offer.currency)}?</span>${canConfirm ? '' : `<span class="shop-confirm-warning">Not enough ${currencyName}</span>`}`;
+            openShopConfirmation('Confirm Purchase', message, canConfirm, () => {
+                const currentBalance = Number(currencyState[offer.currency] || 0);
+                if (currentBalance < offer.price) return;
+                currencyState[offer.currency] = currentBalance - offer.price;
+                offer.soldOut = true;
+                addPartAmount(offer.part.id, offer.amount);
+                updateCurrencyUI();
+                renderShopOffers();
+                if (typeof updateGarageUI === 'function') updateGarageUI();
+                if (typeof manualSaveGame === 'function') manualSaveGame();
+                saveShopState();
+                playGameSfx(MENU_SFX_CLICK_GEAR);
+            });
+        }
+
+        const shopConfirmCancel = document.getElementById('shopConfirmCancel');
+        const shopConfirmConfirm = document.getElementById('shopConfirmConfirm');
+        if (shopConfirmCancel) shopConfirmCancel.addEventListener('click', closeShopConfirmation);
+        if (shopConfirmConfirm) shopConfirmConfirm.addEventListener('click', () => {
+            if (shopConfirmationAction && !shopConfirmConfirm.disabled) {
+                const action = shopConfirmationAction;
+                closeShopConfirmation();
+                action();
+            }
+        });
+        const shopConfirmModal = document.getElementById('shopConfirmModal');
+        if (shopConfirmModal) shopConfirmModal.addEventListener('click', event => {
+            if (event.target === shopConfirmModal) closeShopConfirmation();
+        });
+        initializeShopState();
+        const shopRefreshButton = document.getElementById('shopRefreshButton');
+        if (shopRefreshButton) shopRefreshButton.addEventListener('click', refreshShopWithGems);
+
         navItems.forEach(item => {
             item.addEventListener('click', () => {
                 const targetScreenId = item.getAttribute('data-screen');
@@ -4131,6 +4841,8 @@ arena_7: './arena_7.mp3'
                     renderTowerFloors();
                 } else if (targetScreenId === 'homeScreen') {
                     updateHomeUI();
+                } else if (targetScreenId === 'shopScreen') {
+                    refreshShopBatch();
                 }
             });
         });
@@ -8420,15 +9132,15 @@ arena_7: './arena_7.mp3'
         function getRarityBackground(rarity) {
             let r = (rarity || 'Normal').toLowerCase();
             if (r === 'rare') {
-                return 'linear-gradient(to bottom, #16365f 0%, #3d8edb 100%)'; // blue to brighter blue
+                return 'linear-gradient(to bottom, #173358 0%, #2B6B98 100%)'; // blue to brighter blue
             } else if (r === 'epic') {
-                return 'linear-gradient(to bottom, #3b1f52 0%, #9b59b6 100%)'; // purple to brighter purple
+                return 'linear-gradient(to bottom, #332654 0%, #6D4D9E 100%)'; // purple to brighter purple
             } else if (r === 'legendary') {
-                return 'linear-gradient(to bottom, #6b4100 0%, #f5b041 100%)'; // dark yellow-orange to lighter yellow-orange
+                return 'linear-gradient(to bottom, #4E3715 0%, #E4B13B 100%)'; // dark yellow-orange to lighter yellow-orange
             } else if (r === 'ascended') {
-                return 'linear-gradient(135deg, #117a65 0%, #2980b9 50%, #8e44ad 100%)'; // light rainbow tint
+                return 'linear-gradient(45deg, #E09D94 0%, #D2C692 30%, #A1BEA0 50%, #9EC8CA 70%,  #A221A2 100%)'; // light rainbow tint
             } else {
-                return 'linear-gradient(to bottom, #4a4a4a 0%, #8a8a8a 100%)'; // gray to light gray
+                return 'linear-gradient(to bottom, #364A55 0%, #7D9DA5 100%)'; // gray to light gray
             }
         }
 
@@ -8537,26 +9249,67 @@ arena_7: './arena_7.mp3'
             const listEl = document.getElementById('inventoryList');
             listEl.innerHTML = '';
 
-            const items = PARTS[activeTab];
-            items.forEach(part => {
+            const catalogItems = PARTS[activeTab] || [];
+            const equippedPartsInLoadoutOrder = (Array.isArray(playerLoadouts) ? playerLoadouts : []).slice(0, 3)
+                .map(loadout => loadout && loadout[activeTab])
+                .filter(Boolean);
+            const equippedPartIds = new Set(equippedPartsInLoadoutOrder.map(part => part.id));
+            const equippedItems = equippedPartsInLoadoutOrder
+                .map(equippedPart => catalogItems.find(part => part.id === equippedPart.id))
+                .filter(Boolean);
+            const acquiredItems = catalogItems.filter(part => isPartAcquired(part));
+            const unequippedItems = acquiredItems.filter(part => !equippedPartIds.has(part.id));
+            const unacquiredItems = catalogItems.filter(part => !isPartAcquired(part));
+            const items = [...equippedItems, ...unequippedItems, ...unacquiredItems];
+            items.forEach((part, itemIndex) => {
+                if (itemIndex === equippedItems.length && unequippedItems.length > 0) {
+                    const rowBreak = document.createElement('div');
+                    rowBreak.className = 'garage-equipped-row-break';
+                    rowBreak.setAttribute('aria-hidden', 'true');
+                    listEl.appendChild(rowBreak);
+                }
+                if (itemIndex === equippedItems.length + unequippedItems.length && unacquiredItems.length > 0) {
+                    const sectionLabel = document.createElement('div');
+                    sectionLabel.className = 'garage-section-label';
+                    sectionLabel.textContent = 'Not Acquired';
+                    listEl.appendChild(sectionLabel);
+                }
+                const isAcquired = isPartAcquired(part);
                 const isEquipped = playerEquipped[activeTab].id === part.id;
 
                 const card = document.createElement('div');
-                card.className = `part-card`;
+                card.className = `part-card${isAcquired ? '' : ' unacquired-part-card'}`;
                 card.style.position = 'relative';
                 card.style.background = getRarityBackground(part.rarity);
                 card.style.border = 'none';
                 card.style.boxShadow = '0 1px 0 #000';
                 card.innerHTML = `
                     ${getTypeIconSvg(part.type)}
-                    <div class="part-name" style="color: ${getRarityNameColor(part.rarity)};">${part.name}</div><div class="part-level">Lv.${getPartLevel(part)}</div>
-                    <div class="part-visual-preview" id="preview_card_${part.id}"></div>
-                    <div class="card-footer-info">
+                    <div class="part-name" style="color: ${getRarityNameColor(part.rarity)};">${part.name}</div>${isAcquired ? `<div class="part-level">Lv.${getPartLevel(part)}</div>` : ''}
+                                        <div class="part-visual-preview" id="preview_card_${part.id}"></div>
+                    ${isAcquired ? `<div class="card-footer-info">
                         ${isEquipped ? '<span class="equipped-text">Equipped</span>' : ''}
-
-                    </div>
+                        <span class="part-amount-row" data-part-amount-row-id="${part.id}"><svg class="part-amount-arrow" aria-hidden="true" viewBox="0 0 128 128" preserveAspectRatio="xMidYMid meet"><defs><linearGradient id="partArrowGradient_${part.id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#31EC1F"/><stop offset="100%" stop-color="#28B028"/></linearGradient></defs><path d="m 35.975002,118.14842 c -0.762327,-0.0747 -1.343711,-0.71537 -1.344231,-1.48129 l 0,-39.994663 -23.290841,-0.02743 C 10.76112,76.647631 10.242715,76.318083 9.9956916,75.79467 9.7486683,75.271254 9.8177637,74.648766 10.187726,74.20366 L 63.325972,10.371309 c 0.287001,-0.341957 0.705774,-0.526518 1.152197,-0.521194 0.446423,0.00531 0.87342,0.199921 1.152198,0.548621 l 52.205523,63.832356 c 0.35289,0.445601 0.40944,1.05061 0.16459,1.563578 -0.24484,0.512966 -0.74839,0.844443 -1.31679,0.850366 l -23.290854,0.02743 0.02743,39.994664 c -0.0021,0.39697 -0.155639,0.76426 -0.438932,1.04239 -0.283293,0.27812 -0.67292,0.44405 -1.069898,0.4389 l -55.799271,0 c -0.0457,0.002 -0.09147,0.002 -0.137166,0 z" fill="url(#partArrowGradient_${part.id})" fill-rule="evenodd"/></svg><span class="part-amount-bar ${(part.rarity || 'Normal').toLowerCase()}" data-part-amount-id="${part.id}"><span class="part-amount-fill"></span><span class="part-amount-label"></span></span></span>
+                    </div>` : ''}
                 `;
 
+                const partAmountBar = card.querySelector(`[data-part-amount-id="${part.id}"]`);
+                const partAmountRow = card.querySelector(`[data-part-amount-row-id="${part.id}"]`);
+                if (partAmountBar) {
+                    const rarityClass = (part.rarity || 'Normal').toLowerCase();
+                    const partLevel = getPartLevel(part);
+                    const currentAmount = getPartAmount(part);
+                    const requiredAmount = getUpgradePartAmount(part);
+                    const amountComplete = partLevel >= 15 || currentAmount >= requiredAmount;
+                    const fillRatio = partLevel >= 15 || requiredAmount <= 0 ? 1 : Math.min(1, currentAmount / requiredAmount);
+                    const maxLevel = partLevel >= 15;
+                    partAmountBar.className = `part-amount-bar ${rarityClass} ${amountComplete ? 'amount-complete' : 'amount-incomplete'}${maxLevel ? ' max-level' : ''}`;
+                    if (partAmountRow) partAmountRow.classList.toggle('completed', amountComplete && !maxLevel);
+                    const fillEl = partAmountBar.querySelector('.part-amount-fill');
+                    const labelEl = partAmountBar.querySelector('.part-amount-label');
+                    if (fillEl) fillEl.style.width = `${fillRatio * 100}%`;
+                    if (labelEl) labelEl.textContent = partLevel >= 15 ? 'Max' : `${currentAmount.toLocaleString()} / ${requiredAmount.toLocaleString()}`;
+                }
                 const visualContainer = card.querySelector(`#preview_card_${part.id}`);
                 const cvs = document.createElement('canvas');
                 cvs.width = 50;
@@ -8582,6 +9335,10 @@ arena_7: './arena_7.mp3'
         const modalDescTitle = document.getElementById('modalDescTitle');
         const modalCategoryRow = document.getElementById('modalCategoryRow');
         const modalPartCanvas = document.getElementById('modalPartCanvas');
+        const modalPartUpgradeTitle = document.getElementById('modalPartUpgradeTitle');
+        const modalPartUpgradeBar = document.getElementById('modalPartUpgradeBar');
+        const modalPartUpgradeFill = document.getElementById('modalPartUpgradeFill');
+        const modalPartUpgradeLabel = document.getElementById('modalPartUpgradeLabel');
         const modalStatsGrid = document.getElementById('modalStatsGrid');
         const modalEquipBtn = document.getElementById('modalEquipBtn');
         const upgradePartBtn = document.getElementById('upgradePartBtn');
@@ -8605,9 +9362,27 @@ arena_7: './arena_7.mp3'
         });
         function openPartModal(type, part) {
             modalTargetPart = { type, part };
+            const isAcquired = isPartAcquired(part);
             const abilityTab = document.querySelector('.modal-content-tab[data-tab="ability"]');
             if (abilityTab) abilityTab.click();
             const partLevel = getPartLevel(part);
+            const currentPartAmount = getPartAmount(part);
+            const requiredPartAmount = getUpgradePartAmount(part);
+            if (modalPartUpgradeTitle) {
+                const rarityClass = (part.rarity || 'Normal').toLowerCase();
+                modalPartUpgradeTitle.className = `modal-part-upgrade-title ${rarityClass}`;
+                modalPartUpgradeTitle.textContent = part.rarity || 'Common';
+                modalPartUpgradeTitle.style.display = isAcquired ? '' : 'none';
+            }
+            if (modalPartUpgradeBar && modalPartUpgradeFill && modalPartUpgradeLabel) {
+                modalPartUpgradeBar.style.display = isAcquired ? '' : 'none';
+                const maxLevel = partLevel >= 15;
+                const amountComplete = maxLevel || currentPartAmount >= requiredPartAmount;
+                const fillRatio = maxLevel || requiredPartAmount <= 0 ? 1 : Math.min(1, currentPartAmount / requiredPartAmount);
+                modalPartUpgradeBar.classList.toggle('complete', amountComplete);
+                modalPartUpgradeFill.style.width = `${fillRatio * 100}%`;
+                modalPartUpgradeLabel.textContent = maxLevel ? 'Max' : `${currentPartAmount.toLocaleString()} / ${requiredPartAmount.toLocaleString()}`;
+            }
             modalPartName.innerHTML = `<span class="modal-part-name-text">${part.name}</span> <span class="modal-part-level">Lv. ${partLevel}</span>`;
             if (modalDescTitle) modalDescTitle.textContent = part.name;
             if (modalCategoryRow) {
@@ -8632,7 +9407,13 @@ arena_7: './arena_7.mp3'
             const modalCombatPower = document.getElementById('modalCombatPowerValue');
             if (modalCombatPower) modalCombatPower.textContent = getPartCombatPower(part).toLocaleString();
             const upgradeCost = getUpgradeCost(part);
-            const upgradeAvailable = partLevel < 15 && currencyState.gold >= upgradeCost;
+            const upgradeAvailable = partLevel < 15 && currencyState.gold >= upgradeCost && currentPartAmount >= requiredPartAmount;
+            if (upgradeInfo) {
+                upgradeInfo.style.display = 'none';
+                upgradeInfo.textContent = '';
+            }
+            const modalActionsRow = document.getElementById('modalActionsRow');
+            if (modalActionsRow) modalActionsRow.style.display = isAcquired ? '' : 'none';
             const nextMultiplier = Math.pow(1.10, partLevel);
             const nextAttack = Math.round((part.atk || 0) * nextMultiplier);
             const nextHealth = Math.round((part.health || 0) * nextMultiplier);
@@ -8678,8 +9459,11 @@ arena_7: './arena_7.mp3'
             const part = modalTargetPart.part;
             const level = getPartLevel(part);
             const cost = getUpgradeCost(part);
-            if (level >= 15 || currencyState.gold < cost) return;
+            const requiredPartAmount = getUpgradePartAmount(part);
+            const currentPartAmount = getPartAmount(part);
+            if (level >= 15 || currencyState.gold < cost || currentPartAmount < requiredPartAmount) return;
             currencyState.gold -= cost;
+            partAmounts[part.id] = currentPartAmount - requiredPartAmount;
             partUpgradeLevels[part.id] = level + 1;
             updateCurrencyUI();
             scheduleChampionshipPlayerSync();
@@ -8907,8 +9691,10 @@ arena_7: './arena_7.mp3'
             return {
                 version: 2,
                 seed: universalSeed,
-                tower: { currentFloor: towerCurrentFloor, unlockedFloor: towerUnlockedFloor },
+                tower: { currentFloor: towerCurrentFloor, unlockedFloor: towerUnlockedFloor, firstClearGems: { ...towerFirstClearGems } },
                 currency: { gold: Math.max(0, Math.floor(currencyState.gold || 0)), gems: Math.max(0, Math.floor(currencyState.gems || 0)) },
+                partAmounts: { ...partAmounts },
+                acquiredPartIds: { ...acquiredPartIds },
                 playerName,
                 playerUid,
                 playerChampionshipWins,
@@ -8924,7 +9710,8 @@ arena_7: './arena_7.mp3'
                     battleCap: playerEquipped.battleCap.id,
                     weightRing: playerEquipped.weightRing.id,
                     driver: playerEquipped.driver.id
-                }
+                },
+                shop: { version: 2, expiresAt: shopBatchExpiresAt, refreshCost: shopRefreshCost, offers: serializeShopOffers() }
             };
         }
         // Debug Menu announcements are intentionally disabled; controls remain functional.
@@ -8960,6 +9747,7 @@ arena_7: './arena_7.mp3'
             if (typeof renderTowerFloors === 'function') renderTowerFloors();
             if (typeof updateSkillHexagons === 'function') updateSkillHexagons();
             if (typeof updateHomeUI === 'function') updateHomeUI();
+            if (typeof renderShopOffers === 'function') renderShopOffers();
             scheduleChampionshipPlayerSync();
         }
         function manualLoadGame() {
@@ -8971,7 +9759,10 @@ arena_7: './arena_7.mp3'
                 updateDebugSeedInput();
                 towerCurrentFloor = Math.max(1, Math.min(100, Number(data.tower && data.tower.currentFloor) || 1));
                 towerUnlockedFloor = Math.max(1, Math.min(100, Number(data.tower && data.tower.unlockedFloor) || 1));
+                towerFirstClearGems = Object.fromEntries(Object.entries((data.tower && data.tower.firstClearGems) || {}).filter(([floor, claimed]) => /^(?:[1-9]|[1-9][0-9]|100)$/.test(floor) && claimed === true));
                 currencyState = { gold: Math.max(0, Number(data.currency && data.currency.gold) || 0), gems: Math.max(0, Number(data.currency && data.currency.gems) || 0) };
+                partAmounts = Object.fromEntries(Object.entries(data.partAmounts || {}).map(([id, amount]) => [id, Math.max(0, Math.floor(Number(amount) || 0))]));
+                acquiredPartIds = Object.fromEntries(Object.entries(data.acquiredPartIds || {}).filter(([id, acquired]) => acquired === true));
                 playerName = String(data.playerName || 'Player').trim().slice(0, 20) || 'Player';
                 playerUid = isValidPlayerUid(data.playerUid) ? data.playerUid : playerUid;
                 playerChampionshipWins = Math.max(0, Math.floor(Number(data.playerChampionshipWins) || 0));
@@ -8989,6 +9780,21 @@ arena_7: './arena_7.mp3'
                 });
                 activeLoadoutIndex = Math.max(0, Math.min(2, Number(data.activeLoadoutIndex) || 0));
                 playerEquipped = playerLoadouts[activeLoadoutIndex];
+                if (data.shop && data.shop.version === 2 && Array.isArray(data.shop.offers)) {
+                    try {
+                        const catalog = getShopCatalogParts();
+                        const restoredOffers = data.shop.offers.map(saved => {
+                            const entry = catalog.find(candidate => candidate.type === saved.type && candidate.part.id === saved.partId);
+                            if (!entry) return null;
+                            return { ...entry, amount: SHOP_AMOUNT_OPTIONS.includes(Number(saved.amount)) ? Number(saved.amount) : 10, currency: saved.currency === 'gems' ? 'gems' : 'gold', price: Math.max(0, Math.floor(Number(saved.price) || 0)), soldOut: saved.soldOut === true };
+                        }).filter(Boolean);
+                        if (restoredOffers.length === 12) {
+                            shopOffers = restoredOffers;
+                            shopBatchExpiresAt = Math.max(0, Number(data.shop.expiresAt) || 0);
+                            shopRefreshCost = Math.max(100, Math.floor(Number(data.shop.refreshCost) || 100));
+                        }
+                    } catch (e) {}
+                }
                 refreshAfterManualDataChange();
                 scheduleChampionshipPlayerSync();
                 setManualSaveStatus('Game loaded.');
@@ -9001,13 +9807,19 @@ arena_7: './arena_7.mp3'
             debugOverrides = { playerUnlimitedHealth:false, playerUnlimitedStamina:false, playerUltimateAlwaysFull:false, enemyUnlimitedHealth:false, enemyUnlimitedStamina:false, enemyUltimateAlwaysEmpty:false };
             currencyState = { gold: 0, gems: 0 };
             partUpgradeLevels = {};
+            partAmounts = {};
+            acquiredPartIds = {};
             universalSeed = (Date.now() >>> 0) || 1;
             updateDebugSeedInput();
             towerCurrentFloor = 1; towerUnlockedFloor = 1; towerActiveFloor = null;
+            towerFirstClearGems = {};
             playerLoadouts = createDefaultLoadouts();
             activeLoadoutIndex = 0;
             playerEquipped = playerLoadouts[activeLoadoutIndex];
-            try { localStorage.removeItem(MANUAL_SAVE_KEY); } catch (e) {}
+            try { localStorage.removeItem(MANUAL_SAVE_KEY); localStorage.removeItem(SHOP_SAVE_KEY); } catch (e) {}
+            shopOffers = [];
+            shopBatchExpiresAt = 0;
+            shopRefreshCost = 100;
             refreshAfterManualDataChange();
             scheduleChampionshipPlayerSync();
             setManualSaveStatus('Progress reset.');
@@ -9034,6 +9846,31 @@ arena_7: './arena_7.mp3'
         window.manualLoadGame = manualLoadGame;
         window.manualResetGame = manualResetGame;
 
+        function closeInitialBattleCapUnlock() {
+            const overlay = document.getElementById('initialBattleCapUnlockOverlay');
+            if (!overlay) return;
+            overlay.classList.remove('visible');
+            overlay.classList.add('hidden');
+            overlay.onclick = null;
+        }
+        function showInitialBattleCapUnlock(unlockedPart = null) {
+            const overlay = document.getElementById('initialBattleCapUnlockOverlay');
+            const canvas = document.getElementById('initialBattleCapUnlockCanvas');
+            const nameEl = document.getElementById('initialBattleCapUnlockName');
+            const initialBattleCap = unlockedPart || (playerLoadouts && playerLoadouts[0] ? playerLoadouts[0].battleCap : PARTS.battleCap[0]);
+            if (!overlay || !canvas || !nameEl || !initialBattleCap) return;
+            nameEl.textContent = initialBattleCap.name;
+            canvas.width = 270;
+            canvas.height = 270;
+            const context = canvas.getContext('2d');
+            if (context) {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                drawPartIcon(context, canvas.width / 2, canvas.height / 2, 92, 'battleCap', initialBattleCap);
+            }
+            overlay.onclick = closeInitialBattleCapUnlock;
+            overlay.classList.remove('hidden');
+            requestAnimationFrame(() => overlay.classList.add('visible'));
+        }
 // ==============================
 // Automatic Save / Load System
 // ==============================
@@ -9060,13 +9897,14 @@ function autoLoadGame() {
     if (autoLoadCompleted) return;
     autoLoadCompleted = true;
 
-    try {
+                try {
         const savedData = localStorage.getItem(MANUAL_SAVE_KEY);
 
         // Do not overwrite the default game if no save exists.
         if (savedData) {
             manualLoadGame();
         }
+
     } catch (error) {
         console.warn('Automatic load failed:', error);
     }
@@ -9074,7 +9912,10 @@ function autoLoadGame() {
 
 // Load the most recent save once when the game starts.
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', autoLoadGame, { once: true });
+    document.addEventListener('DOMContentLoaded', () => {
+        const hadExistingSave = !!localStorage.getItem(MANUAL_SAVE_KEY);
+        autoLoadGame();
+    }, { once: true });
 } else {
     autoLoadGame();
 }
