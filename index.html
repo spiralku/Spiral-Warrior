@@ -8440,7 +8440,7 @@ arena_7: './arena_7.mp3'
                 }
                 if (this.phoenixBurnMode && this.parts.battleCap && this.parts.battleCap.id === 'bc_phoenix') {
                     const phoenixEffect = this.getAllEffects().find(eff => eff.type === 'phoenix_ultimate');
-                    playGameSfx(BC_PHOENIX_1);
+                    
                     const phoenixFireInterval = Math.max(1, Number(phoenixEffect && phoenixEffect.fireInterval) || 30);
                     const phoenixFireRadius = this.phoenixRevived
                         ? ARENA_RADIUS * 2
