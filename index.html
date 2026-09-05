@@ -7380,6 +7380,7 @@ arena_7: './arena_7.mp3'
                         this.phoenixUltimatePending = false;
                         this.phoenixFireTimer = 0;
                         this.phoenixFireRadiusMultiplier = 1;
+                        
                         if (this.side === 'left') updateSkillHexagons();
                         return true;
                     }
@@ -7511,6 +7512,7 @@ arena_7: './arena_7.mp3'
                         this.phoenixBurnMode = false;
                         this.phoenixUltimatePending = true;
                         this.phoenixFireTimer = 0;
+                        playGameSfx(BC_PHOENIX_1);
                     } else if (this.parts.battleCap.id === 'bc_lucifer') {
                     playGameSfx(BC_LUCIFER_1);
                         const luciferEffect = this.getAllEffects().find(eff => eff.type === 'lucifer_ultimate');
@@ -10171,10 +10173,12 @@ arena_7: './arena_7.mp3'
                         this.phoenixFireRadiusMultiplier = 1.8;
                         this.phoenixDefenseBroken = true;
                         this.ultimateGauge = 100;
+                        
                         this.stats = this.calculateStats();
                         this.updateUI();
                         this.castUltimate();
                         return;
+                        playGameSfx(BC_PHOENIX_1);
                     }
                     this.health = 0;
                     this.dead = true;
