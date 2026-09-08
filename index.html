@@ -13762,6 +13762,31 @@ function launchShuraRibbonProjectile(caster, target) {
                 ctx.restore();
             }
         }
+        function drawBeyGroundShadow(ctx, bey) {
+            if (!bey || bey.visible === false || bey.timeTeleportStage === 2 || bey.camusTeleportStage === 2) return;
+            const radius = Math.max(8, Number(bey.radius) || 0);
+            const lightDx = bey.x - centerX;
+            const lightDy = bey.y - centerY;
+            const distanceFromLight = Math.hypot(lightDx, lightDy);
+            const directionX = distanceFromLight > 0.001 ? lightDx / distanceFromLight : 0;
+            const directionY = distanceFromLight > 0.001 ? lightDy / distanceFromLight : 0;
+            const maxLightDistance = Math.max(1, ARENA_RADIUS - radius);
+            const distanceRatio = Math.min(1, distanceFromLight / maxLightDistance);
+            const shadowLength = distanceFromLight * 0.05;
+            const shadowX = (bey.x + directionX * shadowLength) * scale;
+            const shadowY = (bey.y + directionY * shadowLength) * scale;
+            const shadowRadius = radius * 1.12 * scale;
+            ctx.save();
+            ctx.globalCompositeOperation = 'multiply';
+            ctx.globalAlpha = (bey.dead ? 0.35 : 1) * (0.18 + distanceRatio * 0.82);
+            ctx.shadowBlur = 0;
+            ctx.shadowColor = 'transparent';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.40)';
+            ctx.beginPath();
+            ctx.arc(shadowX, shadowY, shadowRadius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
         function drawMiniHealthBar(ctx, bey) {
             if (!bey || launchingPhase || bey.visible === false || (bey.timeTeleportStage === 2 || bey.camusTeleportStage === 2)) return;
             const barWidth = 86 * scale;
@@ -14399,6 +14424,8 @@ function launchShuraRibbonProjectile(caster, target) {
             drawShuraLinks(bCtx);
             drawLaunchTrailUnderBeys(bCtx, bey1);
             drawLaunchTrailUnderBeys(bCtx, bey2);
+            drawBeyGroundShadow(bCtx, bey1);
+            drawBeyGroundShadow(bCtx, bey2);
             const survivorLandingBey = [bey1, bey2].find(bey =>
                 bey && bey.arenaOccupationPending && bey.parts.battleCap && bey.parts.battleCap.id === 'bc_survivor'
             );
