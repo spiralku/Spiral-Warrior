@@ -6622,7 +6622,10 @@ arena_7: './arena_7.mp3'
         }
         const BEY_ARTWORK_ROTATION_MULTIPLIER = 62;
         const BEY_ARTWORK_SIZE_MULTIPLIER = 1.15;
-        function drawBeyArtwork(context, radius, parts, angle, rotateArtwork = true) {
+        const BEY_SPIN_BLUR_GHOSTS = 40;
+        const BEY_SPIN_BLUR_ARC = 6.28;
+        const BEY_SPIN_BLUR_OPACITY = 0.14;
+        function drawBeyArtwork(context, radius, parts, angle, rotateArtwork = true, rpmRatio = 1.0, spinActive = rotateArtwork) {
             const entry = getBeyArtwork(parts);
             if (!entry || entry.status !== 'loaded' || !entry.image.naturalWidth || !entry.image.naturalHeight) return false;
             const image = entry.image;
@@ -6630,15 +6633,41 @@ arena_7: './arena_7.mp3'
             const imageScale = Math.min(maxDiameter / image.naturalWidth, maxDiameter / image.naturalHeight);
             const width = image.naturalWidth * imageScale;
             const height = image.naturalHeight * imageScale;
+            const visualAngle = angle * BEY_ARTWORK_ROTATION_MULTIPLIER;
+            const normalizedRpm = Math.max(0, Math.min(1, Number(rpmRatio) || 0));
+            const blurActive = spinActive && normalizedRpm > 0.40;
+            const ghostCount = blurActive ? BEY_SPIN_BLUR_GHOSTS : 0;
+            const spinDirection = parts && parts.battleCap && parts.battleCap.spinType === 'left' ? 1 : -1;
+            const ghostArc = blurActive ? BEY_SPIN_BLUR_ARC : 0;
             context.save();
-            if (rotateArtwork) context.rotate(angle * BEY_ARTWORK_ROTATION_MULTIPLIER);
+            // Keep the PNG smear completely isolated from auras, battle text, filters,
+            // and any shadow state left by other effects on the shared battle context.
+            context.globalCompositeOperation = 'source-over';
+            context.filter = 'none';
+            context.shadowBlur = 0;
+            context.shadowColor = 'transparent';
             context.imageSmoothingEnabled = true;
+            // The configured arc is sampled efficiently to avoid unnecessary
+            // full-image draws while preserving the broad rotational smear.
+            const ghostStride = ghostCount > 48 ? 2 : 1;
+            for (let ghostIndex = ghostCount; ghostIndex >= 1; ghostIndex -= ghostStride) {
+                const ghostProgress = ghostIndex / Math.max(1, ghostCount);
+                context.save();
+                context.globalAlpha = BEY_SPIN_BLUR_OPACITY * (1 - ghostProgress * 0.68);
+                if (rotateArtwork) context.rotate(visualAngle - spinDirection * ghostArc * ghostProgress);
+                context.drawImage(image, -width / 2, -height / 2, width, height);
+                context.restore();
+            }
+            context.save();
+            context.globalAlpha = blurActive ? 0.04 : 1;
+            if (rotateArtwork) context.rotate(visualAngle);
             context.drawImage(image, -width / 2, -height / 2, width, height);
+            context.restore();
             context.restore();
             return true;
         }
 
-        function drawBeyOnContext(context, cx, cy, radius, parts, angle, isImpact = false, shieldActive = false, rpmRatio = 1.0, freezeActive = false, rotateArtwork = context === bCtx) {
+        function drawBeyOnContext(context, cx, cy, radius, parts, angle, isImpact = false, shieldActive = false, rpmRatio = 1.0, freezeActive = false, rotateArtwork = context === bCtx, spinActive = rotateArtwork) {
             context.save();
             context.translate(cx, cy);
 
@@ -6653,7 +6682,7 @@ arena_7: './arena_7.mp3'
             // A completed Battle Cap image replaces the three-part body when its PNG is loaded.
             // The caller passes the same live angle used by the original renderer, so pause,
             // hit-stop, wind-up, freeze, and other existing rotation stops apply identically.
-            const hasCompletedArtwork = drawBeyArtwork(context, radius, parts, angle, rotateArtwork);
+            const hasCompletedArtwork = drawBeyArtwork(context, radius, parts, angle, rotateArtwork, rpmRatio, spinActive);
             if (!hasCompletedArtwork) {
                 // 1. Weight Ring (Body)
                 context.beginPath();
@@ -8621,12 +8650,18 @@ arena_7: './arena_7.mp3'
                     ctx.stroke();
                     ctx.restore();
                 }
-                const rpmRatio = Math.max(0.2, this.rpm / this.maxRpm);
+                const actualRpmRatio = Math.max(0, Math.min(1, this.rpm / this.maxRpm));
+                const rpmRatio = Math.max(0.2, actualRpmRatio);
                 const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
                 const chronosEnemyTimeStoppedForRotation = isChronosFrozenEntity(this);
                 if (!skipRotation && hitStopFrames === 0 && gameRunning && !gamePaused && cinematicFrames === 0 && this.impactState !== 'windup' && !chronosEnemyTimeStoppedForRotation) {
                     let spinDir = (this.parts.battleCap && this.parts.battleCap.spinType === 'left') ? 1 : -1;
-                    this.angle += spinDir * (0.04 + (speed * 0.03) + (rpmRatio * 0.08)) * gameSpeed;
+                    const rotationStep = actualRpmRatio < 0.10
+                        ? 0.005
+                        : actualRpmRatio < 0.20
+                        ? (0.012 + (speed * 0.015) + (actualRpmRatio * 0.04))
+                        : (0.04 + (speed * 0.03) + (rpmRatio * 0.08));
+                    this.angle += spinDir * rotationStep * gameSpeed;
                 }
                 
 
@@ -8751,26 +8786,6 @@ ctx.fill();
                 const lurkAuraActive = this.isLurkLocked();
                 const aliceImpactAuraActive = (this.aliceImpactAuraTimer || 0) > 0 && this.parts.battleCap && this.parts.battleCap.id === 'bc_alice';
                 const shuraImpactAura = this.isImpact && this.parts.battleCap && this.parts.battleCap.id === 'bc_shura';
-                if ((impactDashing || lurkAuraActive || aliceImpactAuraActive) && renderQuality.aura) {
-                    const auraRadius = renderRadius * 1.20;
-                    const auraVariant = lurkAuraActive ? 'lurk' : (shuraImpactAura ? 'shura' : (aliceImpactAuraActive ? 'alice_impact' : (this.luciferClawActive ? 'lucifer' : (this.himikoUltimateActive ? 'himiko' : 'impact'))));
-                    if (!this._impactAuraGradient || this._impactAuraGradientRadius !== auraRadius || this._impactAuraGradientVariant !== auraVariant) {
-                        this._impactAuraGradient = ctx.createRadialGradient(0, 0, renderRadius * 0.45, 0, 0, auraRadius);
-                        const auraColor = lurkAuraActive ? '#0066CC' : (shuraImpactAura ? '#F000F4' : (this.luciferClawActive ? '#F92020' : (this.himikoUltimateActive ? '#FF3EDE' : '#FFE035')));
-                        const auraEdgeColor = lurkAuraActive ? '#003B7A' : (shuraImpactAura ? '#6F42C1' : (this.luciferClawActive ? '#8B0000' : (this.himikoUltimateActive ? '#B92D8B' : '#D9A900')));
-                        const auraCoreColor = lurkAuraActive ? '#0077E6' : (shuraImpactAura ? '#FF8CFF' : (this.luciferClawActive ? '#FFB0B0' : (this.himikoUltimateActive ? '#FFD6F0' : '#FFF3A0')));
-                        this._impactAuraGradient.addColorStop(0, auraCoreColor);
-                        this._impactAuraGradient.addColorStop(0.55, auraColor);
-                        this._impactAuraGradient.addColorStop(1, auraEdgeColor);
-                        this._impactAuraGradientRadius = auraRadius;
-                        this._impactAuraGradientVariant = auraVariant;
-                    }
-                    const aura = this._impactAuraGradient;
-                    ctx.fillStyle = aura;
-                    ctx.beginPath();
-                    ctx.arc(0, 0, auraRadius, 0, Math.PI * 2);
-                    ctx.fill();
-                }
                 if ((impactDashing || lurkAuraActive || aliceImpactAuraActive) && renderQuality.shadows) {
                     ctx.shadowColor = lurkAuraActive ? '#0057B8' : (shuraImpactAura ? '#B000B8' : (this.luciferClawActive ? '#F92020' : (this.himikoUltimateActive ? '#FF3EDE' : '#FFE035')));
                     ctx.shadowBlur = renderRadius * 0.45;
@@ -8813,7 +8828,28 @@ ctx.fill();
                     ctx.stroke();
                     ctx.restore();
                 }
-                drawBeyOnContext(ctx, 0, 0, renderRadius, this.parts, this.angle, impactDashing, this.shieldTimer > 0, rpmRatio, this.hasFreeze());
+                const artworkSpinActive = !skipRotation && hitStopFrames === 0 && gameRunning && !gamePaused && cinematicFrames === 0 && this.impactState !== 'windup' && !chronosEnemyTimeStoppedForRotation && !this.hasFreeze();
+                drawBeyOnContext(ctx, 0, 0, renderRadius, this.parts, this.angle, impactDashing, this.shieldTimer > 0, actualRpmRatio, this.hasFreeze(), true, artworkSpinActive);
+                if ((impactDashing || lurkAuraActive || aliceImpactAuraActive) && renderQuality.aura) {
+                    const auraRadius = renderRadius * 1.20;
+                    const auraVariant = lurkAuraActive ? 'lurk' : (shuraImpactAura ? 'shura' : (aliceImpactAuraActive ? 'alice_impact' : (this.luciferClawActive ? 'lucifer' : (this.himikoUltimateActive ? 'himiko' : 'impact'))));
+                    if (!this._impactAuraGradient || this._impactAuraGradientRadius !== auraRadius || this._impactAuraGradientVariant !== auraVariant) {
+                        this._impactAuraGradient = ctx.createRadialGradient(0, 0, renderRadius * 0.45, 0, 0, auraRadius);
+                        const auraColor = lurkAuraActive ? '#0066CC' : (shuraImpactAura ? '#F000F4' : (this.luciferClawActive ? '#F92020' : (this.himikoUltimateActive ? '#FF3EDE' : '#FFE035')));
+                        const auraEdgeColor = lurkAuraActive ? '#003B7A' : (shuraImpactAura ? '#6F42C1' : (this.luciferClawActive ? '#8B0000' : (this.himikoUltimateActive ? '#B92D8B' : '#D9A900')));
+                        const auraCoreColor = lurkAuraActive ? '#0077E6' : (shuraImpactAura ? '#FF8CFF' : (this.luciferClawActive ? '#FFB0B0' : (this.himikoUltimateActive ? '#FFD6F0' : '#FFF3A0')));
+                        this._impactAuraGradient.addColorStop(0, auraCoreColor);
+                        this._impactAuraGradient.addColorStop(0.55, auraColor);
+                        this._impactAuraGradient.addColorStop(1, auraEdgeColor);
+                        this._impactAuraGradientRadius = auraRadius;
+                        this._impactAuraGradientVariant = auraVariant;
+                    }
+                    ctx.fillStyle = this._impactAuraGradient;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, auraRadius, 0, Math.PI * 2, false);
+                    ctx.arc(0, 0, renderRadius * 0.78, Math.PI * 2, 0, true);
+                    ctx.fill();
+                }
                 if (impactDashing || lurkAuraActive || aliceImpactAuraActive) {
                     ctx.shadowBlur = 0;
                     ctx.shadowColor = 'transparent';
