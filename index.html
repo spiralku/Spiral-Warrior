@@ -5815,6 +5815,7 @@ arena_7: './arena_7.mp3'
         window.addEventListener('beforeunload', pauseGameBgmForPageLifecycle);
         updateGameBgmForScreen(document.querySelector('.screen:not(.hidden)')?.id || 'homeScreen');
 
+        const partIconArtworkCache = new Map();
         const SHOP_SAVE_KEY = 'bey_shop_state_v2';
         // Release reset: increment GAME_DATA_VERSION for a future one-time wipe.
         // Set GAME_DATA_RESET_ENABLED to false during testing to disable the wipe.
@@ -6782,7 +6783,43 @@ arena_7: './arena_7.mp3'
             context.restore();
         }
 
+        function getPartIconArtworkPath(type, part) {
+            if (!part || !part.id) return null;
+            const id = String(part.id);
+            if (type === 'battleCap') return `./bc_${id.replace(/^bc_/, '')}.png`;
+            if (type === 'weightRing') return `./icon_wr_${id.replace(/^wr_/, '')}.png`;
+            if (type === 'driver') return `./icon_drv_${id.replace(/^drv_/, '')}.png`;
+            return null;
+        }
+        function drawPartIconArtwork(context, cx, cy, radius, type, part) {
+            if (typeof isSwAssetsEnabled === 'function' && !isSwAssetsEnabled()) return false;
+            const path = getPartIconArtworkPath(type, part);
+            if (!path) return false;
+            let entry = partIconArtworkCache.get(path);
+            if (!entry) {
+                const image = new Image();
+                entry = { image, status: 'loading' };
+                partIconArtworkCache.set(path, entry);
+                image.onload = () => {
+                    entry.status = 'loaded';
+                    if (context && context.canvas) {
+                        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+                        drawPartIcon(context, cx, cy, radius, type, part);
+                    }
+                };
+                image.onerror = () => { entry.status = 'failed'; };
+                image.src = path;
+            }
+            if (entry.status !== 'loaded' || !entry.image.naturalWidth || !entry.image.naturalHeight) return false;
+            const maxDiameter = radius * 2;
+            const imageScale = Math.min(maxDiameter / entry.image.naturalWidth, maxDiameter / entry.image.naturalHeight);
+            const width = entry.image.naturalWidth * imageScale;
+            const height = entry.image.naturalHeight * imageScale;
+            context.drawImage(entry.image, cx - width / 2, cy - height / 2, width, height);
+            return true;
+        }
         function drawPartIcon(context, cx, cy, radius, type, part) {
+            if (drawPartIconArtwork(context, cx, cy, radius, type, part)) return;
             context.save();
             context.translate(cx, cy);
             if (type === 'battleCap') {
