@@ -6827,7 +6827,7 @@ arena_7: './arena_7.mp3'
         function getPartIconArtworkPath(type, part) {
             if (!part || !part.id) return null;
             const id = String(part.id);
-            if (type === 'battleCap') return `./icon_bc_${id.replace(/^bc_/, '')}.png`;
+            if (type === 'battleCap') return `./bc_${id.replace(/^bc_/, '')}.png`;
             if (type === 'weightRing') return `./icon_wr_${id.replace(/^wr_/, '')}.png`;
             if (type === 'driver') return `./icon_drv_${id.replace(/^drv_/, '')}.png`;
             return null;
