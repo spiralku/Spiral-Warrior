@@ -1,5 +1,5 @@
 const AUDIO_CACHE = 'spiral-warrior-audio-v1';
-const IMAGE_CACHE = 'spiral-warrior-images-v2';
+const IMAGE_CACHE = 'spiral-warrior-images-v3';
 
 const AUDIO_FILES = [
     './bgm_home.mp3',
