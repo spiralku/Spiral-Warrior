@@ -3955,7 +3955,7 @@ const BC_QING_1 = 'data:audio/mpeg;base64,SUQzAwAAAAABLFRFTkMAAAALAAAAUHJvIFRvb2
                     effects: [{ type: 'megalith_stamina', threshold: 0.20, bonus: 1.0, desc: 'When RPM < 20%: +100% Stamina stat' }] 
                 },                
                 { 
-                    id: "drv_throne", rarity: "Epic", type: "Defense", name: "Throne", color: "#f1c40f", atk: 68, def: 37, health: 1595, stamina: 17, weight: 17.4, interval: 0, tip: "ball",
+                    id: "drv_throne", rarity: "Epic", type: "Defense", name: "Throne", color: "#f1c40f", atk: 68, def: 37, health: 1595, stamina: 17, weight: 17.4, interval: 0, tip: "flat",
                     desc: "Grants a shield when entering battle.",
                     effects: [{ type: 'shield', trigger: 'battle_start', scaleStat: 'def', scaleFactor: 15, duration: 300, desc: 'Shield 1500% DEF for 5s on Start' }] 
                 },
@@ -9071,6 +9071,7 @@ arena_7: './arena_7.mp3'
                 this.vy = (Math.random() - 0.5) * 3;
                 this.radius = BEY_RADIUS;
                 this.angle = 0;
+                this.movementRecoveryTimer = 0;
                 
                 this.isImpact = false;
                 this.impactState = 'normal'; // 'normal', 'windup', 'dashing'
@@ -9870,6 +9871,7 @@ arena_7: './arena_7.mp3'
                 this.arenaOccupation = null;
                 this.arenaOccupationPending = false;
                 this.arenaOccupationTimer = 0;
+                this.movementRecoveryTimer = 0;
                 this.preemptiveAttack = false;
                 this.vx = (Math.random() - 0.5) * 3;
                 this.vy = (Math.random() - 0.5) * 3;
@@ -13391,8 +13393,6 @@ ctx.fill();
                             const tangential = spinDir * (isLowRpm ? 0.03 : 0.18) * gameSpeed;
                             this.vx += (-ny) * tangential;
                             this.vy += nx * tangential;
-                            this.vx += (Math.random() - 0.5) * 0.03 * gameSpeed;
-                            this.vy += (Math.random() - 0.5) * 0.03 * gameSpeed;
                             if (this.launchTrailTimer <= 0) {
                                 const flatTangentialVelocity = this.vx * (-ny) + this.vy * nx;
                                 const limitedTangentialVelocity = Math.max(-4.5, Math.min(4.5, flatTangentialVelocity));
@@ -13451,6 +13451,24 @@ ctx.fill();
                             this.vy += nx * tangential;
                         }
                     }
+                }
+
+                // After a collision, let the bounce play out briefly, then smoothly
+                // guide the Bey back toward its normal movement pattern.
+                if (this.movementRecoveryTimer > 0 && !this.isImpact && distToCenter > 1) {
+                    const recoveryProgress = 1 - (this.movementRecoveryTimer / 30);
+                    const recoveryBlend = Math.min(0.16, Math.max(0.015, recoveryProgress * 0.16)) * gameSpeed;
+                    const recoveryNx = dx / distToCenter;
+                    const recoveryNy = dy / distToCenter;
+                    const recoverySpinDir = (this.parts.battleCap && this.parts.battleCap.spinType === 'left') ? 1 : -1;
+                    const recoveryTangentX = -recoveryNy * recoverySpinDir;
+                    const recoveryTangentY = recoveryNx * recoverySpinDir;
+                    const recoveryTargetSpeed = isLowRpm ? 1.0 : 4.0;
+                    const recoveryTargetVx = recoveryTangentX * recoveryTargetSpeed;
+                    const recoveryTargetVy = recoveryTangentY * recoveryTargetSpeed;
+                    this.vx += (recoveryTargetVx - this.vx) * recoveryBlend;
+                    this.vy += (recoveryTargetVy - this.vy) * recoveryBlend;
+                    this.movementRecoveryTimer = Math.max(0, this.movementRecoveryTimer - gameSpeed);
                 }
 
                 const intervalFrames = getImpactIntervalFrames(this, this.stats.interval);
@@ -13639,25 +13657,6 @@ ctx.fill();
                     if (outwardVelocity > 0) {
                         this.vx -= orbitNx * outwardVelocity * 0.10;
                         this.vy -= orbitNy * outwardVelocity * 0.10;
-                    }
-                }
-                if (driverTip === 'flat' && !this.isImpact && distToCenter > 1) {
-                    const flatNx = (this.x - centerX) / distToCenter;
-                    const flatNy = (this.y - centerY) / distToCenter;
-                    const flatSafeRadius = ARENA_RADIUS - this.radius - 50;
-                    if (distToCenter > flatSafeRadius) {
-                        const flatOutwardVelocity = this.vx * flatNx + this.vy * flatNy;
-                        if (flatOutwardVelocity < 8) {
-                            const wallBufferDepth = distToCenter - flatSafeRadius;
-                            const correction = Math.min(1.8, 0.35 + wallBufferDepth * 0.16);
-                            this.vx -= flatNx * correction * gameSpeed;
-                            this.vy -= flatNy * correction * gameSpeed;
-                            if (flatOutwardVelocity > 0) {
-                                const outwardDamping = Math.min(0.75, 0.18 + wallBufferDepth * 0.025);
-                                this.vx -= flatNx * flatOutwardVelocity * outwardDamping;
-                                this.vy -= flatNy * flatOutwardVelocity * outwardDamping;
-                            }
-                        }
                     }
                 }
                 const wallDist = Math.sqrt((this.x - centerX)**2 + (this.y - centerY)**2);
@@ -14631,6 +14630,8 @@ ctx.fill();
                 a.vy = -ny * bounceForce + (Math.random() - 0.5) * 2;
                 b.vx = nx * bounceForce + (Math.random() - 0.5) * 2;
                 b.vy = ny * bounceForce + (Math.random() - 0.5) * 2;
+                a.movementRecoveryTimer = 30;
+                b.movementRecoveryTimer = 30;
 
                 const b1Low = (a.rpm / a.maxRpm) < 0.25;
                 const b2Low = (b.rpm / b.maxRpm) < 0.25;
