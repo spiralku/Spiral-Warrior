@@ -326,19 +326,19 @@
         #adventureModuleOverlay { position:fixed; inset:0; z-index:260; display:flex; align-items:center; justify-content:center; padding:18px; background:rgba(0,0,0,.72); box-sizing:border-box; }
         #adventureModuleOverlay.hidden { display:none; }
         .adventure-module-panel { width:min(680px,100%); color:#fff; text-align:center; }
-        .adventure-module-panel h2 { margin:0 0 18px; font-size:22px; font-weight:900; text-shadow:0 2px 3px rgba(0,0,0,.6); }
-        .adventure-module-choices { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
-        .adventure-module-choices.adventure-module-list { max-height:62vh; overflow-y:auto; grid-template-columns:repeat(3,minmax(0,1fr)); padding:3px; }
-        .adventure-module-close { display:block; min-width:100px; margin:16px auto 0; padding:8px 18px; border:2px solid #fff; border-radius:5px; background:#657d91; color:#fff; font-weight:900; cursor:pointer; }
-        .adventure-module-close.hidden { display:none; }
-        .adventure-module-card { min-height:180px; padding:0; border:2px solid #8fa4b6; border-radius:7px; background:#fff; color:#26313d; box-shadow:0 5px 12px rgba(0,0,0,.38); cursor:pointer; text-align:center; overflow:hidden; }
-        .adventure-module-card:active { transform:translateY(1px); }
-        .adventure-module-top { min-height:124px; padding:12px 8px 10px; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; box-sizing:border-box; background:#657d91; color:#fff; }
-        .adventure-module-name { min-height:30px; margin-bottom:4px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; line-height:1.2; }
-        .adventure-module-rarity { min-height:14px; margin:2px 0 0; color:#ffe58a; font-size:11px; font-weight:1000; letter-spacing:1px; line-height:1; text-shadow:0 1px 2px rgba(0,0,0,.5); }
-        .adventure-module-type-swatch { width:54px; height:54px; border:3px solid #8fa4b6; border-radius:5px; box-sizing:border-box; flex:0 0 54px; }
-        .adventure-module-description { min-height:56px; padding:12px 9px; display:flex; align-items:center; justify-content:center; box-sizing:border-box; background:#fff; color:#111; font-size:10px; line-height:1.4; font-weight:700; }
-        @media (max-width:560px) { .adventure-module-choices { gap:6px; } .adventure-module-top { min-height:116px; padding:9px 5px 8px; } .adventure-module-name { font-size:11px; } .adventure-module-rarity { font-size:10px; margin-top:2px; } .adventure-module-type-swatch { width:46px; height:46px; flex-basis:46px; } .adventure-module-description { min-height:52px; padding:9px 5px; font-size:9px; } }
+.adventure-module-panel h2 { margin:0 0 18px; font-size:22px; font-weight:900; text-shadow:0 2px 3px rgba(0,0,0,.6); }
+.adventure-module-choices { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.adventure-module-choices.adventure-module-list { max-height:62vh; overflow-y:auto; grid-template-columns:repeat(3,minmax(0,1fr)); padding:3px; }
+.adventure-module-close { display:block; min-width:100px; margin:16px auto 0; padding:8px 18px; border:2px solid #fff; border-radius:5px; background:#657d91; color:#fff; font-weight:900; cursor:pointer; }
+.adventure-module-close.hidden { display:none; }
+.adventure-module-card { min-height:180px; padding:0; border:2px solid #8fa4b6; border-radius:7px; background:#EBF5F5; color:#26313d; box-shadow:0 5px 12px rgba(0,0,0,.38); cursor:pointer; text-align:center; overflow:hidden; }
+.adventure-module-card:active { transform:translateY(1px); }
+.adventure-module-top { min-height:124px; padding:12px 8px 10px; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; box-sizing:border-box; background:linear-gradient(to bottom, #244F5F 0%, #749FAF 100%); color:#fff; }
+.adventure-module-name { min-height:30px; margin-bottom:4px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; line-height:1.2; }
+.adventure-module-rarity { min-height:14px; margin:2px 0 0; color:#F7C741; font-size:11px; font-weight:1000; letter-spacing:1px; line-height:1; text-shadow:0 1px 2px rgba(0,0,0,.5); }
+.adventure-module-type-swatch { width:54px; height:54px; border:3px solid #2F6788; border-radius:5px; box-sizing:border-box; flex:0 0 54px; }
+.adventure-module-description { min-height:56px; padding:12px 9px; display:flex; align-items:center; justify-content:center; box-sizing:border-box; background:linear-gradient(to bottom, #D9E9E8 0%, #EBF5F5 100%); color:#111; font-size:10px; line-height:1.4; font-weight:700; }
+@media (max-width:560px) { .adventure-module-choices { gap:6px; } .adventure-module-top { min-height:116px; padding:9px 5px 8px; } .adventure-module-name { font-size:11px; } .adventure-module-rarity { font-size:10px; margin-top:2px; } .adventure-module-type-swatch { width:46px; height:46px; flex-basis:46px; } .adventure-module-description { min-height:52px; padding:9px 5px; font-size:9px; } }
         .adventure-shop-currencies { display:flex; justify-content:center; gap:22px; margin:0 0 10px; padding:6px 9px; border-radius:5px; background:#edf2f6; }
         .adventure-shop-currency { display:flex; align-items:center; gap:5px; color:#26313d; font-size:12px; }
         .adventure-shop-currency .currency-symbol { position:static; display:inline-block; width:20px; height:20px; transform:none; flex:0 0 20px; }
@@ -5543,15 +5543,15 @@ const parts = {
             rare: Object.freeze({ label: 'Rare', stars: 3, weight: 10 })
         });
         const ADVENTURE_MODULES = [
-            { id: 'attack', name: 'Basic Attack Modifier', type: 'Attack', color: '#d94b4b', rarity: 'common', description: 'Increase Attack stat by 10%.', attackMultiplier: 1.10 },
-            { id: 'defense', name: 'Basic Defense Modifier', type: 'Defense', color: '#4c83d1', rarity: 'common', description: 'Increase Defense stat by 10%.', defenseMultiplier: 1.10 },
-            { id: 'stamina', name: 'Basic Stamina Modifier', type: 'Stamina', color: '#4caf68', rarity: 'common', description: 'Increase Stamina stat by 5%.', staminaMultiplier: 1.05 },
-            { id: 'structure', name: 'Basic Structure Modifier', type: 'Balance', color: '#d6ae32', rarity: 'common', description: 'Increase MaxHP stat by 10%.', healthMultiplier: 1.10 },
-            { id: 'medium_attack', name: 'Medium Attack Module', type: 'Attack', color: '#d94b4b', rarity: 'uncommon', description: 'Increase Attack stat by 20%.', attackMultiplier: 1.20 },
-            { id: 'medium_defense', name: 'Medium Defense Module', type: 'Defense', color: '#4c83d1', rarity: 'uncommon', description: 'Increase Defense stat by 30%.', defenseMultiplier: 1.30 },
-            { id: 'medium_stamina', name: 'Medium Stamina Module', type: 'Stamina', color: '#4caf68', rarity: 'uncommon', description: 'Increase Stamina stat by 10%.', staminaMultiplier: 1.10 },
-            { id: 'capacitor', name: 'Capacitor', type: 'Balance', color: '#d6ae32', rarity: 'uncommon', description: 'Automatically charge Ultimate gauge by 10 pts at battle start.', ultimateGaugeBonus: 10 },
-            { id: 'amplifier', name: 'Amplifier', type: 'Balance', color: '#d6ae32', rarity: 'uncommon', description: 'Increase Attack, Defense, and Stamina stats by 10%.', attackMultiplier: 1.10, defenseMultiplier: 1.10, staminaMultiplier: 1.10 }
+            { id: 'attack', name: 'Basic Attack Modifier', type: 'Attack', color: '#E80300', rarity: 'common', description: 'Increase Attack stat by 10%.', attackMultiplier: 1.10 },
+            { id: 'defense', name: 'Basic Defense Modifier', type: 'Defense', color: '#008FCC', rarity: 'common', description: 'Increase Defense stat by 10%.', defenseMultiplier: 1.10 },
+            { id: 'stamina', name: 'Basic Stamina Modifier', type: 'Stamina', color: '#28DA00', rarity: 'common', description: 'Increase Stamina stat by 5%.', staminaMultiplier: 1.05 },
+            { id: 'structure', name: 'Basic Structure Modifier', type: 'Balance', color: '#FFE70F', rarity: 'common', description: 'Increase MaxHP stat by 10%.', healthMultiplier: 1.10 },
+            { id: 'medium_attack', name: 'Medium Attack Module', type: 'Attack', color: '#E80300', rarity: 'uncommon', description: 'Increase Attack stat by 20%.', attackMultiplier: 1.20 },
+            { id: 'medium_defense', name: 'Medium Defense Module', type: 'Defense', color: '#008FCC', rarity: 'uncommon', description: 'Increase Defense stat by 30%.', defenseMultiplier: 1.30 },
+            { id: 'medium_stamina', name: 'Medium Stamina Module', type: 'Stamina', color: '#28DA00', rarity: 'uncommon', description: 'Increase Stamina stat by 10%.', staminaMultiplier: 1.10 },
+            { id: 'capacitor', name: 'Capacitor', type: 'Balance', color: '#FFE70F', rarity: 'uncommon', description: 'Automatically charge Ultimate gauge by 10 pts at battle start.', ultimateGaugeBonus: 10 },
+            { id: 'amplifier', name: 'Amplifier', type: 'Balance', color: '#FFE70F', rarity: 'uncommon', description: 'Increase Attack, Defense, and Stamina stats by 10%.', attackMultiplier: 1.10, defenseMultiplier: 1.10, staminaMultiplier: 1.10 }
         ];
         function getAdventureModuleRarityMeta(module) {
             return ADVENTURE_MODULE_RARITIES[module?.rarity] || ADVENTURE_MODULE_RARITIES.common;
