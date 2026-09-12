@@ -3955,7 +3955,7 @@ const BC_QING_1 = 'data:audio/mpeg;base64,SUQzAwAAAAABLFRFTkMAAAALAAAAUHJvIFRvb2
                     effects: [{ type: 'megalith_stamina', threshold: 0.20, bonus: 1.0, desc: 'When RPM < 20%: +100% Stamina stat' }] 
                 },                
                 { 
-                    id: "drv_throne", rarity: "Epic", type: "Defense", name: "Throne", color: "#f1c40f", atk: 68, def: 37, health: 1595, stamina: 17, weight: 17.4, interval: 0, tip: "flat",
+                    id: "drv_throne", rarity: "Epic", type: "Defense", name: "Throne", color: "#f1c40f", atk: 68, def: 37, health: 1595, stamina: 17, weight: 17.4, interval: 0, tip: "ball",
                     desc: "Grants a shield when entering battle.",
                     effects: [{ type: 'shield', trigger: 'battle_start', scaleStat: 'def', scaleFactor: 15, duration: 300, desc: 'Shield 1500% DEF for 5s on Start' }] 
                 },
@@ -5978,8 +5978,15 @@ const parts = {
             choices.querySelectorAll('canvas').forEach((canvas, index) => drawThreeBeybladeSelectCard(canvas, loadouts[index]));
             choices.querySelectorAll('[data-intensify-index]').forEach(button => button.addEventListener('click', () => {
                 const index = Number(button.dataset.intensifyIndex);
-                if (adventureRepairSelectedIndices.has(index)) adventureRepairSelectedIndices.delete(index); else adventureRepairSelectedIndices.add(index);
-                button.classList.toggle('selected', adventureRepairSelectedIndices.has(index));
+                if (adventureRepairSelectedIndices.has(index)) {
+                    adventureRepairSelectedIndices.delete(index);
+                } else {
+                    adventureRepairSelectedIndices = new Set([index]);
+                }
+                choices.querySelectorAll('[data-intensify-index]').forEach(choiceButton => {
+                    const choiceIndex = Number(choiceButton.dataset.intensifyIndex);
+                    choiceButton.classList.toggle('selected', adventureRepairSelectedIndices.has(choiceIndex));
+                });
                 document.getElementById('adventureIntensifyConfirm').disabled = adventureRepairSelectedIndices.size === 0;
             }));
             document.getElementById('adventureRepairModal')?.classList.add('hidden');
