@@ -1,5 +1,5 @@
 const AUDIO_CACHE = 'spiral-warrior-audio-v1';
-const IMAGE_CACHE = 'spiral-warrior-images-v3';
+const IMAGE_CACHE = 'spiral-warrior-images-v2';
 
 const AUDIO_FILES = [
     './bgm_home.mp3',
@@ -11,7 +11,13 @@ const AUDIO_FILES = [
     './arena_4.mp3',
     './arena_5.mp3',
     './arena_6.mp3',
-    './arena_7.mp3'
+    './arena_7.mp3',
+    './adventure_chapter_1.mp3',
+    './adventure_chapter_2.mp3',
+    './adventure_chapter_3.mp3',
+    './adventure_chapter_4.mp3',
+    './adventure_chapter_5.mp3',
+    './adventure_chapter_6.mp3'
 ];
 
 // Optional assets are cached individually during install. A missing PNG will not
@@ -54,7 +60,10 @@ const IMAGE_FILES = [
     './bc_dr_greek.png',
     './bc_shura.png',
     './bc_qing.png',
-    './bc_alice.png'
+    './bc_alice.png',
+    './bc_iltheus.png',
+     './bc_aiolos.png',
+    './bc_enchantrees.png'
 ];
 
 self.addEventListener('install', event => {

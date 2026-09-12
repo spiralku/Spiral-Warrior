@@ -1,0 +1,4259 @@
+{
+  "contentVersion": 1,
+
+  "chapters": [
+    {
+      "id": "chapter_1",
+      "order": 1,
+      "title": "The First Step",
+      "description": "A strange journey begins as you gather your first companions and discover that this world is far more dangerous than it seems.",
+      "introduction": "You don't remember how you arrived here. The road stretches far beyond the horizon, surrounded by unfamiliar fields and distant mountains. You have no map, no destination, and no idea what waits ahead. But you are not alone. A small group of travelers has gathered near the road. Each of them seems capable in their own way, but none of them seem to know what brought you here either. Then you hear something in the distance. The sound of a battle. One of the travelers looks toward the noise. \"If we're going to survive this place, we should probably stick together.\" And so, your journey begins.",
+
+      "map": {
+        "minNodes": 10,
+        "maxNodes": 20,
+        "maxDepth": 6,
+
+        "eventWeights": {
+          "enemy": 35,
+          "elite": 10,
+          "encounter": 30,
+          "repair": 10,
+          "treasure": 5,
+          "shop": 10
+        }
+      },
+
+      "enemyPools": {
+        "common": {
+          "battleCaps": [
+            "bc_behemoth",
+            "bc_kaguyahime", "bc_athena"
+            
+          ],
+          "weightRings": [
+            "wr_devil",
+            "wr_divinestar", "wr_guardian"
+          ],
+          "drivers": [
+            "drv_rage",
+            "drv_moonlight", "drv_warfare"
+          ],
+          "levels": [
+            1,
+            2
+          ]
+        },
+
+        "elite": {
+          "battleCaps": [
+            "bc_behemoth",
+            "bc_kaguyahime", "bc_athena"
+            
+          ],
+          "weightRings": [
+            "wr_devil",
+            "wr_divinestar", "wr_guardian"
+          ],
+          "drivers": [
+            "drv_rage",
+            "drv_moonlight", "drv_warfare"
+          ],
+          "levels": [
+            3,
+            4
+          ]
+        },
+
+        "boss": {
+          "battleCap": "bc_hattori_hanzo",
+          "weightRing": "wr_shuriken",
+          "driver": "drv_batter",
+          "level": 7
+        }
+      },
+
+      "bossDialogue": {
+        "id": "chapter_1_boss_dialogue",
+        "title": "The First Challenger",
+        "startNode": "start",
+
+        "nodes": {
+          "start": {
+            "dialog": "A lone figure stands in the middle of the road. They look over your group for a moment before smiling. \"So you're the ones heading toward the city.\"",
+            "choices": [
+              {
+                "text": "Who are you?",
+                "next": "identity"
+              },
+              {
+                "text": "Move aside.",
+                "next": "challenge"
+              },
+              {
+                "text": "We're not looking for trouble.",
+                "next": "peace"
+              }
+            ]
+          },
+
+          "identity": {
+            "dialog": "\"Names aren't important.\" The stranger takes a step forward. \"What matters is whether you're strong enough to continue down this road.\"",
+            "choices": [
+              {
+                "text": "Then test us.",
+                "next": "challenge"
+              },
+              {
+                "text": "Why do you care?",
+                "next": "reason"
+              }
+            ]
+          },
+
+          "peace": {
+            "dialog": "\"Not looking for trouble?\" The stranger laughs. \"That's what everyone says before trouble finds them.\"",
+            "choices": [
+              {
+                "text": "We're simply trying to move forward.",
+                "next": "reason"
+              },
+              {
+                "text": "If you want a fight, we'll give you one.",
+                "next": "challenge"
+              }
+            ]
+          },
+
+          "reason": {
+            "dialog": "\"I've seen countless travelers come through here. Most of them turn back.\" The stranger looks at your companions. \"But you seem different.\"",
+            "choices": [
+              {
+                "text": "Different how?",
+                "next": "observation"
+              },
+              {
+                "text": "You talk too much.",
+                "next": "challenge"
+              }
+            ]
+          },
+
+          "observation": {
+            "dialog": "\"You don't know where you're going. You barely know each other. Yet you're already willing to stand together.\"",
+            "choices": [
+              {
+                "text": "We're stronger together.",
+                "next": "respect"
+              },
+              {
+                "text": "That's none of your business.",
+                "next": "challenge"
+              }
+            ]
+          },
+
+          "respect": {
+            "dialog": "The stranger smiles. \"Maybe there's hope for you after all.\"",
+            "choices": [
+              {
+                "text": "Will you let us pass?",
+                "next": "challenge"
+              }
+            ]
+          },
+
+          "challenge": {
+            "dialog": "\"Not yet.\" The stranger raises their battle gear. \"If you want to continue your journey, prove that you deserve to.\"",
+            "choices": [
+              {
+                "text": "Accept the challenge.",
+                "action": {
+                  "type": "battle"
+                }
+              }
+            ]
+          }
+        }
+      },
+
+      "encounters": [
+        {
+          "id": "encounter_story_1",
+          "title": "The Stranger",
+          "startNode": "start",
+
+          "nodes": {
+            "start": {
+              "dialog": "A stranger is sitting beside the road, watching the passing travelers.",
+              "choices": [
+                {
+                  "text": "Talk to them.",
+                  "next": "conversation"
+                },
+                {
+                  "text": "Keep walking.",
+                  "action": {
+                    "type": "complete"
+                  }
+                }
+              ]
+            },
+
+            "conversation": {
+              "dialog": "\"You're heading toward the next town, aren't you?\" They look at the group around you. \"You should know that the road isn't safe.\"",
+              "choices": [
+                {
+                  "text": "Can you tell us what's ahead?",
+                  "next": "warning"
+                },
+                {
+                  "text": "We can take care of ourselves.",
+                  "next": "warning"
+                }
+              ]
+            },
+
+            "warning": {
+              "dialog": "\"Maybe.\" The stranger stands up. \"But strength isn't everything. Having someone beside you when things go wrong matters too.\"",
+              "choices": [
+                {
+                  "text": "Are you offering to join us?",
+                  "next": "join"
+                },
+                {
+                  "text": "We'll remember that.",
+                  "next": "leave"
+                }
+              ]
+            },
+
+            "join": {
+              "dialog": "The stranger considers your words. \"Perhaps I'll travel with you for a while.\"",
+              "choices": [
+                {
+                  "text": "Welcome to the group.",
+                  "action": {
+                    "type": "complete"
+                  }
+                }
+              ]
+            },
+
+            "leave": {
+              "dialog": "\"Good luck out there.\" The stranger disappears down another road.",
+              "choices": [
+                {
+                  "text": "Continue.",
+                  "action": {
+                    "type": "complete"
+                  }
+                }
+              ]
+            }
+          }
+        },
+
+        {
+          "id": "encounter_story_2",
+          "title": "The Injured Traveler",
+          "startNode": "start",
+
+          "nodes": {
+            "start": {
+              "dialog": "You find an injured traveler lying beside the road.",
+              "choices": [
+                {
+                  "text": "Help them.",
+                  "next": "help"
+                },
+                {
+                  "text": "Ask what happened.",
+                  "next": "story"
+                }
+              ]
+            },
+
+            "help": {
+              "dialog": "You help the traveler sit up. They look at you with surprise. \"You stopped to help me?\"",
+              "choices": [
+                {
+                  "text": "Of course.",
+                  "next": "story"
+                }
+              ]
+            },
+
+            "story": {
+              "dialog": "\"A group of bandits attacked us further down the road.\" The traveler looks toward the direction they came from. \"They're still out there.\"",
+              "choices": [
+                {
+                  "text": "We'll deal with them.",
+                  "action": {
+                    "type": "battle",
+                    "enemyClass": "common"
+                  }
+                },
+                {
+                  "text": "You should get somewhere safe.",
+                  "next": "leave"
+                }
+              ]
+            },
+
+            "leave": {
+              "dialog": "\"Thank you.\" The traveler slowly makes their way toward the nearby settlement.",
+              "choices": [
+                {
+                  "text": "Continue.",
+                  "action": {
+                    "type": "complete"
+                  }
+                }
+              ]
+            }
+          }
+        },
+
+        {
+          "id": "encounter_story_3",
+          "title": "The First Companion",
+          "startNode": "start",
+
+          "nodes": {
+            "start": {
+              "dialog": "Someone has been following your group for several minutes. Eventually, they step out from behind a tree.",
+              "choices": [
+                {
+                  "text": "Ask who they are.",
+                  "next": "introduction"
+                },
+                {
+                  "text": "Prepare to defend yourselves.",
+                  "next": "introduction"
+                }
+              ]
+            },
+
+            "introduction": {
+              "dialog": "\"Relax. I'm not here to fight.\" They glance at your group. \"I've been traveling alone for a long time.\"",
+              "choices": [
+                {
+                  "text": "Why were you following us?",
+                  "next": "reason"
+                },
+                {
+                  "text": "What do you want?",
+                  "next": "reason"
+                }
+              ]
+            },
+
+            "reason": {
+              "dialog": "\"Because you look like you're going somewhere dangerous.\" They pause. \"And I was hoping you'd let me come with you.\"",
+              "choices": [
+                {
+                  "text": "Why should we trust you?",
+                  "next": "trust"
+                },
+                {
+                  "text": "You can travel with us.",
+                  "next": "join"
+                }
+              ]
+            },
+
+            "trust": {
+              "dialog": "\"You shouldn't. Not yet.\" They smile. \"Trust has to be earned.\"",
+              "choices": [
+                {
+                  "text": "Then earn it.",
+                  "next": "join"
+                }
+              ]
+            },
+
+            "join": {
+              "dialog": "\"Deal.\" They step into the group. \"Let's see where this road takes us.\"",
+              "choices": [
+                {
+                  "text": "Welcome aboard.",
+                  "action": {
+                    "type": "complete"
+                  }
+                }
+              ]
+            }
+          }
+        },
+
+        {
+          "id": "encounter_story_4",
+          "title": "The Old Rival",
+          "startNode": "start",
+
+          "nodes": {
+            "start": {
+              "dialog": "A familiar face suddenly appears on the road. Someone you have crossed paths with before.",
+              "choices": [
+                {
+                  "text": "Greet them.",
+                  "next": "conversation"
+                },
+                {
+                  "text": "Prepare for a fight.",
+                  "next": "challenge"
+                }
+              ]
+            },
+
+            "conversation": {
+              "dialog": "\"So you really decided to keep going.\" The rival looks at the people traveling beside you. \"You've even started gathering companions.\"",
+              "choices": [
+                {
+                  "text": "They're my friends.",
+                  "next": "respect"
+                },
+                {
+                  "text": "What's it to you?",
+                  "next": "challenge"
+                }
+              ]
+            },
+
+            "respect": {
+              "dialog": "\"Friends, huh?\" The rival smiles. \"Then don't let them down.\"",
+              "choices": [
+                {
+                  "text": "I won't.",
+                  "next": "challenge"
+                }
+              ]
+            },
+
+            "challenge": {
+              "dialog": "\"Before you continue, I want to see how much you've improved.\"",
+              "choices": [
+                {
+                  "text": "Accept the challenge.",
+                  "action": {
+                    "type": "battle",
+                    "enemyClass": "common"
+                  }
+                },
+                {
+                  "text": "Not today.",
+                  "action": {
+                    "type": "complete"
+                  }
+                }
+              ]
+            }
+          }
+        },
+
+        {
+          "id": "encounter_story_5",
+          "title": "The Hidden Supplies",
+          "startNode": "start",
+
+          "nodes": {
+            "start": {
+              "dialog": "You discover a small abandoned camp hidden away from the main road. Several useful supplies have been left behind.",
+              "choices": [
+                {
+                  "text": "Search the camp.",
+                  "action": {
+                    "type": "treasure"
+                  }
+                },
+                {
+                  "text": "Leave everything untouched.",
+                  "action": {
+                    "type": "complete"
+                  }
+                }
+              ]
+            }
+          }
+        },
+
+        {
+          "id": "encounter_story_6",
+          "title": "The Traveling Merchant",
+          "startNode": "start",
+
+          "nodes": {
+            "start": {
+              "dialog": "A traveling merchant has stopped beside the road. Their cart is filled with useful equipment.",
+              "choices": [
+                {
+                  "text": "Take a look.",
+                  "action": {
+                    "type": "shop"
+                  }
+                },
+                {
+                  "text": "We don't need anything.",
+                  "action": {
+                    "type": "complete"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+
+      "treasure": {
+        "allowedRarities": [
+          "Normal",
+          "Rare"
+        ],
+
+        "allowedParts": [
+          "bc_behemoth",
+            "bc_kaguyahime", "bc_athena", "wr_devil",
+            "wr_divinestar", "wr_guardian", "drv_rage",
+            "drv_moonlight", "drv_warfare", "bc_batter"
+        ],
+
+        "minRewards": 1,
+        "maxRewards": 3,
+
+        "amountRange": {
+          "min": 5,
+          "max": 10
+        }
+      },
+
+      "shop": {
+        "allowedRarities": [
+          "Normal",
+          "Rare"
+        ],
+
+        "allowedParts": [
+          "bc_behemoth",
+            "bc_kaguyahime", "bc_athena", "wr_devil",
+            "wr_divinestar", "wr_guardian", "drv_rage",
+            "drv_moonlight", "drv_warfare", "bc_batter"
+        ],
+
+        "offers": {
+          "minOffers": 3,
+          "maxOffers": 5,
+
+          "amounts": [
+            5
+          ],
+
+          "prices": {
+            "gold": {
+              "min": 100,
+              "max": 100
+            },
+
+            "adventureCrystal": {
+              "min": 100,
+              "max": 100
+            }
+          }
+        }
+      }
+    },
+    {
+  "id": "chapter_2",
+  "order": 2,
+  "title": "The Forest's Guardian",
+  "description": "The road leads into a mysterious forest where strange encounters reveal that someone is fiercely protecting the land.",
+  "introduction": "The road eventually disappears beneath a canopy of enormous trees. The deeper you travel, the quieter the world becomes. The wind fades. The birds stop singing. Even your companions begin to whisper. Something about this forest feels wrong. You continue forward anyway. After all, there is only one road ahead. But soon, you begin noticing signs that someone is watching you. Broken branches. Fresh footprints. Arrows buried in tree trunks. Whoever lives here knows you are coming. And they don't seem happy about it.",
+
+  "map": {
+    "minNodes": 10,
+    "maxNodes": 22,
+    "maxDepth": 7,
+
+    "eventWeights": {
+      "enemy": 30,
+      "elite": 15,
+      "encounter": 30,
+      "repair": 10,
+      "treasure": 5,
+      "shop": 10
+    }
+  },
+
+  "enemyPools": {
+    "common": {
+      "battleCaps": [
+        "bc_hattori_hanzo",
+        "bc_laurel_wreath", "bc_atlas"
+      ],
+      "weightRings": [
+        "wr_shuriken",
+        "wr_virgo", "wr_titan"
+      ],
+      "drivers": [
+        "drv_batter",
+        "drv_leaf", "drv_shock"
+      ],
+      "levels": [
+        3,
+        4
+      ]
+    },
+
+    "elite": {
+      "battleCaps": [
+        "bc_hattori_hanzo",
+        "bc_laurel_wreath", "bc_atlas"
+      ],
+      "weightRings": [
+        "wr_shuriken",
+        "wr_virgo", "wr_titan"
+      ],
+      "drivers": [
+        "drv_batter",
+        "drv_leaf", "drv_shock"
+      ],
+      "levels": [
+        5,
+        6
+      ]
+    },
+
+    "boss": {
+      "battleCap": "bc_venus",
+      "weightRing": "wr_heal",
+      "driver": "drv_bloom",
+      "level": 8
+    }
+  },
+
+  "bossDialogue": {
+    "id": "chapter_2_boss_dialogue",
+    "title": "The Forest Guardian",
+    "startNode": "start",
+
+    "nodes": {
+      "start": {
+        "dialog": "The trees suddenly become silent. A woman steps out from behind an enormous tree, her eyes fixed on you. She doesn't look surprised to see you.",
+        "choices": [
+          {
+            "text": "We're just passing through.",
+            "next": "passing"
+          },
+          {
+            "text": "Who are you?",
+            "next": "identity"
+          },
+          {
+            "text": "If you want a fight, we'll fight.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "passing": {
+        "dialog": "The woman narrows her eyes. \"Passing through?\" She looks toward the forest behind you. \"You crossed the outer boundary, disturbed the wildlife, and broke branches along the old trail.\"",
+        "choices": [
+          {
+            "text": "We didn't mean to.",
+            "next": "accusation"
+          },
+          {
+            "text": "We had no idea this was your forest.",
+            "next": "accusation"
+          }
+        ]
+      },
+
+      "identity": {
+        "dialog": "\"This forest doesn't belong to anyone.\" She places a hand against the tree beside her. \"It belongs to everything that lives here. I simply protect it.\"",
+        "choices": [
+          {
+            "text": "Then we're not your enemy.",
+            "next": "peace"
+          },
+          {
+            "text": "We're looking for a way through.",
+            "next": "accusation"
+          }
+        ]
+      },
+
+      "accusation": {
+        "dialog": "\"That's what intruders always say.\" Her expression becomes colder. \"First they enter. Then they take. Then they leave the forest wounded.\"",
+        "choices": [
+          {
+            "text": "We're different.",
+            "next": "prove"
+          },
+          {
+            "text": "You don't have to threaten us.",
+            "next": "challenge"
+          },
+          {
+            "text": "Tell us what you want us to do.",
+            "next": "prove"
+          }
+        ]
+      },
+
+      "peace": {
+        "dialog": "For a moment, the woman says nothing. Then she looks at your companions. \"Perhaps. But words mean very little in a place like this.\"",
+        "choices": [
+          {
+            "text": "How can we prove it?",
+            "next": "prove"
+          },
+          {
+            "text": "You could simply trust us.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "prove": {
+        "dialog": "\"Then prove that you're not here to harm this forest.\" She steps away from the tree. \"You have survived the dangers on the road. Now show me that you can stand against the guardian of this place.\"",
+        "choices": [
+          {
+            "text": "We accept your challenge.",
+            "next": "respect"
+          },
+          {
+            "text": "There has to be another way.",
+            "next": "respect"
+          }
+        ]
+      },
+
+      "respect": {
+        "dialog": "The woman gives a faint smile. \"Perhaps there is.\" She looks toward the path behind her. \"But if you cannot defeat me, you will never survive what lies beyond this forest.\"",
+        "choices": [
+          {
+            "text": "Then we'll defeat you.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "challenge": {
+        "dialog": "The woman takes her position. The leaves around her begin to swirl as if the entire forest has responded to her presence. \"If you truly intend to continue, then show me your strength.\"",
+        "choices": [
+          {
+            "text": "Begin the battle.",
+            "action": {
+              "type": "battle"
+            }
+          }
+        ]
+      }
+    }
+  },
+
+  "encounters": [
+    {
+      "id": "chapter_2_encounter_1",
+      "title": "The Silent Hunter",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You notice someone watching your group from a distant tree. Before you can approach, they disappear into the forest.",
+          "choices": [
+            {
+              "text": "Follow them.",
+              "next": "follow"
+            },
+            {
+              "text": "Ignore them.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "follow": {
+          "dialog": "You follow the trail and eventually find a hunter standing beside a fallen tree. They immediately raise their weapon.",
+          "choices": [
+            {
+              "text": "We're not here to hurt anyone.",
+              "next": "conversation"
+            },
+            {
+              "text": "Put that away.",
+              "next": "conversation"
+            }
+          ]
+        },
+
+        "conversation": {
+          "dialog": "\"Then why are you here?\" The hunter looks past you toward the path. \"The Guardian doesn't tolerate outsiders.\"",
+          "choices": [
+            {
+              "text": "Who is the Guardian?",
+              "next": "guardian"
+            },
+            {
+              "text": "We only need to cross the forest.",
+              "next": "warning"
+            }
+          ]
+        },
+
+        "guardian": {
+          "dialog": "\"The woman who protects this forest. You will know her when she decides you're worth meeting.\"",
+          "choices": [
+            {
+              "text": "Can you tell us anything about her?",
+              "next": "warning"
+            }
+          ]
+        },
+
+        "warning": {
+          "dialog": "\"Just remember one thing. Don't mistake her kindness for weakness.\"",
+          "choices": [
+            {
+              "text": "We'll remember.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_2_encounter_2",
+      "title": "The Wounded Creature",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A strange creature lies wounded beside the path. It tries to move when you approach but quickly collapses again.",
+          "choices": [
+            {
+              "text": "Help the creature.",
+              "next": "help"
+            },
+            {
+              "text": "Keep your distance.",
+              "next": "leave"
+            }
+          ]
+        },
+
+        "help": {
+          "dialog": "You carefully tend to its wounds. After a few moments, the creature gets back on its feet and looks at you.",
+          "choices": [
+            {
+              "text": "Go on. You're safe now.",
+              "next": "reaction"
+            },
+            {
+              "text": "Was someone hunting you?",
+              "next": "reaction"
+            }
+          ]
+        },
+
+        "reaction": {
+          "dialog": "The creature stares at you for a moment before disappearing into the trees. Somewhere deeper in the forest, you hear a distant whistle.",
+          "choices": [
+            {
+              "text": "Continue onward.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "leave": {
+          "dialog": "You decide not to interfere. The creature watches you carefully as you walk away.",
+          "choices": [
+            {
+              "text": "Continue.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_2_encounter_3",
+      "title": "The Forest Shrine",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You discover a small shrine hidden among the trees. Fresh flowers have been placed around it, and someone has recently lit a candle.",
+          "choices": [
+            {
+              "text": "Inspect the shrine.",
+              "next": "inspect"
+            },
+            {
+              "text": "Leave it alone.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "inspect": {
+          "dialog": "The shrine contains no treasure, only a simple message carved into the stone: \"Protect what cannot protect itself.\"",
+          "choices": [
+            {
+              "text": "Remember the message.",
+              "next": "sign"
+            },
+            {
+              "text": "Search around the shrine.",
+              "action": {
+                "type": "treasure"
+              }
+            }
+          ]
+        },
+
+        "sign": {
+          "dialog": "You notice fresh footprints leading away from the shrine. Whoever left them was watching you.",
+          "choices": [
+            {
+              "text": "Continue carefully.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_2_encounter_4",
+      "title": "The Forest Merchant",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You find a merchant beneath a large tree. Their cart is surprisingly well stocked despite being deep inside the forest.",
+          "choices": [
+            {
+              "text": "Ask how they got here.",
+              "next": "conversation"
+            },
+            {
+              "text": "Look at the supplies.",
+              "action": {
+                "type": "shop"
+              }
+            }
+          ]
+        },
+
+        "conversation": {
+          "dialog": "\"I've been coming here for years,\" the merchant says. \"The forest allows me to pass.\"",
+          "choices": [
+            {
+              "text": "The forest allows you?",
+              "next": "explanation"
+            },
+            {
+              "text": "So you know the Guardian?",
+              "next": "guardian"
+            }
+          ]
+        },
+
+        "explanation": {
+          "dialog": "\"Not exactly. But I know better than to cause trouble here.\" The merchant laughs nervously.",
+          "choices": [
+            {
+              "text": "We'll keep that in mind.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "guardian": {
+          "dialog": "\"Everyone knows the Guardian.\" The merchant lowers their voice. \"Just don't give her a reason to notice you.\"",
+          "choices": [
+            {
+              "text": "Too late for that.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_2_encounter_5",
+      "title": "The Lost Child",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You hear crying somewhere between the trees. After following the sound, you find a young traveler who appears to be completely lost.",
+          "choices": [
+            {
+              "text": "Help them.",
+              "next": "help"
+            },
+            {
+              "text": "Ask where they came from.",
+              "next": "story"
+            }
+          ]
+        },
+
+        "help": {
+          "dialog": "\"I can't find the road,\" the child says. \"I was looking for my family.\"",
+          "choices": [
+            {
+              "text": "We'll help you.",
+              "next": "forest"
+            }
+          ]
+        },
+
+        "story": {
+          "dialog": "\"I followed a beautiful bird into the forest. Then I couldn't find my way back.\"",
+          "choices": [
+            {
+              "text": "We'll take you to safety.",
+              "next": "forest"
+            },
+            {
+              "text": "Can you remember where you saw the bird?",
+              "next": "forest"
+            }
+          ]
+        },
+
+        "forest": {
+          "dialog": "You guide the lost traveler back toward the main path. Before you leave, they point toward the trees. \"A woman lives deeper in the forest. She helped me once.\"",
+          "choices": [
+            {
+              "text": "A woman?",
+              "next": "guardian"
+            }
+          ]
+        },
+
+        "guardian": {
+          "dialog": "\"She told me the forest would protect anyone who respected it.\"",
+          "choices": [
+            {
+              "text": "Thank you. Stay safe.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_2_encounter_6",
+      "title": "The Fallen Tree",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A massive tree has fallen across the road, completely blocking your path.",
+          "choices": [
+            {
+              "text": "Find another way around.",
+              "next": "detour"
+            },
+            {
+              "text": "Try to clear the path.",
+              "next": "clear"
+            }
+          ]
+        },
+
+        "detour": {
+          "dialog": "The detour leads you through a narrow part of the forest. You find several useful supplies hidden beneath some old leaves.",
+          "choices": [
+            {
+              "text": "Search the area.",
+              "action": {
+                "type": "treasure"
+              }
+            }
+          ]
+        },
+
+        "clear": {
+          "dialog": "After struggling with the tree for several minutes, you finally manage to clear enough space to pass.",
+          "choices": [
+            {
+              "text": "Continue.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_2_encounter_7",
+      "title": "The Watching Eyes",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You suddenly feel as though dozens of eyes are watching your group from the darkness between the trees.",
+          "choices": [
+            {
+              "text": "Call out to whoever is there.",
+              "next": "response"
+            },
+            {
+              "text": "Keep moving.",
+              "next": "response"
+            }
+          ]
+        },
+
+        "response": {
+          "dialog": "Nothing answers. Then a single leaf falls from a branch above you. A moment later, the feeling disappears.",
+          "choices": [
+            {
+              "text": "Something is definitely watching us.",
+              "next": "sign"
+            },
+            {
+              "text": "It was probably nothing.",
+              "next": "sign"
+            }
+          ]
+        },
+
+        "sign": {
+          "dialog": "As you continue, you notice a small mark carved into a tree. It looks almost like a warning.",
+          "choices": [
+            {
+              "text": "Leave the mark alone.",
+              "action": {
+                "type": "complete"
+              }
+            },
+            {
+              "text": "Inspect the mark.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_2_encounter_8",
+      "title": "The Hidden Clearing",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You discover a peaceful clearing hidden deep within the forest. For the first time since entering the woods, you feel completely safe.",
+          "choices": [
+            {
+              "text": "Rest here.",
+              "action": {
+                "type": "repair"
+              }
+            },
+            {
+              "text": "Search the clearing.",
+              "action": {
+                "type": "treasure"
+              }
+            },
+            {
+              "text": "Leave before anyone finds us.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+
+  "treasure": {
+    "allowedRarities": [
+      "Normal",
+      "Rare"
+    ],
+
+    "allowedParts": [
+      "bc_hattori_hanzo",
+        "bc_laurel_wreath", "bc_atlas", "wr_shuriken",
+        "wr_virgo", "wr_titan", "drv_batter",
+        "drv_leaf", "drv_shock"
+    ],
+
+    "minRewards": 1,
+    "maxRewards": 4,
+
+    "amountRange": {
+      "min": 5,
+      "max": 10
+    }
+  },
+
+  "shop": {
+    "allowedRarities": [
+      "Normal",
+      "Rare"
+    ],
+
+    "allowedParts": [
+      "bc_hattori_hanzo",
+        "bc_laurel_wreath", "bc_atlas", "wr_shuriken",
+        "wr_virgo", "wr_titan", "drv_batter",
+        "drv_leaf", "drv_shock"
+    ],
+
+    "offers": {
+      "minOffers": 3,
+      "maxOffers": 5,
+
+      "amounts": [
+        5,
+        10
+      ],
+
+      "prices": {
+        "gold": {
+          "min": 100,
+          "max": 200
+        },
+
+        "adventureCrystal": {
+          "min": 100,
+          "max": 200
+        }
+      }
+    }
+  }
+},
+{
+  "id": "chapter_3",
+  "order": 3,
+  "title": "The Plague Within",
+  "description": "A once-thriving city has fallen into chaos. As the sickness spreads, you uncover the one responsible for it all: the Plague Knight.",
+  "introduction": "After leaving the forest, you finally reach a large city beyond the mountains. But something is terribly wrong. The gates are open, yet almost nobody enters or leaves. The streets are empty. Shops are abandoned. Sick travelers lie beneath blankets while guards desperately try to keep order. A strange green mist hangs over parts of the city, and the people speak of a mysterious knight who appeared several days ago. Some say he brought the sickness. Others say the plague was already here. Whatever the truth may be, the longer you remain, the worse the city becomes. Your companions look at you. There is no reason to stay. Yet leaving now would mean abandoning everyone inside. You decide to find the source of the plague.",
+
+  "map": {
+    "minNodes": 20,
+    "maxNodes": 22,
+    "maxDepth": 7,
+
+    "eventWeights": {
+      "enemy": 20,
+      "elite": 30,
+      "encounter": 25,
+      "repair": 15,
+      "treasure": 5,
+      "shop": 5
+    }
+  },
+
+  "enemyPools": {
+    "common": {
+      "battleCaps": [
+        "bc_atlas",
+        "bc_himiko", "bc_venus"
+      ],
+      "weightRings": [
+        "wr_titan",
+        "wr_puppet_doll", "wr_heal"
+      ],
+      "drivers": [
+        "drv_shock",
+        "drv_curse", "drv_bloom"
+      ],
+      "levels": [
+        5,
+        6
+      ]
+    },
+
+    "elite": {
+      "battleCaps": [
+        "bc_hattori_hanzo",
+        "bc_athena", "bc_venus"
+      ],
+      "weightRings": [
+        "wr_shuriken",
+        "wr_guardian", "wr_heal"
+      ],
+      "drivers": [
+        "drv_pain",
+        "drv_ravager", "drv_shock"
+      ],
+      "levels": [
+        7,
+        8
+      ]
+    },
+
+    "boss": {
+      "battleCap": "bc_plague_knight",
+      "weightRing": "wr_catalyze",
+      "driver": "drv_erosion",
+      "level": 10
+    }
+  },
+
+  "bossDialogue": {
+    "id": "chapter_3_boss_dialogue",
+    "title": "The Plague Knight",
+    "startNode": "start",
+
+    "nodes": {
+      "start": {
+        "dialog": "At the end of the ruined street, a lone knight stands before the city hall. Green vapor slowly rises from beneath his armor. He turns toward you.",
+        "choices": [
+          {
+            "text": "You're the one causing this.",
+            "next": "accusation"
+          },
+          {
+            "text": "Who are you?",
+            "next": "identity"
+          },
+          {
+            "text": "Move aside.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "accusation": {
+        "dialog": "The knight gives a quiet laugh. \"So the rumors reached you too.\" He looks across the empty streets. \"Yes. This city is mine now.\"",
+        "choices": [
+          {
+            "text": "Why would you do this?",
+            "next": "reason"
+          },
+          {
+            "text": "You're hurting innocent people.",
+            "next": "reason"
+          },
+          {
+            "text": "Then we'll stop you.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "identity": {
+        "dialog": "\"They call me the Plague Knight.\" He slowly raises his weapon. \"I have no reason to hide my name from those who are about to fall.\"",
+        "choices": [
+          {
+            "text": "You're responsible for the plague?",
+            "next": "accusation"
+          },
+          {
+            "text": "Then you're the one we're looking for.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "reason": {
+        "dialog": "\"Why?\" The knight looks genuinely amused. \"Because people fear what they cannot understand. Disease. Death. The unknown.\" He spreads his arms. \"I simply gave their fear a shape.\"",
+        "choices": [
+          {
+            "text": "You're nothing but a murderer.",
+            "next": "anger"
+          },
+          {
+            "text": "There must be another reason.",
+            "next": "mystery"
+          },
+          {
+            "text": "Enough. We're ending this.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "mystery": {
+        "dialog": "For a moment, the knight says nothing. Then he smiles beneath his helmet. \"Perhaps there is.\" His voice becomes quieter. \"But you are not ready to hear it.\"",
+        "choices": [
+          {
+            "text": "Then tell us!",
+            "next": "secret"
+          },
+          {
+            "text": "We'll find the truth ourselves.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "secret": {
+        "dialog": "\"The plague is only the beginning.\" A strange energy flickers around his armor. \"Someone far greater than me opened the door to this power.\"",
+        "choices": [
+          {
+            "text": "Who?",
+            "next": "mystery_name"
+          },
+          {
+            "text": "You're trying to scare us.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "mystery_name": {
+        "dialog": "The knight laughs softly. \"You will learn his name soon enough.\" He grips his weapon. \"If you survive me.\"",
+        "choices": [
+          {
+            "text": "Then we'll make sure we survive.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "anger": {
+        "dialog": "The Plague Knight's laughter echoes through the empty street. \"Murderer? Perhaps. But you still haven't understood.\" The green mist around him grows thicker.",
+        "choices": [
+          {
+            "text": "What haven't we understood?",
+            "next": "secret"
+          },
+          {
+            "text": "We don't need to understand you.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "challenge": {
+        "dialog": "The Plague Knight raises his weapon. Green energy bursts from the ground around him, spreading across the street like poisonous roots. \"Then come. Show me whether your determination is stronger than the plague.\"",
+        "choices": [
+          {
+            "text": "Begin the battle.",
+            "action": {
+              "type": "battle"
+            }
+          }
+        ]
+      }
+    }
+  },
+
+  "encounters": [
+    {
+      "id": "chapter_3_encounter_1",
+      "title": "The Empty Street",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You enter a street where every building appears abandoned. Doors are open, meals are still sitting on tables, and belongings have been left behind.",
+          "choices": [
+            {
+              "text": "Search the buildings.",
+              "next": "search"
+            },
+            {
+              "text": "Keep moving.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "search": {
+          "dialog": "You find signs that people left in a hurry. On one wall, someone has written a warning: \"Do not follow the green mist.\"",
+          "choices": [
+            {
+              "text": "Investigate the warning.",
+              "next": "mist"
+            },
+            {
+              "text": "Leave immediately.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "mist": {
+          "dialog": "A faint green mist drifts through the end of the street. You can hear something moving within it.",
+          "choices": [
+            {
+              "text": "Approach carefully.",
+              "action": {
+                "type": "battle",
+                "enemyClass": "common"
+              }
+            },
+            {
+              "text": "Take another route.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_3_encounter_2",
+      "title": "The Desperate Doctor",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A doctor rushes toward you carrying a small bag of medicine. They nearly collapse when they see your group.",
+          "choices": [
+            {
+              "text": "Are you alright?",
+              "next": "doctor"
+            },
+            {
+              "text": "Do you need help?",
+              "next": "doctor"
+            }
+          ]
+        },
+
+        "doctor": {
+          "dialog": "\"We need more medicine.\" The doctor looks exhausted. \"People are getting sick faster than we can treat them.\"",
+          "choices": [
+            {
+              "text": "What caused the plague?",
+              "next": "cause"
+            },
+            {
+              "text": "Where can we find medicine?",
+              "next": "supplies"
+            }
+          ]
+        },
+
+        "cause": {
+          "dialog": "\"I don't know.\" The doctor looks toward the city hall. \"But everything changed when that knight arrived.\"",
+          "choices": [
+            {
+              "text": "We'll find him.",
+              "next": "thanks"
+            }
+          ]
+        },
+
+        "supplies": {
+          "dialog": "\"There was an old supply warehouse near the eastern gate. If anything remains, you might find it there.\"",
+          "choices": [
+            {
+              "text": "We'll check it.",
+              "next": "thanks"
+            }
+          ]
+        },
+
+        "thanks": {
+          "dialog": "\"If you find a way to stop this, you may save the entire city.\"",
+          "choices": [
+            {
+              "text": "We'll do what we can.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_3_encounter_3",
+      "title": "The Survivor",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "Someone suddenly grabs your arm from an alleyway. A frightened survivor pulls you into the shadows.",
+          "choices": [
+            {
+              "text": "Who are you?",
+              "next": "warning"
+            },
+            {
+              "text": "Let go of me.",
+              "next": "warning"
+            }
+          ]
+        },
+
+        "warning": {
+          "dialog": "\"Keep your voice down!\" They point toward the street. \"The knight's soldiers patrol these roads at night.\"",
+          "choices": [
+            {
+              "text": "Where can we find the knight?",
+              "next": "location"
+            },
+            {
+              "text": "How do we get through the city?",
+              "next": "location"
+            }
+          ]
+        },
+
+        "location": {
+          "dialog": "\"He stays near the city hall. But don't go there unless you're prepared.\"",
+          "choices": [
+            {
+              "text": "We're prepared.",
+              "action": {
+                "type": "complete"
+              }
+            },
+            {
+              "text": "Thanks for the warning.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_3_encounter_4",
+      "title": "The Plague Soldier",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A heavily armored figure blocks the road. Green vapor leaks from their equipment.",
+          "choices": [
+            {
+              "text": "Ask who they work for.",
+              "next": "question"
+            },
+            {
+              "text": "Prepare for battle.",
+              "action": {
+                "type": "battle",
+                "enemyClass": "common"
+              }
+            }
+          ]
+        },
+
+        "question": {
+          "dialog": "\"The Plague Knight.\" The soldier grips their weapon. \"You should turn back while you still can.\"",
+          "choices": [
+            {
+              "text": "We're not turning back.",
+              "action": {
+                "type": "battle",
+                "enemyClass": "common"
+              }
+            },
+            {
+              "text": "What is he planning?",
+              "next": "answer"
+            }
+          ]
+        },
+
+        "answer": {
+          "dialog": "\"He wants the entire city to fall.\" The soldier suddenly attacks before you can ask anything else.",
+          "choices": [
+            {
+              "text": "Defend yourselves!",
+              "action": {
+                "type": "battle",
+                "enemyClass": "common"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_3_encounter_5",
+      "title": "The Abandoned Shop",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You discover an abandoned shop. Most of the shelves are empty, but several useful items remain behind the counter.",
+          "choices": [
+            {
+              "text": "Search the shop.",
+              "action": {
+                "type": "treasure"
+              }
+            },
+            {
+              "text": "Leave it alone.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_3_encounter_6",
+      "title": "The Underground Path",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A damaged stairway leads beneath the city. Faint sounds echo from below.",
+          "choices": [
+            {
+              "text": "Go underground.",
+              "next": "underground"
+            },
+            {
+              "text": "Stay on the main road.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "underground": {
+          "dialog": "The underground passage is filled with abandoned crates and old equipment. Someone appears to have used this place recently.",
+          "choices": [
+            {
+              "text": "Search the crates.",
+              "action": {
+                "type": "treasure"
+              }
+            },
+            {
+              "text": "Continue deeper.",
+              "next": "deeper"
+            }
+          ]
+        },
+
+        "deeper": {
+          "dialog": "You find strange symbols carved into the walls. They resemble the markings on the Plague Knight's armor.",
+          "choices": [
+            {
+              "text": "Remember the markings.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_3_encounter_7",
+      "title": "The Last Merchant",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A merchant is packing what little remains of their supplies into a cart. They look ready to leave the city.",
+          "choices": [
+            {
+              "text": "Ask what they know.",
+              "next": "conversation"
+            },
+            {
+              "text": "See what they have for sale.",
+              "action": {
+                "type": "shop"
+              }
+            }
+          ]
+        },
+
+        "conversation": {
+          "dialog": "\"I'm leaving before that knight finishes what he started.\" The merchant looks toward the city hall.",
+          "choices": [
+            {
+              "text": "What does he want?",
+              "next": "answer"
+            },
+            {
+              "text": "You should leave while you can.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "answer": {
+          "dialog": "\"Power. That's all anyone like him wants.\" The merchant pauses. \"But I've heard he serves someone else.\"",
+          "choices": [
+            {
+              "text": "Someone else?",
+              "next": "secret"
+            }
+          ]
+        },
+
+        "secret": {
+          "dialog": "\"I don't know who. And I don't want to find out.\"",
+          "choices": [
+            {
+              "text": "Thanks for the information.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_3_encounter_8",
+      "title": "The Quarantine Gate",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A group of guards has sealed off an entire section of the city. Nobody is allowed through.",
+          "choices": [
+            {
+              "text": "Ask the guards why.",
+              "next": "reason"
+            },
+            {
+              "text": "Find another route.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "reason": {
+          "dialog": "\"The plague is spreading through that district faster than anywhere else.\" One guard looks frightened. \"Something is causing it.\"",
+          "choices": [
+            {
+              "text": "We need to investigate.",
+              "next": "warning"
+            },
+            {
+              "text": "We'll find another way.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "warning": {
+          "dialog": "\"Then be careful.\" The guard opens the gate slightly. \"If you see a knight covered in green mist, run.\"",
+          "choices": [
+            {
+              "text": "We'll keep that in mind.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_3_encounter_9",
+      "title": "The Safe House",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You discover a hidden room beneath an old building. Several survivors are sheltering inside.",
+          "choices": [
+            {
+              "text": "Offer to help.",
+              "next": "help"
+            },
+            {
+              "text": "Rest for a while.",
+              "action": {
+                "type": "repair"
+              }
+            }
+          ]
+        },
+
+        "help": {
+          "dialog": "\"We've been hiding here for days.\" One survivor points toward a map on the wall. \"The city hall is here. That's where the knight was last seen.\"",
+          "choices": [
+            {
+              "text": "We'll deal with him.",
+              "action": {
+                "type": "complete"
+              }
+            },
+            {
+              "text": "You should stay hidden.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+
+  "treasure": {
+    "allowedRarities": [
+      "Normal",
+      "Rare"
+    ],
+
+    "allowedParts": [
+      "bc_atlas",
+        "bc_himiko", "bc_venus", "wr_titan",
+        "wr_puppet_doll", "wr_heal", "drv_shock",
+        "drv_curse", "drv_bloom"
+    ],
+
+    "minRewards": 1,
+    "maxRewards": 4,
+
+    "amountRange": {
+      "min": 5,
+      "max": 10
+    }
+  },
+
+  "shop": {
+    "allowedRarities": [
+      "Normal",
+      "Rare"
+    ],
+
+    "allowedParts": [
+      "bc_atlas",
+        "bc_himiko", "bc_venus", "wr_titan",
+        "wr_puppet_doll", "wr_heal", "drv_shock",
+        "drv_curse", "drv_bloom"
+    ],
+
+    "offers": {
+      "minOffers": 3,
+      "maxOffers": 5,
+
+      "amounts": [
+        5,
+        10
+      ],
+
+      "prices": {
+        "gold": {
+          "min": 100,
+          "max": 200
+        },
+
+        "adventureCrystal": {
+          "min": 100,
+          "max": 200
+        }
+      }
+    }
+  }
+},
+{
+  "id": "chapter_4",
+  "order": 4,
+  "title": "The Laughing Knight",
+  "description": "The plague has been stopped, but the danger is far from over. A reckless knight appears, laughing as he searches for a worthy opponent.",
+  "introduction": "The city is finally beginning to recover. The green mist has faded, the sick are receiving treatment, and the people are slowly returning to the streets. But before you can celebrate, a message arrives from beyond the city walls. The Plague Knight was not acting alone. Someone had given him the power to spread the plague. Someone stronger. Then, from the road ahead, you hear a strange sound. Laughter. Loud, reckless, and completely fearless. A heavily armored knight is approaching the city. He doesn't look like someone who wants to negotiate. He looks like someone who came here looking for a fight. Your companions prepare themselves. The knight stops in front of you and raises his weapon. \"HAHAHAHA! So you're the ones who defeated Plague Knight! Finally! Someone worth fighting!\"",
+
+  "map": {
+    "minNodes": 12,
+    "maxNodes": 24,
+    "maxDepth": 7,
+
+    "eventWeights": {
+      "enemy": 30,
+      "elite": 20,
+      "encounter": 30,
+      "repair": 10,
+      "treasure": 5,
+      "shop": 5
+    }
+  },
+
+  "enemyPools": {
+    "common": {
+      "battleCaps": [
+        "bc_atum",
+        "bc_survivor", "bc_mercury"
+      ],
+      "weightRings": [
+        "wr_capricorn",
+        "wr_pan", "wr_transfer"
+      ],
+      "drivers": [
+        "drv_bloom",
+        "drv_lurk", "dev_fleet"
+      ],
+      "levels": [
+        7,
+        8
+      ]
+    },
+
+    "elite": {
+      "battleCaps": [
+        "bc_plague_knight"
+      ],
+      "weightRings": [
+        "wr_capricorn","bc_catalyze"
+      ],
+      "drivers": [
+        "drv_batter","bc_ravager","drv_erosion"
+      ],
+      "levels": [
+        9,
+        10
+      ]
+    },
+
+    "boss": {
+      "battleCap": "bc_death_knight",
+      "weightRing": "wr_vengeance",
+      "driver": "drv_rampage",
+      "level": 12
+    }
+  },
+
+  "bossDialogue": {
+    "id": "chapter_4_boss_dialogue",
+    "title": "The Death Knight",
+    "startNode": "start",
+
+    "nodes": {
+      "start": {
+        "dialog": "A gigantic armored knight stands in the middle of the road. His armor is covered in scratches from countless battles. He looks at you for a moment before bursting into laughter. \"HAHAHAHA! So you're the ones who defeated Plague Knight!\"",
+        "choices": [
+          {
+            "text": "Who are you?",
+            "next": "identity"
+          },
+          {
+            "text": "You're the one who empowered Plague Knight.",
+            "next": "plague"
+          },
+          {
+            "text": "Get out of our way.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "identity": {
+        "dialog": "The knight slams his weapon against his armor and laughs again. \"HAHAHAHA! I am the Death Knight! The strongest warrior you'll meet on this miserable road!\"",
+        "choices": [
+          {
+            "text": "You're awfully confident.",
+            "next": "confidence"
+          },
+          {
+            "text": "Then prove it.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "plague": {
+        "dialog": "\"HAHAHAHA! So you've figured that out already!\" The Death Knight looks genuinely pleased. \"Yes! I gave that little plague-ridden fool his power.\"",
+        "choices": [
+          {
+            "text": "Why give him that power?",
+            "next": "reason"
+          },
+          {
+            "text": "Then you're responsible for what happened.",
+            "next": "reason"
+          },
+          {
+            "text": "We'll make you pay for it.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "reason": {
+        "dialog": "\"Because watching people panic is entertaining!\" He laughs loudly. \"But honestly, that wasn't the important part. I wanted to see what would happen when someone with power finally stopped holding back.\"",
+        "choices": [
+          {
+            "text": "You treat people's lives like a game.",
+            "next": "anger"
+          },
+          {
+            "text": "You're completely insane.",
+            "next": "laughter"
+          },
+          {
+            "text": "Enough talking.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "confidence": {
+        "dialog": "\"Confidence? No! This is certainty!\" The Death Knight points toward you. \"I've been waiting for someone strong enough to make me actually try!\"",
+        "choices": [
+          {
+            "text": "Then you've found them.",
+            "next": "challenge"
+          },
+          {
+            "text": "You might regret that.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "anger": {
+        "dialog": "The Death Knight tilts his helmet. For the first time, his laughter stops. \"You sound angry.\" A moment of silence passes. Then he grins. \"GOOD!\"",
+        "choices": [
+          {
+            "text": "You're going down.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "laughter": {
+        "dialog": "\"HAHAHAHA! At least you're honest!\" The Death Knight raises his weapon. \"Crazy, sane, hero, villain... none of that matters when two warriors meet on the battlefield!\"",
+        "choices": [
+          {
+            "text": "Then let's settle this in battle.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "challenge": {
+        "dialog": "The Death Knight raises his weapon and charges forward with terrifying speed. \"HAHAHAHA! COME ON! SHOW ME EVERYTHING YOU'VE GOT!\"",
+        "choices": [
+          {
+            "text": "Begin the battle!",
+            "action": {
+              "type": "battle"
+            }
+          }
+        ]
+      }
+    }
+  },
+
+  "encounters": [
+    {
+      "id": "chapter_4_encounter_1",
+      "title": "The Knight's Trail",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You discover a trail of enormous footprints leading away from the city. Several trees have been knocked over along the path.",
+          "choices": [
+            {
+              "text": "Follow the footprints.",
+              "next": "trail"
+            },
+            {
+              "text": "Look around first.",
+              "next": "clue"
+            }
+          ]
+        },
+
+        "trail": {
+          "dialog": "The trail leads toward the mountains. Whatever made these tracks was moving quickly and didn't care what stood in its way.",
+          "choices": [
+            {
+              "text": "Continue following it.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "clue": {
+          "dialog": "You find a broken piece of black metal embedded in a tree. It looks like part of heavy armor.",
+          "choices": [
+            {
+              "text": "Take the piece.",
+              "action": {
+                "type": "treasure"
+              },
+              "next": "continue"
+            },
+            {
+              "text": "Leave it.",
+              "next": "continue"
+            }
+          ]
+        },
+
+        "continue": {
+          "dialog": "Whatever happened here, it wasn't an ordinary battle.",
+          "choices": [
+            {
+              "text": "Continue.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_4_encounter_2",
+      "title": "The Frightened Soldier",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A soldier rushes toward you, looking terrified. They stop when they realize you're not an enemy.",
+          "choices": [
+            {
+              "text": "What happened?",
+              "next": "story"
+            },
+            {
+              "text": "Are you being chased?",
+              "next": "story"
+            }
+          ]
+        },
+
+        "story": {
+          "dialog": "\"That knight...\" The soldier struggles to catch their breath. \"He walked straight through our entire patrol like we weren't even there.\"",
+          "choices": [
+            {
+              "text": "The Death Knight?",
+              "next": "answer"
+            },
+            {
+              "text": "What did he want?",
+              "next": "answer"
+            }
+          ]
+        },
+
+        "answer": {
+          "dialog": "\"He kept asking where he could find the strongest fighter around.\" The soldier looks at your group. \"I think he was looking for you.\"",
+          "choices": [
+            {
+              "text": "Then he'll find us.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_4_encounter_3",
+      "title": "The Wrecked Camp",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You find an abandoned camp. Tents have been torn apart and equipment is scattered across the ground.",
+          "choices": [
+            {
+              "text": "Search the camp.",
+              "action": {
+                "type": "treasure"
+              }
+            },
+            {
+              "text": "Leave quickly.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_4_encounter_4",
+      "title": "The Wandering Blacksmith",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A blacksmith is repairing equipment beside the road. Several pieces of armor are scattered around them.",
+          "choices": [
+            {
+              "text": "Ask about the armor.",
+              "next": "armor"
+            },
+            {
+              "text": "Ask if they can repair your equipment.",
+              "action": {
+                "type": "repair"
+              }
+            }
+          ]
+        },
+
+        "armor": {
+          "dialog": "\"That?\" The blacksmith points toward a pile of damaged armor. \"A knight came through here earlier. I've never seen armor get destroyed like that.\"",
+          "choices": [
+            {
+              "text": "Was it the Death Knight?",
+              "next": "answer"
+            },
+            {
+              "text": "What happened?",
+              "next": "answer"
+            }
+          ]
+        },
+
+        "answer": {
+          "dialog": "\"He challenged every warrior he could find.\" The blacksmith shakes their head. \"He laughed the entire time.\"",
+          "choices": [
+            {
+              "text": "Sounds like trouble.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_4_encounter_5",
+      "title": "The Reckless Challenger",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A young warrior jumps onto the road and points directly at you. \"You! I heard you're heading after the Death Knight!\"",
+          "choices": [
+            {
+              "text": "What do you want?",
+              "next": "challenge"
+            },
+            {
+              "text": "We don't have time for this.",
+              "next": "challenge"
+            }
+          ]
+        },
+
+        "challenge": {
+          "dialog": "\"I want to know if you're actually strong enough!\" They immediately prepare for battle.",
+          "choices": [
+            {
+              "text": "Accept the challenge.",
+              "action": {
+                "type": "battle",
+                "enemyClass": "common"
+              }
+            },
+            {
+              "text": "Not interested.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_4_encounter_6",
+      "title": "The Merchant's Warning",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A merchant has stopped their cart beside the road. They look nervous and keep glancing toward the mountains.",
+          "choices": [
+            {
+              "text": "What are you afraid of?",
+              "next": "warning"
+            },
+            {
+              "text": "Show us what you're selling.",
+              "action": {
+                "type": "shop"
+              }
+            }
+          ]
+        },
+
+        "warning": {
+          "dialog": "\"A giant knight is coming this way.\" The merchant lowers their voice. \"If I were you, I'd go in the opposite direction.\"",
+          "choices": [
+            {
+              "text": "We're looking for him.",
+              "next": "reaction"
+            },
+            {
+              "text": "Thanks for the warning.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "reaction": {
+          "dialog": "The merchant stares at you in disbelief. \"You're either incredibly brave or completely crazy.\"",
+          "choices": [
+            {
+              "text": "We've been called worse.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_4_encounter_7",
+      "title": "The Ruined Battlefield",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You arrive at an old battlefield. Broken weapons and shattered equipment cover the ground.",
+          "choices": [
+            {
+              "text": "Search for survivors.",
+              "next": "survivors"
+            },
+            {
+              "text": "Search the battlefield.",
+              "action": {
+                "type": "treasure"
+              }
+            }
+          ]
+        },
+
+        "survivors": {
+          "dialog": "You find several defeated warriors hiding among the ruins. One of them looks at you and immediately recognizes your destination.",
+          "choices": [
+            {
+              "text": "What happened here?",
+              "next": "answer"
+            }
+          ]
+        },
+
+        "answer": {
+          "dialog": "\"The Death Knight happened.\" The warrior sighs. \"He challenged everyone here. Nobody could stop him.\"",
+          "choices": [
+            {
+              "text": "We'll try.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_4_encounter_8",
+      "title": "The Strange Laughter",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You hear distant laughter echoing between the mountains. It is loud enough to make your companions stop walking.",
+          "choices": [
+            {
+              "text": "That's definitely not normal.",
+              "next": "laugh"
+            },
+            {
+              "text": "Keep moving.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "laugh": {
+          "dialog": "The laughter suddenly stops. Then you hear a voice from somewhere in the distance. \"HAHAHAHA! COME FIND ME!\"",
+          "choices": [
+            {
+              "text": "We know where we're going now.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_4_encounter_9",
+      "title": "The Hidden Rest",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You find a small abandoned shelter hidden beneath the cliffs. It appears safe enough to rest for a while.",
+          "choices": [
+            {
+              "text": "Rest and repair your equipment.",
+              "action": {
+                "type": "repair"
+              }
+            },
+            {
+              "text": "Search the shelter.",
+              "action": {
+                "type": "treasure"
+              }
+            },
+            {
+              "text": "Keep moving.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_4_encounter_10",
+      "title": "The Mysterious Message",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You find a piece of parchment nailed to a tree. Only a few words are written on it: \"The strong will find the strong.\"",
+          "choices": [
+            {
+              "text": "Take the message.",
+              "next": "message"
+            },
+            {
+              "text": "Leave it behind.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "message": {
+          "dialog": "On the back of the parchment is a crude drawing of a heavily armored knight laughing with a weapon raised above his head.",
+          "choices": [
+            {
+              "text": "We're getting closer.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+
+  "treasure": {
+    "allowedRarities": [
+      "Normal",
+      "Rare", "Epic"
+    ],
+
+    "allowedParts": [
+      "bc_atum",
+        "bc_survivor", "bc_mercury", "wr_capricorn",
+        "wr_pan", "wr_transfer", "drv_bloom",
+        "drv_lurk", "dev_fleet"
+    ],
+
+    "minRewards": 1,
+    "maxRewards": 4,
+
+    "amountRange": {
+      "min": 5,
+      "max": 10
+    }
+  },
+
+  "shop": {
+    "allowedRarities": [
+      "Normal",
+      "Rare", "Epic"
+    ],
+
+    "allowedParts": [
+      "bc_atum",
+        "bc_survivor", "bc_mercury", "wr_capricorn",
+        "wr_pan", "wr_transfer", "drv_bloom",
+        "drv_lurk", "dev_fleet"
+    ],
+
+    "offers": {
+      "minOffers": 3,
+      "maxOffers": 5,
+
+      "amounts": [
+        5,
+        10,
+        20
+      ],
+
+      "prices": {
+        "gold": {
+          "min": 100,
+          "max": 300
+        },
+
+        "adventureCrystal": {
+          "min": 100,
+          "max": 300
+        }
+      }
+    }
+  }
+},
+{
+  "id": "chapter_5",
+  "order": 5,
+  "title": "The Hell Realm",
+  "description": "The truth behind the plague and the Death Knight is finally revealed. Your journey leads beyond the mortal world and into the realm of Hell.",
+  "introduction": "The Death Knight has fallen, but his final words continue to echo in your mind. Someone gave him his power. Someone gave Plague Knight his power as well. You follow the clues left behind and eventually discover an ancient passage hidden deep beneath the battlefield. The passage leads somewhere that should not exist. The air grows hotter with every step. Strange symbols glow along the walls, and distant voices whisper from the darkness. At the end of the passage stands an enormous gate covered in ancient markings. As you approach, the gate slowly opens on its own. Beyond it lies a world of fire, darkness, and endless ruins. You have entered the Hell Realm. And somewhere within it waits the being responsible for everything that has happened so far. A voice echoes from deep within the realm. \"So... the little warriors have finally come looking for me.\"",
+
+  "map": {
+    "minNodes": 14,
+    "maxNodes": 26,
+    "maxDepth": 8,
+
+    "eventWeights": {
+      "enemy": 25,
+      "elite": 25,
+      "encounter": 25,
+      "repair": 5,
+      "treasure": 10,
+      "shop": 10
+    }
+  },
+
+  "enemyPools": {
+    "common": {
+      "battleCaps": [
+        "bc_behemoth",
+        "bc_plague_knight", "bc_death_knight"
+      ],
+      "weightRings": [
+        "wr_devil",
+        "wr_surge", "wr_sagitarius"
+      ],
+      "drivers": [
+        "drv_batter",
+        "drv_battlecry", "drv_berserker"
+      ],
+      "levels": [
+        9,
+        10
+      ]
+    },
+
+    "elite": {
+      "battleCaps": [
+        "bc_puppeteer"
+      ],
+      "weightRings": [
+        "wr_pisces",
+        "wr_sprint", "wr_gemini"
+      ],
+      "drivers": [
+        "drv_lightning",
+        "drv_rage"
+      ],
+      "levels": [
+        11,
+        12
+      ]
+    },
+
+    "boss": {
+      "battleCap": "bc_lucifer",
+      "weightRing": "wr_colorful",
+      "driver": "drv_lightning",
+      "level": 13
+    }
+  },
+
+  "bossDialogue": {
+    "id": "chapter_5_boss_dialogue",
+    "title": "Lucifer",
+    "startNode": "start",
+
+    "nodes": {
+      "start": {
+        "dialog": "You finally reach the center of the Hell Realm. A massive throne stands above a sea of fire. A figure sits upon it, watching you with an amused expression.",
+        "choices": [
+          {
+            "text": "Are you Lucifer?",
+            "next": "identity"
+          },
+          {
+            "text": "You're the one behind everything.",
+            "next": "revelation"
+          },
+          {
+            "text": "We came here to defeat you.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "identity": {
+        "dialog": "The figure slowly rises from the throne. A dark aura spreads across the chamber. \"That is what they call me. Lucifer. Ruler of this realm.\"",
+        "choices": [
+          {
+            "text": "You gave Plague Knight his power.",
+            "next": "plague"
+          },
+          {
+            "text": "You gave Death Knight his power too.",
+            "next": "death"
+          },
+          {
+            "text": "Then you're the one we've been looking for.",
+            "next": "revelation"
+          }
+        ]
+      },
+
+      "revelation": {
+        "dialog": "Lucifer smiles. \"Behind everything? Perhaps. But you misunderstand what happened.\" He steps down from the throne. \"I did not force them to become what they became. I merely gave them the power they desired.\"",
+        "choices": [
+          {
+            "text": "So you admit it.",
+            "next": "admission"
+          },
+          {
+            "text": "Why give them that power?",
+            "next": "reason"
+          },
+          {
+            "text": "You still caused all of this.",
+            "next": "admission"
+          }
+        ]
+      },
+
+      "plague": {
+        "dialog": "\"Plague Knight wanted power capable of spreading beyond a single battlefield. I gave him exactly that.\" Lucifer's expression remains calm. \"What he did with it was his choice.\"",
+        "choices": [
+          {
+            "text": "You knew what he would do.",
+            "next": "reason"
+          },
+          {
+            "text": "You used him.",
+            "next": "reason"
+          }
+        ]
+      },
+
+      "death": {
+        "dialog": "\"And Death Knight...\" Lucifer laughs quietly. \"That one didn't need much convincing. He asked for the strength to fight the strongest warriors in the world.\"",
+        "choices": [
+          {
+            "text": "You turned him into a monster.",
+            "next": "death_response"
+          },
+          {
+            "text": "He was already reckless.",
+            "next": "death_response"
+          }
+        ]
+      },
+
+      "death_response": {
+        "dialog": "\"Exactly.\" Lucifer smiles. \"Power does not change everyone. Sometimes it simply reveals what was already hiding inside.\"",
+        "choices": [
+          {
+            "text": "Then what do you want from us?",
+            "next": "purpose"
+          },
+          {
+            "text": "We're here to stop you.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "reason": {
+        "dialog": "\"Because I wanted to see what would happen.\" Lucifer looks toward the flames below. \"Mortals are fascinating. Give one person power and they may become a hero. Give another the same power and they become a tyrant.\"",
+        "choices": [
+          {
+            "text": "And now you're experimenting on us?",
+            "next": "experiment"
+          },
+          {
+            "text": "We're not like them.",
+            "next": "experiment"
+          }
+        ]
+      },
+
+      "admission": {
+        "dialog": "\"Yes.\" Lucifer's smile disappears. \"I gave them their power. I opened the path that led you here. And I have been watching your journey from the beginning.\"",
+        "choices": [
+          {
+            "text": "Then why let us come this far?",
+            "next": "purpose"
+          },
+          {
+            "text": "You've made a mistake.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "purpose": {
+        "dialog": "Lucifer looks directly at you. \"Because I wanted to see what kind of warriors would survive them.\" He raises one hand, and the entire chamber trembles. \"And now I want to see what you can do.\"",
+        "choices": [
+          {
+            "text": "So this was all a test?",
+            "next": "experiment"
+          },
+          {
+            "text": "We're done playing your game.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "experiment": {
+        "dialog": "\"A test. An experiment. A game.\" Lucifer laughs softly. \"Call it whatever you like.\" His eyes glow as the flames around the arena rise. \"The result is the same. You are standing before me.\"",
+        "choices": [
+          {
+            "text": "Then let's finish this.",
+            "next": "challenge"
+          },
+          {
+            "text": "We'll defeat you and end this.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "challenge": {
+        "dialog": "Lucifer steps forward as the ground begins to crack beneath him. \"Very well.\" He smiles for the first time with genuine excitement. \"Show me the strength that allowed you to defeat my chosen warriors.\"",
+        "choices": [
+          {
+            "text": "Begin the battle!",
+            "action": {
+              "type": "battle"
+            }
+          }
+        ]
+      }
+    }
+  },
+
+  "encounters": [
+    {
+      "id": "chapter_5_encounter_1",
+      "title": "The Gates of Hell",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "An enormous gate stands before you. Strange symbols cover its surface, and a wave of heat escapes through the cracks.",
+          "choices": [
+            {
+              "text": "Open the gate.",
+              "next": "gate"
+            },
+            {
+              "text": "Search for another entrance.",
+              "next": "side"
+            }
+          ]
+        },
+
+        "gate": {
+          "dialog": "The moment you touch the gate, the symbols begin to glow. The massive doors slowly open, revealing a burning landscape beyond.",
+          "choices": [
+            {
+              "text": "Enter the Hell Realm.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "side": {
+          "dialog": "You discover a smaller passage hidden beside the main gate. It appears to lead into the same realm.",
+          "choices": [
+            {
+              "text": "Take the hidden path.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_5_encounter_2",
+      "title": "The Lost Soul",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A strange figure wanders through the burning ruins. It stops when it notices you.",
+          "choices": [
+            {
+              "text": "Ask what this place is.",
+              "next": "answer"
+            },
+            {
+              "text": "Keep your distance.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "answer": {
+          "dialog": "\"This is the realm below your world.\" The figure looks toward the distant fortress. \"And you should not be here.\"",
+          "choices": [
+            {
+              "text": "We're looking for Lucifer.",
+              "next": "lucifer"
+            },
+            {
+              "text": "We came to end his plans.",
+              "next": "lucifer"
+            }
+          ]
+        },
+
+        "lucifer": {
+          "dialog": "The figure becomes visibly frightened. \"Lucifer? Then you have no idea what you're walking toward.\"",
+          "choices": [
+            {
+              "text": "We defeated his warriors.",
+              "next": "warning"
+            },
+            {
+              "text": "We'll defeat him too.",
+              "next": "warning"
+            }
+          ]
+        },
+
+        "warning": {
+          "dialog": "\"Perhaps.\" The figure points toward the fortress. \"But no mortal has challenged him in a very long time.\"",
+          "choices": [
+            {
+              "text": "Then we'll be the first.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_5_encounter_3",
+      "title": "The Demon Merchant",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A demon sits beside a small stall surrounded by strange objects. Somehow, it appears to be running a shop in the middle of Hell.",
+          "choices": [
+            {
+              "text": "Look at the merchandise.",
+              "action": {
+                "type": "shop"
+              }
+            },
+            {
+              "text": "Ask about Lucifer.",
+              "next": "lucifer"
+            }
+          ]
+        },
+
+        "lucifer": {
+          "dialog": "\"Lucifer?\" The demon looks around nervously. \"You really shouldn't say that name so loudly.\"",
+          "choices": [
+            {
+              "text": "Why?",
+              "next": "answer"
+            }
+          ]
+        },
+
+        "answer": {
+          "dialog": "\"Because he might hear you.\" The demon points toward the distant fortress. \"And he always knows when someone is looking for him.\"",
+          "choices": [
+            {
+              "text": "Then he'll know we're coming.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_5_encounter_4",
+      "title": "The Burning Road",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "The road ahead is surrounded by rivers of fire. There is barely enough solid ground for your group to cross.",
+          "choices": [
+            {
+              "text": "Cross carefully.",
+              "action": {
+                "type": "complete"
+              }
+            },
+            {
+              "text": "Search for another path.",
+              "next": "path"
+            }
+          ]
+        },
+
+        "path": {
+          "dialog": "You discover an old stone bridge hidden behind the ruins. It looks unstable, but it may be safer than crossing the flames.",
+          "choices": [
+            {
+              "text": "Cross the bridge.",
+              "action": {
+                "type": "complete"
+              }
+            },
+            {
+              "text": "Take the dangerous route.",
+              "action": {
+                "type": "battle",
+                "enemyClass": "common"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_5_encounter_5",
+      "title": "The Hell Guard",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A heavily armed demon blocks the road. Unlike the others you've encountered, this one seems completely calm.",
+          "choices": [
+            {
+              "text": "Ask for passage.",
+              "next": "question"
+            },
+            {
+              "text": "Prepare for battle.",
+              "action": {
+                "type": "battle",
+                "enemyClass": "common"
+              }
+            }
+          ]
+        },
+
+        "question": {
+          "dialog": "\"No mortal may approach Lucifer.\" The guard raises its weapon.",
+          "choices": [
+            {
+              "text": "We aren't asking permission.",
+              "action": {
+                "type": "battle",
+                "enemyClass": "common"
+              }
+            },
+            {
+              "text": "Why does Lucifer fear us?",
+              "next": "response"
+            }
+          ]
+        },
+
+        "response": {
+          "dialog": "\"Fear him?\" The guard laughs. \"You misunderstand. Lucifer does not fear anyone.\"",
+          "choices": [
+            {
+              "text": "Then let us pass.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_5_encounter_6",
+      "title": "The Fallen Warrior",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You find a warrior lying against a broken pillar. Their armor is damaged, but they are still conscious.",
+          "choices": [
+            {
+              "text": "Help them.",
+              "next": "help"
+            },
+            {
+              "text": "Search the area.",
+              "action": {
+                "type": "treasure"
+              }
+            }
+          ]
+        },
+
+        "help": {
+          "dialog": "\"Don't go to the fortress...\" The warrior coughs. \"I thought I was strong enough. I was wrong.\"",
+          "choices": [
+            {
+              "text": "Who defeated you?",
+              "next": "answer"
+            },
+            {
+              "text": "Was it Lucifer?",
+              "next": "answer"
+            }
+          ]
+        },
+
+        "answer": {
+          "dialog": "\"I never even reached him.\" The warrior looks toward the fortress. \"His servants stopped me before I could get close.\"",
+          "choices": [
+            {
+              "text": "Rest. We'll continue.",
+              "action": {
+                "type": "repair"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_5_encounter_7",
+      "title": "The Forgotten Armory",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You discover an ancient armory hidden beneath a ruined fortress. Weapons and equipment from countless warriors cover the walls.",
+          "choices": [
+            {
+              "text": "Search the armory.",
+              "action": {
+                "type": "treasure"
+              },
+              "next": "continue"
+            },
+            {
+              "text": "Leave it alone.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "continue": {
+          "dialog": "Some of the equipment appears to have belonged to warriors who once challenged Lucifer.",
+          "choices": [
+            {
+              "text": "Take what you can use.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_5_encounter_8",
+      "title": "The Whispering Flames",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "As you walk through the ruins, the flames around you suddenly begin whispering. You hear fragments of voices from somewhere within the fire.",
+          "choices": [
+            {
+              "text": "Listen carefully.",
+              "next": "listen"
+            },
+            {
+              "text": "Ignore the voices.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "listen": {
+          "dialog": "Among the whispers, you hear two familiar names: Plague Knight. Death Knight.",
+          "choices": [
+            {
+              "text": "So this is where their power came from.",
+              "next": "answer"
+            }
+          ]
+        },
+
+        "answer": {
+          "dialog": "A third name follows, spoken much more quietly: Lucifer.",
+          "choices": [
+            {
+              "text": "Continue toward the fortress.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_5_encounter_9",
+      "title": "The Demon Scout",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A small demon watches you from the top of a ruined building. The moment you notice it, it disappears.",
+          "choices": [
+            {
+              "text": "Chase it.",
+              "next": "chase"
+            },
+            {
+              "text": "Ignore it.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "chase": {
+          "dialog": "You corner the creature in an alley. It looks frightened rather than aggressive.",
+          "choices": [
+            {
+              "text": "Ask what it was doing.",
+              "next": "answer"
+            },
+            {
+              "text": "Let it go.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "answer": {
+          "dialog": "\"I was sent to watch you.\" The demon points toward the fortress. \"Lucifer knows you're here.\"",
+          "choices": [
+            {
+              "text": "Let him watch.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_5_encounter_10",
+      "title": "The Final Camp",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You discover a small camp near the entrance to Lucifer's fortress. Someone appears to have prepared it for travelers who never returned.",
+          "choices": [
+            {
+              "text": "Rest before continuing.",
+              "action": {
+                "type": "repair"
+              }
+            },
+            {
+              "text": "Search the camp.",
+              "action": {
+                "type": "treasure"
+              }
+            },
+            {
+              "text": "Continue toward the fortress.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_5_encounter_11",
+      "title": "The Fortress Gate",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "At last, you reach the entrance to Lucifer's fortress. Two enormous doors stand before you. There are no guards.",
+          "choices": [
+            {
+              "text": "Open the doors.",
+              "next": "door"
+            },
+            {
+              "text": "Wait and observe.",
+              "next": "observe"
+            }
+          ]
+        },
+
+        "door": {
+          "dialog": "The doors open without resistance. Beyond them, a long staircase leads directly toward the throne room.",
+          "choices": [
+            {
+              "text": "Enter.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "observe": {
+          "dialog": "After several seconds, a deep voice echoes from inside the fortress. \"You have come all this way. Don't keep me waiting.\"",
+          "choices": [
+            {
+              "text": "Enter the fortress.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+
+  "treasure": {
+    "allowedRarities": [
+      "Normal",
+      "Rare", "Epic"
+    ],
+
+    "allowedParts": [
+      "bc_behemoth",
+        "bc_plague_knight", "bc_death_knight", "wr_devil",
+        "wr_surge", "wr_sagitarius", "drv_batter",
+        "drv_battlecry", "drv_berserker"
+    ],
+
+    "minRewards": 1,
+    "maxRewards": 4,
+
+    "amountRange": {
+      "min": 5,
+      "max": 10
+    }
+  },
+
+  "shop": {
+    "allowedRarities": [
+      "Normal",
+      "Rare", "Epic"
+    ],
+
+    "allowedParts": [
+      "bc_behemoth",
+        "bc_plague_knight", "bc_death_knight", "wr_devil",
+        "wr_surge", "wr_sagitarius", "drv_batter",
+        "drv_battlecry", "drv_berserker"
+    ],
+
+    "offers": {
+      "minOffers": 3,
+      "maxOffers": 5,
+
+      "amounts": [
+        5,
+        10,
+        20
+      ],
+
+      "prices": {
+        "gold": {
+          "min": 100,
+          "max": 300
+        },
+
+        "adventureCrystal": {
+          "min": 100,
+          "max": 300
+        }
+      }
+    }
+  }
+},
+{
+  "id": "chapter_6",
+  "order": 6,
+  "title": "The Prince of Hell",
+  "description": "Lucifer has fallen, but his defeat has opened a path between Hell and the human world. The Prince of Hell now intends to cross that boundary and unleash his army upon the mortal world.",
+  "introduction": "Lucifer has been defeated. For the first time since you entered the Hell Realm, everything becomes strangely quiet. Then the ground begins to shake. Cracks spread across the fortress, and the flames surrounding you suddenly turn black. Your companions look toward the sky as an enormous shadow forms above the realm. A voice echoes through the ruins. \"You defeated Lucifer...\" A figure slowly descends from the darkness, surrounded by an overwhelming aura. \"How interesting.\" He looks toward the distant gateway that connects Hell to the human world. \"My brother kept this realm under control for far too long. Now that he is gone, nothing remains to stop me.\" He turns toward you and smiles. \"I am Beelzebub, Prince of the Hell Realm. And I intend to claim the world above.\" You realize the truth immediately. Lucifer's defeat has weakened the barrier between the two realms. If Beelzebub reaches the gateway, the armies of Hell will have a path into the human world. You have fought your way this far. Now you must stop him before he escapes Hell.",
+
+  "map": {
+    "minNodes": 14,
+    "maxNodes": 26,
+    "maxDepth": 8,
+
+    "eventWeights": {
+      "enemy": 25,
+      "elite": 25,
+      "encounter": 25,
+      "repair": 5,
+      "treasure": 10,
+      "shop": 10
+    }
+  },
+
+  "enemyPools": {
+    "common": {
+      "battleCaps": [
+        "bc_lucifer",
+        "bc_puppeteer", "bc_behemoth"
+      ],
+      "weightRings": [
+        "wr_enlighten",
+        "wr_bless"
+      ],
+      "drivers": [
+        "drv_piety",
+        "drv_throne"
+      ],
+      "levels": [
+        10,
+        11
+      ]
+    },
+
+    "elite": {
+      "battleCaps": [
+        "bc_lucifer"
+      ],
+      "weightRings": [
+        "wr_slash",
+        "wr_titan"
+      ],
+      "drivers": [
+        "drv_pain",
+        "drv_berserker"
+      ],
+      "levels": [
+        12,
+        13
+      ]
+    },
+
+    "boss": {
+      "battleCap": "bc_beelzebub",
+      "weightRing": "wr_colorful",
+      "driver": "drv_rampage",
+      "level": 15
+    }
+  },
+
+  "bossDialogue": {
+    "id": "chapter_6_boss_dialogue",
+    "title": "Beelzebub",
+    "startNode": "start",
+
+    "nodes": {
+      "start": {
+        "dialog": "The ruins shake as the figure approaches. His presence alone makes the flames around the fortress bend away from him. He looks at you with a calm smile. \"So these are the warriors who defeated Lucifer.\"",
+        "choices": [
+          {
+            "text": "You're Beelzebub.",
+            "next": "identity"
+          },
+          {
+            "text": "You're not getting to the human world.",
+            "next": "challenge"
+          },
+          {
+            "text": "What do you want from our world?",
+            "next": "purpose"
+          }
+        ]
+      },
+
+      "identity": {
+        "dialog": "Beelzebub spreads his arms as the Hell Realm trembles around him. \"I am Beelzebub, Prince of the Hell Realm. Lucifer ruled this place with fear and order. I have no intention of following his example.\"",
+        "choices": [
+          {
+            "text": "Then what will you do?",
+            "next": "purpose"
+          },
+          {
+            "text": "We will stop you.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "purpose": {
+        "dialog": "\"The human world.\" Beelzebub looks toward the enormous gateway in the distance. \"For centuries, Hell has been separated from the world above. But Lucifer's defeat has weakened the barrier.\"",
+        "choices": [
+          {
+            "text": "You want to invade the human world.",
+            "next": "invasion"
+          },
+          {
+            "text": "Why should we let you?",
+            "next": "invasion"
+          }
+        ]
+      },
+
+      "invasion": {
+        "dialog": "\"Let you?\" Beelzebub laughs softly. \"You still believe this is something you can decide.\" He raises his hand, and hundreds of distant lights appear throughout the Hell Realm. \"My army is already moving toward the gateway.\"",
+        "choices": [
+          {
+            "text": "We'll stop your army.",
+            "next": "army"
+          },
+          {
+            "text": "Then we'll defeat you before they arrive.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "army": {
+        "dialog": "Beelzebub looks amused. \"You may defeat a soldier. Perhaps even a hundred. But Hell has no shortage of soldiers.\" He steps closer. \"The only way to stop what is coming is to stop me.\"",
+        "choices": [
+          {
+            "text": "Then that's exactly what we'll do.",
+            "next": "respect"
+          },
+          {
+            "text": "You're underestimating us.",
+            "next": "respect"
+          }
+        ]
+      },
+
+      "respect": {
+        "dialog": "For the first time, Beelzebub's expression changes. \"Perhaps.\" He studies your companions carefully. \"You defeated Plague Knight. You defeated Death Knight. You even brought Lucifer down.\"",
+        "choices": [
+          {
+            "text": "And you're next.",
+            "next": "challenge"
+          },
+          {
+            "text": "We've come too far to lose now.",
+            "next": "challenge"
+          }
+        ]
+      },
+
+      "challenge": {
+        "dialog": "Beelzebub slowly raises his weapon. The entire fortress begins to tremble as a massive surge of dark energy erupts behind him. \"Then come, little warriors.\" He smiles. \"Show me whether the human world deserves to survive.\"",
+        "choices": [
+          {
+            "text": "Begin the battle!",
+            "action": {
+              "type": "battle"
+            }
+          }
+        ]
+      }
+    }
+  },
+
+  "encounters": [
+    {
+      "id": "chapter_6_encounter_1",
+      "title": "The Fallen Throne",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "Lucifer's throne has been destroyed. The chamber is covered in cracks, and strange energy leaks from the ground.",
+          "choices": [
+            {
+              "text": "Investigate the throne.",
+              "next": "investigate"
+            },
+            {
+              "text": "Leave before the fortress collapses.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "investigate": {
+          "dialog": "You discover an ancient symbol beneath the throne. It depicts a crowned figure standing before a gateway between two worlds.",
+          "choices": [
+            {
+              "text": "Study the symbol.",
+              "next": "meaning"
+            },
+            {
+              "text": "Search the ruins.",
+              "action": {
+                "type": "treasure"
+              }
+            }
+          ]
+        },
+
+        "meaning": {
+          "dialog": "You suddenly understand what it represents. The Prince of Hell has always been the keeper of the boundary between Hell and the human world.",
+          "choices": [
+            {
+              "text": "We need to find him.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_6_encounter_2",
+      "title": "The Black Flames",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "The flames around you suddenly turn black. Your companions instinctively stop as a wave of heat passes through the area.",
+          "choices": [
+            {
+              "text": "Investigate the flames.",
+              "next": "flames"
+            },
+            {
+              "text": "Keep moving.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "flames": {
+          "dialog": "The black fire forms strange shapes in the air. For a brief moment, you see the outline of the human world beyond the flames.",
+          "choices": [
+            {
+              "text": "The barrier is breaking.",
+              "next": "warning"
+            },
+            {
+              "text": "Find out what caused it.",
+              "next": "warning"
+            }
+          ]
+        },
+
+        "warning": {
+          "dialog": "A deep voice suddenly echoes from somewhere far away. \"The gate will open soon.\"",
+          "choices": [
+            {
+              "text": "We have to reach the gate.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_6_encounter_3",
+      "title": "The Hell Refugees",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You encounter several demons fleeing from the direction of the fortress. They look terrified.",
+          "choices": [
+            {
+              "text": "Ask what happened.",
+              "next": "answer"
+            },
+            {
+              "text": "Prepare for battle.",
+              "action": {
+                "type": "battle",
+                "enemyClass": "common"
+              }
+            }
+          ]
+        },
+
+        "answer": {
+          "dialog": "\"The Prince has awakened.\" One demon looks toward the sky. \"When he walks, the entire realm feels it.\"",
+          "choices": [
+            {
+              "text": "Where is he going?",
+              "next": "destination"
+            }
+          ]
+        },
+
+        "destination": {
+          "dialog": "\"The human gate.\" The demon whispers. \"If he reaches it, your world will be exposed to everything in Hell.\"",
+          "choices": [
+            {
+              "text": "Then we won't let him reach it.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_6_encounter_4",
+      "title": "The Demon Guard",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A group of demons blocks the road ahead. Unlike the frightened creatures you've seen, these soldiers seem eager to fight.",
+          "choices": [
+            {
+              "text": "Ask who they serve.",
+              "next": "answer"
+            },
+            {
+              "text": "Prepare for battle.",
+              "action": {
+                "type": "battle",
+                "enemyClass": "common"
+              }
+            }
+          ]
+        },
+
+        "answer": {
+          "dialog": "\"The Prince.\" One of them smiles. \"He has promised us the human world.\"",
+          "choices": [
+            {
+              "text": "You'll never get there.",
+              "action": {
+                "type": "battle",
+                "enemyClass": "common"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_6_encounter_5",
+      "title": "The Broken Bridge",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A massive bridge has collapsed into a river of fire. The only remaining path is a narrow section of stone.",
+          "choices": [
+            {
+              "text": "Cross carefully.",
+              "action": {
+                "type": "complete"
+              }
+            },
+            {
+              "text": "Search the ruins for another route.",
+              "next": "search"
+            }
+          ]
+        },
+
+        "search": {
+          "dialog": "You discover an old passage beneath the bridge. Something has recently passed through it.",
+          "choices": [
+            {
+              "text": "Follow the passage.",
+              "action": {
+                "type": "complete"
+              }
+            },
+            {
+              "text": "Search the ruins.",
+              "action": {
+                "type": "treasure"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_6_encounter_6",
+      "title": "The Hell Merchant",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A strange merchant has opened a stall beside the road. Despite the chaos around them, they calmly arrange their merchandise.",
+          "choices": [
+            {
+              "text": "Look at the merchandise.",
+              "action": {
+                "type": "shop"
+              }
+            },
+            {
+              "text": "Ask about Beelzebub.",
+              "next": "answer"
+            }
+          ]
+        },
+
+        "answer": {
+          "dialog": "\"The Prince?\" The merchant chuckles. \"He has always wanted the world above. Lucifer simply refused to let him have it.\"",
+          "choices": [
+            {
+              "text": "Why does he want the human world?",
+              "next": "reason"
+            }
+          ]
+        },
+
+        "reason": {
+          "dialog": "\"Because he believes Hell is too small for him.\" The merchant shrugs. \"Perhaps he is right.\"",
+          "choices": [
+            {
+              "text": "We'll prove him wrong.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_6_encounter_7",
+      "title": "The Prisoner",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You find a chained demon inside an abandoned fortress. It immediately notices the weapons your group carries.",
+          "choices": [
+            {
+              "text": "Release the prisoner.",
+              "next": "release"
+            },
+            {
+              "text": "Ask what happened.",
+              "next": "answer"
+            }
+          ]
+        },
+
+        "release": {
+          "dialog": "The demon rubs its wrists after you break the chains. \"You shouldn't have done that. The Prince's soldiers will come looking for me.\"",
+          "choices": [
+            {
+              "text": "Who are you?",
+              "next": "answer"
+            }
+          ]
+        },
+
+        "answer": {
+          "dialog": "\"I was one of Lucifer's servants.\" The demon looks toward the ruined fortress. \"When Lucifer fell, Beelzebub immediately took control.\"",
+          "choices": [
+            {
+              "text": "What is he planning?",
+              "next": "plan"
+            }
+          ]
+        },
+
+        "plan": {
+          "dialog": "\"He is gathering every army he can find and marching them toward the human gate.\"",
+          "choices": [
+            {
+              "text": "Then we need to move.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_6_encounter_8",
+      "title": "The Prince's Banner",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A massive black banner hangs from a ruined tower. A crowned demon is depicted standing above a burning world.",
+          "choices": [
+            {
+              "text": "Search the tower.",
+              "next": "tower"
+            },
+            {
+              "text": "Keep moving.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "tower": {
+          "dialog": "Inside the tower, you find a map showing the entire Hell Realm. A single route is marked in red, leading directly to the human gate.",
+          "choices": [
+            {
+              "text": "Take the map.",
+              "action": {
+                "type": "treasure"
+              },
+              "next": "continue"
+            },
+            {
+              "text": "Memorize the route.",
+              "next": "continue"
+            }
+          ]
+        },
+
+        "continue": {
+          "dialog": "You now know where Beelzebub is heading.",
+          "choices": [
+            {
+              "text": "Follow the route.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_6_encounter_9",
+      "title": "The Awakening",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "A tremendous roar shakes the ground. A distant mountain splits apart, releasing a column of black energy into the sky.",
+          "choices": [
+            {
+              "text": "What was that?",
+              "next": "answer"
+            },
+            {
+              "text": "We need to move.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "answer": {
+          "dialog": "Your companions look toward the source of the explosion. Whatever happened, it was powerful enough to be felt throughout the entire realm.",
+          "choices": [
+            {
+              "text": "Beelzebub is moving.",
+              "next": "move"
+            }
+          ]
+        },
+
+        "move": {
+          "dialog": "A strange feeling tells you that the Prince has begun his final march toward the human gate.",
+          "choices": [
+            {
+              "text": "We have to catch him.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_6_encounter_10",
+      "title": "The Last Rest",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You find a quiet shelter overlooking the road to the human gate. In the distance, you can see countless figures marching toward it.",
+          "choices": [
+            {
+              "text": "Rest and repair your equipment.",
+              "action": {
+                "type": "repair"
+              }
+            },
+            {
+              "text": "Search the shelter.",
+              "action": {
+                "type": "treasure"
+              },
+              "next": "continue"
+            },
+            {
+              "text": "Continue immediately.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        },
+
+        "continue": {
+          "dialog": "The sight of the approaching army makes one thing clear. There is no time left to waste.",
+          "choices": [
+            {
+              "text": "Head for the gate.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "id": "chapter_6_encounter_11",
+      "title": "The Human Gate",
+      "startNode": "start",
+
+      "nodes": {
+        "start": {
+          "dialog": "You finally reach the enormous gateway connecting Hell to the human world. Beyond it, you can see the distant landscape of your home.",
+          "choices": [
+            {
+              "text": "Protect the gateway.",
+              "next": "protect"
+            },
+            {
+              "text": "Find Beelzebub.",
+              "next": "find"
+            }
+          ]
+        },
+
+        "protect": {
+          "dialog": "The gateway begins to crack. Dark energy spills through the opening as the army of Hell approaches.",
+          "choices": [
+            {
+              "text": "Hold the line.",
+              "action": {
+                "type": "battle",
+                "enemyClass": "common"
+              }
+            }
+          ]
+        },
+
+        "find": {
+          "dialog": "You look across the battlefield and finally see him. Beelzebub stands before the gateway, watching the human world beyond it.",
+          "choices": [
+            {
+              "text": "Go after him.",
+              "action": {
+                "type": "complete"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+
+  "treasure": {
+    "allowedRarities": [
+      "Normal",
+      "Rare", "Epic"
+    ],
+
+    "allowedParts": [
+      "bc_lucifer",
+        "bc_puppeteer", "bc_behemoth", "wr_enlighten",
+        "wr_bless", "drv_piety",
+        "drv_throne"
+    ],
+
+    "minRewards": 1,
+    "maxRewards": 4,
+
+    "amountRange": {
+      "min": 5,
+      "max": 10
+    }
+  },
+
+  "shop": {
+    "allowedRarities": [
+      "Normal",
+      "Rare", "Epic"
+    ],
+
+    "allowedParts": [
+      "bc_lucifer",
+        "bc_puppeteer", "bc_behemoth", "wr_enlighten",
+        "wr_bless", "drv_piety",
+        "drv_throne"
+    ],
+
+    "offers": {
+      "minOffers": 3,
+      "maxOffers": 5,
+
+      "amounts": [
+        5,
+        10,
+        20
+      ],
+
+      "prices": {
+        "gold": {
+          "min": 100,
+          "max": 300
+        },
+
+        "adventureCrystal": {
+          "min": 100,
+          "max": 300
+        }
+      }
+    }
+  }
+}
+  ]
+}
