@@ -2840,6 +2840,14 @@ background: linear-gradient(
         .chat-compose-send { min-width:58px; padding:7px 9px; border:1px solid #b27f00; border-radius:5px; background:#f3c63a; color:#332400; font:1000 10px Arial,sans-serif; cursor:pointer; }
         .chat-compose-send:hover { background:#ffd653; }
         @media (max-width:420px) { .chat-box { width:100%; } .chat-message-list { min-height:190px; } }
+        .chat-compose-send { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; line-height:1; }
+        .chat-send-label { display:block; }
+        .world-chat-quota-cue { display:flex; align-items:center; justify-content:center; min-height:12px; font-size:10px; line-height:1; white-space:nowrap; }
+        .world-chat-gem-cost { display:inline-flex; align-items:center; gap:2px; }
+        .world-chat-gem-cost .currency-symbol { position:static !important; left:auto !important; top:auto !important; right:auto !important; bottom:auto !important; z-index:auto !important; display:inline-block; width:11px !important; height:11px !important; flex:0 0 11px !important; transform:rotate(45deg) !important; margin:0 !important; }
+        .settings-manual-save-button { display:block; width:100%; background:#f3c63a; border-color:#b27f00; color:#332400; font-weight:1000; }
+        .settings-manual-save-button:hover { background:#ffd653; }
+        .settings-manual-save-button:disabled { opacity:.7; cursor:wait; }
 </style>
 </head>
 <body>
@@ -3127,9 +3135,10 @@ background: linear-gradient(
 
     <div id="chatModal" class="chat-modal hidden" role="dialog" aria-modal="true" aria-labelledby="chatTitle">
         <div class="chat-box">
-            <div class="chat-title-row"><h3 id="chatTitle">Chat</h3><button id="chatCloseButton" class="chat-close-button" type="button" aria-label="Close chat">×</button></div>
+            <div class="chat-title-row"><h3 id="chatTitle">World Chat</h3><button id="chatCloseButton" class="chat-close-button" type="button" aria-label="Close chat">×</button></div>
             <div id="chatMessageList" class="chat-message-list" aria-live="polite"></div>
-            <div class="chat-compose-row"><input id="chatComposeInput" class="chat-compose-input" type="text" maxlength="180" placeholder="Type a message..." autocomplete="off"><button id="chatComposeSend" class="chat-compose-send" type="button">Send</button></div>
+            <div id="worldChatStatus" class="chat-status" aria-live="polite"></div>
+            <div class="chat-compose-row"><input id="chatComposeInput" class="chat-compose-input" type="text" maxlength="120" placeholder="Type a message..." autocomplete="off"><button id="chatComposeSend" class="chat-compose-send" type="button"><span class="chat-send-label">Send</span><span id="worldChatQuotaCue" class="world-chat-quota-cue" aria-live="polite"></span></button></div>
         </div>
     </div>
 
@@ -3504,6 +3513,7 @@ background: linear-gradient(
                 <section class="settings-section" aria-labelledby="settingsAccountTitle">
                     <h4 id="settingsAccountTitle" class="settings-section-title">Account</h4>
                     <div id="settingsAccountStatus" class="settings-account-status">Offline guest save</div>
+                    <div class="settings-row"><button id="settingsManualSaveButton" type="button" class="settings-account-button settings-manual-save-button" style="display:none;">MANUAL SAVE</button></div>
                     <div class="settings-row settings-account-dual-row"><button id="settingsRegisterButton" type="button" class="settings-account-button">Register</button><button id="settingsLoginButton" type="button" class="settings-account-button">Login</button></div>
                     <div class="settings-row"><button id="settingsResetPasswordButton" type="button" class="settings-account-button">Reset Password</button></div>
                     <div class="settings-row"><button id="settingsLogoutButton" type="button" class="settings-account-button logout" disabled style="display:none;">Logout</button></div>
@@ -8313,6 +8323,7 @@ arena_7: './arena_7.mp3'
                     updateGameBgmForScreen('challengeScreen');
                 } else if (targetScreenId === 'homeScreen') {
                     updateHomeUI();
+                    refreshWorldChatPreview();
                 } else if (targetScreenId === 'shopScreen') {
                     setShopMerchantMode('local');
                     refreshShopBatch();
@@ -17956,31 +17967,67 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         }
         initializeChests();
 
-        const LOCAL_CHAT_KEY = 'beyblade_local_mock_chat_v1';
-        const DEFAULT_CHAT_MESSAGES = [{ author: 'Neneko', text: 'this is just a placeholder~' }];
-        let localChatMessages = [];
+        const WORLD_CHAT_TABLE = 'world_chat_messages';
+        const WORLD_CHAT_MAX_LENGTH = 120;
+        const WORLD_CHAT_HISTORY_LIMIT = 100;
+        const WORLD_CHAT_DAILY_FREE_LIMIT = 3;
+        const WORLD_CHAT_EXTRA_COST_GEMS = 100;
+        const WORLD_CHAT_MIN_INTERVAL_MS = 3000;
+        const WORLD_CHAT_POLL_INTERVAL_MS = 5000;
+        const WORLD_CHAT_USAGE_KEY = 'beyblade_world_chat_usage_v1';
+        let worldChatMessages = [];
+        let worldChatChannelOpen = false;
+        let worldChatPollTimer = null;
+        let worldChatLastCreatedAt = '';
+        let worldChatLastSendAt = 0;
         function escapeChatText(value) {
             return String(value == null ? '' : value).replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
         }
-        function loadLocalChatMessages() {
-            try {
-                const raw = localStorage.getItem(LOCAL_CHAT_KEY);
-                const parsed = raw ? JSON.parse(raw) : null;
-                localChatMessages = Array.isArray(parsed) && parsed.length ? parsed.filter(message => message && message.author && message.text) : DEFAULT_CHAT_MESSAGES.map(message => ({ ...message }));
-            } catch (error) { localChatMessages = DEFAULT_CHAT_MESSAGES.map(message => ({ ...message })); }
-            if (!localChatMessages.length) localChatMessages = DEFAULT_CHAT_MESSAGES.map(message => ({ ...message }));
-        }
-        function saveLocalChatMessages() { try { localStorage.setItem(LOCAL_CHAT_KEY, JSON.stringify(localChatMessages)); } catch (error) {} }
         function renderChatPreview() {
             const preview = document.getElementById('homeChatPreview');
-            const latest = localChatMessages[localChatMessages.length - 1] || DEFAULT_CHAT_MESSAGES[0];
-            if (preview) preview.innerHTML = `<span class="home-chat-preview-label">${escapeChatText(latest.author)}:</span>${escapeChatText(latest.text)}`;
+            const latest = worldChatMessages[worldChatMessages.length - 1];
+            if (preview) preview.innerHTML = latest ? `<span class="home-chat-preview-label">${escapeChatText(latest.author)}:</span>${escapeChatText(latest.text)}` : 'Open World Chat';
         }
-        function renderLocalChatMessages() {
+        function setWorldChatStatus(message, tone = '') {
+            const status = document.getElementById('worldChatStatus');
+            if (!status) return;
+            status.textContent = message || '';
+            status.className = `chat-status${tone ? ` ${tone}` : ''}`;
+        }
+        function updateWorldChatQuotaCue() {
+            const cue = document.getElementById('worldChatQuotaCue');
+            if (!cue) return;
+            const usage = getWorldChatUsage();
+            cue.innerHTML = usage.freeUsed < WORLD_CHAT_DAILY_FREE_LIMIT
+                ? `(${Math.max(0, WORLD_CHAT_DAILY_FREE_LIMIT - usage.freeUsed)}/${WORLD_CHAT_DAILY_FREE_LIMIT})`
+                : `<span class="world-chat-gem-cost">${WORLD_CHAT_EXTRA_COST_GEMS}<span class="currency-symbol currency-gem-icon" aria-hidden="true"></span></span>`;
+        }
+        function getWorldChatEndpoint() {
+            try {
+                const config = window.SUPABASE_CHAMPIONSHIP_CONFIG || (typeof SUPABASE_CHAMPIONSHIP_CONFIG !== 'undefined' ? SUPABASE_CHAMPIONSHIP_CONFIG : null);
+                return config?.projectUrl ? `${String(config.projectUrl).replace(/\/$/, '')}/rest/v1/${WORLD_CHAT_TABLE}` : '';
+            } catch (error) { return ''; }
+        }
+        function getWorldChatHeaders(extra = {}) {
+            try {
+                const config = window.SUPABASE_CHAMPIONSHIP_CONFIG || SUPABASE_CHAMPIONSHIP_CONFIG;
+                const token = typeof cloudSession !== 'undefined' && cloudSession?.access_token;
+                return { apikey: config.publicKey, Authorization: `Bearer ${token || config.publicKey}`, 'Content-Type': 'application/json', ...extra };
+            } catch (error) { return null; }
+        }
+        function getWorldChatUsage() {
+            const dayKey = getTrustedDate().toISOString().slice(0, 10);
+            try {
+                const saved = JSON.parse(localStorage.getItem(WORLD_CHAT_USAGE_KEY) || '{}');
+                return saved.dayKey === dayKey ? { dayKey, freeUsed: Math.max(0, Number(saved.freeUsed) || 0) } : { dayKey, freeUsed: 0 };
+            } catch (error) { return { dayKey, freeUsed: 0 }; }
+        }
+        function saveWorldChatUsage(usage) { try { localStorage.setItem(WORLD_CHAT_USAGE_KEY, JSON.stringify(usage)); } catch (error) {} }
+        function renderWorldChatMessages() {
             const list = document.getElementById('chatMessageList');
             if (!list) return;
             list.innerHTML = '';
-            localChatMessages.forEach(message => {
+            worldChatMessages.forEach(message => {
                 const bubble = document.createElement('div');
                 bubble.className = `chat-message${message.author === (playerName || 'Player') ? ' self' : ''}`;
                 bubble.innerHTML = `<span class="chat-message-author">${escapeChatText(message.author)}</span><span class="chat-message-text">${escapeChatText(message.text)}</span>`;
@@ -17988,33 +18035,90 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             });
             list.scrollTop = list.scrollHeight;
         }
-        function openLocalChat(event) {
+        async function loadWorldChatMessages() {
+            const endpoint = getWorldChatEndpoint();
+            const headers = getWorldChatHeaders();
+            if (!endpoint || !headers) { setWorldChatStatus('World Chat is not configured.', 'error'); return false; }
+            try {
+                const response = await fetch(`${endpoint}?select=id,user_id,player_uid,author,text,created_at&order=created_at.desc&limit=${WORLD_CHAT_HISTORY_LIMIT}`, { headers, cache: 'no-store' });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const rows = await response.json();
+                worldChatMessages = (Array.isArray(rows) ? rows : []).reverse().filter(row => row && row.text).map(row => ({ id: row.id, author: row.author || 'Player', text: String(row.text).slice(0, WORLD_CHAT_MAX_LENGTH), createdAt: row.created_at || '' }));
+                worldChatLastCreatedAt = worldChatMessages[worldChatMessages.length - 1]?.createdAt || '';
+                renderWorldChatMessages();
+                renderChatPreview();
+                setWorldChatStatus('');
+                updateWorldChatQuotaCue();
+                return true;
+            } catch (error) { setWorldChatStatus('Unable to load World Chat.', 'error'); return false; }
+        }
+        async function pollWorldChatMessages() {
+            if (!worldChatChannelOpen) return;
+            await loadWorldChatMessages();
+        }
+        function refreshWorldChatPreview() {
+            if (worldChatChannelOpen) return;
+            loadWorldChatMessages();
+        }
+        function startWorldChatPolling() {
+            clearInterval(worldChatPollTimer);
+            worldChatPollTimer = setInterval(pollWorldChatMessages, WORLD_CHAT_POLL_INTERVAL_MS);
+        }
+        function stopWorldChatPolling() {
+            clearInterval(worldChatPollTimer);
+            worldChatPollTimer = null;
+        }
+        async function purgeExpiredWorldChatMessages() {
+            const endpoint = getWorldChatEndpoint();
+            const headers = getWorldChatHeaders();
+            if (!endpoint || !headers) return;
+            const cutoff = new Date(trustedNow() - (3 * 24 * 60 * 60 * 1000)).toISOString();
+            try { await fetch(`${endpoint}?created_at=lt.${encodeURIComponent(cutoff)}`, { method: 'DELETE', headers }); } catch (error) {}
+        }
+        async function openLocalChat(event) {
             if (event) { event.preventDefault(); event.stopPropagation(); }
-            loadLocalChatMessages();
-            renderLocalChatMessages();
             const modal = document.getElementById('chatModal');
             if (modal) modal.classList.remove('hidden');
+            worldChatChannelOpen = true;
+            await purgeExpiredWorldChatMessages();
+            await loadWorldChatMessages();
+            startWorldChatPolling();
+            updateWorldChatQuotaCue();
             setTimeout(() => document.getElementById('chatComposeInput')?.focus(), 30);
         }
         window.openLocalChat = openLocalChat;
         function closeLocalChat(event) {
             if (event) { event.preventDefault(); event.stopPropagation(); }
+            worldChatChannelOpen = false;
+            stopWorldChatPolling();
             document.getElementById('chatModal')?.classList.add('hidden');
         }
         window.closeLocalChat = closeLocalChat;
-        function sendLocalChatMessage() {
+        async function sendLocalChatMessage() {
             const input = document.getElementById('chatComposeInput');
-            const text = String(input?.value || '').trim();
+            const text = String(input?.value || '').trim().slice(0, WORLD_CHAT_MAX_LENGTH);
             if (!text) return;
-            localChatMessages.push({ author: playerName || 'Player', text });
-            saveLocalChatMessages();
-            renderLocalChatMessages();
-            renderChatPreview();
-            input.value = '';
-            input.focus();
+            const now = trustedNow();
+            if (now - worldChatLastSendAt < WORLD_CHAT_MIN_INTERVAL_MS) { setWorldChatStatus('Please wait 3 seconds between messages.', 'error'); return; }
+            const usage = getWorldChatUsage();
+            const isPaid = usage.freeUsed >= WORLD_CHAT_DAILY_FREE_LIMIT;
+            if (isPaid && Number(currencyState.gems || 0) < WORLD_CHAT_EXTRA_COST_GEMS) { setWorldChatStatus('Daily free limit reached. 100 gems are required.', 'error'); return; }
+            const endpoint = getWorldChatEndpoint();
+            const headers = getWorldChatHeaders({ Prefer: 'return=representation' });
+            if (!endpoint || !headers) { setWorldChatStatus('World Chat is not configured.', 'error'); return; }
+            try {
+                const response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify({ user_id: cloudUser?.id || null, player_uid: playerUid, author: String(playerName || 'Player').trim().slice(0, 20) || 'Player', text, created_at: new Date(now).toISOString() }) });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                if (isPaid) { currencyState.gems -= WORLD_CHAT_EXTRA_COST_GEMS; updateCurrencyUI(); if (typeof manualSaveGame === 'function') manualSaveGame(); }
+                else { usage.freeUsed += 1; saveWorldChatUsage(usage); }
+                worldChatLastSendAt = now;
+                input.value = '';
+                updateWorldChatQuotaCue();
+                await loadWorldChatMessages();
+                input.focus();
+            } catch (error) { setWorldChatStatus('Message could not be sent.', 'error'); }
         }
         function initializeLocalChat() {
-            loadLocalChatMessages();
             renderChatPreview();
             document.getElementById('homeChatIconButton')?.addEventListener('click', openLocalChat);
             document.getElementById('homeChatPreview')?.addEventListener('click', openLocalChat);
@@ -18657,11 +18761,13 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             const registerButton = document.getElementById('settingsRegisterButton');
             const logoutButton = document.getElementById('settingsLogoutButton');
             const resetButton = document.getElementById('settingsResetPasswordButton');
+            const manualSaveButton = document.getElementById('settingsManualSaveButton');
             const signedIn = !!cloudUser;
             if (loginButton) loginButton.textContent = signedIn ? 'Account' : 'Login';
             if (registerButton) registerButton.style.display = signedIn ? 'none' : 'block';
             if (logoutButton) { logoutButton.disabled = !signedIn; logoutButton.style.display = signedIn ? '' : 'none'; }
             if (resetButton) resetButton.disabled = !signedIn;
+            if (manualSaveButton) { manualSaveButton.style.display = signedIn ? 'block' : 'none'; manualSaveButton.disabled = !signedIn; }
             setCloudStatus(signedIn ? `Signed in: ${cloudUser.email || 'account'}` : 'Offline guest save', signedIn ? 'online' : '');
         }
         function saveCloudSession() {
@@ -18854,10 +18960,28 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             try { if (cloudSession?.access_token) await fetchCloudJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.authUrl}/logout`, { method: 'POST', headers: getCloudHeaders() }); } catch (e) {}
             cloudSession = null; cloudUser = null; championshipEnrollmentActive = false; saveCloudSession(); if (cloudSaveTimer) clearTimeout(cloudSaveTimer); if (typeof manualSaveGame === 'function') manualSaveGame(); updateCloudAccountUI(); setCloudStatus('Offline guest save', '');
         }
+        async function handleManualCloudSave() {
+            const button = document.getElementById('settingsManualSaveButton');
+            if (!cloudUser || !cloudSession?.access_token) { updateCloudAccountUI(); return; }
+            if (button) { button.disabled = true; button.textContent = 'SAVING...'; }
+            setCloudStatus('Saving to cloud...', 'online');
+            try {
+                const payload = getUniversalSaveData();
+                try { localStorage.setItem(MANUAL_SAVE_KEY, JSON.stringify(payload)); } catch (e) {}
+                const saved = await upsertCloudSave(payload);
+                if (!saved) throw new Error('Cloud save unavailable.');
+                setCloudStatus('Manual save successful.', 'online');
+            } catch (error) {
+                setCloudStatus(`Manual save failed: ${error.message}`, 'error');
+            } finally {
+                if (button) { button.disabled = false; button.textContent = 'MANUAL SAVE'; }
+            }
+        }
         document.getElementById('settingsLoginButton')?.addEventListener('click', () => openAuthDialog('login'));
         document.getElementById('settingsRegisterButton')?.addEventListener('click', () => openAuthDialog('register'));
         document.getElementById('settingsResetPasswordButton')?.addEventListener('click', () => openAuthDialog('recover'));
         document.getElementById('settingsLogoutButton')?.addEventListener('click', logoutCloudAccount);
+        document.getElementById('settingsManualSaveButton')?.addEventListener('click', handleManualCloudSave);
         document.getElementById('authSubmitButton')?.addEventListener('click', submitAuthDialog);
         document.getElementById('authCancelButton')?.addEventListener('click', closeAuthDialog);
         document.getElementById('authCloseButton')?.addEventListener('click', closeAuthDialog);
@@ -19153,7 +19277,7 @@ window.addEventListener('beforeunload', autoSaveGame);
         renderTowerFloors();
         initializeFirstNicknamePrompt();
         updateCloudAccountUI();
-        initializeCloudAuth();
+        initializeCloudAuth().then(() => refreshWorldChatPreview());
 
         document.getElementById('enemyModalCancelBtn').addEventListener('click', () => {
             arenaPlayerSelectionMode = false;
