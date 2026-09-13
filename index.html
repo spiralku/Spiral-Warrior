@@ -18023,9 +18023,10 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             } catch (error) { return { dayKey, freeUsed: 0 }; }
         }
         function saveWorldChatUsage(usage) { try { localStorage.setItem(WORLD_CHAT_USAGE_KEY, JSON.stringify(usage)); } catch (error) {} }
-        function renderWorldChatMessages() {
+        function renderWorldChatMessages(scrollToLatest = false) {
             const list = document.getElementById('chatMessageList');
             if (!list) return;
+            const previousScrollTop = list.scrollTop;
             list.innerHTML = '';
             worldChatMessages.forEach(message => {
                 const bubble = document.createElement('div');
@@ -18033,9 +18034,9 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 bubble.innerHTML = `<span class="chat-message-author">${escapeChatText(message.author)}</span><span class="chat-message-text">${escapeChatText(message.text)}</span>`;
                 list.appendChild(bubble);
             });
-            list.scrollTop = list.scrollHeight;
+            list.scrollTop = scrollToLatest ? list.scrollHeight : previousScrollTop;
         }
-        async function loadWorldChatMessages() {
+        async function loadWorldChatMessages(scrollToLatest = false) {
             const endpoint = getWorldChatEndpoint();
             const headers = getWorldChatHeaders();
             if (!endpoint || !headers) { setWorldChatStatus('World Chat is not configured.', 'error'); return false; }
@@ -18045,7 +18046,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 const rows = await response.json();
                 worldChatMessages = (Array.isArray(rows) ? rows : []).reverse().filter(row => row && row.text).map(row => ({ id: row.id, author: row.author || 'Player', text: String(row.text).slice(0, WORLD_CHAT_MAX_LENGTH), createdAt: row.created_at || '' }));
                 worldChatLastCreatedAt = worldChatMessages[worldChatMessages.length - 1]?.createdAt || '';
-                renderWorldChatMessages();
+                renderWorldChatMessages(scrollToLatest);
                 renderChatPreview();
                 setWorldChatStatus('');
                 updateWorldChatQuotaCue();
@@ -18081,7 +18082,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             if (modal) modal.classList.remove('hidden');
             worldChatChannelOpen = true;
             await purgeExpiredWorldChatMessages();
-            await loadWorldChatMessages();
+            await loadWorldChatMessages(true);
             startWorldChatPolling();
             updateWorldChatQuotaCue();
             setTimeout(() => document.getElementById('chatComposeInput')?.focus(), 30);
