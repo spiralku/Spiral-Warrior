@@ -18949,13 +18949,18 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             return Array.isArray(rows) && rows.length ? rows[0] : null;
         }
         async function upsertCloudSave(payload = null) {
-            if (!SUPABASE_ENABLED || !cloudUser || !cloudSession?.access_token || (!payload && pendingCloudConflict)) return false;
+            if (!autoLoadCompleted || !autoLoadReady || autoLoadInProgress || pendingCloudConflict) return false;
+            if (!SUPABASE_ENABLED || !cloudUser || !cloudSession?.access_token) return false;
             const savePayload = payload || getLocalSavePayload();
-            if (!savePayload) return false;
+            if (!savePayload || !isValidSavePayload(savePayload)) return false;
+            if (savePayload.cloudUserId && String(savePayload.cloudUserId) !== String(cloudUser.id)) return false;
             await fetchCloudJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.profilesUrl}?on_conflict=user_id`, { method: 'POST', headers: getCloudHeaders(null, { Prefer: 'resolution=merge-duplicates,return=minimal' }), body: JSON.stringify({ user_id: cloudUser.id, player_uid: String(savePayload.playerUid || playerUid), player_name: String(savePayload.playerName || playerName || 'Player'), updated_at: new Date().toISOString() }) });
             await fetchCloudJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.gameSavesUrl}?on_conflict=user_id`, { method: 'POST', headers: getCloudHeaders(null, { Prefer: 'resolution=merge-duplicates,return=minimal' }), body: JSON.stringify({ user_id: cloudUser.id, save_version: Number(savePayload.version) || 2, save_payload: savePayload, updated_at: new Date().toISOString(), revision: Date.now() }) });
             setCloudStatus('Cloud save complete.', 'online');
             return true;
+        }
+        function isValidSavePayload(payload) {
+            return !!(payload && typeof payload === 'object' && Number(payload.version) >= 2 && typeof payload.playerUid === 'string' && isValidPlayerUid(payload.playerUid) && payload.currency && typeof payload.currency === 'object' && Number.isFinite(Number(payload.currency.gold)) && Number.isFinite(Number(payload.currency.gems)) && payload.tower && typeof payload.tower === 'object');
         }
         function applyCloudSavePayload(payload) {
             if (!payload) return false;
@@ -19081,6 +19086,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         }
         async function handleManualCloudSave() {
             const button = document.getElementById('settingsManualSaveButton');
+            if (!autoLoadCompleted || !autoLoadReady || autoLoadInProgress) return;
             if (!cloudUser || !cloudSession?.access_token) { updateCloudAccountUI(); return; }
             if (button) { button.disabled = true; button.textContent = 'SAVING...'; }
             setCloudStatus('Saving to cloud...', 'online');
@@ -19107,8 +19113,6 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         document.getElementById('saveConflictLocalButton')?.addEventListener('click', () => chooseCloudConflict('local'));
         document.getElementById('saveConflictCloudButton')?.addEventListener('click', () => chooseCloudConflict('cloud'));
         window.addEventListener('online', () => { if (cloudUser) cloudSyncAfterLogin(false); });
-        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && cloudUser) { if (cloudSaveTimer) clearTimeout(cloudSaveTimer); upsertCloudSave().catch(() => {}); } });
-        window.addEventListener('pagehide', () => { if (cloudUser) upsertCloudSave().catch(() => {}); });
 
         // Debug Menu announcements are intentionally disabled; controls remain functional.
         function setManualSaveStatus() {}
@@ -19390,11 +19394,6 @@ document.addEventListener('visibilitychange', () => {
         autoSaveGame();
     }
 });
-
-// Save when the page is being closed, refreshed, or navigated away from.
-window.addEventListener('pagehide', autoSaveGame);
-window.addEventListener('beforeunload', autoSaveGame);
-
 
         currencyDebugModal.addEventListener('click', e => { if (e.target === currencyDebugModal) window.closeCurrencyDebug(); });
 
