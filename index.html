@@ -8927,8 +8927,8 @@ arena_7: './arena_7.mp3'
             if (!part || !part.id) return null;
             const id = String(part.id);
             if (type === 'battleCap') return `./bc_${id.replace(/^bc_/, '')}.png`;
-            if (type === 'weightRing') return `./icon_wr_${id.replace(/^wr_/, '')}.png`;
-            if (type === 'driver') return `./icon_drv_${id.replace(/^drv_/, '')}.png`;
+            if (type === 'weightRing') return `./Images/Parts/Weight Ring/icon_wr_${id.replace(/^wr_/, '')}.png`;
+            if (type === 'driver') return `./Images/Parts/Driver/icon_drv_${id.replace(/^drv_/, '')}.png`;
             return null;
         }
         function drawPartIconArtwork(context, cx, cy, radius, type, part) {
