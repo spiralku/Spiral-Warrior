@@ -18991,6 +18991,11 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 }
                 const reconciledCloudPayload = mergeMissingSaveSections(localPayload, cloudPayload);
                 if (localPayload && reconciledCloudPayload) {
+                    const same = JSON.stringify(localPayload) === JSON.stringify(reconciledCloudPayload);
+                    if (!same && showConflict) {
+                        openCloudConflict(localPayload, reconciledCloudPayload);
+                        return;
+                    }
                     const localRevision = Number(localPayload.revision) || 0;
                     const cloudRevision = Number(cloudPayload && cloudPayload.revision) || 0;
                     if (localRevision > cloudRevision) {
@@ -19003,10 +19008,8 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                         setCloudStatus('Newer cloud save loaded.', 'online');
                         return;
                     }
-                    const same = JSON.stringify(localPayload) === JSON.stringify(reconciledCloudPayload);
                     const cloudWasIncomplete = JSON.stringify(cloudPayload) !== JSON.stringify(reconciledCloudPayload);
-                    if (!same && showConflict) openCloudConflict(localPayload, reconciledCloudPayload);
-                    else if (!same) { applyCloudSavePayload(reconciledCloudPayload); await upsertCloudSave(reconciledCloudPayload); setCloudStatus('Cloud save loaded.', 'online'); }
+                    if (!same) { applyCloudSavePayload(reconciledCloudPayload); await upsertCloudSave(reconciledCloudPayload); setCloudStatus('Cloud save loaded.', 'online'); }
                     else if (cloudWasIncomplete) { await upsertCloudSave(localPayload); setCloudStatus('Cloud save repaired.', 'online'); }
                     else setCloudStatus('Cloud save is up to date.', 'online');
                 } else if (cloudPayload) { applyCloudSavePayload(cloudPayload); setCloudStatus('Cloud save loaded.', 'online'); }
