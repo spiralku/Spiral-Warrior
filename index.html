@@ -10477,7 +10477,7 @@ arena_7: './arena_7.mp3'
                         const circleCount = Math.max(1, Number(enchantreesEffect.count) || 6);
                         const hexagonRadius = Math.min(ARENA_RADIUS - 45, Math.max(40, Number(enchantreesEffect.hexagonRadius) || 210));
                         const circleDuration = Math.max(1, Number(enchantreesEffect.duration) || 300);
-                        const windupFrames = Math.max(0, cinematicFrames);
+                                const windupFrames = 0;
                         const enchantreesGroup = {
                             caster: this,
                             casterSide: this.side,
@@ -10585,7 +10585,9 @@ arena_7: './arena_7.mp3'
                                 outlineColor: shuraEffect.outlineColor || '#E7DFFF',
                                 shadowColor: shuraEffect.shadowColor || '#B000B8',
                                 lifetime: Number(shuraEffect.lifetime) || 120,
-                                startDelayFrames: 60,
+                                // The global cinematic pause already holds this projectile during the Ultimate wind-up.
+                                // Keep one simulation frame at the caster so the ribbon visibly starts from Shura.
+                                startDelayFrames: 1,
                                 turnRate: Number(shuraEffect.turnRate) || 0.18,
                                 knockbackForce: Number(shuraEffect.knockbackForce) || 5,
                                 linkColor: shuraEffect.linkColor || '#F000F4',
@@ -14980,6 +14982,7 @@ ctx.fill();
         }
 
                 function updateZones() {
+            if (cinematicFrames > 0) return;
             for (let i = arenaZones.length - 1; i >= 0; i--) {
                 let zone = arenaZones[i];
                 if (chronosTimeStopFrames > 0 && chronosTimeStopOwner && zone.casterSide !== chronosTimeStopOwner.side) continue;
@@ -16324,6 +16327,7 @@ function launchShuraRibbonProjectile(caster, target) {
             return true;
         }
         function updateShuraRepeatQueue() {
+            if (cinematicFrames > 0) return;
             for (let i = shuraRepeatQueue.length - 1; i >= 0; i--) {
                 const repeat = shuraRepeatQueue[i];
                 if (!repeat || !repeat.caster || !repeat.target || repeat.caster.dead || repeat.target.dead) {
@@ -16339,6 +16343,7 @@ function launchShuraRibbonProjectile(caster, target) {
             }
         }
         function updateShuraLinks() {
+            if (cinematicFrames > 0) return;
             for (let i = shuraLinks.length - 1; i >= 0; i--) {
                 const link = shuraLinks[i];
                 if (!link || !link.caster || !link.target || link.caster.dead || link.target.dead) {
@@ -16380,6 +16385,7 @@ function launchShuraRibbonProjectile(caster, target) {
             }
         }
         function updateProjectiles() {
+            if (cinematicFrames > 0) return;
             for (let i = projectiles.length - 1; i >= 0; i--) {
                 if (isChronosFrozenEntity(projectiles[i].owner)) continue;
                 const projectile = projectiles[i];
@@ -18954,8 +18960,9 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         function applyCloudSavePayload(payload) {
             if (!payload) return false;
             try { localStorage.setItem(MANUAL_SAVE_KEY, JSON.stringify(payload)); } catch (e) { return false; }
-            manualLoadGame();
-            return true;
+            const loaded = manualLoadGame() === true;
+            if (loaded) autoLoadReady = true;
+            return loaded;
         }
         function openCloudConflict(localPayload, cloudPayload) {
             pendingCloudConflict = { localPayload, cloudPayload };
@@ -18969,7 +18976,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             const selected = choice === 'cloud' ? pendingCloudConflict.cloudPayload : pendingCloudConflict.localPayload;
             closeCloudConflict();
             if (choice === 'cloud') { applyCloudSavePayload(selected); setCloudStatus('Cloud save loaded.', 'online'); }
-            else { await upsertCloudSave(selected); }
+            else { autoLoadReady = true; await upsertCloudSave(selected); }
         }
         async function cloudSyncAfterLogin(showConflict = false) {
             if (!SUPABASE_ENABLED || !cloudUser || cloudSyncInProgress) return;
@@ -18978,6 +18985,12 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 const localPayload = getLocalSavePayload();
                 const row = await fetchCloudSave();
                 let cloudPayload = getCloudSavePayload(row);
+                const localUid = String(localPayload?.playerUid || '').trim();
+                const cloudUid = String(cloudPayload?.playerUid || '').trim();
+                if (localPayload && cloudPayload && localUid && cloudUid && localUid !== cloudUid) {
+                    openCloudConflict(localPayload, cloudPayload);
+                    return;
+                }
                 const cloudTowerResetVersion = Number(cloudPayload && cloudPayload.towerResetVersion) || 0;
                 if (cloudPayload && cloudTowerResetVersion < TOWER_PROGRESS_RESET_VERSION) {
                     const localRevision = Number(localPayload && localPayload.revision) || 0;
@@ -19021,7 +19034,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             }
         }
         function queueCloudSave(payload = null) {
-            if (!SUPABASE_ENABLED || !cloudUser || !cloudSession?.access_token || pendingCloudConflict) return;
+            if (!autoLoadCompleted || !autoLoadReady || autoLoadInProgress || !SUPABASE_ENABLED || !cloudUser || !cloudSession?.access_token || pendingCloudConflict) return;
             queuedCloudSavePayload = payload || getUniversalSaveData();
             if (cloudSaveTimer) clearTimeout(cloudSaveTimer);
             cloudSaveTimer = setTimeout(async () => {
@@ -19100,12 +19113,14 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         // Debug Menu announcements are intentionally disabled; controls remain functional.
         function setManualSaveStatus() {}
         function manualSaveGame() {
+            if (!autoLoadCompleted || !autoLoadReady || autoLoadInProgress) return false;
             try {
                 const savePayload = getUniversalSaveData();
                 localStorage.setItem(MANUAL_SAVE_KEY, JSON.stringify(savePayload));
                 if (typeof queueCloudSave === 'function') queueCloudSave(savePayload);
                 setManualSaveStatus('Game saved manually.');
-            } catch (e) { setManualSaveStatus('Save failed.', '#ff7777'); }
+                return true;
+            } catch (e) { setManualSaveStatus('Save failed.', '#ff7777'); return false; }
         }
         function findPartById(id, fallback) {
             for (const category of Object.values(PARTS)) {
@@ -19223,7 +19238,8 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 refreshAfterManualDataChange();
                 scheduleChampionshipPlayerSync();
                 setManualSaveStatus('Game loaded.');
-            } catch (e) { setManualSaveStatus('Load failed.', '#ff7777'); }
+                return true;
+            } catch (e) { setManualSaveStatus('Load failed.', '#ff7777'); return false; }
         }
         function manualResetGame() {
             resetAdventureProgress();
@@ -19316,11 +19332,12 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
 // ==============================
 
 const AUTO_SAVE_INTERVAL_MS = 5000; // Save every 5 seconds
-let autoSaveInProgress = false;
-let autoLoadCompleted = false;
-
+var autoSaveInProgress = false;
+var autoLoadInProgress = false;
+var autoLoadCompleted = false;
+var autoLoadReady = false;
 function autoSaveGame() {
-    if (autoSaveInProgress) return;
+    if (!autoLoadCompleted || !autoLoadReady || autoLoadInProgress || autoSaveInProgress) return;
     autoSaveInProgress = true;
 
     try {
@@ -19334,19 +19351,21 @@ function autoSaveGame() {
 }
 
 function autoLoadGame() {
-    if (autoLoadCompleted) return;
-    autoLoadCompleted = true;
+    if (autoLoadCompleted || autoLoadInProgress) return;
+    autoLoadInProgress = true;
 
                 try {
         const savedData = localStorage.getItem(MANUAL_SAVE_KEY);
 
         // Do not overwrite the default game if no save exists.
-        if (savedData) {
-            manualLoadGame();
-        }
+        if (savedData) autoLoadReady = manualLoadGame() === true;
+        else autoLoadReady = true;
 
     } catch (error) {
         console.warn('Automatic load failed:', error);
+    } finally {
+        autoLoadInProgress = false;
+        autoLoadCompleted = true;
     }
 }
 
