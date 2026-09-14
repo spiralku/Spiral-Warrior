@@ -18736,6 +18736,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             return {
                 version: 2,
                 revision: Date.now(),
+                towerResetVersion: TOWER_PROGRESS_RESET_VERSION,
                 seed: universalSeed,
                 tower: { currentFloor: towerCurrentFloor, unlockedFloor: towerUnlockedFloor, firstClearGems: { ...towerFirstClearGems }, firstClearChests: { ...towerFirstClearChests } },
                 currency: { gold: Math.max(0, Math.floor(currencyState.gold || 0)), gems: Math.max(0, Math.floor(currencyState.gems || 0)) },
