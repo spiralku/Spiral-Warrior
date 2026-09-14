@@ -4661,6 +4661,7 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
         }
         // Universal deterministic seed. It is shared by future procedural systems and Tower floors.
         let universalSeed = (Date.now() >>> 0) || 1;
+        const TOWER_GENERATION_SEED = 'SpiralWarriorTOWERV1';
         let towerCurrentFloor = 1;
         let towerUnlockedFloor = 1;
         let towerActiveFloor = null;
@@ -4771,7 +4772,7 @@ function getTowerEnemy(floor) {
     }
 
     // Floors without a fixed early-game combination are seeded and procedurally generated.
-    const rng = makeSeededRandom((universalSeed ^ Math.imul(floor, 2654435761)) >>> 0);
+    const rng = makeSeededRandom((normalizeSeed(TOWER_GENERATION_SEED) ^ Math.imul(floor, 2654435761)) >>> 0);
 const allowedRarities = getTowerAllowedRarities(floor);
 
 const pick = list => {
@@ -4800,6 +4801,10 @@ const parts = {
     };
 }
 
+        function getTowerFloorStatMultiplier(floor) {
+            const normalizedFloor = Math.max(1, Math.min(TOWER_MAX_FLOOR, Number(floor) || 1));
+            return normalizedFloor > 100 ? 1 + ((normalizedFloor - 100) * 0.01) : 1;
+        }
         function towerStat(part, level, key) { return Math.round((part[key] || 0) * Math.pow(1.10, level - 1)); }
         function getTowerReward(floor) { return Math.min(100000, Math.round(1000 * Math.pow(1.054, floor - 1))); }
         function getTowerChestDrop(floor) {
@@ -4958,16 +4963,17 @@ const parts = {
             document.getElementById('towerDetailParts').textContent = `${enemy.name} · Lv.${level}`;
             const category = document.getElementById('towerDetailCategory');
             if (category) category.innerHTML = getTypeIconSvg(enemy.parts.battleCap.type);
-            const atk = Object.values(enemy.parts).reduce((n, p) => n + towerStat(p, enemy.levels[p.id] || level, 'atk'), 0);
-            const def = Object.values(enemy.parts).reduce((n, p) => n + towerStat(p, enemy.levels[p.id] || level, 'def'), 0);
-            const hp = Object.values(enemy.parts).reduce((n, p) => n + towerStat(p, enemy.levels[p.id] || level, 'health'), 0);
-            const stamina = Object.values(enemy.parts).reduce((n, p) => n + (p.stamina || 0), 0);
+            const towerFloorMultiplier = getTowerFloorStatMultiplier(floor);
+            const atk = Object.values(enemy.parts).reduce((n, p) => n + towerStat(p, enemy.levels[p.id] || level, 'atk'), 0) * towerFloorMultiplier;
+            const def = Object.values(enemy.parts).reduce((n, p) => n + towerStat(p, enemy.levels[p.id] || level, 'def'), 0) * towerFloorMultiplier;
+            const hp = Object.values(enemy.parts).reduce((n, p) => n + towerStat(p, enemy.levels[p.id] || level, 'health'), 0) * towerFloorMultiplier;
+            const stamina = Object.values(enemy.parts).reduce((n, p) => n + (p.stamina || 0), 0) * towerFloorMultiplier;
             const interval = Object.values(enemy.parts).reduce((n, p) => n + (p.interval || 0), 0);
             const weight = Object.values(enemy.parts).reduce((n, p) => n + (p.weight || 0), 0);
-            document.getElementById('towerDetailAtk').textContent = atk;
-            document.getElementById('towerDetailDef').textContent = def;
-            document.getElementById('towerDetailHp').textContent = hp;
-            document.getElementById('towerDetailStamina').textContent = stamina;
+            document.getElementById('towerDetailAtk').textContent = Math.round(atk);
+            document.getElementById('towerDetailDef').textContent = Math.round(def);
+            document.getElementById('towerDetailHp').textContent = Math.round(hp);
+            document.getElementById('towerDetailStamina').textContent = Math.round(stamina);
             const detailCanvas = document.getElementById('towerDetailCanvas');
             if (detailCanvas) {
                 const detailCtx = detailCanvas.getContext('2d');
@@ -7361,6 +7367,7 @@ const parts = {
                     bey1.upgradeLevels = getLoadoutLevelMap(selectedPlayer);
                     bey2.upgradeLevels = getLoadoutLevelMap(selectedEnemy);
                     bey2.adventureEnemyStatMultiplier = adventureBattleMode ? Math.max(1, Number(selectedEnemy.__adventureStatMultiplier) || 1) : 1;
+                    bey2.towerStatMultiplier = towerBattleMode ? getTowerFloorStatMultiplier(activeContext.towerFloor) : 1;
                     bey1.updateParts(playerEquipped);
                     bey2.updateParts(enemyEquipped);
                     if (adventureBattleMode) {
@@ -7841,28 +7848,37 @@ arena_7: './arena_7.mp3'
 
         const partIconArtworkCache = new Map();
         const SHOP_SAVE_KEY = 'bey_shop_state_v2';
-        // Release reset: increment GAME_DATA_VERSION for a future one-time wipe.
-        // Set GAME_DATA_RESET_ENABLED to false during testing to disable the wipe.
-        const GAME_DATA_RESET_ENABLED = true;
-        const GAME_DATA_VERSION = 3;
-        const GAME_DATA_VERSION_KEY = 'bey_game_data_version';
-        const GAME_OWNED_STORAGE_KEYS = [
-            'bey_manual_universal_save',
-            'bey_shop_state_v2',
-            'bey_first_nickname_prompt_completed_v1',
-            'initial_battle_cap_unlock_seen_v1'
-        ];
-        function runOneTimeGameDataReset() {
-            if (!GAME_DATA_RESET_ENABLED) return;
+        const TOWER_PROGRESS_RESET_VERSION = 1;
+        const TOWER_PROGRESS_RESET_KEY = 'bey_tower_progress_reset_v1';
+        function resetTowerProgressInSavePayload(payload) {
+            if (!payload || typeof payload !== 'object') return payload;
+            return {
+                ...payload,
+                towerResetVersion: TOWER_PROGRESS_RESET_VERSION,
+                revision: Date.now(),
+                tower: { currentFloor: 1, unlockedFloor: 1, firstClearGems: {}, firstClearChests: {} }
+            };
+        }
+        function runOneTimeTowerProgressReset() {
             try {
-                const storedVersion = Number(localStorage.getItem(GAME_DATA_VERSION_KEY) || 0);
-                if (storedVersion >= GAME_DATA_VERSION) return;
-                if (typeof resetAdventureProgress === 'function') resetAdventureProgress();
-                GAME_OWNED_STORAGE_KEYS.forEach(key => localStorage.removeItem(key));
-                localStorage.setItem(GAME_DATA_VERSION_KEY, String(GAME_DATA_VERSION));
+                const storedVersion = Number(localStorage.getItem(TOWER_PROGRESS_RESET_KEY) || 0);
+                if (storedVersion >= TOWER_PROGRESS_RESET_VERSION) return;
+                towerCurrentFloor = 1;
+                towerUnlockedFloor = 1;
+                towerActiveFloor = null;
+                towerFirstClearGems = {};
+                towerFirstClearChests = {};
+                const rawSave = localStorage.getItem('bey_manual_universal_save');
+                if (rawSave) {
+                    try {
+                        const payload = JSON.parse(rawSave);
+                        localStorage.setItem('bey_manual_universal_save', JSON.stringify(resetTowerProgressInSavePayload(payload)));
+                    } catch (e) {}
+                }
+                localStorage.setItem(TOWER_PROGRESS_RESET_KEY, String(TOWER_PROGRESS_RESET_VERSION));
             } catch (e) {}
         }
-        runOneTimeGameDataReset();
+        runOneTimeTowerProgressReset();
         let shopRefreshCost = 100;
         const SHOP_AMOUNT_OPTIONS = [10, 20, 50, 100];
         const SHOP_RARITY_WEIGHTS = { Normal: 60, Rare: 35, Epic: 10, Legendary: 4, Ascended: 1 };
@@ -9422,6 +9438,13 @@ arena_7: './arena_7.mp3'
                     s.def *= enemyMultiplier;
                     s.stamina *= enemyMultiplier;
                     s.health *= enemyMultiplier;
+                }
+                if (typeof towerBattleMode !== 'undefined' && towerBattleMode && Number(this.towerStatMultiplier) > 1) {
+                    const towerMultiplier = Number(this.towerStatMultiplier);
+                    s.atk *= towerMultiplier;
+                    s.def *= towerMultiplier;
+                    s.stamina *= towerMultiplier;
+                    s.health *= towerMultiplier;
                 }
                 if (this.parts && this.parts.driver && this.parts.driver.id === 'drv_flame' && this.flameProjectileBuffActive) {
                     atkMult += 0.08;
@@ -18712,6 +18735,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         function getUniversalSaveData() {
             return {
                 version: 2,
+                revision: Date.now(),
                 seed: universalSeed,
                 tower: { currentFloor: towerCurrentFloor, unlockedFloor: towerUnlockedFloor, firstClearGems: { ...towerFirstClearGems }, firstClearChests: { ...towerFirstClearChests } },
                 currency: { gold: Math.max(0, Math.floor(currencyState.gold || 0)), gems: Math.max(0, Math.floor(currencyState.gems || 0)) },
@@ -18745,6 +18769,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         var cloudSession = null;
         var cloudUser = null;
         let cloudSaveTimer = null;
+        let queuedCloudSavePayload = null;
         let cloudSyncInProgress = false;
         let cloudSyncQueued = false;
         let pendingCloudConflict = null;
@@ -18864,6 +18889,20 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             try { const raw = localStorage.getItem(MANUAL_SAVE_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
         }
         function getCloudSavePayload(row) { return row && row.save_payload && typeof row.save_payload === 'object' ? row.save_payload : null; }
+        function mergeMissingSaveSections(localPayload, cloudPayload) {
+            if (!localPayload || !cloudPayload) return cloudPayload;
+            const mergeValue = (localValue, cloudValue) => {
+                if (localValue && cloudValue && typeof localValue === 'object' && typeof cloudValue === 'object' && !Array.isArray(localValue) && !Array.isArray(cloudValue)) {
+                    const mergedObject = { ...cloudValue };
+                    Object.keys(localValue).forEach(key => {
+                        mergedObject[key] = key in mergedObject && mergedObject[key] != null ? mergeValue(localValue[key], mergedObject[key]) : localValue[key];
+                    });
+                    return mergedObject;
+                }
+                return cloudValue == null ? localValue : cloudValue;
+            };
+            return mergeValue(localPayload, cloudPayload);
+        }
         async function fetchCloudSave() {
             if (!SUPABASE_ENABLED || !cloudUser || !cloudSession?.access_token) return null;
             const rows = await fetchCloudJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.gameSavesUrl}?select=save_payload,save_version,updated_at&user_id=eq.${encodeURIComponent(cloudUser.id)}&limit=1`, { headers: getCloudHeaders() });
@@ -18904,11 +18943,37 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             try {
                 const localPayload = getLocalSavePayload();
                 const row = await fetchCloudSave();
-                const cloudPayload = getCloudSavePayload(row);
-                if (localPayload && cloudPayload) {
-                    const same = JSON.stringify(localPayload) === JSON.stringify(cloudPayload);
-                    if (!same && showConflict) openCloudConflict(localPayload, cloudPayload);
-                    else if (!same) { applyCloudSavePayload(cloudPayload); setCloudStatus('Cloud save loaded.', 'online'); }
+                let cloudPayload = getCloudSavePayload(row);
+                const cloudTowerResetVersion = Number(cloudPayload && cloudPayload.towerResetVersion) || 0;
+                if (cloudPayload && cloudTowerResetVersion < TOWER_PROGRESS_RESET_VERSION) {
+                    const localRevision = Number(localPayload && localPayload.revision) || 0;
+                    const cloudRevision = Number(cloudPayload.revision) || 0;
+                    const migrationBase = localPayload && localRevision >= cloudRevision ? localPayload : cloudPayload;
+                    cloudPayload = resetTowerProgressInSavePayload(migrationBase);
+                    await upsertCloudSave(cloudPayload);
+                    if (localPayload && migrationBase === localPayload) {
+                        try { localStorage.setItem(MANUAL_SAVE_KEY, JSON.stringify(cloudPayload)); } catch (e) {}
+                    }
+                }
+                const reconciledCloudPayload = mergeMissingSaveSections(localPayload, cloudPayload);
+                if (localPayload && reconciledCloudPayload) {
+                    const localRevision = Number(localPayload.revision) || 0;
+                    const cloudRevision = Number(cloudPayload && cloudPayload.revision) || 0;
+                    if (localRevision > cloudRevision) {
+                        await upsertCloudSave(localPayload);
+                        setCloudStatus('Newer local save uploaded.', 'online');
+                        return;
+                    }
+                    if (cloudRevision > localRevision) {
+                        applyCloudSavePayload(cloudPayload);
+                        setCloudStatus('Newer cloud save loaded.', 'online');
+                        return;
+                    }
+                    const same = JSON.stringify(localPayload) === JSON.stringify(reconciledCloudPayload);
+                    const cloudWasIncomplete = JSON.stringify(cloudPayload) !== JSON.stringify(reconciledCloudPayload);
+                    if (!same && showConflict) openCloudConflict(localPayload, reconciledCloudPayload);
+                    else if (!same) { applyCloudSavePayload(reconciledCloudPayload); await upsertCloudSave(reconciledCloudPayload); setCloudStatus('Cloud save loaded.', 'online'); }
+                    else if (cloudWasIncomplete) { await upsertCloudSave(localPayload); setCloudStatus('Cloud save repaired.', 'online'); }
                     else setCloudStatus('Cloud save is up to date.', 'online');
                 } else if (cloudPayload) { applyCloudSavePayload(cloudPayload); setCloudStatus('Cloud save loaded.', 'online'); }
                 else if (localPayload) { await upsertCloudSave(localPayload); }
@@ -18918,12 +18983,15 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 if (cloudSyncQueued) { cloudSyncQueued = false; queueCloudSave(); }
             }
         }
-        function queueCloudSave() {
+        function queueCloudSave(payload = null) {
             if (!SUPABASE_ENABLED || !cloudUser || !cloudSession?.access_token || pendingCloudConflict) return;
+            queuedCloudSavePayload = payload || getUniversalSaveData();
             if (cloudSaveTimer) clearTimeout(cloudSaveTimer);
             cloudSaveTimer = setTimeout(async () => {
                 if (cloudSyncInProgress) { cloudSyncQueued = true; return; }
-                try { await upsertCloudSave(); } catch (error) { setCloudStatus('Cloud save pending; will retry.', 'error'); }
+                const payloadToUpload = queuedCloudSavePayload || getUniversalSaveData();
+                queuedCloudSavePayload = null;
+                try { await upsertCloudSave(payloadToUpload); } catch (error) { setCloudStatus('Cloud save pending; will retry.', 'error'); }
             }, 1500);
         }
         async function refreshCloudSession() {
@@ -18996,8 +19064,9 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         function setManualSaveStatus() {}
         function manualSaveGame() {
             try {
-                localStorage.setItem(MANUAL_SAVE_KEY, JSON.stringify(getUniversalSaveData()));
-                if (typeof queueCloudSave === 'function') queueCloudSave();
+                const savePayload = getUniversalSaveData();
+                localStorage.setItem(MANUAL_SAVE_KEY, JSON.stringify(savePayload));
+                if (typeof queueCloudSave === 'function') queueCloudSave(savePayload);
                 setManualSaveStatus('Game saved manually.');
             } catch (e) { setManualSaveStatus('Save failed.', '#ff7777'); }
         }
