@@ -2314,7 +2314,18 @@ background: linear-gradient(
         .auth-actions button:hover, .save-conflict-actions button:hover { filter: brightness(1.06); }
         .save-conflict-body { text-align: center; }
         .save-conflict-message { min-height: 0; margin: 0; color: #333; font-size: 12px; }
-        @media (max-width: 390px) { .settings-range-wrap { min-width: 132px; } .settings-range { width: 94px; } }
+        .save-conflict-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 10px; text-align: left; }
+        .save-conflict-column { min-width: 0; padding: 8px; border: 1px solid #9A9EA3; border-radius: 5px; background: #ECEDEF; }
+        .save-conflict-column.cloud { background: #FFF4CE; border-color: #C49A2A; }
+        .save-conflict-column h4 { margin: 0 0 6px; color: #202328; font-size: 12px; font-weight: 1000; text-align: center; }
+        .save-conflict-stat { display: flex; justify-content: space-between; gap: 5px; padding: 2px 0; border-bottom: 1px solid rgba(0,0,0,.10); font-size: 9px; line-height: 1.25; }
+        .save-conflict-stat:last-child { border-bottom: 0; }
+        .save-conflict-stat span:first-child { color: #5B6066; font-weight: 800; }
+        .save-conflict-stat span:last-child { min-width: 0; overflow-wrap: anywhere; color: #1E2226; font-weight: 1000; text-align: right; }
+        .save-conflict-loadouts { margin-top: 7px; color: #30343A; font-size: 8px; line-height: 1.35; text-align: left; }
+        .save-conflict-loadouts strong { display: block; margin-bottom: 2px; font-size: 9px; }
+        .save-conflict-warning { margin-top: 8px; color: #9B2525; font-size: 9px; font-weight: 900; line-height: 1.3; }
+        @media (max-width: 390px) { .settings-range-wrap { min-width: 132px; } .settings-range { width: 94px; } .save-conflict-comparison { gap: 4px; } .save-conflict-column { padding: 6px; } }
 
         /* Placeholder Screens */
         .placeholder-screen {
@@ -3541,7 +3552,7 @@ background: linear-gradient(
     <div id="saveConflictModal" class="save-conflict-modal hidden" role="dialog" aria-modal="true" aria-labelledby="saveConflictTitle">
         <div class="save-conflict-box">
             <div class="save-conflict-title-row"><h3 id="saveConflictTitle">Choose Save Data</h3></div>
-            <div class="save-conflict-body"><p id="saveConflictMessage" class="save-conflict-message">A local save and cloud save are both available.</p><div class="save-conflict-actions"><button id="saveConflictLocalButton" type="button">Keep This Device</button><button id="saveConflictCloudButton" class="primary" type="button">Use Cloud Save</button></div></div>
+            <div class="save-conflict-body"><p id="saveConflictMessage" class="save-conflict-message">A local save and cloud save are both available.</p><div id="saveConflictComparison" class="save-conflict-comparison" aria-label="Save comparison"></div><div id="saveConflictWarning" class="save-conflict-warning"></div><div class="save-conflict-actions"><button id="saveConflictLocalButton" type="button">Keep This Device</button><button id="saveConflictCloudButton" class="primary" type="button">Use Cloud Save</button></div></div>
         </div>
     </div>
     <div id="shopConfirmModal" class="shop-confirm-modal hidden" role="dialog" aria-modal="true" aria-labelledby="shopConfirmTitle">
@@ -18969,8 +18980,53 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             if (loaded) autoLoadReady = true;
             return loaded;
         }
-        function openCloudConflict(localPayload, cloudPayload) {
+        function formatConflictTime(value) {
+            const timestamp = Number(value) > 0 ? Number(value) : Date.parse(value || '');
+            return Number.isFinite(timestamp) && timestamp > 0 ? new Date(timestamp).toLocaleString() : 'Unknown';
+        }
+        function escapeConflictText(value) {
+            return String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
+        }
+        function getConflictLoadoutText(payload) {
+            const loadouts = Array.isArray(payload?.loadouts) ? payload.loadouts : [];
+            if (!loadouts.length) return 'No loadout data';
+            return loadouts.slice(0, 3).map((loadout, index) => {
+                const getPartName = (id, type) => {
+                    if (!id) return '—';
+                    const part = findPartById(id, null);
+                    return part?.name || id;
+                };
+                const cap = getPartName(loadout?.battleCap, 'Battle Cap');
+                const ring = getPartName(loadout?.weightRing, 'Weight Ring');
+                const driver = getPartName(loadout?.driver, 'Driver');
+                return `<div><strong>Loadout ${index + 1}</strong>: ${escapeConflictText(cap)} / ${escapeConflictText(ring)} / ${escapeConflictText(driver)}</div>`;
+            }).join('<br>');
+        }
+        function renderConflictComparison(localPayload, cloudPayload, cloudUpdatedAt = null) {
+            const comparison = document.getElementById('saveConflictComparison');
+            const warning = document.getElementById('saveConflictWarning');
+            if (!comparison) return;
+            const buildColumn = (title, payload, savedAt, cloud = false) => {
+                const tower = payload?.tower || {};
+                const adventure = payload?.adventure || {};
+                const stats = [
+                    ['UID', payload?.playerUid || 'Unknown'],
+                    ['Name', payload?.playerName || 'Player'],
+                    ['Gold', Math.max(0, Math.floor(Number(payload?.currency?.gold) || 0)).toLocaleString()],
+                    ['Gems', Math.max(0, Math.floor(Number(payload?.currency?.gems) || 0)).toLocaleString()],
+                    ['Tower', `Floor ${Math.max(1, Number(tower.unlockedFloor) || 1)}`],
+                    ['Adventure', `Chapter ${Math.max(1, Number(adventure.unlockedChapter) || 1)}`],
+                    ['Wins', Math.max(0, Math.floor(Number(payload?.playerChampionshipWins) || 0)).toLocaleString()],
+                    ['Last saved', formatConflictTime(savedAt)]
+                ];
+                return `<div class="save-conflict-column${cloud ? ' cloud' : ''}"><h4>${escapeConflictText(title)}</h4>${stats.map(([label, value]) => `<div class="save-conflict-stat"><span>${escapeConflictText(label)}</span><span>${escapeConflictText(value)}</span></div>`).join('')}<div class="save-conflict-loadouts"><strong>Loadouts</strong>${getConflictLoadoutText(payload)}</div></div>`;
+            };
+            comparison.innerHTML = buildColumn('This Device', localPayload, localPayload?.revision) + buildColumn('Cloud', cloudPayload, cloudUpdatedAt || cloudPayload?.revision, true);
+            if (warning) warning.textContent = localPayload?.playerUid && cloudPayload?.playerUid && localPayload.playerUid !== cloudPayload.playerUid ? 'Warning: these saves have different player UIDs. Review carefully before choosing.' : '';
+        }
+        function openCloudConflict(localPayload, cloudPayload, cloudUpdatedAt = null) {
             pendingCloudConflict = { localPayload, cloudPayload };
+            renderConflictComparison(localPayload, cloudPayload, cloudUpdatedAt);
             const message = document.getElementById('saveConflictMessage');
             if (message) message.textContent = 'This device and the cloud both contain different progress. Choose which save to keep.';
             document.getElementById('saveConflictModal')?.classList.remove('hidden');
@@ -18993,7 +19049,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 const localUid = String(localPayload?.playerUid || '').trim();
                 const cloudUid = String(cloudPayload?.playerUid || '').trim();
                 if (localPayload && cloudPayload && localUid && cloudUid && localUid !== cloudUid) {
-                    openCloudConflict(localPayload, cloudPayload);
+                    openCloudConflict(localPayload, cloudPayload, row?.updated_at);
                     return;
                 }
                 const cloudTowerResetVersion = Number(cloudPayload && cloudPayload.towerResetVersion) || 0;
@@ -19011,7 +19067,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 if (localPayload && reconciledCloudPayload) {
                     const same = JSON.stringify(localPayload) === JSON.stringify(reconciledCloudPayload);
                     if (!same && showConflict) {
-                        openCloudConflict(localPayload, reconciledCloudPayload);
+                        openCloudConflict(localPayload, reconciledCloudPayload, row?.updated_at);
                         return;
                     }
                     const localRevision = Number(localPayload.revision) || 0;
