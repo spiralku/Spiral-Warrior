@@ -5020,6 +5020,7 @@ const parts = {
             if (floor > towerUnlockedFloor) return;
             const enemy = getTowerEnemy(floor);
             towerCurrentFloor = floor; towerActiveFloor = floor; towerBattleMode = true; towerResultHandled = false;
+            updateRestrictedBattleControls();
             const towerLoadout = { battleCap: { ...enemy.parts.battleCap, __rankerLevel: enemy.levels[enemy.parts.battleCap.id] }, weightRing: { ...enemy.parts.weightRing, __rankerLevel: enemy.levels[enemy.parts.weightRing.id] }, driver: { ...enemy.parts.driver, __rankerLevel: enemy.levels[enemy.parts.driver.id] } };
             closeTowerDetails();
             openThreeBeybladeSelect({ mode: 'tower', returnScreen: 'towerScreen', enemyLoadouts: [towerLoadout], towerFloor: floor, towerEnemyLevels: enemy.levels });
@@ -7359,6 +7360,7 @@ const parts = {
                     towerBattleMode = activeContext.mode === 'tower';
                     adventureBattleMode = activeContext.mode === 'adventure';
                     championshipBattleMode = activeContext.mode === 'championship';
+                    updateRestrictedBattleControls();
                     towerResultHandled = false;
                     standardBattleResultHandled = false;
                     screens.forEach(screen => screen.classList.add('hidden'));
@@ -8365,6 +8367,15 @@ arena_7: './arena_7.mp3'
         const speedToggleBtn = document.getElementById('speedToggleBtn');
         const autoToggleBtn = document.getElementById('autoToggleBtn');
         const autoUltimateToggle = { checked: false };
+
+        function updateRestrictedBattleControls() {
+            const restricted = !!(towerBattleMode || adventureBattleMode || championshipBattleMode);
+            [resetCircularBtn, randomizeCircularBtn].forEach(button => {
+                if (!button) return;
+                button.disabled = restricted;
+                button.setAttribute('aria-disabled', String(restricted));
+            });
+        }
 
         const hexLeft = document.getElementById('hexLeft');
         const hexCenter = document.getElementById('hexCenter');
@@ -18602,6 +18613,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             adventureBattleMode = false;
             document.body.classList.remove('adventure-battle-active');
             championshipBattleMode = false;
+            updateRestrictedBattleControls();
             towerResultHandled = false;
             standardBattleResultHandled = false;
             arenaZones = [];
@@ -18648,8 +18660,12 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             bey2.vx = 0; bey2.vy = 0;
             updateSkillHexagons();
         }
-        resetCircularBtn.addEventListener('click', resetArenaBattle);
+        resetCircularBtn.addEventListener('click', () => {
+            if (towerBattleMode || adventureBattleMode || championshipBattleMode) return;
+            resetArenaBattle();
+        });
         randomizeCircularBtn.addEventListener('click', () => {
+            if (towerBattleMode || adventureBattleMode || championshipBattleMode) return;
             chronosTimeStopProtected = null;
             clearIltheusUltimateState();
             nilthotepSwordFlashFrames = 0;
