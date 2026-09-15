@@ -11,6 +11,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
     <title>Spiral Warrior</title>
+    <link rel="icon" type="image/png" href="./favicon.png">
     <style>
         html {
             width: 100%;
@@ -8948,7 +8949,7 @@ arena_7: './arena_7.mp3'
         function getPartIconArtworkPath(type, part) {
             if (!part || !part.id) return null;
             const id = String(part.id);
-            if (type === 'battleCap') return `./bc_${id.replace(/^bc_/, '')}.png`;
+            if (type === 'battleCap') return `./Images/Parts/Battle Cap/icon_bc_${id.replace(/^bc_/, '')}.png`;
             if (type === 'weightRing') return `./Images/Parts/Weight Ring/icon_wr_${id.replace(/^wr_/, '')}.png`;
             if (type === 'driver') return `./Images/Parts/Driver/icon_drv_${id.replace(/^drv_/, '')}.png`;
             return null;
