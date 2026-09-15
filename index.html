@@ -7005,6 +7005,7 @@ const parts = {
 
         async function syncPlayerChampionshipData() {
             if (!SUPABASE_CHAMPIONSHIP_ENABLED || !isChampionshipSyncScreenActive()) return;
+            ensureChampionshipProgress();
             if (championshipSyncInProgress) {
                 championshipSyncQueued = true;
                 return;
@@ -7014,20 +7015,18 @@ const parts = {
                 const now = new Date().toISOString();
                 const playerPayload = {
                     uid: String(playerUid),
-                    ...(cloudUser && cloudUser.id ? { user_id: cloudUser.id } : {}),
                     player_name: String(playerName || 'Player').trim().slice(0, 20) || 'Player',
                     total_wins: Math.max(0, Math.floor(Number(playerChampionshipWins) || 0)),
                     combat_power: Math.max(0, Math.floor(Number(getPlayerCombatPower()) || 0)),
                     updated_at: now
                 };
-                await fetchSupabaseChampionshipJson(SUPABASE_CHAMPIONSHIP_CONFIG.playersUrl, {
+                await fetchSupabaseChampionshipJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.playersUrl}?on_conflict=uid`, {
                     method: 'POST',
                     headers: getSupabaseChampionshipHeaders({ Prefer: 'resolution=merge-duplicates,return=minimal' }),
                     body: JSON.stringify(playerPayload)
                 });
                 const loadoutRows = getPlayerRankerLoadouts().map((loadout, index) => ({
                     player_uid: String(playerUid),
-                    ...(cloudUser && cloudUser.id ? { user_id: cloudUser.id } : {}),
                     loadout_index: index,
                     battle_cap_id: loadout.battle_cap ? loadout.battle_cap.id : null,
                     battle_cap_level: loadout.battle_cap ? loadout.battle_cap.level : 1,
@@ -7046,6 +7045,7 @@ const parts = {
                 if (!document.getElementById('challengeChampionshipScreen')?.classList.contains('hidden')) updateChallengeChampionship();
             } catch (error) {
                 championshipOnlineError = true;
+                setChampionshipOnlineStatus(`Upload failed: ${error.message}`, 'error');
                 console.warn('Supabase Championship player sync failed:', error);
             } finally {
                 championshipSyncInProgress = false;
@@ -19227,6 +19227,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 playerName = String(data.playerName || 'Player').trim().slice(0, 20) || 'Player';
                 playerUid = isValidPlayerUid(data.playerUid) ? data.playerUid : playerUid;
                 playerChampionshipWins = Math.max(0, Math.floor(Number(data.playerChampionshipWins) || 0));
+                ensureChampionshipProgress();
                 championshipEnrollmentActive = data.championshipEnrollmentActive === true;
                 audioSettings = normalizeAudioSettings(data.audioSettings || {});
                 visualSettings = normalizeVisualSettings(data.visualSettings || {});
