@@ -1431,14 +1431,15 @@
             height: 100%;
             display: block;
         }
-        .loadout-selector {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            z-index: 4;
-            display: flex;
-            gap: 4px;
-        }
+        .loadout-controls { position: absolute; top: 8px; left: 8px; z-index: 6; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+        .loadout-selector { position: relative; top: auto; left: auto; z-index: 1; display: flex; gap: 4px; }
+        .loadout-team-selector { position: relative; top: auto; left: auto; z-index: 20; }
+        .loadout-team-button { min-width: 82px; height: 26px; padding: 0 7px; border: 1px solid #54C8F0; border-radius: 4px; background: #081827; color: #fff; font-size: 11px; font-weight: 900; cursor: pointer; }
+        .loadout-team-button .loadout-team-chevron { margin-left: 7px; color: #82E4F1; }
+        .loadout-team-menu { position: absolute; top: 29px; left: 0; z-index: 30; min-width: 100%; padding: 3px; border: 1px solid #54C8F0; border-radius: 4px; background: #081827; box-shadow: 0 4px 12px rgba(0,0,0,.55); }
+        .loadout-team-menu.hidden { display: none; }
+        .loadout-team-option { display: block; width: 100%; padding: 6px 8px; border: 0; border-radius: 3px; background: transparent; color: #fff; font-size: 11px; font-weight: 900; text-align: left; cursor: pointer; }
+        .loadout-team-option:hover, .loadout-team-option.active { background: #FDD035; color: #1a1a1a; }
         .loadout-btn {
             width: 26px;
             height: 26px;
@@ -1474,6 +1475,7 @@
             white-space: nowrap;
         }
         .combat-power-badge .combat-power-fist { width: 16px; height: 16px; display: inline-block; fill: #fff; flex: 0 0 auto; }
+        #garageCombatPower { position: absolute; top: 70px; left: 8px; z-index: 5; }
         .modal-content-tabs {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -1513,7 +1515,7 @@
         }
         #garageCombatPower {
             position: absolute;
-            top: 40px;
+            top: 70px;
             left: 8px;
             z-index: 5;
             margin: 0;
@@ -1836,6 +1838,11 @@
         .modal-part-upgrade-title.epic { background: #C222E8; }
         .modal-part-upgrade-title.legendary { background: #EABA34; }
         .modal-part-upgrade-title.ascended { background: linear-gradient(45deg, #E09D94 0%, #D2C692 30%, #A1BEA0 50%, #9EC8CA 70%,  #A221A2 100%);  }       
+        .modal-part-upgrade-content { position:relative; display:flex; align-items:center; justify-content:center; width:100%; }
+        .ascended-stone-counter { position:absolute; left:25%; top:50%; z-index:3; display:none; align-items:center; justify-content:center; transform:translate(-50%, -50%); pointer-events:none; }
+        .ascended-stone-gem { position:relative; display:inline-block; width:18px; height:20px; clip-path:polygon(50% 0%, 88% 24%, 100% 68%, 68% 100%, 32% 100%, 0% 68%, 12% 24%); background:radial-gradient(circle at 35% 25%, #fff 0 8%, #F3B7FF 9% 18%, #D94DFF 28%, #8D16D6 62%, #3C0875 100%); box-shadow:0 0 6px #D946FF, 0 0 12px rgba(216,70,255,.8); filter:saturate(1.25); animation:ascendedStoneShine 1.8s ease-in-out infinite; }
+        .ascended-stone-gem::after { content:''; position:absolute; top:3px; left:4px; width:5px; height:8px; border-radius:50%; background:rgba(255,255,255,.85); transform:rotate(35deg); }
+        @keyframes ascendedStoneShine { 0%,100% { filter:brightness(1) saturate(1.25); transform:translateY(0); } 50% { filter:brightness(1.45) saturate(1.5); transform:translateY(-1px); } }
  .modal-part-upgrade-bar {
             position: relative;
             width: 50%;
@@ -2083,6 +2090,243 @@
             grid-template-rows: repeat(2, 50px);
             gap: 8px;
         }
+        .home-spiral-mart-row { width:100%; margin-top:10px; }
+        .home-slot.spiral-mart-slot {
+    width: 100%;
+    position: relative;
+    background: linear-gradient(to right, #000 0%, #fff 100%);
+    color: #fff;
+    border: 2px solid transparent;
+    border-radius: 10px;
+
+    background:
+        linear-gradient(to right, #16335D 0%, #2E659D 100%) padding-box,
+        linear-gradient(
+            145deg,
+            #A8EEF6 0%,
+            #7DE3B3 20%,
+            #7CE1B5 30%,
+            #85D5F0 40%,
+            #E7DBF7 43%,
+            #C99DE6 46%,
+            #ABA5E3 70%,
+            #85D5F0 100%
+        ) border-box;
+}
+        #spiralMartScreen { background:linear-gradient(to bottom, #1A152C 0%, #332256 50%, #292E4C 100%); }
+        #spiralMartScreen .spiral-mart-dashboard { position:relative; flex:1 1 auto; align-items:stretch; padding:8px 0 64px; }
+        #spiralMartScreen .adventure-screen-header { position:relative; top:auto; left:auto; z-index:auto; margin-bottom:10px; }
+        .spiral-mart-placeholder { flex:1 1 auto; min-height:0; display:flex; align-items:center; justify-content:center; padding:20px; color:rgba(255,255,255,.82); font-size:15px; font-weight:900; text-align:center; }
+        .spiral-mart-banner { position:relative; width:100vw; min-height:320px; margin:0 calc((100% - 100vw) / 2); display:flex; align-items:flex-end; justify-content:center; padding:24px 18px 20px; box-sizing:border-box; 
+background:
+    linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(90, 70, 141, 0.4) 20%,
+        rgba(90, 70, 141, 0.8) 50%,
+        #5A468D 100%
+    ),
+    linear-gradient(
+        to right,
+        #F8E4CC 0% 20%,
+        #93EBA9 20% 40%,
+        #8597FF 40% 60%,
+        #EA90AE 60% 80%,
+        #FEC1B6 80% 100%
+    ); border:0; box-shadow:0 -12px 62px 28px rgba(0,0,0,.22), 0 12px 62px 28px rgba(0,0,0,.22); }
+        .spiral-mart-banner::before { display:none; }
+        .spiral-mart-guarantee-copy { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:min(92%, 440px); color:#fff; font-weight:1000; line-height:1.12; text-align:left; }
+        .spiral-mart-guarantee-title { font-size:14px; letter-spacing:.4px; }
+        .spiral-mart-guarantee-counter { margin-top:4px; font-size:28px; letter-spacing:1px; }
+        .spiral-mart-guarantee-subtitle { margin-top:8px; font-size:11px; letter-spacing:.15px; }
+        .spiral-mart-draw-row { position:relative; z-index:1; width:min(300px,100%); display:grid; grid-template-columns:1fr 1fr; gap:40px; }
+        .spiral-mart-draw-button { min-width:0; padding:0; border:2px solid rgba(255,255,255,.8); border-radius:0px; overflow:hidden; color:#fff; font-family:inherit; font-weight:1000; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,.32); }
+        .spiral-mart-draw-button:active { transform:translateY(1px); }
+        .spiral-mart-draw-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 18px;
+    padding: 1px 3px;
+    font-size: 10px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.spiral-mart-draw-cost {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-height: 21px;
+    min-width: max-content;
+    padding: 1px 3px;
+    font-size: 10px;
+    line-height: 1;
+    white-space: nowrap;
+}
+        .spiral-mart-draw-one .spiral-mart-draw-title { background:#243D5C; }
+        .spiral-mart-draw-one .spiral-mart-draw-cost { background:#40B0F2; }
+        .spiral-mart-draw-ten .spiral-mart-draw-title { background:#5E3E25; }
+        .spiral-mart-draw-ten .spiral-mart-draw-cost { background:#F3A745; }
+        .spiral-mart-draw-cost .lucky-ticket-icon {
+    width: max-content;
+    min-width: 0;
+    height: 14px;
+    padding: 0 3px;
+    font-size: 3.5px;
+    line-height: 1;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+        @media (max-width:380px) { .spiral-mart-banner { min-height:230px; } .spiral-mart-draw-row { gap:10px; } .spiral-mart-draw-title, .spiral-mart-draw-cost { font-size:11px; } }
+        .spiral-gacha-screen { width:100%; height:100%; min-height:0; flex:1 1 auto; overflow:hidden; background:linear-gradient(to bottom,#111425 0%,#1F3656 50%,#111425 100%); color:#fff; }
+        .spiral-gacha-opening-stage, .spiral-gacha-results-stage { width:100%; height:100%; min-height:0; flex:1 1 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; padding:28px 14px 74px; box-sizing:border-box; }
+        .spiral-gacha-opening-stage { cursor:grab; touch-action:none; user-select:none; }
+        .spiral-gacha-opening-stage:active { cursor:grabbing; }
+        #spiralGachaChest.home-chest-render.common .home-chest-lid { background: linear-gradient(to right, #484A59 0% 30%, #2D3041 30% 70%, #484A59 70% 100%); }
+        #spiralGachaChest.home-chest-render.common .home-chest-body { background: linear-gradient(to bottom, #C0C5D8 0% 50%, #2D3041 50% 100%); }
+        .spiral-gacha-results-stage { position:relative; justify-content:center; padding-top:28px; overflow-y:auto; }
+        .spiral-gacha-results-stage.single-result { justify-content:center; }
+        .spiral-gacha-results-stage.single-result .spiral-gacha-results-grid { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
+        .spiral-gacha-results-grid { width:min(318px,100%); min-height:0; display:grid; grid-template-columns:repeat(3,1fr); align-items:start; gap:8px; }
+        .spiral-gacha-results-grid.multi-result > .spiral-gacha-stack:first-child,
+        .spiral-gacha-results-grid.multi-result > .spiral-gacha-stack:last-child { padding-top:70px; }
+        .spiral-gacha-stack { position:relative; min-height:0; display:flex; flex-direction:column; align-items:center; gap:8px; }
+        .spiral-gacha-stack.single { grid-column:2; }
+        .spiral-gacha-stack .chest-reward-card { position:relative; top:auto; width:88px; min-height:132px; transform:none; transform-origin:center; z-index:auto; flex:0 0 auto; }
+        .spiral-gacha-stack .chest-reward-card .part-visual-preview { width:48px; height:48px; min-height:48px; align-self:center; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+        .spiral-gacha-stack .chest-reward-card .part-visual-preview canvas { width:48px !important; height:48px !important; object-fit:contain; flex:0 0 48px; }
+        .spiral-gacha-flip-card { position:relative; width:88px; height:132px; flex:0 0 132px; perspective:900px; cursor:pointer; }
+        .spiral-gacha-flip-inner { position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .55s cubic-bezier(.2,.75,.25,1); }
+        .spiral-gacha-flip-card.revealed .spiral-gacha-flip-inner { transform:rotateY(180deg); }
+        .spiral-gacha-card-cover, .spiral-gacha-card-back { position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:4px; box-sizing:border-box; }
+        .spiral-gacha-card-cover { border:2px solid var(--spiral-rarity-glow,#9BB8D2); 
+background:
+  radial-gradient(
+    ellipse 120% 90% at 50% 15%,
+    #282828 54%,
+    #4B4B53 55%
+  ),
+  linear-gradient(
+    to bottom,
+    #1F1A1E 0%,
+    #282828 55%,
+    #4B4B53 85%,
+    #374343 100%
+  );box-shadow:0 0 13px color-mix(in srgb, var(--spiral-rarity-glow,#9BB8D2) 72%, transparent), inset 0 0 0 2px rgba(255,255,255,.12); }
+        .spiral-gacha-card-cover::before {
+    content: "?";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    padding-top: 10px;
+
+    font-family: Arial, sans-serif;
+    font-size: 65px;
+    font-weight: 900;
+    line-height: 1;
+
+    background: linear-gradient(
+        to bottom,
+        #E0B7C7 0% 10%,
+        #B399FF 30%,
+        #94B2F0 35%,
+        #7FD6F3 40%, 
+        #A3F5BF 45%,
+        #F4EE9A 50% 100%
+    );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+
+    pointer-events: none;
+}
+.spiral-gacha-card-back { transform:rotateY(180deg); }
+        .spiral-gacha-card-back .chest-reward-card { box-shadow:0 0 13px color-mix(in srgb, var(--spiral-rarity-glow,#9BB8D2) 72%, transparent); }
+        .spiral-gacha-action-row { width:min(318px,100%); display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:auto; }
+        .spiral-gacha-back { align-self:auto; margin-top:0; }
+        .spiral-gacha-back.hidden { display:none !important; }
+        .spiral-gacha-quick-open { margin-left:auto; min-height:34px; padding:7px 14px; border:2px solid #A87500; border-radius:5px; background:#F5C431; color:#352400; font-family:inherit; font-size:11px; font-weight:1000; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,.35); }
+        .spiral-gacha-quick-open:active { transform:translateY(1px); }
+        .spiral-gacha-draw-more { min-width:126px; line-height:1.05; }
+        .spiral-gacha-draw-more .draw-more-title { display:block; }
+        .spiral-gacha-draw-more .draw-more-cost { display:flex; align-items:center; justify-content:center; gap:4px; margin-top:3px; font-size:10px; }
+        .spiral-gacha-draw-more .lucky-ticket-icon {
+    width: max-content;
+    min-width: 0;
+    height: 14px;
+    padding: 0 3px;
+    font-size: 3.5px;
+    line-height: 1;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+        body.spiral-mart-view #bottomNav { display:none !important; }
+        .lucky-ticket-counter { margin-left:auto; display:flex; align-items:center; gap:7px; padding:3px 5px; border-radius:4px; background:rgba(255,255,255,.15); color:#fff; font-size:14px; font-weight:1000; line-height:1; white-space:nowrap; cursor:pointer; }
+        .lucky-ticket-counter:active, .lucky-ticket-counter:hover { background:rgba(0,0,0,.48); }
+        .lucky-ticket-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: auto;
+    height: auto;
+    padding: 4px 6px;
+
+    border: 1px solid #fff;
+    border-radius: 2px;
+    background: #050505;
+    color: #fff;
+
+    font-size: 6px;
+    font-weight: 1000;
+    letter-spacing: .1px;
+    line-height: 1;
+    text-transform: none;
+    box-sizing: border-box;
+}
+        .lucky-ticket-plus { color:#FFD43B; font-size:21px; font-weight:1000; line-height:1; }
+        .lucky-ticket-modal { position:fixed; inset:0; z-index:5000; display:flex; align-items:center; justify-content:center; padding:14px; background:rgba(0,0,0,.72); }
+        .lucky-ticket-modal.hidden { display:none !important; }
+        .lucky-ticket-box { width:min(340px, calc(100vw - 28px)); overflow:hidden; border:2px solid #F5B82E; border-radius:2px; background:linear-gradient(to bottom, #FFF0A0 0%, #F7C640 38%, #8D4B05 100%); color:#4A2500; box-shadow:0 5px 18px rgba(0,0,0,.55); }
+        .lucky-ticket-title-row { display:flex; align-items:center; justify-content:space-between; padding:8px 10px 8px 14px; border-bottom:1px solid rgba(99,48,0,.4); background:#A85F08; }
+        .lucky-ticket-title { margin:0; color:#FFE9A2; font-size:15px; font-weight:1000; }
+        .lucky-ticket-close { width:26px; height:26px; padding:0; border:0; background:transparent; color:#fff; font-size:25px; line-height:1; cursor:pointer; }
+        .lucky-ticket-exchange-row { display:flex; align-items:center; justify-content:center; gap:9px; padding:18px 10px 10px; color:#4A2500; font-size:15px; font-weight:1000; }
+        .lucky-ticket-exchange-item { display:flex; align-items:center; gap:5px; min-width:82px; justify-content:center; }
+        .lucky-ticket-exchange-item .currency-symbol { position:static; width:24px; height:24px; transform:none; flex:0 0 24px; }
+        .lucky-ticket-exchange-item .lucky-ticket-icon { width:28px; height:28px; font-size:7px; }
+        .lucky-ticket-arrow { color:#fff; font-size:24px; font-weight:1000; line-height:1; text-shadow:0 1px 2px rgba(0,0,0,.4); }
+        .lucky-ticket-rate { padding:0 14px 8px; color:#6B3900; font-size:10px; font-weight:900; text-align:center; }
+        .lucky-ticket-slider-wrap { padding:0 18px 14px; }
+        .lucky-ticket-slider { width:100%; accent-color:#9A5600; cursor:pointer; }
+        .lucky-ticket-slider-label { display:flex; justify-content:space-between; color:#6B3900; font-size:10px; font-weight:900; }
+        .lucky-ticket-confirm { display:block; width:calc(100% - 28px); min-height:38px; margin:0 14px 16px; border:1px solid #7A3C05; border-radius:5px; background:#F6C441; color:#4A2500; font-family:inherit; font-size:13px; font-weight:1000; cursor:pointer; }
+        .lucky-ticket-confirm:disabled { opacity:.45; cursor:not-allowed; }
+        /* Lucky Ticket purchase uses the Adventure chapter/encounter dialog visual language. */
+        .lucky-ticket-modal { z-index:3000; }
+        .lucky-ticket-box { width:min(360px,100%); min-height:0; box-sizing:border-box; border:3px solid #fff; border-radius:10px; background:#fff; color:#26313d; box-shadow:0 8px 24px rgba(0,0,0,.5); }
+        .lucky-ticket-title-row { position:relative; min-height:36px; padding:0 42px 0 16px; border:0; background:#150C43; box-sizing:border-box; }
+        .lucky-ticket-title { color:#fff; font-size:18px; letter-spacing:.5px; }
+        .lucky-ticket-close { position:absolute; right:10px; top:50%; transform:translateY(-50%); width:auto; height:auto; padding:4px 7px; border-radius:4px; color:#fff; font-size:16px; font-weight:900; }
+        .lucky-ticket-close:hover { background:rgba(255,255,255,.15); }
+        .lucky-ticket-exchange-row { padding:18px 14px 10px; background:#fff; color:#3b4147; }
+        .lucky-ticket-rate { padding:0 14px 10px; background:#fff; color:#5c6670; }
+        .lucky-ticket-slider-wrap { padding:0 14px 14px; background:#fff; }
+        .lucky-ticket-slider-label { color:#5c6670; }
+        .lucky-ticket-confirm { min-height:38px; margin:0 auto 18px; border:2px solid #b8750b; border-radius:5px; background:#f6b73c; color:#6b3d00; }
         .home-slot {
             min-height: 50px;
             max-height: 50px;
@@ -2178,9 +2422,21 @@ background: radial-gradient(
 box-shadow:        0 0 0 20px rgba(185, 195, 195, 1), 0 10px 20px rgba(0,0,0,.55); }
         .chest-opening-render { width: 140px; height: 108px; position: relative; top: 78px; z-index: 2; transform: scale(1.25); transform-origin: center 70%; }
         .chest-opening-render .home-chest-lid { height: 37px; border-width: 4px; transition: transform .65s cubic-bezier(.2,.8,.2,1); transform-origin: center bottom; }
+        .spiral-gacha-chest { isolation: isolate; --spiral-chest-light: 0; }
+        .spiral-gacha-chest .home-chest-lid { position: relative; z-index: 1; transform-origin: 100% 100%; }
+        .spiral-gacha-chest .home-chest-body { position: relative; z-index: 1; overflow: visible; box-shadow: inset 0 5px 14px rgba(255, 255, 255, .16); }
+        .spiral-swipe-indicator { position: absolute; left: 0%; top: 15%; z-index: 3; display: flex; align-items: center; color: #fff; font-family: Arial, sans-serif; font-size: 30px; font-weight: 1000; line-height: 1; text-shadow: 0 0 4px rgba(0, 0, 0, .9), 0 0 9px rgba(255, 255, 255, .9); pointer-events: none; transform: translateX(-50%); animation: spiralSwipeArrow 1s linear infinite; }
+        .spiral-swipe-indicator .spiral-swipe-arrow { display: block; width: 8px; text-align: center; }
+        .spiral-swipe-indicator .spiral-swipe-arrow-faint { opacity: .25; }
+        .spiral-swipe-indicator .spiral-swipe-arrow-mid { opacity: .5; }
+        .spiral-swipe-indicator .spiral-swipe-arrow-head { opacity: 1; }
+        .spiral-gacha-chest.spiral-swipe-active .spiral-swipe-indicator, .spiral-gacha-chest.chest-opened .spiral-swipe-indicator { display: none; }
+        @keyframes spiralSwipeArrow { 0% { opacity: 0; transform: translateX(-50%); } 12% { opacity: 1; } 82% { opacity: 1; transform: translateX(calc(-50% + 22px)); } 100% { opacity: 0; transform: translateX(calc(-50% + 26px)); } }
+        .spiral-gacha-chest::after { content:""; position:absolute; left:50%; top:calc(15% - (var(--spiral-chest-light) * 38%)); width:140px; height:90px; transform:translateX(-50%); z-index:0; pointer-events:none; background:linear-gradient(to bottom,rgba(253,149,255,0) 0%,rgba(253,149,255,0.15) 5%,#EBC1A8 20%,#FFF34F 30%,#FFFFFF 50%,#FFFFFF 100%); opacity:1; }
         .chest-opening-render .home-chest-body { border-width: 4px; }
         .chest-opening-render.chest-shaking { animation: chestShake .12s linear infinite; }
         .chest-opening-render.chest-opened .home-chest-lid { transform: translateY(-48px) rotate(-5deg); }
+        .spiral-gacha-chest.chest-opened .home-chest-lid { transform: rotate(50deg); }
         @keyframes chestShake { 0%,100% { transform: scale(1.25) rotate(0deg); } 25% { transform: scale(1.25) rotate(-4deg) translateX(-3px); } 75% { transform: scale(1.25) rotate(4deg) translateX(3px); } }
         .chest-open-circle { width: 58px; height: 58px; position: absolute; left: 50%; top: 112%; z-index: 5; display: flex; align-items: center; justify-content: center; transform: translate(-50%, -50%); border: 2px solid #82E4F1; border-radius: 50%; background: #101D2D; color: #82E4F1; font-size: 14px; font-weight: 1000; cursor: pointer; }
         .chest-open-circle:disabled { opacity: .65; cursor: default; }
@@ -3052,10 +3308,20 @@ background: linear-gradient(
     <div id="garageScreen" class="screen hidden"><div class="screen-top-row"><div class="profile-block"><div class="profile-avatar" role="button" tabindex="0" aria-label="Edit Nickname" onclick="if(window.handleProfileAvatarClick) window.handleProfileAvatarClick(event);" onkeydown="if((event.key==='Enter'||event.key===' ')&&window.handleProfileAvatarClick){event.preventDefault();window.handleProfileAvatarClick(event);}"></div><div class="profile-details"><div class="profile-name">Player</div><div class="profile-level"><span class="profile-level-label">GP</span><span class="profile-level-value">1</span><span class="profile-level-end" aria-hidden="true"></span></div><div class="profile-exp" aria-label="Experience placeholder"></div></div></div></div><div class="currency-hud"><span class="currency-item currency-gold"><span class="currency-symbol currency-gold-icon" aria-hidden="true"></span><span id="garageGold">0</span></span><span class="currency-item currency-gem"><span class="currency-symbol currency-gem-icon" aria-hidden="true"></span><span id="garageGems">0</span></span></div><button class="debug-currency-btn" id="garageDebugCurrencyBtn" onclick="var m=document.getElementById('currencyDebugModal');m.classList.remove('hidden');m.classList.add('is-open');m.style.display='flex';"><svg class="debug-gear-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.02-.66-.07-.98l2.11-1.65-2-3.46-2.49 1a7.7 7.7 0 0 0-1.69-.98L15 3h-4l-.36 2.93c-.61.25-1.18.58-1.69.98l-2.49-1-2 3.46 2.11 1.65c-.04.32-.08.65-.08.98s.03.66.08.98l-2.11 1.65 2 3.46 2.49-1c.51.4 1.08.73 1.69.98L11 21h4l.36-2.93c.61-.25 1.18-.58 1.69-.98l2.49 1 2-3.46-2.11-1.65zM13 15.5A3.5 3.5 0 1 1 13 8a3.5 3.5 0 0 1 0 7.5z"/></svg></button>
         <div class="garage-dashboard">
             <div class="garage-preview">
+            <div class="loadout-controls">
+            <div id="loadoutTeamSelector" class="loadout-team-selector" aria-label="Loadout Team selection">
+                <button type="button" id="activeLoadoutTeamButton" class="loadout-team-button" aria-haspopup="true" aria-expanded="false">Team A<span class="loadout-team-chevron">▾</span></button>
+                <div id="loadoutTeamMenu" class="loadout-team-menu hidden" role="menu">
+                    <button type="button" class="loadout-team-option" data-team="0" role="menuitem">Team A</button>
+                    <button type="button" class="loadout-team-option" data-team="1" role="menuitem">Team B</button>
+                    <button type="button" class="loadout-team-option" data-team="2" role="menuitem">Team C</button>
+                </div>
+            </div>
             <div id="loadoutSelector" class="loadout-selector" aria-label="Loadout selection">
                 <button type="button" class="loadout-btn active" data-loadout="0">1</button>
                 <button type="button" class="loadout-btn" data-loadout="1">2</button>
                 <button type="button" class="loadout-btn" data-loadout="2">3</button>
+            </div>
             </div>
             <div id="previewName" style="font-size: 15px; font-weight: bold; color: #fff;">-</div>
             <div id="previewPartsDesc" style="font-size: 10px; color: #aaa; margin-top: 1px;">-</div>
@@ -3115,6 +3381,9 @@ background: linear-gradient(
                     <div class="home-slot adventure-slot" role="button" tabindex="0" aria-label="Open Adventure" onclick="window.openAdventureScreen();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.openAdventureScreen();}">ADVENTURE</div>
                     <div id="championshipHomeButton" class="home-slot championship-slot" role="button" tabindex="0" aria-label="Open Championship Lobby" onclick="window.openChampionshipLobby();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.openChampionshipLobby();}">CHAMPIONSHIP</div>
                 </div>
+            </div>
+            <div class="home-spiral-mart-row">
+                <div class="home-slot spiral-mart-slot" role="button" tabindex="0" aria-label="Open Spiral Mart" onclick="window.openSpiralMartScreen();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.openSpiralMartScreen();}">SPIRAL MART</div>
             </div>
         </div>
     </div>
@@ -3287,6 +3556,60 @@ background: linear-gradient(
         </div>
     </div>
 
+    <!-- SPIRAL MART PLACEHOLDER SCREEN -->
+    <div id="spiralMartScreen" class="screen hidden">
+        <div class="home-dashboard adventure-dashboard spiral-mart-dashboard">
+            <div class="adventure-screen-header"><h2>Spiral Mart</h2><div id="spiralLuckyTicketCounter" class="lucky-ticket-counter" role="button" tabindex="0" aria-label="Lucky Tickets" onclick="window.openLuckyTicketPurchase();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.openLuckyTicketPurchase();}"><span class="lucky-ticket-icon">Lucky</span><span id="spiralLuckyTicketValue">0</span><span class="lucky-ticket-plus">+</span></div></div>
+            <div class="spiral-mart-placeholder" aria-label="Spiral Mart placeholder">
+                <div class="spiral-mart-banner">
+                    <div class="spiral-mart-guarantee-copy" aria-label="Spiral Mart guarantees">
+                        <div class="spiral-mart-guarantee-title">Guaranteed Ascended Part</div>
+                        <div id="spiralGachaPityCounter" class="spiral-mart-guarantee-counter">0/100</div>
+                        <div class="spiral-mart-guarantee-subtitle">Guaranteed Epic or better part within 10 draws</div>
+                    </div>
+                    <div class="spiral-mart-draw-row" aria-label="Spiral Mart draw options">
+                        <button type="button" class="spiral-mart-draw-button spiral-mart-draw-one" aria-label="Draw 1" onclick="window.startSpiralGachaDraw(1);">
+                            <span class="spiral-mart-draw-title">Draw 1</span>
+                            <span class="spiral-mart-draw-cost"><span class="lucky-ticket-icon">Lucky</span><span id="spiralDrawOneTicketAmount">0</span> / 1</span>
+                        </button>
+                        <button type="button" class="spiral-mart-draw-button spiral-mart-draw-ten" aria-label="Draw 10" onclick="window.startSpiralGachaDraw(10);">
+                            <span class="spiral-mart-draw-title">Draw 10</span>
+                            <span class="spiral-mart-draw-cost"><span class="lucky-ticket-icon">Lucky</span><span id="spiralDrawTenTicketAmount">0</span> / 10</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="adventure-screen-back" aria-label="Back to Home" onclick="window.openHomeScreenFromSpiralMart();">◀</button>
+        </div>
+    </div>
+
+    <div id="spiralGachaOpeningScreen" class="screen hidden spiral-gacha-screen">
+        <div id="spiralGachaOpeningStage" class="spiral-gacha-opening-stage">
+            <div id="spiralGachaChest" class="home-chest-render common chest-opening-render spiral-gacha-chest" aria-label="Spiral Mart chest"><span class="home-chest-lid"></span><span class="home-chest-body"></span><span class="spiral-swipe-indicator" aria-hidden="true"><span class="spiral-swipe-arrow spiral-swipe-arrow-faint">›</span><span class="spiral-swipe-arrow spiral-swipe-arrow-mid">›</span><span class="spiral-swipe-arrow spiral-swipe-arrow-head">›</span></span></div>
+        </div>
+    </div>
+
+    <div id="spiralGachaResultsScreen" class="screen hidden spiral-gacha-screen">
+        <div class="spiral-gacha-results-stage">
+            <div id="spiralGachaResultsGrid" class="spiral-gacha-results-grid" aria-label="Spiral Mart results"></div>
+            <div class="spiral-gacha-action-row"><button type="button" class="adventure-screen-back spiral-gacha-back hidden" aria-label="Back to Spiral Mart" onclick="window.closeSpiralGachaResults();">◀</button><button type="button" id="spiralGachaQuickOpenButton" class="spiral-gacha-quick-open" onclick="window.handleSpiralGachaAction();">Quick Open</button></div>
+        </div>
+    </div>
+
+    <div id="luckyTicketPurchaseModal" class="lucky-ticket-modal hidden" role="dialog" aria-modal="true" aria-labelledby="luckyTicketPurchaseTitle">
+        <div class="lucky-ticket-box">
+            <div class="lucky-ticket-title-row"><h3 id="luckyTicketPurchaseTitle" class="lucky-ticket-title">Purchase Ticket</h3><button type="button" id="luckyTicketCloseButton" class="lucky-ticket-close" aria-label="Close Purchase Ticket" onclick="window.closeLuckyTicketPurchase();">×</button></div>
+            <div class="lucky-ticket-exchange-row">
+                <div class="lucky-ticket-exchange-item"><span class="currency-symbol currency-gem-icon" aria-hidden="true"></span><span id="luckyTicketGemSpend">0</span></div>
+                <span class="lucky-ticket-arrow" aria-hidden="true">→</span>
+                <div class="lucky-ticket-exchange-item"><span class="lucky-ticket-icon">Lucky</span><span id="luckyTicketReceive">0</span></div>
+            </div>
+            <div class="lucky-ticket-rate">300 Gems per 1 Lucky Ticket</div>
+            <div class="lucky-ticket-slider-wrap"><input id="luckyTicketSlider" class="lucky-ticket-slider" type="range" min="0" max="0" value="0" step="1" aria-label="Lucky Tickets to purchase" oninput="window.updateLuckyTicketPurchasePreview(this.value);"><div class="lucky-ticket-slider-label"><span>0 Tickets</span><span id="luckyTicketSliderMax">0 Tickets max</span></div></div>
+            <button type="button" id="luckyTicketConfirmButton" class="lucky-ticket-confirm" disabled onclick="window.confirmLuckyTicketPurchase();">CONFIRM</button>
+        </div>
+    </div>
+
     <!-- ADVENTURE CHAPTER PLACEHOLDER SCREEN -->
     <div id="adventureChapterScreen" class="screen hidden">
         <div class="home-dashboard adventure-dashboard adventure-chapter-placeholder">
@@ -3368,7 +3691,7 @@ background: linear-gradient(
                 <div class="tower-detail-reward-items">
                     <div class="tower-reward-detail" aria-label="Tower gold reward"><span class="tower-reward-icon currency-symbol currency-gold-icon" aria-hidden="true"></span><span class="tower-reward-amount">x<span id="towerDetailReward">0</span></span></div>
                     <div id="towerDetailAdventureLoot" class="tower-detail-adventure-loot" aria-label="Possible enemy part loot"><div id="towerDetailAdventureLootCards" class="tower-detail-adventure-loot-cards"></div></div>
-                    <div id="towerDetailGemRewardEntry" class="tower-reward-detail" aria-label="Tower gem first-clear reward"><span class="tower-reward-icon currency-symbol currency-gem-icon" aria-hidden="true"></span><span class="tower-reward-amount">x<span id="towerDetailGemReward">50</span></span></div>
+                    <div id="towerDetailGemRewardEntry" class="tower-reward-detail" aria-label="Tower gem first-clear reward"><span class="tower-reward-icon currency-symbol currency-gem-icon" aria-hidden="true"></span><span class="tower-reward-amount">x<span id="towerDetailGemReward">10</span></span></div>
                     <div id="towerDetailChestRewardEntry" class="tower-reward-detail" aria-label="Tower chest reward"><span id="towerDetailChestRewardPreview" class="tower-chest-reward-preview home-chest-render plain"><span class="home-chest-lid"></span><span class="home-chest-body"></span></span><span id="towerDetailChestRewardName" class="tower-reward-amount">x1</span></div>
                 </div>
                 <button id="towerDetailBattle" class="tower-battle-btn tower-detail-battle-btn">BATTLE</button>
@@ -3569,7 +3892,10 @@ background: linear-gradient(
             </div>
             <div class="modal-part-upgrade-row">
                 <div id="modalPartUpgradeTitle" class="modal-part-upgrade-title common">Common</div>
-                <div id="modalPartUpgradeBar" class="modal-part-upgrade-bar"><span id="modalPartUpgradeFill" class="modal-part-upgrade-fill"></span><span id="modalPartUpgradeLabel" class="modal-part-upgrade-label"></span></div>
+                <div class="modal-part-upgrade-content">
+                    <div id="modalAscendedStoneCounter" class="ascended-stone-counter" aria-label="Ascended Stone"><span class="ascended-stone-gem" aria-hidden="true"></span></div>
+                    <div id="modalPartUpgradeBar" class="modal-part-upgrade-bar"><span id="modalPartUpgradeFill" class="modal-part-upgrade-fill"></span><span id="modalPartUpgradeLabel" class="modal-part-upgrade-label"></span></div>
+                </div>
             </div>
             <div class="modal-content-tabs" role="tablist" aria-label="Part information sections">
                 <button class="modal-content-tab active" type="button" data-tab="ability" role="tab" aria-selected="true">Ability</button>
@@ -4189,9 +4515,9 @@ const BC_QING_1 = 'data:audio/mpeg;base64,SUQzAwAAAAABLFRFTkMAAAALAAAAUHJvIFRvb2
         }
         function getChampionshipRewardDefinitions() {
             return [
-                { id: 'superior', chestId: 'superior', requiredWins: 25, name: 'Superior Chest' },
-                { id: 'epic', chestId: 'epic', requiredWins: 50, name: 'Epic Chest' },
-                { id: 'uncommon', chestId: 'uncommon', requiredWins: 10, name: 'Uncommon Chest' }
+                { id: 'legendary', chestId: 'legendary', requiredWins: 25, name: 'Legendary Chest' },
+                { id: 'paradise', chestId: 'paradise', requiredWins: 50, name: 'Paradise Chest' },
+                { id: 'epic', chestId: 'epic', requiredWins: 10, name: 'Epic Chest' }
             ];
         }
         function updateChampionshipRewardRow() {
@@ -4272,7 +4598,10 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
             updateSkillHexagons();
         }
         window.setDebugOverride = setDebugOverride;
-        let currencyState = { gold: 5000, gems: 100 };
+        let currencyState = { gold: 5000, gems: 100, ascendedStones: 0, luckyTickets: 1 };
+        let spiralGachaState = { ascendedPity: 0, totalDraws: 0 };
+        let spiralGachaRewardGrantActive = false;
+        let spiralGachaPendingBattleCapUnlocks = [];
         function updateProfileNameUI() {
             document.querySelectorAll('.profile-name').forEach(element => { element.textContent = playerName || 'Player'; });
             const input = document.getElementById('playerNameInput');
@@ -4354,13 +4683,21 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
                 if (g) g.textContent = Math.floor(currencyState.gold || 0).toLocaleString();
                 if (m) m.textContent = Math.floor(currencyState.gems || 0).toLocaleString();
             });
+            if (typeof updateLuckyTicketUI === 'function') updateLuckyTicketUI();
         }
         function addCurrency(kind, amount) { const n = Math.max(0, Math.floor(Number(amount) || 0)); currencyState[kind] = Math.max(0, (currencyState[kind] || 0) + n); updateCurrencyUI(); }
         window.addCurrency = addCurrency;
 
 
         const UPGRADE_COSTS = [0, 20, 40, 100, 200, 400, 700, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000];
-        const PART_AMOUNT_REQUIREMENTS = [0, 2, 4, 8, 20, 40, 80, 200, 400, 1000, 2000, 5000, 10000, 20000, 40000, 100000];
+        const PART_AMOUNT_REQUIREMENTS_BY_RARITY = Object.freeze({
+            Common: [0, 2, 4, 8, 20, 40, 80, 200, 400, 1000, 2000, 5000, 10000, 20000, 40000, 100000],
+            Rare: [0, 0, 0, 2, 4, 8, 20, 40, 100, 200, 400, 1000, 2000, 4000, 10000, 0],
+            Epic: [0, 0, 0, 0, 0, 2, 4, 8, 20, 40, 100, 200, 400, 1000, 2000, 0],
+            Legendary: [0, 0, 0, 0, 0, 0, 0, 2, 4, 8, 20, 40, 100, 200, 400, 0],
+            Ascended: [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 0]
+        });
+        const PART_START_LEVELS_BY_RARITY = Object.freeze({ Common: 1, Rare: 3, Epic: 5, Legendary: 7, Ascended: 9 });
         let partUpgradeLevels = {};
         let partAmounts = {};
         let acquiredPartIds = {};
@@ -4368,24 +4705,49 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
         function isPartAcquired(part) { return !!part && (INITIAL_UNLOCKED_PART_IDS.has(part.id) || acquiredPartIds[part.id] === true || getPartAmount(part) > 0); }
         // Upgrade levels and part amounts are intentionally session-only until the user presses Save.
         function getPartAmount(part) { return Math.max(0, Math.floor(Number(partAmounts[part.id] || 0))); }
-        function getUpgradePartAmount(part) { const level = getPartLevel(part); return level >= 15 ? 0 : PART_AMOUNT_REQUIREMENTS[level]; }
+        function getPartUpgradeAmount(part) {
+            return part && part.rarity === 'Ascended'
+                ? Math.max(0, Math.floor(Number(currencyState.ascendedStones) || 0))
+                : getPartAmount(part);
+        }
+        function getUpgradePartAmount(part) {
+            const level = getPartLevel(part);
+            if (level >= 15) return 0;
+            const requirements = PART_AMOUNT_REQUIREMENTS_BY_RARITY[part && part.rarity] || PART_AMOUNT_REQUIREMENTS_BY_RARITY.Common;
+            return requirements[level] || 0;
+        }
         function addPartAmount(partId, amount) {
             const n = Math.max(0, Math.floor(Number(amount) || 0));
             if (!partId || n <= 0) return;
             const catalogEntry = Object.entries(PARTS).map(([type, parts]) => ({ type, part: (parts || []).find(candidate => candidate.id === partId) })).find(entry => entry.part);
             const wasAcquired = catalogEntry ? isPartAcquired(catalogEntry.part) : true;
-            partAmounts[partId] = Math.max(0, Math.floor(Number(partAmounts[partId] || 0))) + n;
             acquiredPartIds[partId] = true;
+            if (catalogEntry && catalogEntry.part.rarity === 'Ascended') {
+                if (wasAcquired) {
+                    currencyState.ascendedStones = Math.max(0, Math.floor(Number(currencyState.ascendedStones) || 0)) + n;
+                }
+            } else {
+                partAmounts[partId] = Math.max(0, Math.floor(Number(partAmounts[partId] || 0))) + n;
+            }
             if (modalTargetPart && modalTargetPart.part && modalTargetPart.part.id === partId) openPartModal(modalTargetPart.type, modalTargetPart.part);
             if (typeof updateGarageUI === 'function') updateGarageUI();
             if (!wasAcquired && catalogEntry && catalogEntry.type === 'battleCap' && typeof showInitialBattleCapUnlock === 'function') {
+                if (spiralGachaRewardGrantActive) {
+                    if (!spiralGachaPendingBattleCapUnlocks.some(part => part.id === catalogEntry.part.id)) spiralGachaPendingBattleCapUnlocks.push(catalogEntry.part);
+                    return;
+                }
                 const unlockDelay = (typeof chestRewardGrantActive !== 'undefined' && chestRewardGrantActive) ? 750 : 0;
                 setTimeout(() => showInitialBattleCapUnlock(catalogEntry.part), unlockDelay);
             }
         }
         // Upgrade levels are intentionally session-only until the user presses Save.
         function savePartUpgradeLevels() { /* Manual save only; no automatic persistence. */ }
-        function getPartLevel(part) { return Math.max(1, Math.min(15, Number(partUpgradeLevels[part.id] || 1))); }
+        function getPartStartingLevel(part) {
+            return PART_START_LEVELS_BY_RARITY[part && part.rarity] || PART_START_LEVELS_BY_RARITY.Common;
+        }
+        function getPartLevel(part) {
+            return Math.max(getPartStartingLevel(part), Math.min(15, Number(partUpgradeLevels[part.id] || getPartStartingLevel(part))));
+        }
         function getEffectivePartStats(part) {
             const multiplier = Math.pow(1.10, getPartLevel(part) - 1);
             return { ...part, atk:Math.round((Number(part.atk) || 0) * multiplier), def:Math.round((Number(part.def) || 0) * multiplier), health:Math.round((Number(part.health) || 0) * multiplier), stamina:Number(part.stamina) || 0, weight:Number(part.weight) || 0, interval:Number(part.interval) || 0 };
@@ -4410,7 +4772,10 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
                 { battleCap: PARTS.battleCap[2], weightRing: PARTS.weightRing[2], driver: PARTS.driver[2] }
             ];
         }
-        let playerLoadouts = createDefaultLoadouts();
+        const LOADOUT_TEAM_NAMES = ['Team A', 'Team B', 'Team C'];
+        let loadoutTeams = [createDefaultLoadouts(), createDefaultLoadouts(), createDefaultLoadouts()];
+        let activeTeamIndex = 0;
+        let playerLoadouts = loadoutTeams[activeTeamIndex];
         let activeLoadoutIndex = 0;
         let playerEquipped = playerLoadouts[activeLoadoutIndex];
 
@@ -4652,7 +5017,7 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
         let towerUnlockedFloor = 1;
         let towerActiveFloor = null;
         const TOWER_MAX_FLOOR = 1000;
-        const TOWER_FIRST_CLEAR_GEMS = 50;
+        const TOWER_FIRST_CLEAR_GEMS = 10;
         let towerFirstClearGems = {};
         let towerFirstClearChests = {};
         const TOWER_RANKING_FALLBACK_DATA = [{ uid: '000', player_name: 'Dummy', floor_achieved: 999, achieved_at: null }];
@@ -5186,6 +5551,332 @@ const parts = {
             updateGameBgmForScreen('homeScreen');
         }
         window.openHomeScreenFromAdventure = openHomeScreenFromAdventure;
+        function openSpiralMartScreen() {
+            if (gameRunning || towerBattleMode) resetArenaBattle();
+            screens.forEach(screen => screen.classList.add('hidden'));
+            const spiralMartScreen = document.getElementById('spiralMartScreen');
+            if (spiralMartScreen) spiralMartScreen.classList.remove('hidden');
+            document.body.classList.remove('adventure-view', 'adventure-battle-active');
+            document.body.classList.add('spiral-mart-view');
+            navItems.forEach(nav => nav.classList.remove('active'));
+            updateGameBgmForScreen('spiralMartScreen');
+        }
+        window.openSpiralMartScreen = openSpiralMartScreen;
+        function openHomeScreenFromSpiralMart() {
+            screens.forEach(screen => screen.classList.add('hidden'));
+            const homeScreen = document.getElementById('homeScreen');
+            if (homeScreen) homeScreen.classList.remove('hidden');
+            document.body.classList.remove('spiral-mart-view', 'adventure-view', 'adventure-battle-active');
+            navItems.forEach(nav => nav.classList.toggle('active', nav.getAttribute('data-screen') === 'homeScreen'));
+            if (typeof updateHomeUI === 'function') updateHomeUI();
+            updateGameBgmForScreen('homeScreen');
+        }
+        window.openHomeScreenFromSpiralMart = openHomeScreenFromSpiralMart;
+        const LUCKY_TICKET_GEM_COST = 300;
+        function updateLuckyTicketUI() {
+            const ticketBalance = Math.max(0, Math.floor(Number(currencyState.luckyTickets) || 0));
+            const value = document.getElementById('spiralLuckyTicketValue');
+            const drawOneAmount = document.getElementById('spiralDrawOneTicketAmount');
+            const drawTenAmount = document.getElementById('spiralDrawTenTicketAmount');
+            const pityCounter = document.getElementById('spiralGachaPityCounter');
+            if (value) value.textContent = ticketBalance.toLocaleString();
+            if (drawOneAmount) drawOneAmount.textContent = ticketBalance.toLocaleString();
+            if (drawTenAmount) drawTenAmount.textContent = ticketBalance.toLocaleString();
+            if (pityCounter) pityCounter.textContent = `${Math.max(0, Math.min(99, Math.floor(Number(spiralGachaState.ascendedPity) || 0)))}/100`;
+        }
+        function updateLuckyTicketPurchasePreview(value) {
+            const slider = document.getElementById('luckyTicketSlider');
+            const maximum = slider ? Math.max(0, Math.floor(Number(slider.max) || 0)) : 0;
+            const tickets = Math.max(0, Math.min(maximum, Math.floor(Number(value) || 0)));
+            if (slider) slider.value = String(tickets);
+            const spend = tickets * LUCKY_TICKET_GEM_COST;
+            const spendLabel = document.getElementById('luckyTicketGemSpend');
+            const receiveLabel = document.getElementById('luckyTicketReceive');
+            const confirmButton = document.getElementById('luckyTicketConfirmButton');
+            const maxLabel = document.getElementById('luckyTicketSliderMax');
+            if (spendLabel) spendLabel.textContent = spend.toLocaleString();
+            if (receiveLabel) receiveLabel.textContent = tickets.toLocaleString();
+            if (maxLabel) maxLabel.textContent = `${maximum.toLocaleString()} Tickets max`;
+            if (confirmButton) confirmButton.disabled = tickets <= 0 || spend > Math.max(0, Math.floor(Number(currencyState.gems) || 0));
+        }
+        function openLuckyTicketPurchase() {
+            const modal = document.getElementById('luckyTicketPurchaseModal');
+            const slider = document.getElementById('luckyTicketSlider');
+            if (!modal || !slider) return;
+            const maximum = Math.max(0, Math.floor((Number(currencyState.gems) || 0) / LUCKY_TICKET_GEM_COST));
+            slider.max = String(maximum);
+            slider.value = maximum > 0 ? '1' : '0';
+            updateLuckyTicketPurchasePreview(slider.value);
+            modal.classList.remove('hidden');
+        }
+        function closeLuckyTicketPurchase() {
+            document.getElementById('luckyTicketPurchaseModal')?.classList.add('hidden');
+        }
+        function confirmLuckyTicketPurchase() {
+            const slider = document.getElementById('luckyTicketSlider');
+            const tickets = Math.max(0, Math.floor(Number(slider && slider.value) || 0));
+            const cost = tickets * LUCKY_TICKET_GEM_COST;
+            const gems = Math.max(0, Math.floor(Number(currencyState.gems) || 0));
+            if (tickets <= 0 || cost > gems) return;
+            currencyState.gems = gems - cost;
+            currencyState.luckyTickets = Math.max(0, Math.floor(Number(currencyState.luckyTickets) || 0)) + tickets;
+            updateCurrencyUI();
+            if (typeof manualSaveGame === 'function') manualSaveGame();
+            closeLuckyTicketPurchase();
+        }
+        window.updateLuckyTicketUI = updateLuckyTicketUI;
+        window.updateLuckyTicketPurchasePreview = updateLuckyTicketPurchasePreview;
+        window.openLuckyTicketPurchase = openLuckyTicketPurchase;
+        window.closeLuckyTicketPurchase = closeLuckyTicketPurchase;
+        window.confirmLuckyTicketPurchase = confirmLuckyTicketPurchase;
+        const SPIRAL_GACHA_RARITY_WEIGHTS = Object.freeze({ Rare: 61.32, Epic: 25, Legendary: 12.5, Ascended: 1.18 });
+        let spiralGachaContext = null;
+        function chooseSpiralGachaRarity(forceEpicOrBetter = false, forceAscended = false) {
+            if (forceAscended) return 'Ascended';
+            const allowed = forceEpicOrBetter ? ['Epic', 'Legendary', 'Ascended'] : ['Rare', 'Epic', 'Legendary', 'Ascended'];
+            const total = allowed.reduce((sum, rarity) => sum + (SPIRAL_GACHA_RARITY_WEIGHTS[rarity] || 0), 0);
+            let roll = Math.random() * total;
+            for (const rarity of allowed) {
+                roll -= SPIRAL_GACHA_RARITY_WEIGHTS[rarity] || 0;
+                if (roll < 0) return rarity;
+            }
+            return allowed[allowed.length - 1];
+        }
+        function createSpiralGachaRewards(drawCount) {
+            const rewards = [];
+            for (let index = 0; index < drawCount; index += 1) {
+                const nextDrawNumber = Math.max(0, Math.floor(Number(spiralGachaState.totalDraws) || 0)) + 1;
+                const forceAscended = Math.max(0, Math.floor(Number(spiralGachaState.ascendedPity) || 0)) >= 99;
+                const forceEpicOrBetter = nextDrawNumber % 10 === 0;
+                const rarity = chooseSpiralGachaRarity(forceEpicOrBetter, forceAscended);
+                const part = chooseChestPart(rarity, ['Rare', 'Epic', 'Legendary', 'Ascended']);
+                if (part) rewards.push({ kind: 'part', type: Object.entries(PARTS).find(([, parts]) => (parts || []).some(candidate => candidate.id === part.part.id))?.[0] || 'battleCap', part: part.part, rarity, name: part.part.name || part.part.id, amount: ({ Rare:25, Epic:12, Legendary:2, Ascended:1 }[rarity] || 1) });
+                spiralGachaState.totalDraws = nextDrawNumber;
+                spiralGachaState.ascendedPity = rarity === 'Ascended' ? 0 : Math.min(99, Math.max(0, Math.floor(Number(spiralGachaState.ascendedPity) || 0)) + 1);
+            }
+            return rewards;
+        }
+        function startSpiralGachaDraw(drawCount) {
+            const count = Number(drawCount) === 10 ? 10 : 1;
+            const cost = count;
+            const balance = Math.max(0, Math.floor(Number(currencyState.luckyTickets) || 0));
+            if (balance < cost) return;
+            currencyState.luckyTickets = balance - cost;
+            spiralGachaPendingBattleCapUnlocks = [];
+            spiralGachaContext = { drawCount: count, rewards: createSpiralGachaRewards(count), phase: 'idle', granted: false };
+            updateCurrencyUI();
+            if (typeof manualSaveGame === 'function') manualSaveGame();
+            screens.forEach(screen => screen.classList.add('hidden'));
+            document.getElementById('spiralGachaOpeningScreen')?.classList.remove('hidden');
+            navItems.forEach(nav => nav.classList.remove('active'));
+            document.body.classList.remove('adventure-view');
+            document.body.classList.add('spiral-mart-view');
+            const chest = document.getElementById('spiralGachaChest');
+            chest?.classList.remove('chest-opened');
+            chest?.classList.remove('spiral-swipe-active');
+            chest?.style.setProperty('--spiral-chest-light', '0');
+            chest?.querySelector('.home-chest-lid')?.style.removeProperty('transform');
+        }
+        let spiralGachaSwipe = null;
+        let spiralGachaSwipeIdleTimer = null;
+        function updateSpiralGachaLid(progress) {
+            const chest = document.getElementById('spiralGachaChest');
+            const lid = chest?.querySelector('.home-chest-lid');
+            if (!lid) return;
+            chest.classList.add('spiral-swipe-active');
+            clearTimeout(spiralGachaSwipeIdleTimer);
+            spiralGachaSwipeIdleTimer = setTimeout(() => chest.classList.remove('spiral-swipe-active'), 700);
+            lid.style.transition = 'none';
+            lid.style.transform = `rotate(${50 * progress}deg)`;
+            chest.style.setProperty('--spiral-chest-light', String(progress));
+        }
+        function finishSpiralGachaSwipe() {
+            const chest = document.getElementById('spiralGachaChest');
+            const lid = chest?.querySelector('.home-chest-lid');
+            if (!spiralGachaSwipe) return;
+            const completed = spiralGachaSwipe.progress >= 1;
+            spiralGachaSwipe = null;
+            if (lid) lid.style.transition = '';
+            if (!completed || !spiralGachaContext || spiralGachaContext.phase !== 'idle') {
+                clearTimeout(spiralGachaSwipeIdleTimer);
+                if (lid) { lid.style.transition = 'transform .25s ease-out'; lid.style.transform = ''; }
+                chest?.style.setProperty('--spiral-chest-light', '0');
+                chest?.classList.remove('spiral-swipe-active');
+                return;
+            }
+            spiralGachaContext.phase = 'opening';
+            if (lid) lid.style.removeProperty('transform');
+            chest?.classList.add('chest-opened');
+            if (typeof manualSaveGame === 'function') manualSaveGame();
+            setTimeout(() => {
+                spiralGachaContext.phase = 'results';
+                showSpiralGachaResults();
+            }, 700);
+        }
+        function initializeSpiralGachaSwipe() {
+            const stage = document.getElementById('spiralGachaOpeningStage');
+            if (!stage || stage.dataset.swipeBound === '1') return;
+            stage.dataset.swipeBound = '1';
+            stage.addEventListener('pointerdown', (event) => {
+                if (!spiralGachaContext || spiralGachaContext.phase !== 'idle') return;
+                clearTimeout(spiralGachaSwipeIdleTimer);
+                document.getElementById('spiralGachaChest')?.classList.add('spiral-swipe-active');
+                spiralGachaSwipe = { pointerId: event.pointerId, startX: event.clientX, progress: 0 };
+                stage.setPointerCapture?.(event.pointerId);
+                event.preventDefault();
+            });
+            stage.addEventListener('pointermove', (event) => {
+                if (!spiralGachaSwipe || event.pointerId !== spiralGachaSwipe.pointerId) return;
+                const progress = Math.max(0, Math.min(1, (event.clientX - spiralGachaSwipe.startX) / Math.max(120, stage.clientWidth * 0.58)));
+                spiralGachaSwipe.progress = progress;
+                updateSpiralGachaLid(progress);
+                event.preventDefault();
+            });
+            stage.addEventListener('pointerup', (event) => {
+                if (!spiralGachaSwipe || event.pointerId !== spiralGachaSwipe.pointerId) return;
+                finishSpiralGachaSwipe();
+                stage.releasePointerCapture?.(event.pointerId);
+                event.preventDefault();
+            });
+            stage.addEventListener('pointercancel', finishSpiralGachaSwipe);
+        }
+        initializeSpiralGachaSwipe();
+        function createSpiralGachaFlipCard(reward, cardIndex) {
+            const flipCard = document.createElement('div');
+            flipCard.className = 'spiral-gacha-flip-card';
+            const rarityGlow = { Rare:'#4EA8FF', Epic:'#C45CFF', Legendary:'#FFD34E', Ascended:'#FFFFFF' }[reward.rarity] || '#9BB8D2';
+            flipCard.style.setProperty('--spiral-rarity-glow', rarityGlow);
+            const flipInner = document.createElement('div');
+            flipInner.className = 'spiral-gacha-flip-inner';
+            const cover = document.createElement('div');
+            cover.className = 'spiral-gacha-card-cover';
+            cover.setAttribute('aria-label', 'Tap to reveal reward');
+            const cardBack = document.createElement('div');
+            cardBack.className = 'spiral-gacha-card-back';
+            cardBack.appendChild(createChestRewardCard(reward, cardIndex));
+            flipCard._spiralGachaReward = reward;
+            flipInner.appendChild(cover);
+            flipInner.appendChild(cardBack);
+            flipCard.appendChild(flipInner);
+            flipCard.addEventListener('click', () => {
+                if (flipCard.classList.contains('revealed') || !spiralGachaContext) return;
+                flipCard.classList.add('revealed');
+                playGameSfx(MENU_SFX_CLICK_GEAR);
+                if (reward?.part?.id && reward.type === 'battleCap') {
+                    const unlockedPart = reward.unlockPart || spiralGachaPendingBattleCapUnlocks.find(part => part.id === reward.part.id);
+                    if (unlockedPart && !reward.unlockPopupScheduled) {
+                        reward.unlockPopupScheduled = true;
+                        const pendingIndex = spiralGachaPendingBattleCapUnlocks.indexOf(unlockedPart);
+                        if (pendingIndex >= 0) spiralGachaPendingBattleCapUnlocks.splice(pendingIndex, 1);
+                        setTimeout(() => showInitialBattleCapUnlock(unlockedPart), 500);
+                    }
+                }
+                spiralGachaContext.revealedCards = Math.min((spiralGachaContext.revealedCards || 0) + 1, spiralGachaContext.rewards.length);
+                if (spiralGachaContext.revealedCards >= spiralGachaContext.rewards.length) {
+                    const backButton = document.querySelector('#spiralGachaResultsScreen .spiral-gacha-back');
+                    if (backButton) { backButton.classList.remove('hidden'); backButton.style.display = ''; }
+                    updateSpiralGachaActionButton();
+                    
+                }
+            });
+            return flipCard;
+        }
+        function showSpiralGachaResults() {
+            if (!spiralGachaContext) return;
+            const grid = document.getElementById('spiralGachaResultsGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            const rewards = spiralGachaContext.rewards || [];
+            spiralGachaContext.revealedCards = 0;
+            updateSpiralGachaActionButton();
+            const backButton = document.querySelector('#spiralGachaResultsScreen .spiral-gacha-back');
+            if (backButton) { backButton.classList.add('hidden'); backButton.style.display = 'none'; }
+            grid.classList.toggle('multi-result', rewards.length > 1);
+            const resultsStage = document.querySelector('#spiralGachaResultsScreen .spiral-gacha-results-stage');
+            resultsStage?.classList.toggle('single-result', rewards.length === 1);
+            const groups = rewards.length === 1 ? [rewards] : [rewards.slice(0, 3), rewards.slice(3, 7), rewards.slice(7, 10)];
+            groups.forEach((group, groupIndex) => {
+                const stack = document.createElement('div');
+                stack.className = `spiral-gacha-stack${rewards.length === 1 ? ' single' : ''}`;
+                group.forEach((reward, index) => {
+                    stack.appendChild(createSpiralGachaFlipCard(reward, index));
+                });
+                grid.appendChild(stack);
+            });
+            if (!spiralGachaContext.granted) {
+                spiralGachaRewardGrantActive = true;
+                spiralGachaContext.rewards.forEach(reward => { chestRewardGrantActive = true; addPartAmount(reward.part.id, reward.amount); chestRewardGrantActive = false; });
+                spiralGachaRewardGrantActive = false;
+                const unlockQueue = spiralGachaPendingBattleCapUnlocks.slice();
+                spiralGachaContext.rewards.forEach(reward => {
+                    if (reward.type === 'battleCap') {
+                        const pendingIndex = unlockQueue.findIndex(part => part.id === reward.part.id);
+                        reward.unlockPart = pendingIndex >= 0 ? unlockQueue.splice(pendingIndex, 1)[0] : null;
+                    }
+                });
+                spiralGachaContext.granted = true;
+                updateCurrencyUI();
+                if (typeof updateGarageUI === 'function') updateGarageUI();
+                if (typeof manualSaveGame === 'function') manualSaveGame();
+            }
+            screens.forEach(screen => screen.classList.add('hidden'));
+            document.getElementById('spiralGachaResultsScreen')?.classList.remove('hidden');
+            navItems.forEach(nav => nav.classList.remove('active'));
+        }
+        function updateSpiralGachaActionButton() {
+            const button = document.getElementById('spiralGachaQuickOpenButton');
+            if (!button || !spiralGachaContext) return;
+            const cost = spiralGachaContext.drawCount === 10 ? 10 : 1;
+            const tickets = Math.max(0, Math.floor(Number(currencyState.luckyTickets) || 0));
+            if (spiralGachaContext.revealedCards >= spiralGachaContext.rewards.length && tickets >= cost) {
+                button.classList.add('spiral-gacha-draw-more');
+                button.innerHTML = `<span class="draw-more-title">Draw ${cost} More</span><span class="draw-more-cost"><span class="lucky-ticket-icon">Lucky</span>${tickets.toLocaleString()} / ${cost}</span>`;
+                button.setAttribute('aria-label', `Draw ${cost} more for ${cost} Lucky Tickets`);
+            } else {
+                button.classList.remove('spiral-gacha-draw-more');
+                button.innerHTML = 'Quick Open';
+                button.setAttribute('aria-label', 'Quick Open');
+            }
+        }
+        function handleSpiralGachaAction() {
+            if (!spiralGachaContext) return;
+            if (spiralGachaContext.revealedCards < spiralGachaContext.rewards.length) { quickOpenSpiralGacha(); return; }
+            const cost = spiralGachaContext.drawCount === 10 ? 10 : 1;
+            if (Math.max(0, Math.floor(Number(currencyState.luckyTickets) || 0)) >= cost) startSpiralGachaDraw(cost);
+        }
+        function quickOpenSpiralGacha() {
+            if (!spiralGachaContext) return;
+            const cards = Array.from(document.querySelectorAll('#spiralGachaResultsGrid .spiral-gacha-flip-card'));
+            cards.forEach((flipCard, index) => {
+                if (flipCard.classList.contains('revealed')) return;
+                flipCard.classList.add('revealed');
+                const reward = flipCard._spiralGachaReward;
+                if (reward?.part?.id && reward.type === 'battleCap') {
+                    const unlockedPart = reward.unlockPart || spiralGachaPendingBattleCapUnlocks.find(part => part.id === reward.part.id);
+                    if (unlockedPart && !reward.unlockPopupScheduled) {
+                        reward.unlockPopupScheduled = true;
+                        const pendingIndex = spiralGachaPendingBattleCapUnlocks.indexOf(unlockedPart);
+                        if (pendingIndex >= 0) spiralGachaPendingBattleCapUnlocks.splice(pendingIndex, 1);
+                        setTimeout(() => showInitialBattleCapUnlock(unlockedPart), 500 + index * 500);
+                    }
+                }
+            });
+            spiralGachaContext.revealedCards = spiralGachaContext.rewards.length;
+            const backButton = document.querySelector('#spiralGachaResultsScreen .spiral-gacha-back');
+            if (backButton) { backButton.classList.remove('hidden'); backButton.style.display = ''; }
+            updateSpiralGachaActionButton();
+        }
+        function closeSpiralGachaResults() {
+            spiralGachaContext = null;
+            screens.forEach(screen => screen.classList.add('hidden'));
+            document.getElementById('spiralMartScreen')?.classList.remove('hidden');
+            document.body.classList.add('spiral-mart-view');
+            updateLuckyTicketUI();
+        }
+        window.startSpiralGachaDraw = startSpiralGachaDraw;
+        window.quickOpenSpiralGacha = quickOpenSpiralGacha;
+        window.handleSpiralGachaAction = handleSpiralGachaAction;
+        window.closeSpiralGachaResults = closeSpiralGachaResults;
         let adventureCompletedNodeIds = new Set();
         let adventurePendingNode = null;
         let adventureBossCompleted = false;
@@ -6631,10 +7322,19 @@ const parts = {
         let activeTab = 'battleCap';
         let modalTargetPart = null;
         let modalShopOfferIndex = null;
+        function updateLoadoutTeamSelector() {
+            const name = LOADOUT_TEAM_NAMES[activeTeamIndex] || LOADOUT_TEAM_NAMES[0];
+            const button = document.getElementById('activeLoadoutTeamButton');
+            const menu = document.getElementById('loadoutTeamMenu');
+            if (button) { button.childNodes[0].textContent = name; button.setAttribute('aria-label', `Active loadout team: ${name}`); }
+            document.querySelectorAll('.loadout-team-option').forEach(option => option.classList.toggle('active', Number(option.dataset.team) === activeTeamIndex));
+            if (menu) menu.setAttribute('aria-label', `${name} selected`);
+        }
         function updateLoadoutSelector() {
             document.querySelectorAll('.loadout-btn').forEach(btn => {
                 btn.classList.toggle('active', Number(btn.dataset.loadout) === activeLoadoutIndex);
             });
+            updateLoadoutTeamSelector();
         }
         function isPartUsedInOtherLoadout(type, partId) {
             return playerLoadouts.some((loadout, index) => index !== activeLoadoutIndex && loadout[type] && loadout[type].id === partId);
@@ -6650,6 +7350,43 @@ const parts = {
             if (typeof updateSkillHexagons === 'function') updateSkillHexagons();
             scheduleChampionshipPlayerSync();
         }
+        function closeLoadoutTeamMenu() {
+            const menu = document.getElementById('loadoutTeamMenu');
+            const button = document.getElementById('activeLoadoutTeamButton');
+            menu?.classList.add('hidden');
+            button?.setAttribute('aria-expanded', 'false');
+        }
+        function toggleLoadoutTeamMenu() {
+            const menu = document.getElementById('loadoutTeamMenu');
+            const button = document.getElementById('activeLoadoutTeamButton');
+            if (!menu || !button) return;
+            const opening = menu.classList.contains('hidden');
+            menu.classList.toggle('hidden', !opening);
+            button.setAttribute('aria-expanded', String(opening));
+        }
+        function selectLoadoutTeam(index) {
+            if (index < 0 || index >= loadoutTeams.length || index === activeTeamIndex) { closeLoadoutTeamMenu(); return; }
+            activeTeamIndex = index;
+            playerLoadouts = loadoutTeams[activeTeamIndex];
+            activeLoadoutIndex = 0;
+            playerEquipped = playerLoadouts[activeLoadoutIndex];
+            if (typeof bey1 !== 'undefined' && bey1) bey1.updateParts(playerEquipped);
+            closeLoadoutTeamMenu();
+            updateLoadoutSelector();
+            updateGarageUI();
+            if (typeof updateHomeUI === 'function') updateHomeUI();
+            if (typeof updateSkillHexagons === 'function') updateSkillHexagons();
+            scheduleChampionshipPlayerSync();
+            if (typeof manualSaveGame === 'function') manualSaveGame();
+        }
+        document.getElementById('activeLoadoutTeamButton')?.addEventListener('click', event => { event.stopPropagation(); toggleLoadoutTeamMenu(); });
+        document.querySelectorAll('.loadout-team-option').forEach(option => option.addEventListener('click', () => {
+            playGameSfx(MENU_SFX_CLICK_GEAR);
+            selectLoadoutTeam(Number(option.dataset.team));
+        }));
+        document.addEventListener('click', event => {
+            if (!event.target.closest?.('#loadoutTeamSelector')) closeLoadoutTeamMenu();
+        });
         document.querySelectorAll('.loadout-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 playGameSfx(MENU_SFX_CLICK_GEAR);
@@ -7865,54 +8602,68 @@ arena_7: './arena_7.mp3'
 
         const partIconArtworkCache = new Map();
         const SHOP_SAVE_KEY = 'bey_shop_state_v2';
-        const TOWER_PROGRESS_RESET_VERSION = 1;
-        const TOWER_PROGRESS_RESET_KEY = 'bey_tower_progress_reset_v1';
-        function resetTowerProgressInSavePayload(payload) {
+        const PARTS_PROGRESS_RESET_VERSION = 1;
+        const PARTS_PROGRESS_RESET_KEY = 'bey_parts_progress_reset_v1';
+        function resetRareAndHigherPartProgressInSavePayload(payload) {
             if (!payload || typeof payload !== 'object') return payload;
+            const resetRarities = new Set(['Rare', 'Epic', 'Legendary', 'Ascended']);
+            const resetLevels = { Rare: 3, Epic: 5, Legendary: 7, Ascended: 9 };
+            const nextUpgrades = { ...(payload.upgrades || {}) };
+            const nextPartAmounts = { ...(payload.partAmounts || {}) };
+            Object.values(PARTS).flat().forEach(part => {
+                if (!part || !resetRarities.has(part.rarity)) return;
+                nextUpgrades[part.id] = resetLevels[part.rarity];
+                nextPartAmounts[part.id] = 0;
+            });
             return {
                 ...payload,
-                towerResetVersion: TOWER_PROGRESS_RESET_VERSION,
+                partsProgressResetVersion: PARTS_PROGRESS_RESET_VERSION,
                 revision: Date.now(),
-                tower: { currentFloor: 1, unlockedFloor: 1, firstClearGems: {}, firstClearChests: {} }
+                currency: { ...(payload.currency || {}), ascendedStones: 0 },
+                upgrades: nextUpgrades,
+                partAmounts: nextPartAmounts
             };
         }
-        function runOneTimeTowerProgressReset() {
+        function runOneTimeRareAndHigherPartProgressReset() {
             try {
-                const storedVersion = Number(localStorage.getItem(TOWER_PROGRESS_RESET_KEY) || 0);
-                if (storedVersion >= TOWER_PROGRESS_RESET_VERSION) return;
-                towerCurrentFloor = 1;
-                towerUnlockedFloor = 1;
-                towerActiveFloor = null;
-                towerFirstClearGems = {};
-                towerFirstClearChests = {};
+                const storedVersion = Number(localStorage.getItem(PARTS_PROGRESS_RESET_KEY) || 0);
+                if (storedVersion >= PARTS_PROGRESS_RESET_VERSION) return;
+                const resetRarities = new Set(['Rare', 'Epic', 'Legendary', 'Ascended']);
+                const resetLevels = { Rare: 3, Epic: 5, Legendary: 7, Ascended: 9 };
+                Object.values(PARTS).flat().forEach(part => {
+                    if (!part || !resetRarities.has(part.rarity)) return;
+                    partUpgradeLevels[part.id] = resetLevels[part.rarity];
+                    partAmounts[part.id] = 0;
+                });
+                currencyState.ascendedStones = 0;
                 const rawSave = localStorage.getItem('bey_manual_universal_save');
                 if (rawSave) {
                     try {
                         const payload = JSON.parse(rawSave);
-                        localStorage.setItem('bey_manual_universal_save', JSON.stringify(resetTowerProgressInSavePayload(payload)));
+                        localStorage.setItem('bey_manual_universal_save', JSON.stringify(resetRareAndHigherPartProgressInSavePayload(payload)));
                     } catch (e) {}
                 }
-                localStorage.setItem(TOWER_PROGRESS_RESET_KEY, String(TOWER_PROGRESS_RESET_VERSION));
+                localStorage.setItem(PARTS_PROGRESS_RESET_KEY, String(PARTS_PROGRESS_RESET_VERSION));
             } catch (e) {}
         }
-        runOneTimeTowerProgressReset();
+        runOneTimeRareAndHigherPartProgressReset();
         let shopRefreshCost = 100;
         const SHOP_AMOUNT_OPTIONS = [10, 20, 50, 100];
         const SHOP_RARITY_WEIGHTS = { Normal: 60, Rare: 35, Epic: 10, Legendary: 4, Ascended: 1 };
         const SHOP_GOLD_BASE_PRICES = { Normal: 100, Rare: 1000, Epic: 8000, Legendary: 20000, Ascended: 50000 };
-        const SHOP_GEM_BASE_PRICES = { Legendary: 200, Ascended: 500 };
+        const SHOP_GEM_BASE_PRICES = { Legendary: 200, Ascended: 5000 };
         let shopOffers = [];
         let shopBatchExpiresAt = 0;
         let shopDailyExpiresAt = 0;
         let shopBatchTimer = null;
         let shopMerchantMode = 'local';
         const WORLD_MERCHANT_OFFERS = [
-            { kind: 'gold', name: 'Gold', amount: 1000, currency: 'gems', price: 10 },
-            { kind: 'gold', name: 'Gold', amount: 10000, currency: 'gems', price: 100 },
-            { kind: 'gold', name: 'Gold', amount: 100000, currency: 'gems', price: 1000 },
-            { kind: 'gems', name: 'Gems', amount: 10, currency: 'gold', price: 1000 },
-            { kind: 'gems', name: 'Gems', amount: 100, currency: 'gold', price: 10000 },
-            { kind: 'gems', name: 'Gems', amount: 1000, currency: 'gold', price: 100000 },
+            { kind: 'gold', name: 'Gold', amount: 750, currency: 'gems', price: 5 },
+            { kind: 'gold', name: 'Gold', amount: 7500, currency: 'gems', price: 50 },
+            { kind: 'gold', name: 'Gold', amount: 75000, currency: 'gems', price: 400 },
+            { kind: 'gems', name: 'Gems', amount: 5, currency: 'gold', price: 1000 },
+            { kind: 'gems', name: 'Gems', amount: 50, currency: 'gold', price: 10000 },
+            { kind: 'gems', name: 'Gems', amount: 500, currency: 'gold', price: 100000 },
             { kind: 'chest', name: 'Plain Chest', chestId: 'plain', currency: 'gems', price: 10 },
             { kind: 'chest', name: 'Uncommon Chest', chestId: 'uncommon', currency: 'gems', price: 20 },
             { kind: 'chest', name: 'Superior Chest', chestId: 'superior', currency: 'gems', price: 50 },
@@ -7962,14 +8713,20 @@ arena_7: './arena_7.mp3'
             if (!candidates.length) candidates = catalog.filter(entry => !usedIds.has(entry.part.id));
             if (!candidates.length) candidates = catalog;
             const selected = candidates[Math.floor(Math.random() * candidates.length)];
-            const amount = SHOP_AMOUNT_OPTIONS[Math.floor(Math.random() * SHOP_AMOUNT_OPTIONS.length)];
             const selectedRarity = selected.part.rarity || 'Normal';
+            const amount = selectedRarity === 'Legendary' || selectedRarity === 'Ascended'
+                ? 1
+                : selectedRarity === 'Epic'
+                    ? [10, 20, 50][Math.floor(Math.random() * 3)]
+                    : SHOP_AMOUNT_OPTIONS[Math.floor(Math.random() * SHOP_AMOUNT_OPTIONS.length)];
             let currency = 'gold';
-            if (!protectedPartSlot && (selectedRarity === 'Legendary' || selectedRarity === 'Ascended') && Math.random() < 0.5) currency = 'gems';
+            if (selectedRarity === 'Ascended') currency = 'gems';
+            else if (!protectedPartSlot && selectedRarity === 'Legendary' && Math.random() < 0.5) currency = 'gems';
             const basePrice = currency === 'gems' ? SHOP_GEM_BASE_PRICES[selectedRarity] : SHOP_GOLD_BASE_PRICES[selectedRarity];
-                const fixedPrice = index === 2 ? 0 : null;
+            const fixedPrice = index === 2 ? 0 : null;
             usedIds.add(selected.part.id);
-            return { ...selected, kind: 'part', amount, currency, price: fixedPrice ?? Math.round(basePrice * amount / 10), soldOut: false };
+            const price = selectedRarity === 'Ascended' ? 5000 : fixedPrice ?? Math.round(basePrice * amount / 10);
+            return { ...selected, kind: 'part', amount, currency, price, soldOut: false };
         }
         function generateShopOffers(startIndex = 0, preservedOffers = []) {
             const usedIds = new Set(preservedOffers.filter(offer => offer && offer.part).map(offer => offer.part.id));
@@ -7998,7 +8755,17 @@ arena_7: './arena_7.mp3'
                     if (saved.kind === 'chest') return { kind: 'chest', type: 'chest', part: null, chestId: saved.chestId || 'daily', name: saved.name || 'Daily Chest', rarity: saved.rarity || 'Normal', amount: 1, currency: 'gold', price: 0, soldOut: saved.soldOut === true };
                     const entry = catalog.find(candidate => candidate.type === saved.type && candidate.part.id === saved.partId);
                     if (!entry) return null;
-                    return { ...entry, kind: 'part', amount: SHOP_AMOUNT_OPTIONS.includes(Number(saved.amount)) ? Number(saved.amount) : 10, currency: saved.currency === 'gems' ? 'gems' : 'gold', price: Math.max(0, Math.floor(Number(saved.price) || 0)), soldOut: saved.soldOut === true };
+                    const savedRarity = entry.part.rarity || 'Normal';
+                    const restoredAmount = savedRarity === 'Legendary' || savedRarity === 'Ascended'
+                        ? 1
+                        : savedRarity === 'Epic'
+                            ? ([10, 20, 50].includes(Number(saved.amount)) ? Number(saved.amount) : 10)
+                            : (SHOP_AMOUNT_OPTIONS.includes(Number(saved.amount)) ? Number(saved.amount) : 10);
+                    const restoredCurrency = savedRarity === 'Ascended' ? 'gems' : (saved.currency === 'gems' ? 'gems' : 'gold');
+                    const restoredPrice = savedRarity === 'Ascended'
+                        ? 5000
+                        : Math.max(0, Math.floor(Number(saved.price) || 0));
+                    return { ...entry, kind: 'part', amount: restoredAmount, currency: restoredCurrency, price: restoredPrice, soldOut: saved.soldOut === true };
                 }).filter(Boolean) : [];
                 if (restoredOffers.length !== 12) return false;
                 if (!restoredOffers[1] || restoredOffers[1].kind !== 'chest') restoredOffers[1] = { kind: 'chest', type: 'chest', part: null, chestId: Math.random() < 0.3 ? 'uncommon' : 'plain', name: 'Daily Chest', rarity: 'Normal', amount: 1, currency: 'gold', price: 0, soldOut: false };
@@ -18411,6 +19178,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         const modalPartUpgradeBar = document.getElementById('modalPartUpgradeBar');
         const modalPartUpgradeFill = document.getElementById('modalPartUpgradeFill');
         const modalPartUpgradeLabel = document.getElementById('modalPartUpgradeLabel');
+        const modalAscendedStoneCounter = document.getElementById('modalAscendedStoneCounter');
         const modalStatsGrid = document.getElementById('modalStatsGrid');
         const modalEquipBtn = document.getElementById('modalEquipBtn');
         const upgradePartBtn = document.getElementById('upgradePartBtn');
@@ -18442,8 +19210,12 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             const abilityTab = document.querySelector('.modal-content-tab[data-tab="ability"]');
             if (abilityTab) abilityTab.click();
             const partLevel = getPartLevel(part);
-            const currentPartAmount = getPartAmount(part);
+            const currentUpgradeAmount = getPartUpgradeAmount(part);
             const requiredPartAmount = getUpgradePartAmount(part);
+            if (modalAscendedStoneCounter) {
+                const showStoneCounter = isAcquired && part.rarity === 'Ascended';
+                modalAscendedStoneCounter.style.display = showStoneCounter ? 'flex' : 'none';
+            }
             if (modalPartUpgradeTitle) {
                 const rarityClass = (part.rarity || 'Normal').toLowerCase();
                 modalPartUpgradeTitle.className = `modal-part-upgrade-title ${rarityClass}`;
@@ -18453,11 +19225,11 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             if (modalPartUpgradeBar && modalPartUpgradeFill && modalPartUpgradeLabel) {
                 modalPartUpgradeBar.style.display = isAcquired ? '' : 'none';
                 const maxLevel = partLevel >= 15;
-                const amountComplete = maxLevel || currentPartAmount >= requiredPartAmount;
-                const fillRatio = maxLevel || requiredPartAmount <= 0 ? 1 : Math.min(1, currentPartAmount / requiredPartAmount);
+                const amountComplete = maxLevel || currentUpgradeAmount >= requiredPartAmount;
+                const fillRatio = maxLevel || requiredPartAmount <= 0 ? 1 : Math.min(1, currentUpgradeAmount / requiredPartAmount);
                 modalPartUpgradeBar.classList.toggle('complete', amountComplete);
                 modalPartUpgradeFill.style.width = `${fillRatio * 100}%`;
-                modalPartUpgradeLabel.textContent = maxLevel ? 'Max' : `${currentPartAmount.toLocaleString()} / ${requiredPartAmount.toLocaleString()}`;
+                modalPartUpgradeLabel.textContent = maxLevel ? 'Max' : `${currentUpgradeAmount.toLocaleString()} / ${requiredPartAmount.toLocaleString()}`;
             }
             modalPartName.innerHTML = `<span class="modal-part-name-text">${part.name}</span> <span class="modal-part-level">Lv. ${partLevel}</span>`;
             if (modalDescTitle) modalDescTitle.textContent = part.name;
@@ -18483,7 +19255,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             const modalCombatPower = document.getElementById('modalCombatPowerValue');
             if (modalCombatPower) modalCombatPower.textContent = getPartCombatPower(part).toLocaleString();
             const upgradeCost = getUpgradeCost(part);
-            const upgradeAvailable = partLevel < 15 && currencyState.gold >= upgradeCost && currentPartAmount >= requiredPartAmount;
+            const upgradeAvailable = partLevel < 15 && currencyState.gold >= upgradeCost && currentUpgradeAmount >= requiredPartAmount;
             if (upgradeInfo) {
                 upgradeInfo.style.display = 'none';
                 upgradeInfo.textContent = '';
@@ -18560,10 +19332,14 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             const level = getPartLevel(part);
             const cost = getUpgradeCost(part);
             const requiredPartAmount = getUpgradePartAmount(part);
-            const currentPartAmount = getPartAmount(part);
-            if (level >= 15 || currencyState.gold < cost || currentPartAmount < requiredPartAmount) return;
+            const currentUpgradeAmount = getPartUpgradeAmount(part);
+            if (level >= 15 || currencyState.gold < cost || currentUpgradeAmount < requiredPartAmount) return;
             currencyState.gold -= cost;
-            partAmounts[part.id] = currentPartAmount - requiredPartAmount;
+            if (part.rarity === 'Ascended') {
+                currencyState.ascendedStones = currentUpgradeAmount - requiredPartAmount;
+            } else {
+                partAmounts[part.id] = currentUpgradeAmount - requiredPartAmount;
+            }
             partUpgradeLevels[part.id] = level + 1;
             updateCurrencyUI();
             scheduleChampionshipPlayerSync();
@@ -18770,6 +19546,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 speedToggleBtn.textContent = '1X';
                 speedToggleBtn.classList.remove('active');
             }
+            if (typeof manualSaveGame === 'function') manualSaveGame();
         });
 
         autoToggleBtn.addEventListener('click', () => {
@@ -18779,6 +19556,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             } else {
                 autoToggleBtn.classList.remove('active');
             }
+            if (typeof manualSaveGame === 'function') manualSaveGame();
         });
 
         hexCenter.addEventListener('click', () => {
@@ -18844,10 +19622,12 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             return {
                 version: 2,
                 revision: Date.now(),
-                towerResetVersion: TOWER_PROGRESS_RESET_VERSION,
+                partsProgressResetVersion: PARTS_PROGRESS_RESET_VERSION,
                 seed: universalSeed,
                 tower: { currentFloor: towerCurrentFloor, unlockedFloor: towerUnlockedFloor, firstClearGems: { ...towerFirstClearGems }, firstClearChests: { ...towerFirstClearChests } },
-                currency: { gold: Math.max(0, Math.floor(currencyState.gold || 0)), gems: Math.max(0, Math.floor(currencyState.gems || 0)) },
+                currency: { gold: Math.max(0, Math.floor(currencyState.gold || 0)), gems: Math.max(0, Math.floor(currencyState.gems || 0)), ascendedStones: Math.max(0, Math.floor(currencyState.ascendedStones || 0)), luckyTickets: Math.max(0, Math.floor(currencyState.luckyTickets || 0)) },
+                spiralGacha: { ascendedPity: Math.max(0, Math.min(99, Math.floor(spiralGachaState.ascendedPity || 0))), totalDraws: Math.max(0, Math.floor(spiralGachaState.totalDraws || 0)) },
+                battlePreferences: { speed2x: gameSpeed === 2, autoUltimate: !!autoUltimateToggle.checked },
                 partAmounts: { ...partAmounts },
                 acquiredPartIds: { ...acquiredPartIds },
                 playerName,
@@ -18858,6 +19638,12 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                     visualSettings: { ...visualSettings },
                 debugOverrides: { ...debugOverrides },
                 upgrades: { ...partUpgradeLevels },
+                activeTeamIndex,
+                loadoutTeams: loadoutTeams.map(team => team.map(loadout => ({
+                    battleCap: loadout.battleCap.id,
+                    weightRing: loadout.weightRing.id,
+                    driver: loadout.driver.id
+                }))),
                 activeLoadoutIndex,
                 loadouts: playerLoadouts.map(loadout => ({
                     battleCap: loadout.battleCap.id,
@@ -19110,12 +19896,12 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                     openCloudConflict(localPayload, cloudPayload, row?.updated_at);
                     return;
                 }
-                const cloudTowerResetVersion = Number(cloudPayload && cloudPayload.towerResetVersion) || 0;
-                if (cloudPayload && cloudTowerResetVersion < TOWER_PROGRESS_RESET_VERSION) {
+                const cloudPartsProgressResetVersion = Number(cloudPayload && cloudPayload.partsProgressResetVersion) || 0;
+                if (cloudPayload && cloudPartsProgressResetVersion < PARTS_PROGRESS_RESET_VERSION) {
                     const localRevision = Number(localPayload && localPayload.revision) || 0;
                     const cloudRevision = Number(cloudPayload.revision) || 0;
                     const migrationBase = localPayload && localRevision >= cloudRevision ? localPayload : cloudPayload;
-                    cloudPayload = resetTowerProgressInSavePayload(migrationBase);
+                    cloudPayload = resetRareAndHigherPartProgressInSavePayload(migrationBase);
                     await upsertCloudSave(cloudPayload);
                     if (localPayload && migrationBase === localPayload) {
                         try { localStorage.setItem(MANUAL_SAVE_KEY, JSON.stringify(cloudPayload)); } catch (e) {}
@@ -19279,7 +20065,13 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 towerUnlockedFloor = Math.max(1, Math.min(TOWER_MAX_FLOOR, Number(data.tower && data.tower.unlockedFloor) || 1));
                 towerFirstClearGems = Object.fromEntries(Object.entries((data.tower && data.tower.firstClearGems) || {}).filter(([floor, claimed]) => /^(?:[1-9]|[1-9][0-9]{0,2}|1000)$/.test(floor) && Number(floor) <= TOWER_MAX_FLOOR && claimed === true));
                 towerFirstClearChests = Object.fromEntries(Object.entries((data.tower && data.tower.firstClearChests) || {}).filter(([floor, claimed]) => /^(?:[1-9]|[1-9][0-9]{0,2}|1000)$/.test(floor) && Number(floor) >= 801 && Number(floor) <= TOWER_MAX_FLOOR && claimed === true));
-                currencyState = { gold: Math.max(0, Number(data.currency && data.currency.gold) || 0), gems: Math.max(0, Number(data.currency && data.currency.gems) || 0) };
+                currencyState = { gold: Math.max(0, Number(data.currency && data.currency.gold) || 0), gems: Math.max(0, Number(data.currency && data.currency.gems) || 0), ascendedStones: Math.max(0, Math.floor(Number(data.currency && data.currency.ascendedStones) || 0)), luckyTickets: Math.max(0, Math.floor(Number(data.currency && data.currency.luckyTickets) || 0)) };
+                spiralGachaState = { ascendedPity: Math.max(0, Math.min(99, Math.floor(Number(data.spiralGacha && data.spiralGacha.ascendedPity) || 0))), totalDraws: Math.max(0, Math.floor(Number(data.spiralGacha && data.spiralGacha.totalDraws) || 0)) };
+                const savedBattlePreferences = data.battlePreferences || {};
+                gameSpeed = savedBattlePreferences.speed2x === true ? 2 : 1;
+                autoUltimateToggle.checked = savedBattlePreferences.autoUltimate === true;
+                if (speedToggleBtn) { speedToggleBtn.textContent = gameSpeed === 2 ? '2X' : '1X'; speedToggleBtn.classList.toggle('active', gameSpeed === 2); }
+                if (autoToggleBtn) autoToggleBtn.classList.toggle('active', autoUltimateToggle.checked);
                 partAmounts = Object.fromEntries(Object.entries(data.partAmounts || {}).map(([id, amount]) => [id, Math.max(0, Math.floor(Number(amount) || 0))]));
                 acquiredPartIds = Object.fromEntries(Object.entries(data.acquiredPartIds || {}).filter(([id, acquired]) => acquired === true));
                 playerName = String(data.playerName || 'Player').trim().slice(0, 20) || 'Player';
@@ -19294,16 +20086,22 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 updateSettingsAudioUI();
                 debugOverrides = { ...debugOverrides, ...(data.debugOverrides || {}) };
                 partUpgradeLevels = { ...(data.upgrades || {}) };
-                const savedLoadouts = Array.isArray(data.loadouts) && data.loadouts.length >= 3 ? data.loadouts : [data.playerLoadout || {}];
                 const defaults = createDefaultLoadouts();
-                playerLoadouts = [0, 1, 2].map(index => {
-                    const saved = savedLoadouts[index] || {};
-                    return {
-                        battleCap: findPartById(saved.battleCap, defaults[index].battleCap),
-                        weightRing: findPartById(saved.weightRing, defaults[index].weightRing),
-                        driver: findPartById(saved.driver, defaults[index].driver)
-                    };
+                const legacyLoadouts = Array.isArray(data.loadouts) && data.loadouts.length >= 3 ? data.loadouts : [data.playerLoadout || {}];
+                const savedTeams = Array.isArray(data.loadoutTeams) && data.loadoutTeams.length >= 3 ? data.loadoutTeams : [legacyLoadouts, null, null];
+                loadoutTeams = [0, 1, 2].map(teamIndex => {
+                    const savedTeam = Array.isArray(savedTeams[teamIndex]) ? savedTeams[teamIndex] : [];
+                    return [0, 1, 2].map(index => {
+                        const saved = savedTeam[index] || {};
+                        return {
+                            battleCap: findPartById(saved.battleCap, defaults[index].battleCap),
+                            weightRing: findPartById(saved.weightRing, defaults[index].weightRing),
+                            driver: findPartById(saved.driver, defaults[index].driver)
+                        };
+                    });
                 });
+                activeTeamIndex = Math.max(0, Math.min(2, Number(data.activeTeamIndex) || 0));
+                playerLoadouts = loadoutTeams[activeTeamIndex];
                 activeLoadoutIndex = Math.max(0, Math.min(2, Number(data.activeLoadoutIndex) || 0));
                 playerEquipped = playerLoadouts[activeLoadoutIndex];
                 const savedAdventure = data.adventure || {};
@@ -19342,7 +20140,15 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                             if (saved.kind === 'chest') return { kind: 'chest', type: 'chest', part: null, chestId: saved.chestId || 'daily', name: saved.name || 'Daily Chest', rarity: saved.rarity || 'Normal', amount: 1, currency: 'gold', price: 0, soldOut: saved.soldOut === true };
                             const entry = catalog.find(candidate => candidate.type === saved.type && candidate.part.id === saved.partId);
                             if (!entry) return null;
-                            return { ...entry, kind: 'part', amount: SHOP_AMOUNT_OPTIONS.includes(Number(saved.amount)) ? Number(saved.amount) : 10, currency: saved.currency === 'gems' ? 'gems' : 'gold', price: Math.max(0, Math.floor(Number(saved.price) || 0)), soldOut: saved.soldOut === true };
+                            const savedRarity = entry.part.rarity || 'Normal';
+                            const restoredAmount = savedRarity === 'Legendary' || savedRarity === 'Ascended'
+                                ? 1
+                                : savedRarity === 'Epic'
+                                    ? ([10, 20, 50].includes(Number(saved.amount)) ? Number(saved.amount) : 10)
+                                    : (SHOP_AMOUNT_OPTIONS.includes(Number(saved.amount)) ? Number(saved.amount) : 10);
+                            const restoredCurrency = savedRarity === 'Ascended' ? 'gems' : (saved.currency === 'gems' ? 'gems' : 'gold');
+                            const restoredPrice = savedRarity === 'Ascended' ? 5000 : Math.max(0, Math.floor(Number(saved.price) || 0));
+                            return { ...entry, kind: 'part', amount: restoredAmount, currency: restoredCurrency, price: restoredPrice, soldOut: saved.soldOut === true };
                         }).filter(Boolean);
                         if (restoredOffers.length === 12) {
                             shopOffers = restoredOffers;
@@ -19372,7 +20178,13 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             applyVisualSettings();
             updateSettingsAudioUI();
             debugOverrides = { playerUnlimitedHealth:false, playerUnlimitedStamina:false, playerUltimateAlwaysFull:false, enemyUnlimitedHealth:false, enemyUnlimitedStamina:false, enemyUltimateAlwaysEmpty:false };
-            currencyState = { gold: 0, gems: 0 };
+            currencyState = { gold: 5000, gems: 100, ascendedStones: 0, luckyTickets: 1 };
+            spiralGachaState = { ascendedPity: 0, totalDraws: 0 };
+            gameSpeed = 1;
+            autoUltimateToggle.checked = false;
+            speedToggleBtn.textContent = '1X';
+            speedToggleBtn.classList.remove('active');
+            autoToggleBtn.classList.remove('active');
             partUpgradeLevels = {};
             partAmounts = {};
             acquiredPartIds = {};
@@ -19387,7 +20199,9 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             try { localStorage.removeItem(CHAMPIONSHIP_PROGRESS_KEY); } catch (e) {}
             renderChestSlots();
             updateChestCountdowns();
-            playerLoadouts = createDefaultLoadouts();
+            loadoutTeams = [createDefaultLoadouts(), createDefaultLoadouts(), createDefaultLoadouts()];
+            activeTeamIndex = 0;
+            playerLoadouts = loadoutTeams[activeTeamIndex];
             activeLoadoutIndex = 0;
             playerEquipped = playerLoadouts[activeLoadoutIndex];
             try { localStorage.removeItem(MANUAL_SAVE_KEY); localStorage.removeItem(SHOP_SAVE_KEY); } catch (e) {}
