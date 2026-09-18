@@ -7409,8 +7409,8 @@ const parts = {
                 }, null, '1:0', true, 0, 0, null, bey2);
             } else {
                 showBattleResultSequence(false, true, 'DEFEATED', null, () => {
-                    bossCurrentReward = 50000;
-                    bossNextReward = 100000;
+                    bossCurrentReward = 25000;
+                    bossNextReward = 50000;
                     bossBattleNumber = 1;
                     returnFromFinalBattle({ returnScreen: 'allOrNothingScreen', mode: 'boss' });
                 }, '0:1', true, 0, 0, null, newlyDefeatedBey || bossPlayerBeys.find(bey => bey && bey.dead) || bey2);
@@ -8295,8 +8295,8 @@ const parts = {
                 title: 'Undying Moon',
                 description: 'A relentless lunar Boss that refuses to fade and grows dangerous over a drawn-out fight.',
                 battleCap: 'bc_kaguyahime',
-                weightRing: 'wr_libra',
-                driver: 'drv_moonlight'
+                weightRing: 'wr_pisces',
+                driver: 'drv_bloom'
             }
         ];
         function getSelectedAllOrNothingBoss() {
@@ -8411,8 +8411,8 @@ const parts = {
                 addCurrency('gold', reward);
                 if (typeof manualSaveGame === 'function') manualSaveGame();
                 closeTowerDetails();
-                bossCurrentReward = 50000;
-                    bossNextReward = 100000;
+                bossCurrentReward = 25000;
+                    bossNextReward = 50000;
                 bossBattleNumber = 1;
                 showWinnerAnnouncement('VICTORY', true, true, null, () => {
                     openAllOrNothingLobby();
@@ -9652,8 +9652,8 @@ arena_7: './arena_7.mp3'
         let bossBattleMode = false;
         let bossPlayerBeys = [];
         let bossAnnouncedDefeatedBeys = new Set();
-        let bossCurrentReward = 50000;
-        let bossNextReward = 100000;
+        let bossCurrentReward = 25000;
+        let bossNextReward = 50000;
         let bossBattleNumber = 1;
         let allOrNothingBossIndex = 0;
         let bossStartTimer = null;
