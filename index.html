@@ -272,6 +272,7 @@
         .tower-battle-btn { border:2px solid #b8750b; background:#f6b73c; color:#6b3d00; border-radius:5px; font-size:10px; font-weight:900; padding:6px 5px; cursor:pointer; }
         .tower-battle-btn:disabled { opacity:.35; cursor:not-allowed; }
         .tower-detail-modal { position:fixed; inset:0; z-index:3000; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.72); padding:14px; }
+        #towerDetailModal.boss-detail-layer { z-index:5100; }
         .tower-detail-modal.hidden { display:none; }
         .tower-detail-box { width:min(360px,100%); min-height:420px; box-sizing:border-box; background:#fff; border:3px solid #fff; border-radius:10px; padding:0; color:#26313d; position:relative; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.5); }
         .adventure-encounter-box { min-height:0; height:auto; }
@@ -366,6 +367,10 @@
         .tower-reward-detail .tower-reward-icon { display:block; width:24px; height:24px; flex:0 0 24px; position:static; transform:translateY(-1px); }
         .tower-reward-amount { display:block; color:#5c6670; font-size:10px; line-height:1; white-space:nowrap; transform:translateY(2px); }
         .tower-detail-battle-btn { position:absolute; left:50%; bottom:14px; transform:translateX(-50%); display:block; width:auto !important; min-width:112px; margin:0; padding:6px 18px; }
+        .tower-detail-boss-actions { position:absolute; left:50%; bottom:8px; transform:translateX(-50%); display:flex; gap:7px; width:calc(100% - 28px); justify-content:center; }
+        .tower-detail-boss-action { position:static; transform:none; display:flex; flex-direction:column; align-items:center; min-width:112px; margin:0; padding:5px 14px; }
+        .tower-detail-boss-action span { display:block; margin-top:2px; font-size:9px; font-weight:900; }
+        .tower-detail-boss-quit { border-color:#477e9d; background:#9dd8f9; color:#12304a; }
         .ranker-loadout-detail-box { min-height:0; }
         .ranker-loadout-detail-box .tower-detail-details-row { min-height:0; align-items:start; padding:10px 8px 12px; }
         .ranker-loadout-detail-box #rankerLoadoutDetailCanvas { width:min(228px,100%); height:auto; display:block; }
@@ -744,7 +749,7 @@
             inset: 0;
             display: none;
             background: var(--survivor-overlay-color, rgba(102, 194, 255, 0.35));
-            z-index: 15;
+            z-index: 30;
             pointer-events: none;
         }
         #survivorUltimateOverlay.active { display: block; }
@@ -1155,6 +1160,40 @@
             border: 2px solid #555;
         }
         .hex-medium:hover { transform: scale(1.05); }
+        #bossPlayerUi { display:none; position:absolute; left:10px; right:10px; bottom:8px; z-index:32; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; pointer-events:none; }
+        .boss-player-panel { min-width:0; display:flex; flex-direction:column; align-items:stretch; gap:3px; padding:4px 3px 2px; border-radius:6px; background:linear-gradient(to bottom,rgba(30,144,255,0),rgba(30,144,255,.24)); overflow:hidden; }
+        .boss-player-panel .boss-player-ultimate { align-self:center; width:44px; height:51px; min-width:44px; pointer-events:auto; }
+        .boss-player-panel .bar-container { width:100%; height:8px; margin:0; }
+        .boss-player-panel .boss-player-rpm-bar { height:6px; border-radius:3px; }
+        .boss-player-panel .bey-name { margin:1px 0 0; text-align:center; font-size:10px; }
+        .boss-player-panel .parts-info { margin:0; text-align:center; font-size:7px; }
+        .boss-player-panel .boss-player-ultimate .ultimate-fill { position:absolute; left:0; right:0; bottom:0; height:0; border-radius:0 0 5px 5px; opacity:.72; }
+        .boss-player-panel .boss-player-ultimate .hex-content { position:relative; z-index:2; }
+        .boss-player-panel .boss-player-hp-fill { left:auto; right:0; background:#7CFC00; }
+        .boss-player-panel .boss-player-damage-preview { left:auto; right:0; background:#ff3030; }
+        #bossEnemyUi .boss-enemy-hp-fill { left:0; right:auto; background:#e53935; }
+        #bossEnemyUi .boss-enemy-damage-preview { left:0; right:auto; background:#FBDF4D; }
+        body.boss-battle-active #stats-left, body.boss-battle-active #stats-right, body.boss-battle-active #skillControls { display:none; }
+        body.boss-battle-active #skillControls { display:flex; }
+        body.boss-battle-active #skillControls > .hex-btn { display:none; }
+        body.boss-battle-active #bossPlayerUi { display:grid; }
+        #bossEnemyUi { display:none; position:absolute; top:52px; left:14px; right:14px; z-index:32; padding:4px 8px 5px; border-radius:6px; background:linear-gradient(to bottom,rgba(220,40,55,.08),rgba(220,40,55,.25)); text-align:center; pointer-events:none; }
+        body.boss-battle-active #bossEnemyUi { display:block; }
+        .boss-enemy-name { margin:0; font-size:12px; }
+        .boss-enemy-parts { margin:0 0 3px; font-size:8px; }
+        #bossEnemyUi .bar-container { width:100%; height:10px; margin:0 0 3px; }
+        #bossEnemyUi .boss-enemy-rpm-bar { height:7px; border-radius:3px; }
+        .boss-enemy-stat-grid { width:150px; margin-top:4px; display:flex; flex-direction:column; gap:1px; text-align:left; }
+        .boss-enemy-stat-grid .stat-item { justify-content:flex-start; gap:3px; }
+        .boss-enemy-stat-grid .stat-value { min-width:34px; }
+        @media (max-width:420px) {
+            #bossPlayerUi { left:4px; right:4px; gap:3px; }
+            .boss-player-panel { padding-left:1px; padding-right:1px; }
+            .boss-player-panel .boss-player-ultimate { width:39px; height:45px; min-width:39px; }
+            .boss-player-panel .bey-name { font-size:8px; }
+            .boss-player-panel .parts-info { font-size:6px; }
+            #bossEnemyUi { top:49px; left:5px; right:5px; padding-left:4px; padding-right:4px; }
+        }
 
         #thetisBulletIndicator {
             position: absolute;
@@ -1965,6 +2004,16 @@
         }
         .shop-banner-row h2 { margin-bottom: 30%; font-size: clamp(21px, 6vw, 30px); font-weight: 1000; letter-spacing: 1px; text-shadow: 0 1px 0 #FFEFA3; }
         .shop-refresh-label { margin-top: 8px; align-self: flex-end; padding: 6px 9px; border-radius: 3px; background: #9A440B; color: #fff; font-size: 10px; font-weight: 900; white-space: nowrap; }
+        @media (min-width: 768px) {
+            #shopScreen .shop-banner-row {
+                width: min(620px, calc(100vw - 48px));
+                max-width: 620px;
+                min-height: 150px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            #shopScreen .shop-banner-row h2 { margin-bottom: 18%; }
+        }
         .shop-items-row {
             width: 100%;
             min-height: 0;
@@ -2117,6 +2166,20 @@
         #spiralMartScreen .spiral-mart-dashboard { position:relative; flex:1 1 auto; align-items:stretch; padding:8px 0 64px; }
         #spiralMartScreen .adventure-screen-header { position:relative; top:auto; left:auto; z-index:auto; margin-bottom:10px; }
         .spiral-mart-placeholder { flex:1 1 auto; min-height:0; display:flex; align-items:center; justify-content:center; padding:20px; color:rgba(255,255,255,.82); font-size:15px; font-weight:900; text-align:center; }
+        #allOrNothingScreen { display:block; height:100%; min-height:0; overflow:hidden; touch-action:pan-y; background:linear-gradient(to bottom,#0E061B 0%,#24416D 30%, #70E7FD 55%, #4D5CB1 65%, #A05995 75%, #9B5EA1 90%, #8D7FA3 100%); padding:clamp(14px,3vh,28px) clamp(12px,4vw,28px) 10px; box-sizing:border-box; }
+        #allOrNothingScreen .all-or-nothing-dashboard { position:relative; width:min(620px,100%); height:100%; min-height:0; margin:0 auto; display:flex; flex-direction:column; align-items:stretch; padding:8px 0 64px; box-sizing:border-box; }
+        .all-or-nothing-intro { width:min(100%,520px); height:360px; flex:0 0 360px; align-self:center; display:flex; flex-direction:column; justify-content:center; gap:6px; margin:8px auto 8px; padding:0 20px; border:0; border-radius:0; background:transparent; color:#fff; box-shadow:none; box-sizing:border-box; text-align:center; }
+        .all-or-nothing-boss-selector { position:relative; width:min(100%,520px); align-self:center; display:flex; align-items:center; justify-content:center; }
+        .all-or-nothing-boss-arrow { position:absolute; top:50%; z-index:2; display:flex; align-items:center; justify-content:center; width:34px; height:58px; transform:translateY(-50%); border:0; padding:0; background:rgba(15,8,48,.56); color:#fff; font-size:31px; font-weight:1000; line-height:1; cursor:pointer; text-shadow:0 1px 3px #000; }
+        .all-or-nothing-boss-arrow:hover { background:rgba(15,8,48,.82); color:#FFE27A; }
+        .all-or-nothing-boss-arrow.left { left:-12px; border-radius:5px 0 0 5px; }
+        .all-or-nothing-boss-arrow.right { right:-12px; border-radius:0 5px 5px 0; }
+        .all-or-nothing-intro h3 { margin:0; color:#fff; font-size:clamp(22px,6vw,32px); font-weight:1000; }
+        .all-or-nothing-boss-render { display:block; width:290px; height:290px; max-width:100%; margin:0 auto; }
+        .all-or-nothing-rules { max-width:420px; margin:0 auto 14px; color:rgba(255,255,255,.92); font-size:clamp(11px,3vw,14px); font-weight:800; line-height:1.35; text-align:center; }
+        .all-or-nothing-enter { align-self:center; min-width:170px; min-height:40px; margin:0 auto 14px; padding:8px 24px; border:1px solid #B27F00; border-radius:4px; background:#F3C63A; color:#332400; font-family:inherit; font-size:13px; font-weight:1000; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,.3); }
+        .all-or-nothing-enter:hover { background:#FFD960; }
+        .all-or-nothing-back { position:absolute; left:12px; bottom:18px; z-index:4; display:flex; align-items:center; justify-content:center; width:34px; height:34px; border:1px solid #fff; border-radius:2px; padding:0; background:rgba(0,0,0,.45); color:#fff; font-size:22px; line-height:1; cursor:pointer; box-sizing:border-box; }
         .spiral-mart-banner { position:relative; width:100vw; min-height:320px; margin:0 calc((100% - 100vw) / 2); display:flex; align-items:flex-end; justify-content:center; padding:24px 18px 20px; box-sizing:border-box; 
 background:
     linear-gradient(
@@ -2274,6 +2337,7 @@ background:
     white-space: nowrap;
 }
         body.spiral-mart-view #bottomNav { display:none !important; }
+        body.all-or-nothing-view #bottomNav { display:none !important; }
         .lucky-ticket-counter { margin-left:auto; display:flex; align-items:center; gap:7px; padding:3px 5px; border-radius:4px; background:rgba(255,255,255,.15); color:#fff; font-size:14px; font-weight:1000; line-height:1; white-space:nowrap; cursor:pointer; }
         .lucky-ticket-counter:active, .lucky-ticket-counter:hover { background:rgba(0,0,0,.48); }
         .lucky-ticket-icon {
@@ -2486,13 +2550,14 @@ background: linear-gradient(
         }
         #homeBeyCanvas { width: min(250px, 58vw); height: min(250px, 58vw); max-height: 38vh; display: block; }
         #homeScreen .home-dashboard { position: relative; }
-        #homeActiveSilhouetteCanvas { position: absolute; left: -110px; top: 14%; width: min(520px, 100vw); height: min(520px, 100vw); z-index: 0; opacity: .2; filter: brightness(.48) saturate(.65); pointer-events: none; }
-        .home-bey-arc { position: absolute; top: 18%; right: 0; width: min(170px, 38vw); height: min(330px, 52vh); min-height: 180px; margin: 0; }
+        #homeActiveSilhouetteCanvas { position: absolute; left: clamp(-110px, -20vw, -70px); top: clamp(4%, 4vh, 6%); width: min(520px, 100vw); height: min(520px, 100vw); z-index: 0; opacity: .2; filter: brightness(.48) saturate(.65); pointer-events: none; }
+        .home-bey-arc { position: absolute; top: clamp(7%, 7vh, 10%); right: 0; width: clamp(136px, 38vw, 170px); height: clamp(235px, 52vh, 330px); min-height: 180px; margin: 0; }
         .home-bey-arc canvas { position: absolute; display: block; cursor: pointer; transition: filter .2s ease, transform .2s ease, width .2s ease, height .2s ease; }
         .home-bey-arc canvas.home-bey-active { width: clamp(128px, 32vw, 150px); height: clamp(128px, 32vw, 150px); right: 14px; bottom: 0; transform: rotate(-8deg); z-index: 3; filter: brightness(1); }
         .home-bey-arc canvas.home-bey-middle { width: clamp(96px, 24vw, 116px); height: clamp(96px, 24vw, 116px); right: 0; top: 45%; transform: translateY(-50%) rotate(2deg); z-index: 2; filter: brightness(.48); }
         .home-bey-arc canvas.home-bey-top { width: clamp(82px, 20vw, 98px); height: clamp(82px, 20vw, 98px); right: 18px; top: 7%; transform: rotate(10deg); z-index: 1; filter: brightness(.48); }
-        @media (max-height: 650px) { .home-bey-arc { height: 235px; min-height: 155px; top: 18%; } }
+        @media (max-width: 420px) { #homeActiveSilhouetteCanvas { left: -88px; } .home-bey-arc { right: -2px; width: 146px; } }
+        @media (max-height: 650px) { #homeActiveSilhouetteCanvas { top: 4%; width: min(430px, 100vw); height: min(430px, 100vw); } .home-bey-arc { height: 235px; min-height: 155px; top: 7%; } }
         .home-bey-caption {
             margin-top: 2px;
             color: #d8e8f3;
@@ -2553,6 +2618,17 @@ background: linear-gradient(
         .settings-enter-button, .settings-reset-button { min-height: 34px; padding: 6px 12px; border: 1px solid #B27F00; border-radius: 4px; background: #F3C63A; color: #332400; font-family: inherit; font-size: 11px; font-weight: 1000; cursor: pointer; }
         .settings-enter-button:hover, .settings-reset-button:hover { background: #FFD960; }
         .settings-reset-button { width: 100%; margin-top: 10px; }
+        .redeem-result-modal { position: fixed; inset: 0; z-index: 1480; display: flex; align-items: center; justify-content: center; padding: 14px; background: rgba(0,0,0,.74); }
+        .redeem-result-modal.hidden { display: none !important; }
+        .redeem-result-box { width: min(390px, calc(100vw - 28px)); overflow: hidden; border: 2px solid #72777D; border-radius: 8px; background: #D3D5D8; color: #1A1C1F; box-shadow: 0 10px 30px rgba(0,0,0,.62); }
+        .redeem-result-title-row { min-height: 46px; padding: 8px 16px; box-sizing: border-box; background: linear-gradient(110deg, #15171B 0%, #292D33 65%, #3B3F44 100%); color: #fff; }
+        .redeem-result-title-row h3 { margin: 0; font-size: 17px; font-weight: 1000; }
+        .redeem-result-body { padding: 14px; text-align: center; }
+        .redeem-result-message { margin: 0; color: #333; font-size: 12px; font-weight: 800; line-height: 1.4; }
+        .redeem-result-message.error { color: #9B2525; }
+        .redeem-result-list { display: grid; gap: 5px; max-height: 260px; margin-top: 11px; overflow-y: auto; text-align: left; }
+        .redeem-result-item { padding: 7px 9px; border: 1px solid #A1A5AA; border-radius: 4px; background: #ECEDEF; color: #24282C; font-size: 11px; font-weight: 900; }
+        .redeem-result-close { width: 100%; min-height: 34px; margin-top: 12px; border: 1px solid #B27F00; border-radius: 4px; background: #F3C63A; color: #332400; font-family: inherit; font-size: 11px; font-weight: 1000; cursor: pointer; }
         .settings-account-status { padding: 8px 10px; color: #4a4f54; font-size: 10px; font-weight: 800; line-height: 1.35; }
         .settings-account-dual-row { display: flex; gap: 8px; }
         .settings-account-dual-row .settings-account-button { flex: 1 1 0; }
@@ -3242,6 +3318,37 @@ background: linear-gradient(
                     </button>
                     <button id="hexRight" class="hex-btn hex-small" title="Driver Passive"></button>
                 </div>
+                <div id="bossPlayerUi" aria-label="Boss Mode player Beys">
+                    <section class="boss-player-panel" data-boss-player-ui="0">
+                        <button class="hex-btn hex-medium boss-player-ultimate" data-boss-player-ultimate="0" title="Battle Top Ultimate Skill (Click to Cast)"><div class="ultimate-fill"></div><div class="hex-content"><span class="boss-player-ultimate-pct">0%</span></div></button>
+                        <div class="bar-container hp-bar-container hp-player"><div class="hp-bar-fill boss-player-hp-fill"></div><div class="hp-damage-preview boss-player-damage-preview"></div><div class="hp-bar-label boss-player-hp-text">0</div></div>
+                        <div class="bar-container boss-player-rpm-bar"><div class="rpm-bar-fill boss-player-rpm-fill"></div></div>
+                        <div class="bey-name boss-player-name">-</div><div class="parts-info boss-player-parts">-</div>
+                    </section>
+                    <section class="boss-player-panel" data-boss-player-ui="1">
+                        <button class="hex-btn hex-medium boss-player-ultimate" data-boss-player-ultimate="1" title="Battle Top Ultimate Skill (Click to Cast)"><div class="ultimate-fill"></div><div class="hex-content"><span class="boss-player-ultimate-pct">0%</span></div></button>
+                        <div class="bar-container hp-bar-container hp-player"><div class="hp-bar-fill boss-player-hp-fill"></div><div class="hp-damage-preview boss-player-damage-preview"></div><div class="hp-bar-label boss-player-hp-text">0</div></div>
+                        <div class="bar-container boss-player-rpm-bar"><div class="rpm-bar-fill boss-player-rpm-fill"></div></div>
+                        <div class="bey-name boss-player-name">-</div><div class="parts-info boss-player-parts">-</div>
+                    </section>
+                    <section class="boss-player-panel" data-boss-player-ui="2">
+                        <button class="hex-btn hex-medium boss-player-ultimate" data-boss-player-ultimate="2" title="Battle Top Ultimate Skill (Click to Cast)"><div class="ultimate-fill"></div><div class="hex-content"><span class="boss-player-ultimate-pct">0%</span></div></button>
+                        <div class="bar-container hp-bar-container hp-player"><div class="hp-bar-fill boss-player-hp-fill"></div><div class="hp-damage-preview boss-player-damage-preview"></div><div class="hp-bar-label boss-player-hp-text">0</div></div>
+                        <div class="bar-container boss-player-rpm-bar"><div class="rpm-bar-fill boss-player-rpm-fill"></div></div>
+                        <div class="bey-name boss-player-name">-</div><div class="parts-info boss-player-parts">-</div>
+                    </section>
+                </div>
+                <section id="bossEnemyUi" aria-label="Boss Mode enemy">
+                    <div class="boss-enemy-name bey-name">-</div>
+                    <div class="boss-enemy-parts parts-info">-</div>
+                    <div class="bar-container hp-bar-container hp-enemy"><div class="hp-bar-fill boss-enemy-hp-fill"></div><div class="hp-damage-preview boss-enemy-damage-preview"></div><div class="hp-bar-label boss-enemy-hp-text">0</div></div>
+                    <div class="bar-container boss-enemy-rpm-bar"><div class="rpm-bar-fill boss-enemy-rpm-fill"></div></div>
+                    <div class="stat-grid boss-enemy-stat-grid">
+                        <div class="stat-item"><span class="stat-icon" aria-label="Attack"><svg viewBox="0 0 24 24"><path d="M5 19L19 5M8 5H5v3M16 19h3v-3M7 17l10-10"/></svg></span><span class="stat-value boss-enemy-atk">0</span></div>
+                        <div class="stat-item"><span class="stat-icon" aria-label="Defense"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.6-2.9 8.1-7 10-4.1-1.9-7-5.4-7-10V6l7-3z"/><path d="M8.5 12l2.2 2.2 4.8-5"/></svg></span><span class="stat-value boss-enemy-def">0</span></div>
+                        <div class="stat-item"><span class="stat-icon" aria-label="Stamina"><svg viewBox="0 0 24 24"><path d="M8 3h8M8 21h8M9 4v4l6 8v4M15 4v4l-6 8v4M9 8h6M9 16h6"/></svg></span><span class="stat-value boss-enemy-stm">0</span></div>
+                    </div>
+                </section>
             </div>
 
             <div id="leftControls">
@@ -3542,11 +3649,28 @@ background: linear-gradient(
                 <button type="button" class="challenge-mode-bar purple locked" aria-label="Survival Mode, unavailable"><span class="challenge-mode-title">Survival Mode</span><span class="challenge-mode-description">Break out from 81 players</span><span class="challenge-keep-out"><span>KEEP</span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg><span>OUT</span></span></button>
                 <button type="button" class="challenge-mode-bar red locked" aria-label="My Gym, unavailable"><span class="challenge-mode-title">My Gym</span><span class="challenge-mode-description">Run your own Gym</span><span class="challenge-keep-out"><span>KEEP</span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg><span>OUT</span></span></button>
                 <button type="button" class="challenge-mode-bar blue" data-challenge-mode="tower" aria-label="Tower of Trials"><span class="challenge-mode-title">Tower of Trials</span><span class="challenge-mode-description">Endless golds</span></button>
-                <button type="button" class="challenge-mode-bar green locked" aria-label="All or Nothing, unavailable"><span class="challenge-mode-title">All or Nothing</span><span class="challenge-mode-description">Test your luck</span><span class="challenge-keep-out"><span>KEEP</span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg><span>OUT</span></span></button>
+                <button type="button" class="challenge-mode-bar green" data-challenge-mode="boss" aria-label="All or Nothing"><span class="challenge-mode-title">All or Nothing</span><span class="challenge-mode-description">Are you brave enough?</span></button>
             </div>
         </div>
     </div>
 
+    <!-- ADVENTURE SCREEN -->
+    <div id="allOrNothingScreen" class="screen hidden">
+        <div class="all-or-nothing-dashboard">
+            <div class="adventure-screen-header"><h2>All or Nothing</h2></div>
+            <div class="all-or-nothing-boss-selector">
+                <button id="allOrNothingBossPrev" type="button" class="all-or-nothing-boss-arrow left" aria-label="Previous Boss">‹</button>
+                <section class="all-or-nothing-intro" aria-labelledby="allOrNothingIntroTitle">
+                    <h3 id="allOrNothingIntroTitle">Shield Fortress</h3>
+                    <canvas id="allOrNothingBossRender" class="all-or-nothing-boss-render" width="290" height="290" aria-label="Selected Boss Bey"></canvas>
+                </section>
+                <button id="allOrNothingBossNext" type="button" class="all-or-nothing-boss-arrow right" aria-label="Next Boss">›</button>
+            </div>
+            <p class="all-or-nothing-rules"><b>All or Nothing</b><br> All three Beys battle the Boss as a team. Defeat the Boss to double the potential Gold reward, or retreat to claim your current reward. <br> If all three Beys are defeated, the run ends and no reward is granted.</p>
+            <button id="allOrNothingEnterButton" type="button" class="all-or-nothing-enter">ENTER</button>
+            <button type="button" class="all-or-nothing-back" aria-label="Back to Challenge" onclick="window.openChallengeScreenFromAllOrNothing();">◀</button>
+        </div>
+    </div>
     <!-- ADVENTURE SCREEN -->
     <div id="adventureScreen" class="screen hidden">
         <div class="home-dashboard adventure-dashboard">
@@ -3693,6 +3817,10 @@ background: linear-gradient(
                     <div id="towerDetailAdventureLoot" class="tower-detail-adventure-loot" aria-label="Possible enemy part loot"><div id="towerDetailAdventureLootCards" class="tower-detail-adventure-loot-cards"></div></div>
                     <div id="towerDetailGemRewardEntry" class="tower-reward-detail" aria-label="Tower gem first-clear reward"><span class="tower-reward-icon currency-symbol currency-gem-icon" aria-hidden="true"></span><span class="tower-reward-amount">x<span id="towerDetailGemReward">10</span></span></div>
                     <div id="towerDetailChestRewardEntry" class="tower-reward-detail" aria-label="Tower chest reward"><span id="towerDetailChestRewardPreview" class="tower-chest-reward-preview home-chest-render plain"><span class="home-chest-lid"></span><span class="home-chest-body"></span></span><span id="towerDetailChestRewardName" class="tower-reward-amount">x1</span></div>
+                </div>
+                <div id="towerDetailBossActions" class="tower-detail-boss-actions" style="display:none;">
+                    <button id="towerDetailBossContinue" class="tower-battle-btn tower-detail-boss-action">CONTINUE<span id="towerDetailBossContinueReward"></span></button>
+                    <button id="towerDetailBossQuit" class="tower-battle-btn tower-detail-boss-action tower-detail-boss-quit">QUIT<span id="towerDetailBossQuitReward"></span></button>
                 </div>
                 <button id="towerDetailBattle" class="tower-battle-btn tower-detail-battle-btn">BATTLE</button>
             </div>
@@ -3845,6 +3973,12 @@ background: linear-gradient(
                 <div id="authError" class="auth-error" role="alert" aria-live="polite"></div>
                 <div class="auth-actions"><button id="authCancelButton" type="button">Cancel</button><button id="authSubmitButton" class="primary" type="button">Login</button></div>
             </div>
+        </div>
+    </div>
+    <div id="redeemResultModal" class="redeem-result-modal hidden" role="dialog" aria-modal="true" aria-labelledby="redeemResultTitle">
+        <div class="redeem-result-box">
+            <div class="redeem-result-title-row"><h3 id="redeemResultTitle">Redeem Code</h3></div>
+            <div class="redeem-result-body"><p id="redeemResultMessage" class="redeem-result-message"></p><div id="redeemResultList" class="redeem-result-list"></div><button id="redeemResultCloseButton" class="redeem-result-close" type="button">Close</button></div>
         </div>
     </div>
     <div id="saveConflictModal" class="save-conflict-modal hidden" role="dialog" aria-modal="true" aria-labelledby="saveConflictTitle">
@@ -4831,7 +4965,7 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
         }
         function registerOdeCreationRemoval(creation) {
             if (!creation || !creation.casterSide) return;
-            const owner = creation.caster || [bey1, bey2].find(bey => bey && bey.side === creation.casterSide);
+            const owner = creation.caster || getCombatBeys().find(bey => bey && bey.side === creation.casterSide);
             if (!owner || !owner.parts || !owner.parts.driver || owner.parts.driver.id !== 'drv_ode') return;
             const odeEffect = owner.getAllEffects().find(eff => eff.type === 'ode_creation_disappear');
             if (!odeEffect) return;
@@ -4868,11 +5002,8 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
             const gladiatorIntervalMultiplier = gladiatorEffect ? (Number(gladiatorEffect.impactIntervalMultiplier) || 2.0) : 1.0;
             let gushReduction = 0;
             if (hasGush && owner) {
-                // Count each active Bey once, even if it has multiple ailments.
-                const candidates = [owner];
-                if (typeof bey1 !== 'undefined' && bey1) candidates.push(bey1);
-                if (typeof bey2 !== 'undefined' && bey2) candidates.push(bey2);
-                const uniqueBeys = [...new Set(candidates)];
+                // Count every active Bey once, including all Boss Mode allies.
+                const uniqueBeys = getCombatBeys();
                 const ailmentedBeyCount = uniqueBeys.filter(bey => !bey.dead && (
                     bey.breakTimer > 0 || bey.unbalanceTimer > 0 || bey.sealTimer > 0
                 )).length;
@@ -5310,6 +5441,7 @@ const parts = {
             towerActiveFloor = floor;
             document.getElementById('towerDetailAdventureDescription')?.style.setProperty('display', 'none');
             document.getElementById('towerDetailAdventureLoot')?.style.setProperty('display', 'none');
+            document.getElementById('towerDetailBossActions')?.style.setProperty('display', 'none');
             document.getElementById('towerDetailName').textContent = `Floor ${floor}`;
             document.getElementById('towerDetailParts').textContent = `${enemy.name} · Lv.${level}`;
             const category = document.getElementById('towerDetailCategory');
@@ -5346,6 +5478,7 @@ const parts = {
             const towerDetailGemRewardEntry = document.getElementById('towerDetailGemRewardEntry');
             if (towerDetailGemRewardEntry) towerDetailGemRewardEntry.style.display = towerFirstClearGems[floor] ? 'none' : 'flex';
             const battle = document.getElementById('towerDetailBattle');
+            battle.style.display = 'block';
             battle.disabled = floor > towerUnlockedFloor;
             battle.dataset.towerBattle = floor;
             battle.onclick = (event) => {
@@ -5355,7 +5488,7 @@ const parts = {
             };
             document.getElementById('towerDetailModal').classList.remove('hidden');
         }
-        function closeTowerDetails() { document.getElementById('towerDetailModal').classList.add('hidden'); }
+        function closeTowerDetails() { document.getElementById('towerDetailModal').classList.add('hidden'); document.getElementById('towerDetailModal').classList.remove('boss-detail-layer'); }
         function startTowerBattle(floor) {
             if (floor > towerUnlockedFloor) return;
             const enemy = getTowerEnemy(floor);
@@ -5428,12 +5561,12 @@ const parts = {
                 requestAnimationFrame(() => winnerScreen.classList.add('visible'));
             });
         }
-        function showBattleResultSequence(won, finalMatch, title, continueAction, backAction, roundScore, showWinnerScreen = true, rewardAmount = 0, rewardGemAmount = 0, rewardChestId = null) {
+        function showBattleResultSequence(won, finalMatch, title, continueAction, backAction, roundScore, showWinnerScreen = true, rewardAmount = 0, rewardGemAmount = 0, rewardChestId = null, defeatedBeyOverride = null) {
             const announcement = document.getElementById('battleResultAnnouncement');
             const announcementPanel = announcement ? announcement.querySelector('.battle-result-announcement-panel') : null;
             const announcementText = document.getElementById('battleResultAnnouncementText');
             const capName = document.getElementById('battleResultCapName');
-            const deadBey = getBattleResultDeadBey();
+            const deadBey = defeatedBeyOverride || getBattleResultDeadBey();
             if (capName) capName.textContent = deadBey && deadBey.parts && deadBey.parts.battleCap ? deadBey.parts.battleCap.name : '';
             playGameSfx(SFX_DESTROYED);
             setTimeout(() => playGameSfx(SFX_CROWD), 250);
@@ -5465,16 +5598,46 @@ const parts = {
                 battleResultAnnouncementTimer = setTimeout(advanceFromAnnouncement, 450);
             }, 2000);
         }
+        function showBossPlayerDefeatAnnouncement(deadBey) {
+            const announcement = document.getElementById('battleResultAnnouncement');
+            const announcementPanel = announcement ? announcement.querySelector('.battle-result-announcement-panel') : null;
+            const announcementText = document.getElementById('battleResultAnnouncementText');
+            const capName = document.getElementById('battleResultCapName');
+            if (!announcement || !deadBey) return;
+            if (battleResultAnnouncementTimer) clearTimeout(battleResultAnnouncementTimer);
+            battleResultAnnouncementTimer = null;
+            if (capName) capName.textContent = deadBey.parts && deadBey.parts.battleCap ? deadBey.parts.battleCap.name : '';
+            playGameSfx(SFX_DESTROYED);
+            announcement.classList.add('active');
+            if (announcementPanel) announcementPanel.classList.remove('faded');
+            if (announcementText) announcementText.classList.remove('faded');
+            const dismiss = () => {
+                if (battleResultAnnouncementTimer) clearTimeout(battleResultAnnouncementTimer);
+                battleResultAnnouncementTimer = null;
+                announcement.classList.remove('active');
+                announcement.onclick = null;
+            };
+            announcement.onclick = dismiss;
+            battleResultAnnouncementTimer = setTimeout(() => {
+                if (announcementPanel) announcementPanel.classList.add('faded');
+                if (announcementText) announcementText.classList.add('faded');
+                battleResultAnnouncementTimer = setTimeout(dismiss, 450);
+            }, 1000);
+        }
         function returnFromFinalBattle(context) {
             resetArenaBattle();
             if (context && context.returnScreen === 'adventureChapterScreen') {
                 openAdventureChapter(adventureCurrentChapter);
             } else if (context && context.returnScreen === 'towerScreen') {
                 openTowerTrialsScreen();
+            } else if (context && context.mode === 'boss') {
+                openAllOrNothingLobby();
             } else if (context && context.mode === 'championship') {
                 openChallengeChampionship();
             } else if (context && context.returnScreen === 'challengeChampionshipScreen') {
                 openChallengeChampionship();
+            } else if (context && context.returnScreen === 'challengeScreen') {
+                document.querySelector('.nav-item[data-screen="challengeScreen"]')?.click();
             } else {
                 document.querySelectorAll('.screen').forEach(screen => screen.classList.add('hidden'));
                 document.getElementById('homeScreen')?.classList.remove('hidden');
@@ -5776,7 +5939,6 @@ const parts = {
                     const backButton = document.querySelector('#spiralGachaResultsScreen .spiral-gacha-back');
                     if (backButton) { backButton.classList.remove('hidden'); backButton.style.display = ''; }
                     updateSpiralGachaActionButton();
-                    
                 }
             });
             return flipCard;
@@ -6464,6 +6626,8 @@ const parts = {
             if (!node || (node.id != null && adventureCompletedNodeIds.has(node.id)) || (node.isAdventureBoss && adventureBossCompleted)) return;
             if (node.isAdventureBoss && !adventureBossDialogueCompleted) return openAdventureBossDialogue(node);
             adventurePendingNode = node;
+            document.getElementById('towerDetailBossActions')?.style.setProperty('display', 'none');
+            document.getElementById('towerDetailBattle')?.style.setProperty('display', 'block');
             const enemy = node.adventureEnemy || makeAdventureRandomEnemy();
             node.adventureEnemy = enemy;
             enemy.__adventureStatMultiplier = getAdventureEnemyStatMultiplier(node);
@@ -7215,13 +7379,43 @@ const parts = {
         }
         function handleStandardBattleEnd() {
             const context = threeBeybladeSelectContext;
-            if (towerBattleMode || adventureBattleMode || (context && context.bestOfThree) || standardBattleResultHandled || !bey1 || !bey2 || (!bey1.dead && !bey2.dead)) return;
+            if (bossBattleMode || towerBattleMode || adventureBattleMode || (context && context.bestOfThree) || standardBattleResultHandled || !bey1 || !bey2 || (!bey1.dead && !bey2.dead)) return;
             standardBattleResultHandled = true;
             const won = !bey1.dead && bey2.dead;
             showBattleResultSequence(won, true, won ? 'VICTORY' : 'DEFEATED', null, () => {
                 if (context && context.mode === 'adventure') completeAdventureEnemyNode(won);
                 returnFromFinalBattle(context || { returnScreen: 'homeScreen', mode: 'generic' });
             }, won ? '1:0' : '0:1', false);
+        }
+        function handleBossBattleEnd() {
+            if (!bossBattleMode || standardBattleResultHandled || !bey2 || !bossPlayerBeys.length) return;
+            let newlyDefeatedBey = null;
+            bossPlayerBeys.forEach(bey => {
+                if (bey && bey.dead && !bossAnnouncedDefeatedBeys.has(bey)) {
+                    bossAnnouncedDefeatedBeys.add(bey);
+                    newlyDefeatedBey = bey;
+                    if (!bey2.dead) {
+                        showBossPlayerDefeatAnnouncement(bey);
+                    }
+                }
+            });
+            const teamDefeated = bossPlayerBeys.every(bey => !bey || bey.dead);
+            if (!bey2.dead && !teamDefeated) return;
+            standardBattleResultHandled = true;
+            const won = !!bey2.dead && !teamDefeated;
+            if (won) {
+                showBattleResultSequence(true, false, 'ROUND WIN', () => {
+                    resetArenaBattle();
+                    openAllOrNothingRewardDetails();
+                }, null, '1:0', true, 0, 0, null, bey2);
+            } else {
+                showBattleResultSequence(false, true, 'DEFEATED', null, () => {
+                    bossCurrentReward = 50000;
+                    bossNextReward = 100000;
+                    bossBattleNumber = 1;
+                    returnFromFinalBattle({ returnScreen: 'allOrNothingScreen', mode: 'boss' });
+                }, '0:1', true, 0, 0, null, newlyDefeatedBey || bossPlayerBeys.find(bey => bey && bey.dead) || bey2);
+            }
         }
         function handleAdventureBattleEnd() {
             const context = threeBeybladeSelectContext;
@@ -7258,6 +7452,7 @@ const parts = {
             if (challengeMode) {
                 e.preventDefault(); e.stopPropagation();
                 if (challengeMode.dataset.challengeMode === 'tower') openTowerTrialsScreen();
+                if (challengeMode.dataset.challengeMode === 'boss') openAllOrNothingLobby();
                 return;
             }
             if (championshipReward) {
@@ -7283,7 +7478,20 @@ const parts = {
             if (preview) { const floor = Number(preview.dataset.towerFloor); if (floor <= towerUnlockedFloor) openTowerEnemyDetails(floor); }
         });
         document.getElementById('towerDetailClose').addEventListener('click', closeTowerDetails);
-        document.getElementById('towerDetailModal').addEventListener('click', e => { if (e.target.id === 'towerDetailModal') closeTowerDetails(); });
+        document.getElementById('towerDetailModal').addEventListener('click', e => { if (e.target.id === 'towerDetailModal' && !e.currentTarget.classList.contains('boss-detail-layer')) closeTowerDetails(); });
+        document.getElementById('allOrNothingBossPrev')?.addEventListener('click', event => {
+            event.preventDefault();
+            event.stopPropagation();
+            allOrNothingBossIndex = (allOrNothingBossIndex - 1 + allOrNothingBosses.length) % allOrNothingBosses.length;
+            renderAllOrNothingBossSelector();
+        });
+        document.getElementById('allOrNothingBossNext')?.addEventListener('click', event => {
+            event.preventDefault();
+            event.stopPropagation();
+            allOrNothingBossIndex = (allOrNothingBossIndex + 1) % allOrNothingBosses.length;
+            renderAllOrNothingBossSelector();
+        });
+        document.getElementById('allOrNothingEnterButton')?.addEventListener('click', openAllOrNothingBossDetails);
         document.getElementById('towerRankingButton').addEventListener('click', openTowerRankingScreen);
         document.getElementById('towerRankingBack').addEventListener('click', openTowerTrialsScreen);
         document.getElementById('adventureEncounterClose').addEventListener('click', () => document.getElementById('adventureEncounterModal').classList.add('hidden'));
@@ -7316,6 +7524,26 @@ const parts = {
                 weightRing: rings[Math.floor(Math.random() * rings.length)],
                 driver: drivers[Math.floor(Math.random() * drivers.length)]
             };
+        }
+        function prepareNormalArenaState() {
+            playerEquipped = playerLoadouts[activeLoadoutIndex] || playerLoadouts[0] || playerEquipped;
+            threeBeybladeSelectContext = null;
+            threeBeybladeSelectedIndex = activeLoadoutIndex;
+            document.getElementById('threeBeybladeSelect')?.classList.add('hidden');
+            document.getElementById('adventureLoadoutOverlay')?.classList.remove('active');
+            randomizeEnemy();
+            if (typeof resetArenaBattle === 'function') resetArenaBattle();
+            activeArenaBeys = [bey1, bey2];
+            puppetBeys = [];
+            const playerLevelMap = Object.fromEntries(Object.values(playerEquipped || {}).filter(Boolean).map(part => [part.id, 1]));
+            const enemyLevelMap = Object.fromEntries(Object.values(enemyEquipped || {}).filter(Boolean).map(part => [part.id, 1]));
+            bey1.upgradeLevels = playerLevelMap;
+            bey2.upgradeLevels = enemyLevelMap;
+            bey1.updateParts(playerEquipped);
+            bey2.updateParts(enemyEquipped);
+            bey2.adventureEnemyStatMultiplier = 1;
+            bey2.towerStatMultiplier = 1;
+            updateSkillHexagons();
         }
         randomizeEnemy();
 
@@ -7542,6 +7770,7 @@ const parts = {
             projectUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co',
             playersUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co/rest/v1/championship_players',
             loadoutsUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co/rest/v1/championship_loadouts',
+            redeemRpcUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co/rest/v1/rpc/redeem_code',
             towerRankingsUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co/rest/v1/tower_rankings',
             towerRankingUpsertUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co/rest/v1/rpc/upsert_tower_ranking',
             publicKey: 'sb_publishable_9vExJ6KsV1wwlF4PbVrZag_eDAIb4Ih',
@@ -7974,6 +8203,20 @@ const parts = {
         function renderThreeBeybladeSelect() {
             const content = document.getElementById('threeBeybladeSelectContent');
             if (!content || !threeBeybladeSelectContext) return;
+            if (threeBeybladeSelectContext.mode === 'boss') {
+                const playerCards = playerLoadouts.map((loadout, index) => `<div class="three-beyblade-select-card">${getTypeIconSvg(loadout && loadout.battleCap ? loadout.battleCap.type : 'Attack')}<canvas width="130" height="130"></canvas><div class="three-beyblade-select-card-name">${escapeChampionshipText(loadout && loadout.battleCap ? loadout.battleCap.name : `Loadout ${index + 1}`)}</div><div class="three-beyblade-select-card-level">Lv. ${getLoadoutAverageLevel(loadout)}</div></div>`).join('');
+                const enemyCards = threeBeybladeSelectContext.enemyLoadouts.slice(0, 3).map(loadout => `<div class="three-beyblade-select-card">${getTypeIconSvg(loadout && loadout.battleCap ? loadout.battleCap.type : 'Attack')}<canvas width="52" height="52"></canvas></div>`).join('');
+                const selectedBoss = threeBeybladeSelectContext.selectedEnemy || null;
+                const enemyDisplay = selectedBoss
+                    ? `<div class="three-beyblade-select-card three-beyblade-select-mystery-card three-beyblade-select-revealed-card">${getTypeIconSvg(selectedBoss.battleCap ? selectedBoss.battleCap.type : 'Attack')}<canvas data-boss-revealed-enemy width="130" height="130"></canvas><div class="three-beyblade-select-card-name">${escapeChampionshipText(selectedBoss.battleCap ? selectedBoss.battleCap.name : 'Opponent')}</div><div class="three-beyblade-select-card-level">Lv. ${getLoadoutAverageLevel(selectedBoss)}</div></div>`
+                    : `<div class="three-beyblade-select-card three-beyblade-select-mystery-card">?</div>`;
+                content.innerHTML = `<div class="three-beyblade-select-enemy-layout"><div class="three-beyblade-select-mystery-wrap"><div class="three-beyblade-select-mystery-label">Opponent sent</div>${enemyDisplay}</div><div class="three-beyblade-select-opponent-panel"><h3>Opponent</h3><div class="three-beyblade-select-opponent-stack">${enemyCards}</div></div></div><section class="three-beyblade-select-section three-beyblade-select-player-section"><h3>Tap to select</h3><div class="three-beyblade-select-grid">${playerCards}</div></section><div class="three-beyblade-select-actions"><button type="button" class="three-beyblade-select-battle" onclick="window.beginThreeBeybladeBattle();">Confirm</button></div>`;
+                content.querySelectorAll('.three-beyblade-select-opponent-stack canvas').forEach((canvas, index) => drawThreeBeybladeSelectCard(canvas, threeBeybladeSelectContext.enemyLoadouts[index]));
+                content.querySelectorAll('section canvas').forEach((canvas, index) => drawThreeBeybladeSelectCard(canvas, playerLoadouts[index]));
+                const revealedBossCanvas = content.querySelector('[data-boss-revealed-enemy]');
+                if (revealedBossCanvas && selectedBoss) drawThreeBeybladeSelectCard(revealedBossCanvas, selectedBoss);
+                return;
+            }
             const usedPlayerIndices = new Set(threeBeybladeSelectContext.usedPlayerIndices || []);
             const usedEnemyIndices = new Set(threeBeybladeSelectContext.usedEnemyIndices || []);
             const selectableLoadouts = threeBeybladeSelectContext.mode === 'adventure' ? getAdventureLoadouts() : playerLoadouts;
@@ -8034,18 +8277,261 @@ const parts = {
             navItems.forEach(nav => nav.classList.remove('active'));
             renderThreeBeybladeSelect();
         }
+        const allOrNothingBosses = [
+            {
+                title: 'Shield Fortress',
+                description: 'A fortified Boss that endures punishment and turns defense into a long battle of attrition.',
+                battleCap: 'bc_atlas',
+                weightRing: 'wr_enlighten',
+                driver: 'drv_piety'
+            },
+            {
+                title: 'Slippery Bubble',
+                description: 'A nimble, elusive Boss that slips away from danger and keeps opponents chasing.',
+                battleCap: 'bc_bubble',
+                weightRing: 'wr_colorful',
+                driver: 'drv_agility'
+            },
+            {
+                title: 'Undying Moon',
+                description: 'A relentless lunar Boss that refuses to fade and grows dangerous over a drawn-out fight.',
+                battleCap: 'bc_kaguyahime',
+                weightRing: 'wr_libra',
+                driver: 'drv_moonlight'
+            }
+        ];
+        function getSelectedAllOrNothingBoss() {
+            const index = Math.max(0, Math.min(allOrNothingBosses.length - 1, Number(allOrNothingBossIndex) || 0));
+            return allOrNothingBosses[index];
+        }
+        function renderAllOrNothingBossSelector() {
+            const boss = getSelectedAllOrNothingBoss();
+            const title = document.getElementById('allOrNothingIntroTitle');
+            const canvas = document.getElementById('allOrNothingBossRender');
+            if (title) title.textContent = boss.title;
+            if (canvas && typeof drawBeyOnContext === 'function') {
+                const context = canvas.getContext('2d');
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                const loadout = getBossModeTestEnemyLoadout(1);
+                drawBeyOnContext(context, canvas.width / 2, canvas.height / 2, 82, loadout, 0.5, false, false, 1.0);
+            }
+        }
+        function getAllOrNothingBossPartLevel(battleNumber = bossBattleNumber) {
+            const battle = Math.max(1, Number(battleNumber) || 1);
+            return Math.min(15, 4 + battle);
+        }
+        function getAllOrNothingBossStatMultiplier(battleNumber = bossBattleNumber) {
+            const battle = Math.max(1, Number(battleNumber) || 1);
+            return 1.5 + ((battle - 1) * 0.10);
+        }
+        function getBossModeTestEnemyLoadout(battleNumber = bossBattleNumber) {
+            const partLevel = getAllOrNothingBossPartLevel(battleNumber);
+            const boss = getSelectedAllOrNothingBoss();
+            return {
+                battleCap: { ...getPartById('battleCap', boss.battleCap), __rankerLevel: partLevel },
+                weightRing: { ...getPartById('weightRing', boss.weightRing), __rankerLevel: partLevel },
+                driver: { ...getPartById('driver', boss.driver), __rankerLevel: partLevel }
+            };
+        }
+        function openBossModeSelection() {
+            document.body.classList.remove('all-or-nothing-view');
+            openThreeBeybladeSelect({ mode: 'boss', enemyLoadouts: [getBossModeTestEnemyLoadout()], returnScreen: 'allOrNothingScreen', bossBattleNumber, bossIndex: allOrNothingBossIndex });
+        }
+        function openChallengeScreenFromAllOrNothing() {
+            document.body.classList.remove('all-or-nothing-view');
+            document.querySelector('.nav-item[data-screen="challengeScreen"]')?.click();
+        }
+        function openAllOrNothingLobby() {
+            if (gameRunning || towerBattleMode || adventureBattleMode || bossBattleMode) resetArenaBattle();
+            screens.forEach(screen => screen.classList.add('hidden'));
+            hideChampionshipScreens();
+            document.getElementById('allOrNothingScreen')?.classList.remove('hidden');
+            document.body.classList.remove('spiral-mart-view');
+            document.body.classList.add('all-or-nothing-view');
+            navItems.forEach(nav => nav.classList.remove('active'));
+            renderAllOrNothingBossSelector();
+            updateGameBgmForScreen('challengeScreen');
+        }
+        function openAllOrNothingBossDetails(battleNumber = bossBattleNumber) {
+            const previewBattleNumber = Math.max(1, Number(battleNumber) || 1);
+            const enemy = getBossModeTestEnemyLoadout(previewBattleNumber);
+            const detailModal = document.getElementById('towerDetailModal');
+            if (!detailModal) return;
+            detailModal.classList.remove('boss-detail-layer');
+            document.getElementById('towerDetailName').textContent = 'Boss Enemy';
+            const bossPartLevel = getAllOrNothingBossPartLevel(previewBattleNumber);
+            const bossStatMultiplier = getAllOrNothingBossStatMultiplier(previewBattleNumber);
+            document.getElementById('towerDetailParts').textContent = `${enemy.battleCap.name} / ${enemy.weightRing.name} / ${enemy.driver.name} · Lv.${bossPartLevel}`;
+            document.getElementById('towerDetailAdventureDescription')?.style.setProperty('display', 'none');
+            document.getElementById('towerDetailAdventureLoot')?.style.setProperty('display', 'none');
+            document.getElementById('towerDetailCategory').innerHTML = getTypeIconSvg(enemy.battleCap.type);
+            const parts = [enemy.battleCap, enemy.weightRing, enemy.driver];
+            const bossLevel = bossPartLevel;
+            const statMultiplier = bossStatMultiplier;
+            document.getElementById('towerDetailAtk').textContent = Math.round(parts.reduce((total, part) => total + towerStat(part, bossLevel, 'atk'), 0) * statMultiplier);
+            document.getElementById('towerDetailDef').textContent = Math.round(parts.reduce((total, part) => total + towerStat(part, bossLevel, 'def'), 0) * statMultiplier);
+            document.getElementById('towerDetailHp').textContent = Math.round(parts.reduce((total, part) => total + towerStat(part, bossLevel, 'health'), 0) * statMultiplier);
+            document.getElementById('towerDetailStamina').textContent = Math.round(parts.reduce((total, part) => total + (part.stamina || 0), 0) * statMultiplier);
+            const detailCanvas = document.getElementById('towerDetailCanvas');
+            if (detailCanvas) { const context = detailCanvas.getContext('2d'); context.clearRect(0, 0, detailCanvas.width, detailCanvas.height); drawGarageThreePartPreview(context, detailCanvas.width, detailCanvas.height, enemy); }
+            document.getElementById('towerDetailReward').textContent = bossCurrentReward.toLocaleString();
+            document.getElementById('towerDetailGemRewardEntry')?.style.setProperty('display', 'none');
+            document.getElementById('towerDetailChestRewardEntry')?.style.setProperty('display', 'none');
+            const battle = document.getElementById('towerDetailBattle');
+            battle.disabled = false;
+            battle.style.display = 'block';
+            battle.removeAttribute('data-adventure-battle');
+            battle.removeAttribute('data-tower-battle');
+            battle.onclick = event => { event.preventDefault(); event.stopPropagation(); closeTowerDetails(); openBossModeSelection(); };
+            document.getElementById('towerDetailBossActions')?.style.setProperty('display', 'none');
+            detailModal.classList.remove('hidden');
+        }
+        function openAllOrNothingRewardDetails() {
+            // The reward decision is for the next battle, so preview its upcoming Boss scaling.
+            openAllOrNothingBossDetails(bossBattleNumber + 1);
+            const battle = document.getElementById('towerDetailBattle');
+            const actions = document.getElementById('towerDetailBossActions');
+            if (!battle || !actions) return;
+            document.getElementById('towerDetailModal')?.classList.add('boss-detail-layer');
+            battle.style.display = 'none';
+            actions.style.display = 'flex';
+            document.getElementById('towerDetailReward').textContent = bossNextReward.toLocaleString();
+            document.getElementById('towerDetailBossContinueReward').textContent = `x${bossNextReward.toLocaleString()}`;
+            document.getElementById('towerDetailBossQuitReward').textContent = `x${bossCurrentReward.toLocaleString()}`;
+            document.getElementById('towerDetailBossContinue').onclick = event => {
+                event.preventDefault();
+                closeTowerDetails();
+                bossCurrentReward = bossNextReward;
+                bossNextReward *= 2;
+                bossBattleNumber += 1;
+                openBossModeSelection();
+            };
+            document.getElementById('towerDetailBossQuit').onclick = event => {
+                event.preventDefault();
+                const reward = Math.max(0, Number(bossCurrentReward) || 0);
+                addCurrency('gold', reward);
+                if (typeof manualSaveGame === 'function') manualSaveGame();
+                closeTowerDetails();
+                bossCurrentReward = 50000;
+                    bossNextReward = 100000;
+                bossBattleNumber = 1;
+                showWinnerAnnouncement('VICTORY', true, true, null, () => {
+                    openAllOrNothingLobby();
+                }, '1:0', reward, 0, null);
+            };
+        }
+        window.openChallengeScreenFromAllOrNothing = openChallengeScreenFromAllOrNothing;
+        window.openAllOrNothingLobby = openAllOrNothingLobby;
+        window.openAllOrNothingBossDetails = openAllOrNothingBossDetails;
+        function startBossModeBattle(context) {
+            if (!context || context.mode !== 'boss') return;
+            const playerTeam = Array.isArray(context.selectedPlayer) ? context.selectedPlayer.slice(0, 3) : playerLoadouts.slice(0, 3);
+            const bossLoadout = Array.isArray(context.selectedEnemy) ? context.selectedEnemy[0] : (context.selectedEnemy || getBossModeTestEnemyLoadout());
+            if (playerTeam.length < 3 || !bossLoadout) return;
+            const bossStatMultiplier = getAllOrNothingBossStatMultiplier(context.bossBattleNumber || bossBattleNumber);
+            if (bossStartTimer) clearTimeout(bossStartTimer);
+            resetArenaBattle();
+            activeArenaBeys = [];
+            puppetBeys = [];
+            bossBattleMode = true;
+            bossAnnouncedDefeatedBeys.clear();
+            towerBattleMode = false;
+            adventureBattleMode = false;
+            championshipBattleMode = false;
+            updateRestrictedBattleControls();
+            threeBeybladeBattleResultHandled = false;
+            standardBattleResultHandled = false;
+            playerEquipped = playerTeam[0];
+            enemyEquipped = bossLoadout;
+            // Boss starts at the arena center; player team forms a wide, evenly spaced Y.
+            const playerSpawnRadius = 220;
+            bey1 = new Beyblade(centerX, centerY + playerSpawnRadius, playerTeam[0], 'left');
+            const bossAlly2 = new Beyblade(
+                centerX - playerSpawnRadius * 0.8660254,
+                centerY - playerSpawnRadius * 0.5,
+                playerTeam[1],
+                'left'
+            );
+            const bossAlly3 = new Beyblade(
+                centerX + playerSpawnRadius * 0.8660254,
+                centerY - playerSpawnRadius * 0.5,
+                playerTeam[2],
+                'left'
+            );
+            bey2 = new Beyblade(centerX, centerY, bossLoadout, 'right');
+            bossPlayerBeys = [bey1, bossAlly2, bossAlly3];
+            // Keep the full Boss Mode roster available to targeting, pickups, and collisions.
+            activeArenaBeys = [...bossPlayerBeys, bey2];
+            bossPlayerBeys.forEach((bey, index) => {
+                bey.upgradeLevels = getLoadoutLevelMap(playerTeam[index]);
+                bey.updateParts(playerTeam[index]);
+                bey.vx = 3.2 + Math.random() * 1.4;
+                bey.vy = (centerY - bey.y) * 0.012;
+            });
+            bey2.upgradeLevels = getLoadoutLevelMap(bossLoadout);
+            bey2.updateParts(bossLoadout);
+            // Boss scaling is recalculated for this battle only. Size remains +50%.
+            bey2.bossSizeMultiplier = 1.5;
+            bey2.bossStatMultiplier = bossStatMultiplier;
+            bey2.stats = bey2.calculateStats();
+            bey2.maxHealth = bey2.stats.health;
+            bey2.health = bey2.maxHealth;
+            bey2.rpm = bey2.maxRpm;
+            bey2.vx = -2.5;
+            bey2.vy = 0;
+            screens.forEach(screen => screen.classList.add('hidden'));
+            document.getElementById('arenaScreen').classList.remove('hidden');
+            document.body.classList.add('boss-battle-active');
+            updateGameBgmForScreen('arenaScreen');
+            resizeCanvas();
+            const p1DOM = getCachedElement('p1LauncherDOM');
+            const enemyDOM = getCachedElement('enemyLauncherDOM');
+            const pMeter = getCachedElement('powerMeterBar');
+            [p1DOM, enemyDOM, pMeter].forEach(element => { if (element) { element.classList.add('hidden'); element.style.display = 'none'; } });
+            launchingPhase = true;
+            gameRunning = false;
+            launchAimStart = null;
+            launchAimCurrent = null;
+            bossStartTimer = setTimeout(() => {
+                bossStartTimer = null;
+                if (!bossBattleMode || threeBeybladeSelectContext !== context) return;
+                launchingPhase = false;
+                gameRunning = true;
+                bossPlayerBeys.concat([bey2]).forEach(bey => bey.beginArenaOccupationTracking());
+                playGameSfx(SFX_LAUNCH);
+                updateSkillHexagons();
+            }, 1000);
+            updateSkillHexagons();
+        }
         function closeThreeBeybladeSelect() {
             const returnScreen = threeBeybladeSelectContext && threeBeybladeSelectContext.returnScreen;
             threeBeybladeSelectContext = null;
             document.getElementById('adventureLoadoutOverlay')?.classList.remove('active');
             document.getElementById('threeBeybladeSelect')?.classList.add('hidden');
             if (returnScreen === 'challengeChampionshipScreen') openChallengeChampionship();
+            else if (returnScreen === 'challengeScreen') document.querySelector('.nav-item[data-screen="challengeScreen"]')?.click();
+            else if (returnScreen === 'allOrNothingScreen') openAllOrNothingLobby();
             else if (returnScreen === 'towerScreen') { const towerNav = document.querySelector('.nav-item[data-screen="towerScreen"]'); if (towerNav) towerNav.click(); }
             else { document.querySelectorAll('.screen').forEach(screen => screen.classList.add('hidden')); document.getElementById('homeScreen')?.classList.remove('hidden'); if (typeof updateHomeUI === 'function') updateHomeUI(); }
         }
         function beginThreeBeybladeBattle() {
             if (!threeBeybladeSelectContext || threeBeybladeSelectContext.selectedEnemy || threeBeybladeRevealTimer) return;
             const context = threeBeybladeSelectContext;
+            if (context.mode === 'boss') {
+                const selectedEnemy = context.enemyLoadouts[0];
+                threeBeybladeSelectContext = { ...context, selectedPlayer: playerLoadouts, selectedEnemy, selectedPlayerIndex: 0, selectedEnemyIndex: 0 };
+                const mysteryCard = document.querySelector('#threeBeybladeSelect .three-beyblade-select-mystery-card');
+                if (mysteryCard) mysteryCard.classList.add('three-beyblade-select-fade-out');
+                threeBeybladeRevealTimer = setTimeout(() => {
+                    renderThreeBeybladeSelect();
+                    playGameSfx(MENU_SFX_ENEMYCHOSEN);
+                    threeBeybladeRevealTimer = setTimeout(() => {
+                        threeBeybladeRevealTimer = null;
+                        if (threeBeybladeSelectContext && threeBeybladeSelectContext.selectedEnemy) startBossModeBattle(threeBeybladeSelectContext);
+                    }, 1740);
+                }, 260);
+                return;
+            }
             const battleLoadouts = context.mode === 'adventure' ? getAdventureLoadouts() : playerLoadouts;
             const chosenPlayer = battleLoadouts[threeBeybladeSelectedIndex] || battleLoadouts[0];
             const enemyLoadouts = Array.isArray(context.enemyLoadouts) && context.enemyLoadouts.length ? context.enemyLoadouts : [enemyEquipped];
@@ -8580,7 +9066,7 @@ arena_7: './arena_7.mp3'
             if (screenId === 'threeBeybladeSelect') stopGameBgm();
             else if (screenId === 'arenaScreen') {
                 playArenaBgmForEnemy();
-                playGameSfx(SFX_LAUNCHER);
+                if (typeof bossBattleMode === 'undefined' || !bossBattleMode) playGameSfx(SFX_LAUNCHER);
             }
             else if (screenId === 'adventureChapterScreen') playAdventureChapterBgm(adventureCurrentChapter);
             else if (screenId === 'adventureScreen' || screenId === 'adventureResultScreen') playGameBgm('home');
@@ -9091,18 +9577,15 @@ arena_7: './arena_7.mp3'
         navItems.forEach(item => {
             item.addEventListener('click', () => {
                 const targetScreenId = item.getAttribute('data-screen');
-                if (targetScreenId !== 'arenaScreen' && (gameRunning || towerBattleMode || adventureBattleMode)) {
+                if (targetScreenId !== 'arenaScreen' && (gameRunning || towerBattleMode || adventureBattleMode || bossBattleMode)) {
                     resetArenaBattle();
                 }
                 if (targetScreenId !== 'arenaScreen') {
                     playerEquipped = playerLoadouts[activeLoadoutIndex];
                 }
-                if (targetScreenId === 'arenaScreen' && !towerBattleMode && !adventureBattleMode && !championshipBattleMode) {
+                if (targetScreenId === 'arenaScreen') {
+                    prepareNormalArenaState();
                     arenaPlayerTempEquipped = JSON.parse(JSON.stringify(playerEquipped));
-                    if (typeof bey1 !== 'undefined' && bey1) {
-                        bey1.upgradeLevels = Object.fromEntries(Object.values(arenaPlayerTempEquipped).filter(Boolean).map(part => [part.id, 1]));
-                        bey1.updateParts(arenaPlayerTempEquipped);
-                    }
                 }
 
                 screens.forEach(s => s.classList.add('hidden'));
@@ -9140,7 +9623,7 @@ arena_7: './arena_7.mp3'
         const autoUltimateToggle = { checked: false };
 
         function updateRestrictedBattleControls() {
-            const restricted = !!(towerBattleMode || adventureBattleMode || championshipBattleMode);
+            const restricted = !!(towerBattleMode || adventureBattleMode || championshipBattleMode || bossBattleMode);
             [resetCircularBtn, randomizeCircularBtn].forEach(button => {
                 if (!button) return;
                 button.disabled = restricted;
@@ -9156,10 +9639,25 @@ arena_7: './arena_7.mp3'
         const thetisBulletIndicator = document.getElementById('thetisBulletIndicator');
         const thetisBulletSlots = thetisBulletIndicator ? Array.from(thetisBulletIndicator.querySelectorAll('.thetis-bullet-slot')) : [];
 
+        function getManualThetisOwner() {
+            if (typeof bossBattleMode !== 'undefined' && bossBattleMode && Array.isArray(bossPlayerBeys)) {
+                return bossPlayerBeys.find(bey => bey && !bey.dead && bey.side === 'left' && bey.thetisBulletTimeActive) || null;
+            }
+            return (typeof bey1 !== 'undefined' && bey1 && !bey1.dead && bey1.thetisBulletTimeActive) ? bey1 : null;
+        }
+
         let gameRunning = false;
         let towerBattleMode = false;
         let adventureBattleMode = false;
         let championshipBattleMode = false;
+        let bossBattleMode = false;
+        let bossPlayerBeys = [];
+        let bossAnnouncedDefeatedBeys = new Set();
+        let bossCurrentReward = 50000;
+        let bossNextReward = 100000;
+        let bossBattleNumber = 1;
+        let allOrNothingBossIndex = 0;
+        let bossStartTimer = null;
         let towerResultHandled = false;
         let standardBattleResultHandled = false;
         let battleResultAnnouncementTimer = null;
@@ -9304,12 +9802,13 @@ arena_7: './arena_7.mp3'
 
         // Touch support for mobile devices
         arenaCanvas.addEventListener('touchstart', (e) => {
-            if (gameRunning && bey1 && bey1.thetisBulletTimeActive) {
+            const thetisOwner = getManualThetisOwner();
+            if (gameRunning && thetisOwner) {
                 e.preventDefault();
                 if (e.touches.length > 0) {
                     const touch = e.touches[0];
                     const rect = arenaCanvas.getBoundingClientRect();
-                    fireThetisBulletTimeShot(bey1, (touch.clientX - rect.left) / scale, (touch.clientY - rect.top) / scale);
+                    fireThetisBulletTimeShot(thetisOwner, (touch.clientX - rect.left) / scale, (touch.clientY - rect.top) / scale);
                 }
                 return;
             }
@@ -9399,9 +9898,10 @@ arena_7: './arena_7.mp3'
             bey2.activateStartShield();
         }, { passive: false });
         arenaCanvas.addEventListener('pointerdown', (e) => {
-            if (e.pointerType !== 'mouse' || !gameRunning || !bey1 || !bey1.thetisBulletTimeActive) return;
+            const thetisOwner = getManualThetisOwner();
+            if (e.pointerType !== 'mouse' || !gameRunning || !thetisOwner) return;
             const rect = arenaCanvas.getBoundingClientRect();
-            fireThetisBulletTimeShot(bey1, (e.clientX - rect.left) / scale, (e.clientY - rect.top) / scale);
+            fireThetisBulletTimeShot(thetisOwner, (e.clientX - rect.left) / scale, (e.clientY - rect.top) / scale);
         });
         arenaCanvas.addEventListener('pointerdown', (e) => {
             if (!gameRunning || !bey1) return;
@@ -9414,9 +9914,9 @@ arena_7: './arena_7.mp3'
                 if (note.caster !== bey1 || note.casterSide !== 'left') continue;
                 const hitRadius = note.radius * 1.25 + 12;
                 if (Math.hypot(tapX - note.x, tapY - note.y) > hitRadius) continue;
-                const nearest = [bey1, bey2]
-                    .filter(bey => bey && !bey.dead)
-                    .sort((left, right) => Math.hypot(left.x - note.x, left.y - note.y) - Math.hypot(right.x - note.x, right.y - note.y))[0];
+                        const nearest = [note.caster, ...getLivingCombatEnemies(note.caster)]
+                            .filter(bey => bey && !bey.dead)
+                            .sort((left, right) => Math.hypot(left.x - note.x, left.y - note.y) - Math.hypot(right.x - note.x, right.y - note.y))[0];
                 if (activateAliceNote(note, nearest)) {
                     e.preventDefault();
                     break;
@@ -9424,18 +9924,20 @@ arena_7: './arena_7.mp3'
             }
         }, { passive: false });
         window.addEventListener('touchstart', (e) => {
-            if (e.target === arenaCanvas || !gameRunning || !bey1 || !bey1.thetisBulletTimeActive) return;
+            const thetisOwner = getManualThetisOwner();
+            if (e.target === arenaCanvas || !gameRunning || !thetisOwner) return;
             if (e.touches.length > 0) {
                 e.preventDefault();
                 const touch = e.touches[0];
                 const rect = arenaCanvas.getBoundingClientRect();
-                fireThetisBulletTimeShot(bey1, (touch.clientX - rect.left) / scale, (touch.clientY - rect.top) / scale);
+                fireThetisBulletTimeShot(thetisOwner, (touch.clientX - rect.left) / scale, (touch.clientY - rect.top) / scale);
             }
         }, { passive: false });
         window.addEventListener('pointerdown', (e) => {
-            if (e.target === arenaCanvas || e.pointerType !== 'mouse' || !gameRunning || !bey1 || !bey1.thetisBulletTimeActive) return;
+            const thetisOwner = getManualThetisOwner();
+            if (e.target === arenaCanvas || e.pointerType !== 'mouse' || !gameRunning || !thetisOwner) return;
             const rect = arenaCanvas.getBoundingClientRect();
-            fireThetisBulletTimeShot(bey1, (e.clientX - rect.left) / scale, (e.clientY - rect.top) / scale);
+            fireThetisBulletTimeShot(thetisOwner, (e.clientX - rect.left) / scale, (e.clientY - rect.top) / scale);
         });
 
         // Optional completed Battle Cap artwork. The file convention is ./bc_<battle-cap-id>.png,
@@ -9836,10 +10338,11 @@ arena_7: './arena_7.mp3'
         function updateSkillHexagons() {
             if (typeof bey1 === 'undefined' || !bey1) return;
 
-            const bulletTimeActive = !!bey1.thetisBulletTimeActive;
+            const thetisOwner = getManualThetisOwner();
+            const bulletTimeActive = !!thetisOwner;
             if (thetisBulletIndicator) thetisBulletIndicator.classList.toggle('active', bulletTimeActive);
             thetisBulletSlots.forEach((slot, index) => {
-                slot.style.display = bulletTimeActive && index >= (bey1.thetisBulletTimeShots || 0) ? '' : 'none';
+                slot.style.display = bulletTimeActive && index >= (thetisOwner.thetisBulletTimeShots || 0) ? '' : 'none';
             });
 
             hexLeft.style.backgroundColor = playerEquipped.weightRing.color;
@@ -9884,6 +10387,71 @@ arena_7: './arena_7.mp3'
             }
 
             if (ultimatePct) ultimatePct.textContent = `${Math.floor(Math.max(0, bey1.ultimateGauge))}%`;
+            updateBossPlayerUI();
+        }
+
+        function updateBossPlayerUI() {
+            if (typeof bossBattleMode === 'undefined' || !bossBattleMode || !Array.isArray(bossPlayerBeys)) return;
+            document.querySelectorAll('[data-boss-player-ui]').forEach(panel => {
+                const index = Number(panel.dataset.bossPlayerUi);
+                const bey = bossPlayerBeys[index];
+                if (!bey || !bey.parts || !bey.parts.battleCap) return;
+                const requirement = Math.max(1, bey.getUltimateRequirement());
+                const pct = Math.min(100, Math.max(0, (bey.ultimateGauge / requirement) * 100));
+                const fill = panel.querySelector('.ultimate-fill');
+                const ultimatePctEl = panel.querySelector('.boss-player-ultimate-pct');
+                const ultimateButton = panel.querySelector('.boss-player-ultimate');
+                const sealed = typeof bey.hasSeal === 'function' && bey.hasSeal();
+                if (fill) { fill.style.height = `${pct}%`; fill.style.backgroundColor = bey.parts.battleCap.color; }
+                if (ultimatePctEl) ultimatePctEl.textContent = `${Math.floor(Math.max(0, bey.ultimateGauge))}%`;
+                if (ultimateButton) {
+                    ultimateButton.disabled = sealed;
+                    ultimateButton.style.opacity = sealed ? '0.4' : '1';
+                    ultimateButton.style.backgroundColor = bey.ultimateGauge >= requirement ? bey.parts.battleCap.color : '#444';
+                }
+                const hpRatio = Math.max(0, Math.min(1, bey.health / Math.max(1, bey.maxHealth)));
+                const rpmRatio = Math.max(0, Math.min(1, bey.rpm / Math.max(1, bey.maxRpm)));
+                const hpFill = panel.querySelector('.boss-player-hp-fill');
+                const damagePreview = panel.querySelector('.boss-player-damage-preview');
+                const hpText = panel.querySelector('.boss-player-hp-text');
+                const rpmFill = panel.querySelector('.boss-player-rpm-fill');
+                if (hpFill) hpFill.style.width = `${hpRatio * 100}%`;
+                if (damagePreview) {
+                    const previewRatio = Math.max(0, Math.min(1, (bey.damagePreviewAmount || 0) / Math.max(1, bey.maxHealth)));
+                    damagePreview.style.width = `${previewRatio * 100}%`;
+                    damagePreview.style.right = `${hpRatio * 100}%`;
+                    damagePreview.style.left = 'auto';
+                    damagePreview.style.opacity = (bey.damagePreviewTimer || 0) > 0 && previewRatio > 0 ? '1' : '0';
+                }
+                if (hpText) hpText.textContent = `${Math.round(Math.max(0, bey.health))}`;
+                if (rpmFill) rpmFill.style.width = `${rpmRatio * 100}%`;
+                const name = panel.querySelector('.boss-player-name');
+                const parts = panel.querySelector('.boss-player-parts');
+                if (name) name.textContent = bey.parts.battleCap.name;
+                if (parts) parts.textContent = `${bey.parts.weightRing.name} | ${bey.parts.driver.name}`;
+            });
+            const bossPanel = document.getElementById('bossEnemyUi');
+            const boss = typeof bey2 !== 'undefined' ? bey2 : null;
+            if (bossPanel && boss && boss.parts && boss.parts.battleCap) {
+                const hpRatio = Math.max(0, Math.min(1, boss.health / Math.max(1, boss.maxHealth)));
+                const rpmRatio = Math.max(0, Math.min(1, boss.rpm / Math.max(1, boss.maxRpm)));
+                bossPanel.querySelector('.boss-enemy-name').textContent = boss.parts.battleCap.name;
+                bossPanel.querySelector('.boss-enemy-parts').textContent = `${boss.parts.weightRing.name} | ${boss.parts.driver.name}`;
+                bossPanel.querySelector('.boss-enemy-hp-fill').style.width = `${hpRatio * 100}%`;
+                const enemyDamagePreview = bossPanel.querySelector('.boss-enemy-damage-preview');
+                if (enemyDamagePreview) {
+                    const previewRatio = Math.max(0, Math.min(1, (boss.damagePreviewAmount || 0) / Math.max(1, boss.maxHealth)));
+                    enemyDamagePreview.style.width = `${previewRatio * 100}%`;
+                    enemyDamagePreview.style.left = `${hpRatio * 100}%`;
+                    enemyDamagePreview.style.right = 'auto';
+                    enemyDamagePreview.style.opacity = (boss.damagePreviewTimer || 0) > 0 && previewRatio > 0 ? '1' : '0';
+                }
+                bossPanel.querySelector('.boss-enemy-hp-text').textContent = `${Math.round(Math.max(0, boss.health))}`;
+                bossPanel.querySelector('.boss-enemy-rpm-fill').style.width = `${rpmRatio * 100}%`;
+                bossPanel.querySelector('.boss-enemy-atk').textContent = Math.round(boss.stats.atk);
+                bossPanel.querySelector('.boss-enemy-def').textContent = Math.round(boss.stats.def);
+                bossPanel.querySelector('.boss-enemy-stm').textContent = Math.round(boss.stats.stamina);
+            }
         }
 
         let activeArenaBeys = [];
@@ -9937,6 +10505,8 @@ arena_7: './arena_7.mp3'
                 this.vx = (Math.random() - 0.5) * 3;
                 this.vy = (Math.random() - 0.5) * 3;
                 this.radius = BEY_RADIUS;
+                this.bossSizeMultiplier = 1;
+                this.bossStatMultiplier = 1;
                 this.angle = 0;
                 this.movementRecoveryTimer = 0;
                 
@@ -10416,10 +10986,16 @@ arena_7: './arena_7.mp3'
                     });
                 }
 
-                const justiceActive = !!(this.justiceUltimateActive || (this.currentOpponent && this.currentOpponent.justiceUltimateActive));
-                const insideJusticeInnerArena = Math.hypot(this.x - centerX, this.y - centerY) <= ARENA_INNER_RADIUS;
-                if (justiceActive && insideJusticeInnerArena) s.atk = 1;
+                if (isJusticeCenterActiveFor(this)) s.atk = 1;
                 if (this.phoenixDefenseBroken && this.parts.battleCap && this.parts.battleCap.id === 'bc_phoenix') s.def = 0;
+                if (Number(this.bossStatMultiplier) > 1) {
+                    const bossMultiplier = Number(this.bossStatMultiplier);
+                    s.atk *= bossMultiplier;
+                    s.def *= bossMultiplier;
+                    s.stamina *= bossMultiplier;
+                    s.health *= bossMultiplier;
+                    s.weight *= bossMultiplier;
+                }
                 s.stamina = Math.round(s.stamina);
                 s.interval = Math.max(1.5, s.interval + 3.0);
 
@@ -10435,9 +11011,9 @@ arena_7: './arena_7.mp3'
                         : 0;
                     const titanMultiplier = 1 + ((hpRatio + shieldRatio) * 0.20);
                     s.weight *= titanMultiplier;
-                    this.radius = BEY_RADIUS * titanMultiplier;
+                    this.radius = BEY_RADIUS * titanMultiplier * this.bossSizeMultiplier;
                 } else {
-                    this.radius = BEY_RADIUS;
+                    this.radius = BEY_RADIUS * this.bossSizeMultiplier;
                 }
 
                 return s;
@@ -11639,7 +12215,7 @@ arena_7: './arena_7.mp3'
                         const sealDuration = camusEffect ? camusEffect.duration : 360;
                         const camusTargets = this.isPuppet && this.nilthotepOwner
                             ? [getUltimateEnemyTarget(this)]
-                            : [bey1, bey2];
+                            : getLivingCombatEnemies(this);
                         camusTargets.forEach(bey => {
                             if (bey && !bey.dead && bey !== this.nilthotepOwner) bey.applySeal(sealDuration);
                         });
@@ -12184,11 +12760,7 @@ ctx.fill();
                     ctx.stroke();
                     ctx.restore();
                 }
-                const justiceAffectingBey = !!(
-                    this.justiceUltimateActive ||
-                    (this.currentOpponent && this.currentOpponent.justiceUltimateActive)
-                );
-                const justiceAffected = justiceAffectingBey && Math.hypot(this.x - centerX, this.y - centerY) <= ARENA_INNER_RADIUS;
+                const justiceAffected = isJusticeCenterActiveFor(this);
                 if (justiceAffected) {
                     ctx.save();
                     ctx.beginPath();
@@ -12834,10 +13406,12 @@ ctx.fill();
                     if (this.puppeteerBuffTimer <= 0) this.stats = this.calculateStats();
                 }
                 if (this.valkyrieUltimatePending) {
-                    this.valkyrieUltimateDelay = Math.max(0, this.valkyrieUltimateDelay - gameSpeed);
-                    if (this.valkyrieUltimateDelay <= 0) {
-                        this.castUltimate();
-                        return;
+                    if (!this.hasSeal()) {
+                        this.valkyrieUltimateDelay = Math.max(0, this.valkyrieUltimateDelay - gameSpeed);
+                        if (this.valkyrieUltimateDelay <= 0) {
+                            this.castUltimate();
+                            return;
+                        }
                     }
                 }
                 if (this.luciferCelestialWingsActive) {
@@ -12869,7 +13443,7 @@ ctx.fill();
                     const safeShrinkDuration = Math.max(1, Number(survivorEffect && survivorEffect.safeShrinkDuration) || 360);
                     this.survivorSafeTimer = Math.max(0, this.survivorSafeTimer - gameSpeed);
                     this.survivorSafeRadius = this.survivorSafeInitialRadius * (this.survivorSafeTimer / safeShrinkDuration);
-                    [bey1, bey2].forEach(affectedBey => {
+                    getCombatBeys().forEach(affectedBey => {
                         if (!affectedBey || affectedBey.dead) return;
                         const distanceFromSafeCenter = Math.hypot(
                             affectedBey.x - this.survivorSafeCenterX,
@@ -12891,7 +13465,7 @@ ctx.fill();
                     this.justiceHealTimer -= gameSpeed;
                     if (this.justiceHealTimer <= 0 && this.justiceUltimateTimer > 0) {
                         const healRatio = Math.max(0, Number(justiceEffect && justiceEffect.lostHpHealRatio) || 0.30);
-                        [bey1, bey2].forEach(affectedBey => {
+                        getLivingCombatTeam(this).forEach(affectedBey => {
                             if (!affectedBey || affectedBey.dead) return;
                             const distanceFromCenter = Math.hypot(affectedBey.x - centerX, affectedBey.y - centerY);
                             if (distanceFromCenter <= ARENA_INNER_RADIUS) {
@@ -12912,7 +13486,7 @@ ctx.fill();
                     const thorEffect = this.getAllEffects().find(eff => eff.type === 'thor_ultimate');
                     this.thorUltimateTimer -= gameSpeed;
                     this.thorLightningTimer -= gameSpeed;
-                    const thorTarget = [bey1, bey2].find(bey => bey && !bey.dead && bey.side !== this.side);
+                    const thorTarget = getLivingCombatEnemies(this)[0] || null;
                     while (this.thorUltimateTimer > 0 && this.thorLightningTimer <= 0 && thorTarget) {
                         const edgeAngle = Math.random() * Math.PI * 2;
                         const edgeDistance = ARENA_RADIUS + 40;
@@ -12951,7 +13525,7 @@ ctx.fill();
                     const bubbleMinRadius = Number(bubbleEffect && bubbleEffect.minRadius) || 16;
                     const bubbleMaxRadius = Math.max(bubbleMinRadius, Number(bubbleEffect && bubbleEffect.maxRadius) || 32);
                     while (this.bubbleSpawnRemaining > 0 && this.bubbleSpawnTimer <= 0) {
-                        const bubbleTarget = [bey1, bey2].find(bey => bey && !bey.dead && bey.side !== this.side);
+                        const bubbleTarget = getLivingCombatEnemies(this)[0] || null;
                         const targetDx = bubbleTarget ? bubbleTarget.x - this.x : (centerX - this.x);
                         const targetDy = bubbleTarget ? bubbleTarget.y - this.y : (centerY - this.y);
                         const maxDistance = Math.max(0, ARENA_RADIUS - bubbleMaxRadius - 1);
@@ -14048,7 +14622,10 @@ ctx.fill();
                     this.lightningSkillTimer -= gameSpeed;
                     if (this.lightningSkillTimer <= 0) {
                         this.lightningSkillTimer = getPartsSkillCooldownFrames(lightningEffect.interval || 360, this);
-                        const candidates = [bey1, bey2].filter(bey => bey && !bey.dead);
+                        // Lightning chooses the farthest valid target relative to arena center.
+                        // The user is always a candidate: hitting the user grants gauge, while
+                        // hitting any living enemy applies Break. Same-side allies are excluded.
+                        const candidates = [this, ...getLivingCombatEnemies(this)];
                         const target = candidates.reduce((furthest, bey) => {
                             if (!furthest) return bey;
                             const beyDistance = Math.hypot(bey.x - centerX, bey.y - centerY);
@@ -14807,7 +15384,7 @@ ctx.fill();
                     }
                     const chillEffect = this.getAllEffects().find(eff => eff.type === 'chill_block_freeze' && eff.trigger === 'block_occurred');
                     if (chillEffect) {
-                        const opponent = (this === bey1) ? bey2 : bey1;
+                        const opponent = getUltimateEnemyTarget(this);
                         if (opponent && !opponent.dead && opponent.applyFreeze) {
                             opponent.applyFreeze(Number(chillEffect.freezeDuration) || 240, this);
                         }
@@ -15040,19 +15617,43 @@ ctx.fill();
 
         let spawns = getRandomSpawnPositions();
         activeArenaBeys = [];
-        let bey1 = new Beyblade(spawns.x1, spawns.y1, playerEquipped, 'left');
-        let bey2 = new Beyblade(spawns.x2, spawns.y2, enemyEquipped, 'right');
+        var bey1 = new Beyblade(spawns.x1, spawns.y1, playerEquipped, 'left');
+        var bey2 = new Beyblade(spawns.x2, spawns.y2, enemyEquipped, 'right');
         let puppetBeys = [];
         let wreathBey = null;
         let chronosTimeStopProtected = null;
             bey1.stats = bey1.calculateStats();
         bey2.stats = bey2.calculateStats();
 
+        function getCombatBeys() {
+            const roster = (typeof bossBattleMode !== 'undefined' && bossBattleMode && Array.isArray(activeArenaBeys) && activeArenaBeys.length)
+                ? activeArenaBeys
+                : [bey1, bey2];
+            return Array.from(new Set(roster.filter(Boolean)));
+        }
+        function getLivingCombatTeam(source) {
+            if (!source) return [];
+            return getCombatBeys().filter(bey => bey && !bey.dead && bey.side === source.side);
+        }
+        function getLivingCombatEnemies(source) {
+            if (!source) return [];
+            return getCombatBeys().filter(bey => bey && !bey.dead && bey.side !== source.side);
+        }
         function getUltimateEnemyTarget(source) {
-            if (!source) return null;
-            return source.isPuppet
-                ? (source.side === 'left' ? bey2 : bey1)
-                : (source === bey1 ? bey2 : bey1);
+            const enemies = getLivingCombatEnemies(source);
+            if (!source || !enemies.length) return null;
+            return enemies[0] || null;
+        }
+        function getActiveJusticeCaster() {
+            return getCombatBeys().find(bey => bey && !bey.dead && bey.justiceUltimateActive &&
+                bey.parts && bey.parts.battleCap && bey.parts.battleCap.id === 'bc_justice') || null;
+        }
+        function isInsideJusticeCenter(entity) {
+            return !!(entity && Math.hypot(entity.x - centerX, entity.y - centerY) <= ARENA_INNER_RADIUS);
+        }
+        function isJusticeCenterActiveFor(entity) {
+            const justiceCaster = getActiveJusticeCaster();
+            return !!(justiceCaster && isInsideJusticeCenter(entity));
         }
         function isChronosFrozenEntity(entity) {
             const chronosNilthotepOwner = chronosTimeStopOwner && chronosTimeStopOwner.nilthotepOwner;
@@ -15060,7 +15661,8 @@ ctx.fill();
                 entity === chronosNilthotepOwner || entity.nilthotepOwner === chronosNilthotepOwner
             );
             return !!(chronosTimeStopFrames > 0 && chronosTimeStopOwner && entity &&
-                entity !== chronosTimeStopOwner && entity !== chronosTimeStopProtected && !alliedNilthotepEntity);
+                entity !== chronosTimeStopOwner && entity !== chronosTimeStopProtected &&
+                entity.side !== chronosTimeStopOwner.side && !alliedNilthotepEntity);
         }
 
         function dismissPuppeteerPuppet(owner = null, specificPuppet = null) {
@@ -15259,7 +15861,7 @@ ctx.fill();
         function spawnLaurelWreathProjectile(wreath) {
             if (!wreath || wreath.dead || !wreath.wreathOwner) return;
             const owner = wreath.wreathOwner;
-            const target = owner.side === 'left' ? bey2 : bey1;
+            const target = getLivingCombatEnemies(owner)[0] || null;
             if (!target || target.dead) return;
             const effect = owner.getAllEffects().find(eff => eff.type === 'laurel_wreath_ultimate') || {};
             projectiles.push(new Projectile(owner, target, {
@@ -15818,7 +16420,7 @@ ctx.fill();
                 zone.tickTimer -= gameSpeed;
                 if (zone.tickTimer <= 0) {
                     zone.tickTimer = 60; // every 1 second
-                    [bey1, bey2].forEach(bey => {
+                    getCombatBeys().forEach(bey => {
                         if (bey && !bey.dead && bey.side === zone.casterSide) {
                             const dist = Math.hypot(bey.x - zone.x, bey.y - zone.y);
                             if (dist <= zone.radius) {
@@ -15856,7 +16458,7 @@ ctx.fill();
                     }
                     c.x = c.caster.x;
                     c.y = c.caster.y;
-                    const enemy = [bey1, bey2].find(bey => bey && !bey.dead && bey.side !== c.casterSide);
+                    const enemy = getCombatBeys().find(bey => bey && !bey.dead && bey.side !== c.casterSide && Math.hypot(bey.x - c.x, bey.y - c.y) <= bey.radius + c.radius);
                     if (!c.hitResolved && enemy) {
                         const dist = Math.hypot(enemy.x - c.x, enemy.y - c.y);
                         if (dist <= c.radius + enemy.radius) {
@@ -15905,7 +16507,7 @@ ctx.fill();
                     }
                     if (c.damageCooldown <= 0) {
                         c.damageCooldown = c.damageInterval;
-                        [bey1, bey2].forEach(target => {
+                        getCombatBeys().forEach(target => {
                             if (!target || target.dead || target.side === c.casterSide) return;
                             const targetRingDistance = Math.abs(Math.hypot(target.x - c.x, target.y - c.y) - c.radius);
                             if (targetRingDistance <= c.ringThickness + target.radius) {
@@ -15926,7 +16528,10 @@ ctx.fill();
                     if (c.activationState === 'idle') {
                         c.lifeTimer = Math.max(0, (c.lifeTimer || 0) - gameSpeed);
                         if (c.lifeTimer <= 0) {
-                            const nearest = [bey1, bey2]
+                            const nearestCandidates = c.caster && c.caster.side === 'right'
+                                ? getLivingCombatEnemies(c.caster)
+                                : [c.caster, ...getLivingCombatEnemies(c.caster)];
+                            const nearest = nearestCandidates
                                 .filter(bey => bey && !bey.dead)
                                 .sort((left, right) => Math.hypot(left.x - c.x, left.y - c.y) - Math.hypot(right.x - c.x, right.y - c.y))[0];
                             activateAliceNote(c, nearest);
@@ -15953,8 +16558,8 @@ ctx.fill();
                     }
                     continue;
                 } else if (c.type === 'crystal_emitter') {
-                    const enemy = [bey1, bey2].find(bey => bey && !bey.dead && bey.side !== c.casterSide);
-                    if (enemy && Math.hypot(enemy.x - c.x, enemy.y - c.y) <= enemy.radius + c.radius) {
+                    const enemy = getCombatBeys().find(bey => bey && !bey.dead && bey.side !== c.casterSide && Math.hypot(bey.x - c.x, bey.y - c.y) <= bey.radius + c.radius);
+                    if (enemy) {
                         removeArenaCreationAt(i);
                         continue;
                     }
@@ -15968,7 +16573,7 @@ ctx.fill();
                         const lineDx = partner.x - c.x;
                         const lineDy = partner.y - c.y;
                         const lineLengthSquared = (lineDx * lineDx) + (lineDy * lineDy) || 1;
-                        [bey1, bey2].forEach(target => {
+                        getCombatBeys().forEach(target => {
                             if (!target || target.dead || target.side === c.casterSide || c.laserHitCooldown > 0) return;
                             const pointX = target.x - c.x;
                             const pointY = target.y - c.y;
@@ -15989,7 +16594,7 @@ ctx.fill();
                     c.tickTimer -= gameSpeed;
                     if (c.tickTimer <= 0) {
                         c.tickTimer = Math.max(1, Number(c.breakTickInterval) || 15);
-                        [bey1, bey2].forEach(bey => {
+                        getCombatBeys().forEach(bey => {
                             if (bey && !bey.dead && bey.side !== c.casterSide) {
                                 const dist = Math.hypot(bey.x - c.x, bey.y - c.y);
                                 if (dist <= bey.radius + c.radius) {
@@ -16002,7 +16607,7 @@ ctx.fill();
                         });
                     }
                 } else if (c.type === 'bubble') {
-                    const enemy = [bey1, bey2].find(bey => bey && !bey.dead && bey.side !== c.casterSide);
+                    const enemy = getCombatBeys().find(bey => bey && !bey.dead && bey.side !== c.casterSide && Math.hypot(bey.x - c.x, bey.y - c.y) <= bey.radius + c.radius);
                     if (enemy) {
                         const dist = Math.hypot(enemy.x - c.x, enemy.y - c.y);
                         if (dist <= enemy.radius + c.radius) {
@@ -16035,7 +16640,7 @@ ctx.fill();
                         c.x = c.caster.x + Math.cos(orbitAngle) * c.orbitDistance;
                         c.y = c.caster.y + Math.sin(orbitAngle) * c.orbitDistance;
                     }
-                    const enemy = [bey1, bey2].find(bey => bey && !bey.dead && bey.side !== c.casterSide);
+                    const enemy = getCombatBeys().find(bey => bey && !bey.dead && bey.side !== c.casterSide && Math.hypot(bey.x - c.x, bey.y - c.y) <= bey.radius + c.radius);
                     if (enemy) {
                         const dist = Math.hypot(enemy.x - c.x, enemy.y - c.y);
                         if (dist <= enemy.radius + c.radius) {
@@ -16058,20 +16663,21 @@ ctx.fill();
                     // Telegraph orbs remain non-collectible until they complete the inward transition.
                     continue;
                 } else if (c.type === 'dr_greek_orb') {
-                    const collector = [bey1, bey2].find(bey =>
+                    // Any living Bey can collect the orb, but only the caster's team
+                    // receives the enhanced version of the medicakit buff.
+                    const collector = getCombatBeys().find(bey =>
                         bey && !bey.dead && Math.hypot(bey.x - c.x, bey.y - c.y) <= bey.radius + c.radius
                     );
                     if (collector) {
-                        // 300% increased means the caster receives the base amount plus
-                        // 300% of it: 4x total. Enemies receive the normal 1x amount.
-                        const casterPickupMultiplier = collector === c.caster ? 4.0 : 1.0;
+                        // The caster and allies get 4x; an enemy collector gets the base 1x amount.
+                        const casterPickupMultiplier = collector.side === c.caster.side ? 4.0 : 1.0;
                         const shieldAmount = collector.stats.atk * (Number(c.shieldAttackRatio) || 0.20) * casterPickupMultiplier;
                         const healAmount = collector.stats.atk * (Number(c.healAttackRatio) || 0.20) * casterPickupMultiplier;
                         collector.shield = Math.max(collector.shield || 0, shieldAmount);
                         collector.maxShield = Math.max(collector.maxShield || 0, shieldAmount);
                         collector.shieldTimer = Math.max(collector.shieldTimer || 0, Number(c.pickupShieldDuration) || 60);
                         collector.applyHeal(healAmount);
-                        if (collector === c.caster) {
+                        if (collector.side === c.caster.side) {
                             collector.isImpact = true;
                             playGameSfx(SFX_RUSH);
                             collector.isUltimateImpact = false;
@@ -16085,14 +16691,17 @@ ctx.fill();
                         removeArenaCreationAt(i);
                     }
                 } else if (c.type === 'pisces_orb') {
-                    const collector = c.caster && !c.caster.dead ? c.caster : null;
-                    if (collector && Math.hypot(collector.x - c.x, collector.y - c.y) <= collector.radius + c.radius) {
+                    // Pisces charge orbs can be collected by any living ally.
+                    const collector = getLivingCombatTeam(c.caster).find(bey =>
+                        Math.hypot(bey.x - c.x, bey.y - c.y) <= bey.radius + c.radius
+                    ) || null;
+                    if (collector) {
                         collector.gainUltimateCharge(c.ultimateGaugeGain || 20);
                         removeArenaCreationAt(i);
                     }
                 } else {
                     // Check if caster touched creation
-                    [bey1, bey2].forEach(bey => {
+                    getCombatBeys().forEach(bey => {
                         if (bey && !bey.dead && bey.side === c.casterSide) {
                             const dist = Math.hypot(bey.x - c.x, bey.y - c.y);
                             if (dist <= bey.radius + c.radius) {
@@ -17243,7 +17852,8 @@ function launchShuraRibbonProjectile(caster, target) {
                     continue;
                 }
                 // The orb remains stationary at the exact position where it spawned.
-                const target = orb.owner === bey1 ? bey2 : bey1;
+                // Hyperspace targets any living enemy, including Boss Mode allies.
+                const target = getLivingCombatEnemies(orb.owner)[0] || null;
                 if (orb.launchTimer > 0 && target && !target.dead && target.timeTeleportStage !== 2) {
                     const contactDistance = Math.hypot(orb.x - target.x, orb.y - target.y);
                     if (contactDistance <= target.radius + orb.radius) {
@@ -17402,8 +18012,13 @@ function launchShuraRibbonProjectile(caster, target) {
         }
 
         function drawMiniHealthBars(ctx) {
-            drawMiniHealthBar(ctx, bey1);
-            drawMiniHealthBar(ctx, bey2);
+            if (bossBattleMode) {
+                bossPlayerBeys.forEach(bey => drawMiniHealthBar(ctx, bey));
+                drawMiniHealthBar(ctx, bey2);
+            } else {
+                drawMiniHealthBar(ctx, bey1);
+                drawMiniHealthBar(ctx, bey2);
+            }
         }
 
         function drawInsightLasers(ctx) {
@@ -17471,7 +18086,7 @@ function launchShuraRibbonProjectile(caster, target) {
                 arenaScreen.classList.toggle('chronos-negative', nextChronosNegativeState);
                 arenaScreen._chronosNegativeClassState = nextChronosNegativeState;
             }
-            const phoenixActive = !!(gameRunning && [bey1, bey2].some(bey => bey && bey.phoenixRevived && (bey.phoenixBurnMode || bey.phoenixUltimatePending || bey.phoenixDefenseBroken)));
+            const phoenixActive = !!(gameRunning && getCombatBeys().some(bey => bey && bey.phoenixRevived && (bey.phoenixBurnMode || bey.phoenixUltimatePending || bey.phoenixDefenseBroken)));
             const nextPhoenixClassState = phoenixActive;
             if (arenaScreen && arenaScreen._phoenixArenaClassState !== nextPhoenixClassState) {
                 arenaScreen.classList.toggle('phoenix-arena-active', nextPhoenixClassState);
@@ -17641,7 +18256,7 @@ function launchShuraRibbonProjectile(caster, target) {
         let iltheusAbsorption = null;
         function clearIltheusUltimateState() {
             iltheusAbsorption = null;
-            [bey1, bey2, ...puppetBeys].forEach(bey => {
+            getCombatBeys().forEach(bey => {
                 if (!bey) return;
                 bey.iltheusUltimateActive = false;
                 bey.iltheusUltimateTimer = 0;
@@ -17786,7 +18401,7 @@ function launchShuraRibbonProjectile(caster, target) {
                 }
             }
             const deathSequenceAffectsBattle = deathSequenceTimer > 0 && deathSequenceBey && !deathSequenceBey.isWreath;
-            const allCombatBeys = [bey1, bey2, ...puppetBeys].filter(bey => bey && bey.visible && !bey.dead && !bey.isWreath);
+            const allCombatBeys = getCombatBeys().filter(bey => bey && bey.visible && !bey.dead && !bey.isWreath);
             const thetisBulletTimeActive = !!(
                 allCombatBeys.some(bey => bey.thetisBulletTimeActive)
             );
@@ -17862,13 +18477,13 @@ function launchShuraRibbonProjectile(caster, target) {
                     cinematicOverlay.classList.remove('active');
                     arenaContainer.style.transform = 'scale(1)';
                     arenaContainer.style.transformOrigin = 'center center';
-                    [bey1, bey2].forEach(phoenix => {
+                    getCombatBeys().forEach(phoenix => {
                         if (!phoenix || !phoenix.phoenixUltimatePending) return;
                         phoenix.phoenixUltimatePending = false;
                         phoenix.phoenixBurnMode = true;
                         phoenix.phoenixFireTimer = 0;
                     });
-                    [bey1, bey2, ...puppetBeys].forEach(mermaid => {
+                    getCombatBeys().forEach(mermaid => {
                         if (!mermaid || !mermaid.mermaidUltimatePending) return;
                         mermaid.mermaidUltimatePending = false;
                         const mermaidUltimateEffect = mermaid.getAllEffects().find(eff => eff.type === 'mermaid_ultimate');
@@ -17916,7 +18531,7 @@ function launchShuraRibbonProjectile(caster, target) {
 
             const powerMeter = getCachedElement('powerMeterBar');
 
-            if (launchingPhase) {
+            if (launchingPhase && !bossBattleMode) {
                 aCtx.save();
                 aCtx.scale(scale, scale);
 
@@ -18097,13 +18712,16 @@ function launchShuraRibbonProjectile(caster, target) {
                 frameCounter++;
                 const shouldUpdateUI = (frameCounter % 10 === 0);
                 activeArenaBeys.filter(Boolean).forEach(bey => {
-                    const opponent = bey.isPuppet
-                        ? (bey.side === 'left' ? bey2 : bey1)
-                        : (bey === bey1 ? bey2 : bey1);
+                    const opponent = bossBattleMode
+                        ? (bey.side === 'left' ? bey2 : (bossPlayerBeys.find(ally => ally && !ally.dead) || bey1))
+                        : (bey.isPuppet
+                            ? (bey.side === 'left' ? bey2 : bey1)
+                            : (bey === bey1 ? bey2 : bey1));
                     bey.update(opponent, shouldUpdateUI);
                     resolveEnchantressCircleCollision(bey);
                 });
             }
+            if (typeof bossBattleMode !== 'undefined' && bossBattleMode) updateBossPlayerUI();
             updateIltheusAbsorption(allCombatBeys, normalGameSpeed);
             if (!gamePaused) {
                 updateHyperspaceOrbs();
@@ -18115,6 +18733,7 @@ function launchShuraRibbonProjectile(caster, target) {
             handleTowerBattleEnd();
             handleReusableBattleEnd();
             handleAdventureBattleEnd();
+            handleBossBattleEnd();
             handleStandardBattleEnd();
             updateChronosArenaFilter();
             const iltheusSequenceActive = iltheusAbsorption && iltheusAbsorption.phase === 'absorb';
@@ -18124,17 +18743,19 @@ function launchShuraRibbonProjectile(caster, target) {
             drawInsightLasers(bCtx);
             drawLightningStrikes(bCtx);
             drawShuraLinks(bCtx);
-            drawLaunchTrailUnderBeys(bCtx, bey1);
-            drawLaunchTrailUnderBeys(bCtx, bey2);
+            const primaryArenaBeys = bossBattleMode ? activeArenaBeys.filter(bey => bey && !bey.isPuppet && !bey.isWreath) : [bey1, bey2];
+            primaryArenaBeys.forEach(bey => drawLaunchTrailUnderBeys(bCtx, bey));
             if (!iltheusSequenceActive) {
-                drawBeyGroundShadow(bCtx, bey1);
-                drawBeyGroundShadow(bCtx, bey2);
+                primaryArenaBeys.forEach(bey => drawBeyGroundShadow(bCtx, bey));
             }
             }
-            const survivorLandingBey = [bey1, bey2].find(bey =>
+            const primaryArenaBeys = bossBattleMode ? activeArenaBeys.filter(bey => bey && !bey.isPuppet && !bey.isWreath) : [bey1, bey2];
+            const survivorLandingBey = primaryArenaBeys.find(bey =>
                 bey && bey.arenaOccupationPending && bey.parts.battleCap && bey.parts.battleCap.id === 'bc_survivor'
             );
-            if (survivorLandingBey === bey1) {
+            if (bossBattleMode) {
+                primaryArenaBeys.slice().sort((a, b) => (a === survivorLandingBey ? 1 : 0) - (b === survivorLandingBey ? 1 : 0)).forEach(bey => bey.draw(bCtx));
+            } else if (survivorLandingBey === bey1) {
                 bey2.draw(bCtx);
                 bey1.draw(bCtx);
             } else if (survivorLandingBey === bey2) {
@@ -18147,8 +18768,7 @@ function launchShuraRibbonProjectile(caster, target) {
             puppetBeys.filter(puppet => puppet && puppet.visible && !puppet.dead).forEach(puppet => puppet.draw(bCtx));
             if (wreathBey && wreathBey.visible && !wreathBey.dead) wreathBey.draw(bCtx);
             if (!iltheusSequenceActive) {
-            drawPaperDollAttachments(bCtx, bey1);
-            drawPaperDollAttachments(bCtx, bey2);
+            primaryArenaBeys.forEach(bey => drawPaperDollAttachments(bCtx, bey));
             petalCtx.clearRect(0, 0, valkyriePetalCanvas.width, valkyriePetalCanvas.height);
             if (valkyriePetalFrames > 0) {
                     const petalAge = 300 - valkyriePetalFrames;
@@ -18271,7 +18891,7 @@ function launchShuraRibbonProjectile(caster, target) {
 
             }
             // Redraw a jumping Mercury last so it appears above every other arena visual.
-            const jumpingMercury = [bey1, bey2].find(bey => bey && bey.mercuryUltimateActive && !bey.dead);
+            const jumpingMercury = getCombatBeys().find(bey => bey && bey.mercuryUltimateActive && !bey.dead);
             if (!iltheusSequenceActive && jumpingMercury) jumpingMercury.draw(bCtx, true);
             if (nilthotepSwordFlashFrames > 0) {
     const elapsed = 45 - nilthotepSwordFlashFrames;
@@ -19416,9 +20036,24 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             updateSkillHexagons();
         });
 
+        function clearArenaVisualOverlays() {
+            ['thorUltimateOverlay', 'hodurUltimateOverlay', 'survivorUltimateOverlay', 'camusUltimateOverlay'].forEach(id => {
+                const overlay = getCachedElement(id);
+                if (overlay) overlay.classList.remove('active');
+            });
+            const arenaContainerElement = getCachedElement('arenaContainer');
+            if (arenaContainerElement) arenaContainerElement.classList.remove('thor-overlay-active', 'survivor-overlay-active');
+            hodurSwordVisualPhase = 'inactive';
+            hodurSwordSequenceFrame = 0;
+            hodurSwordConvergeFrame = 0;
+            hodurSwordFloatFrame = 0;
+            hodurSlashVisualScheduleIndex = 0;
+            hodurSlashVisuals = [];
+        }
         function resetArenaBattle() {
             chronosTimeStopProtected = null;
             clearIltheusUltimateState();
+            clearArenaVisualOverlays();
             nilthotepSwordFlashFrames = 0;
             const battleResultAnnouncement = document.getElementById('battleResultAnnouncement');
             if (battleResultAnnouncement) {
@@ -19431,6 +20066,20 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             adventureBattleMode = false;
             document.body.classList.remove('adventure-battle-active');
             championshipBattleMode = false;
+            bossBattleMode = false;
+            // Boss-only visual/stat scaling must never leak into later battle modes.
+            [bey1, bey2].forEach(bey => {
+                if (!bey) return;
+                bey.bossSizeMultiplier = 1;
+                bey.bossStatMultiplier = 1;
+                bey.adventureEnemyStatMultiplier = 1;
+                bey.towerStatMultiplier = 1;
+            });
+            bossPlayerBeys = [];
+            bossAnnouncedDefeatedBeys.clear();
+            document.body.classList.remove('boss-battle-active');
+            if (bossStartTimer) clearTimeout(bossStartTimer);
+            bossStartTimer = null;
             updateRestrictedBattleControls();
             towerResultHandled = false;
             standardBattleResultHandled = false;
@@ -19479,13 +20128,14 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             updateSkillHexagons();
         }
         resetCircularBtn.addEventListener('click', () => {
-            if (towerBattleMode || adventureBattleMode || championshipBattleMode) return;
+            if (towerBattleMode || adventureBattleMode || championshipBattleMode || bossBattleMode) return;
             resetArenaBattle();
         });
         randomizeCircularBtn.addEventListener('click', () => {
-            if (towerBattleMode || adventureBattleMode || championshipBattleMode) return;
+            if (towerBattleMode || adventureBattleMode || championshipBattleMode || bossBattleMode) return;
             chronosTimeStopProtected = null;
             clearIltheusUltimateState();
+            clearArenaVisualOverlays();
             nilthotepSwordFlashFrames = 0;
             gameRunning = false;
             launchingPhase = true;
@@ -19563,6 +20213,13 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             if (bey1 && gameRunning && !bey1.hasSeal()) {
                 bey1.castUltimate();
             }
+        });
+        document.querySelectorAll('[data-boss-player-ultimate]').forEach(button => {
+            button.addEventListener('click', () => {
+                const index = Number(button.dataset.bossPlayerUltimate);
+                const bey = Array.isArray(bossPlayerBeys) ? bossPlayerBeys[index] : null;
+                if (bossBattleMode && gameRunning && bey && !bey.dead && !bey.hasSeal()) bey.castUltimate();
+            });
         });
 
         updateSkillHexagons();
@@ -19984,6 +20641,78 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             try { if (cloudSession?.access_token) await fetchCloudJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.authUrl}/logout`, { method: 'POST', headers: getCloudHeaders() }); } catch (e) {}
             cloudSession = null; cloudUser = null; championshipEnrollmentActive = false; saveCloudSession(); if (cloudSaveTimer) clearTimeout(cloudSaveTimer); if (typeof manualSaveGame === 'function') manualSaveGame(); updateCloudAccountUI(); setCloudStatus('Offline guest save', '');
         }
+        function escapeRedeemText(value) {
+            return String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
+        }
+        function showRedeemResult(message, rewards = [], isError = false) {
+            const modal = document.getElementById('redeemResultModal');
+            const messageElement = document.getElementById('redeemResultMessage');
+            const list = document.getElementById('redeemResultList');
+            if (messageElement) { messageElement.textContent = message; messageElement.classList.toggle('error', isError); }
+            if (list) list.innerHTML = (Array.isArray(rewards) ? rewards : []).map(reward => `<div class="redeem-result-item">${escapeRedeemText(reward)}</div>`).join('');
+            modal?.classList.remove('hidden');
+        }
+        function closeRedeemResult() { document.getElementById('redeemResultModal')?.classList.add('hidden'); }
+        function applyRedeemRewards(reward = {}) {
+            const rewards = [];
+            const addRewardCurrency = (key, label) => {
+                const amount = Math.max(0, Math.floor(Number(reward[key]) || 0));
+                if (!amount) return;
+                currencyState[key] = Math.max(0, Math.floor(Number(currencyState[key]) || 0)) + amount;
+                rewards.push(`${label}: x${amount.toLocaleString()}`);
+            };
+            addRewardCurrency('gold', 'Gold');
+            addRewardCurrency('gems', 'Gems');
+            addRewardCurrency('ascendedStones', 'Ascended Stones');
+            addRewardCurrency('luckyTickets', 'Lucky Tickets');
+            (Array.isArray(reward.parts) ? reward.parts : []).forEach(entry => {
+                const id = String(entry?.id || entry?.partId || '').trim();
+                const amount = Math.max(0, Math.floor(Number(entry?.amount) || 0));
+                const part = id ? findPartById(id, null) : null;
+                if (!part || !amount) return;
+                if (part.rarity === 'Ascended') currencyState.ascendedStones += amount;
+                else partAmounts[id] = Math.max(0, Math.floor(Number(partAmounts[id]) || 0)) + amount;
+                acquiredPartIds[id] = true;
+                rewards.push(`${part.name || id}: x${amount.toLocaleString()}`);
+            });
+            (Array.isArray(reward.chests) ? reward.chests : []).forEach(entry => {
+                const chestId = typeof entry === 'string' ? entry : String(entry?.chestId || entry?.id || '').trim();
+                const amount = Math.max(0, Math.floor(typeof entry === 'string' ? 1 : Number(entry?.amount) || 0));
+                const definition = chestDefinitions[chestId];
+                if (!definition || !amount) return;
+                for (let index = 0; index < amount; index += 1) addChestToInventory(chestId);
+                rewards.push(`${definition.name}: x${amount.toLocaleString()}`);
+            });
+            updateCurrencyUI();
+            renderChestSlots();
+            return rewards;
+        }
+        async function redeemCode() {
+            const input = document.getElementById('settingsRedeemInput');
+            const button = document.getElementById('settingsRedeemButton');
+            const code = String(input?.value || '').trim().toUpperCase();
+            if (!code) { showRedeemResult('Enter a redeem code first.', [], true); return; }
+            if (!SUPABASE_ENABLED) { showRedeemResult('Redeem codes are currently unavailable.', [], true); return; }
+            if (!isValidPlayerUid(playerUid)) { showRedeemResult('Your player identity is not ready yet. Please reload the game and try again.', [], true); return; }
+            if (button) { button.disabled = true; button.textContent = '...'; }
+            try {
+                const response = await fetchSupabaseChampionshipJson(SUPABASE_CHAMPIONSHIP_CONFIG.redeemRpcUrl, {
+                    method: 'POST',
+                    headers: getSupabaseChampionshipHeaders(),
+                    body: JSON.stringify({ p_code: code, p_player_uid: String(playerUid), p_user_id: cloudUser?.id || null })
+                });
+                const result = Array.isArray(response) ? response[0] : response;
+                if (!result?.success) throw new Error(result?.message || 'This code could not be redeemed.');
+                const rewards = applyRedeemRewards(result.reward || result.rewards || {});
+                if (typeof manualSaveGame === 'function') manualSaveGame();
+                if (input) input.value = '';
+                showRedeemResult(result.message || 'Code redeemed successfully.', rewards.length ? rewards : ['Reward received'], false);
+            } catch (error) {
+                showRedeemResult(error.message || 'Redeem failed. Please try again.', [], true);
+            } finally {
+                if (button) { button.disabled = false; button.textContent = 'Enter'; }
+            }
+        }
         async function handleManualCloudSave() {
             const button = document.getElementById('settingsManualSaveButton');
             if (!autoLoadCompleted || !autoLoadReady || autoLoadInProgress) return;
@@ -20007,6 +20736,10 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         document.getElementById('settingsResetPasswordButton')?.addEventListener('click', () => openAuthDialog('recover'));
         document.getElementById('settingsLogoutButton')?.addEventListener('click', logoutCloudAccount);
         document.getElementById('settingsManualSaveButton')?.addEventListener('click', handleManualCloudSave);
+        document.getElementById('settingsRedeemButton')?.addEventListener('click', redeemCode);
+        document.getElementById('settingsRedeemInput')?.addEventListener('keydown', event => { if (event.key === 'Enter') redeemCode(); });
+        document.getElementById('redeemResultCloseButton')?.addEventListener('click', closeRedeemResult);
+        document.getElementById('redeemResultModal')?.addEventListener('click', event => { if (event.target.id === 'redeemResultModal') closeRedeemResult(); });
         document.getElementById('authSubmitButton')?.addEventListener('click', submitAuthDialog);
         document.getElementById('authCancelButton')?.addEventListener('click', closeAuthDialog);
         document.getElementById('authCloseButton')?.addEventListener('click', closeAuthDialog);
