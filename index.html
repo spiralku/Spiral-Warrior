@@ -8377,7 +8377,7 @@ const parts = {
         }
         function getAllOrNothingBossStatMultiplier(battleNumber = bossBattleNumber) {
             const battle = Math.max(1, Number(battleNumber) || 1);
-            return 1.5 + ((battle - 1) * 0.5);
+            return 1.5 + ((battle - 1) * 0.1);
         }
         function getBossModeTestEnemyLoadout(battleNumber = bossBattleNumber) {
             const partLevel = getAllOrNothingBossPartLevel(battleNumber);
