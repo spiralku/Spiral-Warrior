@@ -8309,6 +8309,8 @@ const parts = {
                 driver: 'drv_bloom'
             }
         ];
+        // All or Nothing daily boss limit. Set to true to restore one-clear-per-boss-per-day.
+        const ALL_OR_NOTHING_DAILY_LIMIT_ENABLED = false;
         let allOrNothingBossDailyState = { dayKey: '', completed: {} };
         function normalizeAllOrNothingBossDailyState() {
             const todayKey = getChampionshipDayKey(getTrustedDate());
@@ -8326,6 +8328,7 @@ const parts = {
             return boss && boss.battleCap ? String(boss.battleCap) : '';
         }
         function isAllOrNothingBossCompletedToday(boss = getSelectedAllOrNothingBoss()) {
+            if (!ALL_OR_NOTHING_DAILY_LIMIT_ENABLED) return false;
             normalizeAllOrNothingBossDailyState();
             const key = getAllOrNothingBossDailyKey(boss);
             return !!(key && allOrNothingBossDailyState.completed[key] === allOrNothingBossDailyState.dayKey);
