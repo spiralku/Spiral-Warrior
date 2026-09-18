@@ -8266,6 +8266,8 @@ const parts = {
                 rankerUid: context && context.rankerUid ? context.rankerUid : null,
                 towerFloor: context && context.towerFloor ? context.towerFloor : null,
                 towerEnemyLevels: context && context.towerEnemyLevels ? context.towerEnemyLevels : null,
+                bossIndex: context && context.mode === 'boss' ? Math.max(0, Math.min(allOrNothingBosses.length - 1, Number(context.bossIndex) || 0)) : null,
+                bossBattleNumber: context && context.mode === 'boss' ? Math.max(1, Number(context.bossBattleNumber) || 1) : null,
                 bestOfThree: enemyLoadouts.length >= 3,
                 round: 1,
                 playerWins: 0,
@@ -8372,7 +8374,7 @@ const parts = {
         }
         function getAllOrNothingBossStatMultiplier(battleNumber = bossBattleNumber) {
             const battle = Math.max(1, Number(battleNumber) || 1);
-            return 1.5 + ((battle - 1) * 0.25);
+            return 1.5 + ((battle - 1) * 0.5);
         }
         function getBossModeTestEnemyLoadout(battleNumber = bossBattleNumber) {
             const partLevel = getAllOrNothingBossPartLevel(battleNumber);
