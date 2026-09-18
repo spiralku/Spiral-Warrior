@@ -7416,8 +7416,8 @@ const parts = {
             } else {
                 markAllOrNothingBossCompletedToday();
                 showBattleResultSequence(false, true, 'DEFEATED', null, () => {
-                    bossCurrentReward = 25000;
-                    bossNextReward = 50000;
+                    bossCurrentReward = 50000;
+                    bossNextReward = 100000;
                     bossBattleNumber = 1;
                     returnFromFinalBattle({ returnScreen: 'allOrNothingScreen', mode: 'boss' });
                 }, '0:1', true, 0, 0, null, newlyDefeatedBey || bossPlayerBeys.find(bey => bey && bey.dead) || bey2);
@@ -8372,7 +8372,7 @@ const parts = {
         }
         function getAllOrNothingBossStatMultiplier(battleNumber = bossBattleNumber) {
             const battle = Math.max(1, Number(battleNumber) || 1);
-            return 1.5 + ((battle - 1) * 0.5);
+            return 1.5 + ((battle - 1) * 0.25);
         }
         function getBossModeTestEnemyLoadout(battleNumber = bossBattleNumber) {
             const partLevel = getAllOrNothingBossPartLevel(battleNumber);
@@ -8467,8 +8467,8 @@ const parts = {
                 addCurrency('gold', reward);
                 if (typeof manualSaveGame === 'function') manualSaveGame();
                 closeTowerDetails();
-                bossCurrentReward = 25000;
-                    bossNextReward = 50000;
+                bossCurrentReward = 50000;
+                    bossNextReward = 100000;
                 bossBattleNumber = 1;
                 showWinnerAnnouncement('VICTORY', true, true, null, () => {
                     openAllOrNothingLobby();
@@ -9713,8 +9713,8 @@ arena_7: './arena_7.mp3'
         let bossBattleMode = false;
         let bossPlayerBeys = [];
         let bossAnnouncedDefeatedBeys = new Set();
-        let bossCurrentReward = 25000;
-        let bossNextReward = 50000;
+        let bossCurrentReward = 50000;
+        let bossNextReward = 100000;
         let bossBattleNumber = 1;
         let allOrNothingBossIndex = 0;
         let bossStartTimer = null;
