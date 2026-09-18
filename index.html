@@ -8310,7 +8310,7 @@ const parts = {
             }
         ];
         // All or Nothing daily boss limit. Set to true to restore one-clear-per-boss-per-day.
-        const ALL_OR_NOTHING_DAILY_LIMIT_ENABLED = false;
+        const ALL_OR_NOTHING_DAILY_LIMIT_ENABLED = true;
         let allOrNothingBossDailyState = { dayKey: '', completed: {} };
         function normalizeAllOrNothingBossDailyState() {
             const todayKey = getChampionshipDayKey(getTrustedDate());
