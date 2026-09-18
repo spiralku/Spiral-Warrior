@@ -8398,6 +8398,11 @@ const parts = {
         }
         function openAllOrNothingLobby() {
             if (gameRunning || towerBattleMode || adventureBattleMode || bossBattleMode) resetArenaBattle();
+            // Always start the All or Nothing lobby with a fresh boss run after leaving a battle.
+            bossBattleNumber = 1;
+            bossCurrentReward = 50000;
+            bossNextReward = 100000;
+            threeBeybladeSelectContext = null;
             screens.forEach(screen => screen.classList.add('hidden'));
             hideChampionshipScreens();
             document.getElementById('allOrNothingScreen')?.classList.remove('hidden');
