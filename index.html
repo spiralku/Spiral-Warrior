@@ -9008,11 +9008,11 @@ const parts = {
             updateGameBgmForScreen('challengeScreen');
         }
         function openAllOrNothingBossDetails(battleNumber = bossBattleNumber) {
-            if (isAllOrNothingBossCompletedToday()) {
+            const previewBattleNumber = Math.max(1, Number(battleNumber) || 1);
+            if (previewBattleNumber === 1 && isAllOrNothingBossCompletedToday()) {
                 renderAllOrNothingBossSelector();
                 return;
             }
-            const previewBattleNumber = Math.max(1, Number(battleNumber) || 1);
             const enemy = getBossModeTestEnemyLoadout(previewBattleNumber);
             const detailModal = document.getElementById('towerDetailModal');
             if (!detailModal) return;
