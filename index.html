@@ -5758,7 +5758,9 @@ const parts = {
         }
         function addTowerMicrochipDrop(drop) {
             if (!drop || !MICROCHIP_DATABASE.some(chip => chip.id === drop.chipId)) return null;
-            const instance = createMicrochipInstance(drop.chipId, { stars: 1, level: 1, experience: 0 });
+            const chip = MICROCHIP_DATABASE.find(candidate => candidate.id === drop.chipId);
+            const stars = Math.max(1, Math.min(6, Math.floor(Number(drop.stars) || chip?.star || 1)));
+            const instance = createMicrochipInstance(drop.chipId, { stars, level: Math.max(1, Math.floor(Number(drop.level) || 1)), experience: Math.max(0, Number(drop.experience) || 0) });
             if (!Array.isArray(microchipInventory[drop.chipId])) microchipInventory[drop.chipId] = [];
             microchipInventory[drop.chipId].push(instance);
             return instance;
