@@ -110,7 +110,7 @@
         .launcher-png-dom { width:300px; height:300px; align-items:center; justify-content:center; z-index:22 !important; }
         .launcher-png-image { display:block; width:100%; height:100%; object-fit:contain; object-position:center; }
         .launcher-png-image-enemy { transform:rotate(180deg); transform-origin:center center; }
-        .tower-shell { width:min(620px,100%); margin:0 auto; color:#fff; }
+        .tower-shell { position:relative; width:min(620px,100%); margin:0 auto; color:#fff; }
         .challenge-shell { width:min(620px,100%); margin:0 auto; color:#fff; }
         .challenge-mode-list { display:flex; flex-direction:column; gap:10px; width:100%; height:calc(100vh - 86px); height:calc(100dvh - 86px); overflow-x:hidden; overflow-y:auto; overscroll-behavior-y:contain; -webkit-overflow-scrolling:touch; padding:4px 2px 18px; box-sizing:border-box; }
         .challenge-mode-bar { position:relative; min-height:150px; display:flex; flex-direction:column; justify-content:flex-end; overflow:hidden; padding:14px 16px; border:0; border-radius:9px; box-sizing:border-box; color:#fff; text-align:left; cursor:pointer; box-shadow:0 1px 2px rgba(0,0,0,.28); }
@@ -157,7 +157,7 @@
         .adventure-result-stats { display:flex; flex-direction:column; align-items:flex-start; gap:3px; color:#fff; font-size:16px; font-weight:1000; line-height:1.2; text-align:left; text-shadow:0 1px 2px rgba(0,0,0,.35); }
         .adventure-result-stats .adventure-result-value { color:#FFD83D; }
         .adventure-result-reward-title { align-self:stretch; width:100%; margin:20px 0 8px; padding:8px 28px; background:rgba(0,0,0,.42); color:#B7F1FF; font-family:inherit; font-size:20px; font-weight:1000; text-align:center; text-shadow:0 1px 2px rgba(0,0,0,.35); }
-        .adventure-result-rewards { width:100%; min-height:0; max-height:none; flex:0 0 auto; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); align-content:start; gap:7px; overflow:visible; padding:10px 8px 12px; background:rgba(0,0,0,.42); box-sizing:border-box; }
+        .adventure-result-rewards { width:100%; min-height:0; max-height:min(42vh,360px); flex:0 1 auto; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); align-content:start; gap:7px; overflow-x:hidden; overflow-y:auto; overscroll-behavior:contain; padding:10px 8px 12px; background:rgba(0,0,0,.42); box-sizing:border-box; }
         .adventure-result-reward-card { min-width:0; width:100%; height:82px; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; position:relative; overflow:hidden; padding:4px; border:1px solid rgba(255,255,255,.84); border-radius:4px; box-shadow:0 1px 0 rgba(0,0,0,.38); box-sizing:border-box; }
         .adventure-result-reward-card .shop-item-type { position:absolute; top:4px; left:4px; width:18px; height:18px; opacity:.9; }
         .adventure-result-reward-card .shop-item-type svg { width:18px !important; height:18px !important; }
@@ -238,6 +238,27 @@
         .tower-header h2 { margin:0; color:#fff; font-size:20px; letter-spacing:1px; }
         .tower-floor-list { display:flex; flex-direction:column; gap:6px; max-height:calc(100dvh - 195px); overflow-y:auto; overscroll-behavior:contain; padding-right:3px; }
         .tower-floor-list.tower-floor-list-virtualized { display:block; position:relative; }
+        .tower-scroll-latest-button { position:absolute; right:16px; bottom:72px; z-index:8; width:44px; height:44px; display:flex; align-items:center; justify-content:center; border:2px solid #fff; border-radius:50%; background: #6C7374; color:#fff; box-shadow:0 2px 8px rgba(0,0,0,.45); cursor:pointer; }
+        .tower-scroll-latest-button svg { width:24px; height:24px; display:block;  fill:none; stroke:currentColor; stroke-width:2.8; stroke-linecap:round; stroke-linejoin:round; }
+        .tower-scroll-latest-button:active { transform:translateY(1px); }
+        .tower-smash-button { position:absolute; right:16px; bottom:124px; z-index:8; width:44px; height:44px; display:flex; align-items:center; justify-content:center; border:2px solid #1A4518; border-radius:50%; background: #4DAE4D; color:#fff; box-shadow:0 2px 8px rgba(0,0,0,.45); font-size:9px; font-weight:1000; letter-spacing:.3px; cursor:pointer; }
+        .tower-smash-button:active { transform:translateY(1px); }
+        .tower-smash-range { display:flex; align-items:center; justify-content:center; gap:8px; margin:8px auto 12px; color:#3b4147; font-weight:1000; font-size:11px; }
+        .tower-smash-range label { display:flex; flex-direction:column; align-items:center; gap:4px; }
+        .tower-smash-range input { width:68px; box-sizing:border-box; padding:7px 5px; border:1px solid #b8c3cc; border-radius:5px; text-align:center; font:inherit; color:#26323b; }
+        .tower-smash-hint { color:#68747c !important; font-size:11px !important; font-weight:700 !important; }
+        .tower-smash-results { max-height:260px; overflow-y:auto; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); align-items:start; gap:7px; margin:8px 0 14px; padding:5px; }
+        .tower-smash-result-card { min-width:0; min-height:76px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:5px 2px; border-radius:6px; background:rgba(18,35,48,.08); color:#25323a; font-size:9px; font-weight:900; text-align:center; }
+        .tower-smash-result-card .tower-reward-detail { display:flex; flex-direction:column; gap:3px; align-items:center; }
+        .tower-smash-result-card .tower-reward-detail { width:auto; height:auto; min-height:0; margin:0; padding:0; background:transparent; border:0; border-radius:0; }
+        .tower-smash-gold-card { height:76px; box-sizing:border-box; }
+        .tower-smash-gold-card > * { position:relative; left:14px; }
+        .tower-smash-gold-card .smash-floor-label { left:0; }
+        .tower-smash-result-card .tower-reward-amount { font-size:9px; }
+        .tower-smash-result-card .tower-microchip-reward-preview { width:38px; height:44px; display:flex; align-items:center; justify-content:center; }
+        .tower-smash-result-card .microchip-card { pointer-events:none; transform:scale(.72); transform-origin:center; }
+        .tower-smash-result-card .smash-floor-label { font-size:8px; color:#68747c; }
+        @media (max-width:360px) { .tower-smash-results { gap:4px; padding:3px; } .tower-smash-result-card { min-height:70px; } }
         .tower-ranking-launcher-wrap { margin-top:8px; padding:8px; border:1px solid rgba(159,215,255,.55); border-radius:7px; background:rgba(5,24,46,.72); box-shadow:0 2px 7px rgba(0,0,0,.3); }
         .tower-ranking-launcher { display:block; width:100%; padding:9px 14px; border:1px solid #8bd1ff; border-radius:5px; background:linear-gradient(90deg,#234e78,#4d9bd2); color:#fff; font-size:13px; font-weight:1000; letter-spacing:.8px; box-shadow:0 1px 3px rgba(0,0,0,.35); cursor:pointer; }
         .tower-ranking-screen { height:100%; min-height:0; overflow:hidden; padding:14px 10px 82px; box-sizing:border-box; background:linear-gradient(to bottom,#07172e 0%,#173d65 52%,#4a87ad 100%); }
@@ -258,13 +279,14 @@
         .tower-ranking-table .tower-ranking-floor { color:#ffd83d; font-size:13px; font-weight:1000; }
         .tower-ranking-table .tower-ranking-date { color:#c8d9e8; font-size:10px; white-space:nowrap; }
         @media (max-width:380px) { .tower-ranking-table { font-size:10px; } .tower-ranking-table th, .tower-ranking-table td { padding-left:4px; padding-right:4px; } .tower-ranking-table .tower-ranking-date { font-size:9px; } }
-        .tower-floor-row { display:grid; grid-template-columns:54px 1fr 120px; align-items:center; gap:8px; min-height:132px; padding:8px 10px; background:linear-gradient(90deg,#111c2b,#1a2b40); border:1px solid #526679; border-radius:8px; }
-        .tower-floor-row:not(.locked) { cursor:pointer; }
+        .tower-floor-row { display:grid; grid-template-columns:54px 1fr 120px; align-items:center; gap:8px; min-height:132px; padding:8px 10px; 
+background: radial-gradient(ellipse 85% 55% at 50% 108%, #286d70 0%, #1b555b 38%, #12383f 65%, transparent 66%), radial-gradient(ellipse 45% 18% at 50% 100%, rgba(55,255,255,.22), transparent 70%), radial-gradient(ellipse 30% 55% at 50% 38%, rgba(0,190,195,.28), transparent 70%), linear-gradient(90deg, transparent 0 8%, rgba(35,80,88,.35) 8% 13%, transparent 13% 27%, rgba(2,10,17,.95) 27% 38%, rgba(0,70,78,.8) 38% 62%, rgba(2,10,17,.95) 62% 73%, transparent 73% 87%, rgba(35,80,88,.35) 87% 92%, transparent 92%), linear-gradient(180deg, #060b11 0%, #101b22 45%, #172d32 67%, #216064 100%); border:1px solid #526679; }
+        .tower-floor-row { cursor:pointer; }
         .tower-floor-row.locked { opacity:.45; filter:grayscale(.6); }
-        .tower-floor-row.current { border-color:#f39c12; background:linear-gradient(90deg,#30291b,#1d2d40); }
+        .tower-floor-row.current { border-color:#f39c12;  }
         .tower-floor-number { color:#9dd8f9; font-size:12px; font-weight:800; text-align:center; }
         .tower-enemy-preview { display:flex; align-items:center; gap:8px; min-width:0; cursor:pointer; grid-column:2; }
-        .tower-floor-row.locked .tower-enemy-preview { cursor:default; pointer-events:none; }
+        .tower-floor-row.locked .tower-enemy-preview { cursor:pointer; pointer-events:auto; }
         .tower-enemy-canvas { width:120px; height:120px; display:block; grid-column:3; justify-self:end; pointer-events:none; }
         .tower-enemy-name { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:800; font-size:11px; }
         .tower-enemy-meta { color:#aab8c8; font-size:9px; margin-top:2px; }
@@ -1552,6 +1574,212 @@
             font-weight: 700;
             text-align: center;
         }
+        .microchip-panel { min-height: 190px; padding: 10px; background: #F2F5F9; color: #26313D; }
+        .microchip-panel-section { padding:8px; border:1px solid #C4CBD3; border-radius:6px; 
+background:
+    radial-gradient(
+        ellipse 55% 55% at 15% 30%,
+        #B09EAE 0%,
+        #8F879B 45%,
+        transparent 80%
+    ),
+    radial-gradient(
+        ellipse 55% 55% at 85% 30%,
+        #817A8E 0%,
+        #626A7C 50%,
+        transparent 80%
+    ),
+    radial-gradient(
+        ellipse 55% 50% at 50% 78%,
+        #D5AA98 0%,
+        #B99C9A 40%,
+        transparent 80%
+    ),
+    linear-gradient(
+        to bottom,
+        #8F9BAB 0%,
+        #596777 42%,
+        #4C5664 60%,
+        #9D8D8D 100%
+    ); }
+        .microchip-layout { display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-rows:auto auto; gap:8px; align-items:center; justify-items:center; }
+        .microchip-slot { width:min(100%,58px); aspect-ratio:4 / 5; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; border:2px solid rgba(255,255,255,.6); border-radius:6px; color:#fff; cursor:pointer; padding:3px; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,.28); }
+        .microchip-slot.attack { background:linear-gradient(to bottom,#E95362 0%,#B12121 100%); } .microchip-slot.defense { background:linear-gradient(to bottom,#4DC7EC 0%,#1F86D1 100%); }
+        .microchip-slot.stamina { background:linear-gradient(to bottom,#56FF44 0%,#1CB330 100%); }
+        .microchip-slot.empty.attack {
+    background: radial-gradient(
+        circle at center,
+        #6A5457 0% 55%,
+        #5A474B 100%
+    );
+}
+
+.microchip-slot.empty.defense {
+    background: radial-gradient(
+        circle at center,
+        #436581 0% 55%,
+        #3C5B77 100%
+    );
+}
+
+.microchip-slot.empty.stamina {
+    background: radial-gradient(
+        circle at center,
+        #456D62 0% 55%,
+        #385C4E 100%
+    );
+}
+        .microchip-slot-label { display:block; padding:2px 3px; font-size:9px; font-weight:900; text-transform:uppercase; }
+        .microchip-slot.attack .microchip-slot-label { background:#A75154; } .microchip-slot.defense .microchip-slot-label { background:#4793B3; }
+        .microchip-slot.stamina .microchip-slot-label { background:#48A465; }
+        .microchip-slot.empty.attack .microchip-slot-label { border:2px solid #E04B4D; }
+        .microchip-slot.empty.defense .microchip-slot-label { border:2px solid #4AAAF3; }
+        .microchip-slot.empty.stamina .microchip-slot-label { border:2px solid #60DD55; }
+        .microchip-slot.disabled { background:#5A5A5A !important; border-color:#8A8A8A; color:#BEBEBE; cursor:not-allowed; box-shadow:none; }
+        .microchip-slot.disabled .microchip-slot-label { border:0; background:#5A5A5A; color:#BEBEBE; }
+        .microchip-slot-unlock-label { padding:1px 2px; font-size:6px; line-height:1; white-space:nowrap; text-transform:none; }
+        .microchip-slot.locked { cursor:not-allowed; }
+        .microchip-slot-name { display:block; max-width:100%; margin:auto 0; overflow:hidden; color:#fff; font-size:9px; font-weight:1000; line-height:1.05; text-overflow:ellipsis; white-space:nowrap; }
+        .microchip-slot-level { display:block; align-self:center; width:max-content; margin:-1px 0 0; padding:2px 4px; background:rgba(0,0,0,.58); color:#fff; font-size:7px; font-weight:800; line-height:1; }
+        .microchip-star { display:block; margin-top:auto; color:#EED151; font-size:10px; font-weight:1000; line-height:1; text-shadow:0 1px 1px rgba(0,0,0,.55); }
+        .microchip-slot:nth-child(1) { grid-column:1; grid-row:1; } .microchip-slot:nth-child(2) { grid-column:1; grid-row:2; }
+        .microchip-slot:nth-child(3) { grid-column:3; grid-row:1; } .microchip-slot:nth-child(4) { grid-column:3; grid-row:2; }
+        .microchip-center-stack { grid-column:2; grid-row:1 / span 2; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; width:100%; }
+        .microchip-bonus-summary { width:100%; min-height:64px; display:flex; flex-direction:column; justify-content:center; gap:3px; padding:6px; border-radius:5px; background:#5A5A62; border:2px solid #C4C2C5;color:#fff; font-size:9px; font-weight:800; text-align:center; }
+        .microchip-bonus-summary-title { color:#D8D8D8; font-size:9px; text-transform:uppercase; }
+        .microchip-bonus-line { color:#fff; }
+        .microchip-manage-button { display:block; width:100%; margin:0 auto; padding:6px 8px; border:0; border-radius:4px; background:#FAEC65; border:2px solid #ECC35B;color:#222; font-size:11px; font-weight:900; cursor:pointer; }
+        .microchip-inventory-modal { position:fixed; inset:0; z-index:1000; display:flex; align-items:center; justify-content:center; padding:18px; background:rgba(0,0,0,.72); }
+        .microchip-inventory-modal.hidden { display:none; }
+        .microchip-inventory-box { width:min(390px,100%); max-height:min(560px,90vh); overflow:hidden; border:2px solid #fff; border-radius:8px; background:#F2F5F9; box-shadow:0 8px 28px rgba(0,0,0,.55); }
+        .microchip-inventory-header { display:flex; align-items:center; justify-content:space-between; padding:9px 12px; background:#343B5B; color:#fff; }
+        .microchip-inventory-header h3 { margin:0; font-size:16px; }
+        .microchip-inventory-close { width:28px; height:28px; border:1px solid #fff; border-radius:4px; background:transparent; color:#fff; font-weight:900; cursor:pointer; }
+        .microchip-category-tabs { display:grid; grid-template-columns:repeat(4,1fr); gap:3px; padding:5px; background:#474D6D; }
+        .microchip-category-tab { min-height:28px; border:0; border-radius:3px; background:#fff; color:#222; font-size:9px; font-weight:900; cursor:pointer; }
+        .microchip-category-tab.active { background:#FDD035; }
+        .microchip-inventory-list { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:5px; max-height:420px; overflow-y:auto; overscroll-behavior-y:contain; -webkit-overflow-scrolling:touch; padding:8px; }
+        .microchip-card { position:relative; width:100%; aspect-ratio:4 / 5; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:4px 2px; border:2px solid rgba(255,255,255,.9); border-radius:5px; color:#fff; cursor:pointer; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,.3); }
+        @keyframes microchipLevelUpGlow { 0% { border-color:#FFF8A6; box-shadow:0 0 4px 1px rgba(255,232,43,.55); } 45% { border-color:#FFE21F; box-shadow:0 0 18px 6px rgba(255,220,24,.98); } 100% { border-color:rgba(255,255,255,.9); box-shadow:0 1px 3px rgba(0,0,0,.3); } }
+        @keyframes microchipEvolveGlow { 0% { border-color:#E9B8FF; box-shadow:0 0 4px 1px rgba(172,64,255,.58); } 45% { border-color:#C13CFF; box-shadow:0 0 20px 7px rgba(177,53,255,1); } 100% { border-color:rgba(255,255,255,.9); box-shadow:0 1px 3px rgba(0,0,0,.3); } }
+        .microchip-card.microchip-level-up-glow { animation:microchipLevelUpGlow .5s ease-out both; }
+        .microchip-card.microchip-evolve-glow { animation:microchipEvolveGlow .5s ease-out both; }
+        .microchip-card.attack { background:linear-gradient(to bottom,#E95362 0%,#B12121 100%); } .microchip-card.defense { background:linear-gradient(to bottom,#4DC7EC 0%,#1F86D1 100%); }
+        .microchip-card.stamina { background:linear-gradient(to bottom,#56FF44 0%,#1CB330 100%); }
+        .microchip-card-name { margin:auto 0 0; font-size:9px; font-weight:1000; line-height:1.05; }
+        .microchip-card-equipped-visual { width:25px; height:25px; flex:0 0 25px; display:flex; align-items:center; justify-content:center; margin:1px auto 0; }
+        .microchip-card-equipped-visual canvas { display:block; width:25px; height:25px; }
+        .microchip-card-level { align-self:center; width:max-content; margin:-1px 0 0; padding:2px 4px; background:rgba(0,0,0,.58); color:#fff; font-size:7px; font-weight:800; line-height:1; }
+        .microchip-card .microchip-star { margin-top:auto; font-size:10px; }
+        .microchip-card-effect { margin-top:3px; font-size:7px; line-height:1.05; }
+        .microchip-card[data-microchip-incompatible="true"] { filter:grayscale(.65); opacity:.58; }
+        .tower-microchip-reward-preview { width:38px; height:44px; min-width:38px; min-height:44px; display:flex; align-items:center; justify-content:center; overflow:visible; }
+        .tower-microchip-reward-preview .microchip-card { width:42px; height:48px; min-height:0; flex:0 0 42px; aspect-ratio:auto; box-sizing:border-box; padding:2px 1px; cursor:default; transform:scale(.82); transform-origin:center; }
+        .winner-announcement-reward-entry .tower-microchip-reward-preview { width:44px; height:50px; min-width:44px; min-height:50px; }
+        #towerDetailMicrochipRewardPreview { transform:translateY(-16px); margin-bottom:-16px; }
+        #towerDetailMicrochipRewardEntry .tower-reward-amount { transform:translateY(-2px); }
+        .winner-announcement-reward-tile .tower-microchip-reward-preview { width:44px; height:50px; min-width:44px; min-height:50px; }
+        .microchip-incompatible-warning { position:fixed; top:50%; left:50%; z-index:1200; display:none; width:max-content; max-width:calc(100% - 32px); transform:translate(-50%,-50%); padding:10px 28px; border:0; border-radius:0; background:rgba(0,0,0,.62); color:#FF4545; font-size:14px; font-weight:1000; line-height:1; text-align:center; white-space:nowrap; pointer-events:none; }
+        .microchip-incompatible-warning.show { display:block; }
+        .microchip-manage-modal, .microchip-upgrade-modal, .microchip-evolve-modal { position:fixed; inset:0; z-index:1100; display:flex; align-items:center; justify-content:center; padding:14px; background:rgba(0,0,0,.72); }
+        .microchip-manage-modal.hidden, .microchip-upgrade-modal.hidden, .microchip-evolve-modal.hidden { display:none; }
+        .microchip-manage-box, .microchip-upgrade-box {
+  width:min(430px,100%);
+  max-height:85vh;
+  overflow:hidden;
+  border:2px solid #fff;
+  border-radius:8px;
+  background:#F2F5F9;
+  box-shadow:0 8px 28px rgba(0,0,0,.55);
+}
+
+.microchip-upgrade-box {
+  height:85vh;
+  position:relative;
+}
+
+.microchip-evolve-box { height:85vh; position:relative; }
+
+.microchip-upgrade-box .microchip-inventory-list {
+  
+  max-height:calc(85vh - 280px);
+  overflow-y:auto;
+}
+
+.microchip-evolve-box .microchip-inventory-list { max-height:calc(85vh - 280px); overflow-y:auto; }
+
+.microchip-upgrade-box .microchip-upgrade-actions {
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:10;
+  background:#F2F5F9;
+}
+        .microchip-evolve-box .microchip-upgrade-actions { position:absolute; left:0; right:0; bottom:0; z-index:10; justify-content:center; background:#F2F5F9; }
+        .microchip-evolve-confirm, .microchip-upgrade-confirm { background:#FAEC65; border:2px solid #ECC35B !important; color:#222; }
+        .microchip-evolve-confirm { flex:0 1 280px; width:280px; max-width:100%; }
+        .microchip-evolve-confirm:disabled { opacity:.45; cursor:not-allowed; }
+        .microchip-evolve-preview-row { position:relative; display:flex; align-items:center; justify-content:center; width:100%; min-height:92px; }
+        .microchip-evolve-material-slot { position:absolute; top:50%; display:flex; align-items:center; justify-content:center; width:48px; height:70px; transform:translateY(-50%); pointer-events:none; }
+        .microchip-evolve-material-slot:first-child { left:calc(50% - 90px); }
+        .microchip-evolve-material-slot:last-child { right:calc(50% - 90px); }
+        .microchip-evolve-material-slot .microchip-card { width:100%; transform:scale(.5); transform-origin:center; filter:grayscale(1); opacity:.26; cursor:default; }
+        .microchip-evolve-material-slot:not(.filled) .microchip-card { background:#777; }
+        .microchip-evolve-material-slot.filled .microchip-card { filter:none; opacity:1; }
+        .microchip-evolve-target-slot { position:relative; width:auto; margin:auto; }
+        .microchip-manage-title { margin:0; font-size:16px; } .microchip-upgrade-selected { display:flex; justify-content:center; padding:9px 10px 3px; }
+        .microchip-action-choice { position:fixed; inset:0; z-index:1300; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.45); }
+        .microchip-action-choice.hidden { display:none; } .microchip-action-box { display:flex; flex-direction:column; width:210px; padding:12px; border:2px solid rgba(255,255,255,.9); border-radius:8px; background:rgba(209,226,255,.9); box-shadow:0 8px 24px rgba(0,0,0,.35); }
+        .microchip-action-visual { display:flex; align-items:center; justify-content:center; min-height:100px; padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,.9); }
+        .microchip-action-visual .microchip-card { width:76px; }
+        .microchip-action-stat { padding:9px 4px; color:#AD500B; font-size:13px; font-weight:1000; text-align:left; border-bottom:1px solid rgba(255,255,255,.9); }
+        .microchip-action-buttons { display:flex; flex-direction:column; gap:7px; padding-top:10px; }
+        .microchip-action-box button, .microchip-upgrade-actions button { padding:8px; border:0; border-radius:4px; font-weight:900; cursor:pointer; }
+        .microchip-action-upgrade, .microchip-action-evolve { border:2px solid #000 !important; color:#000; }
+        .microchip-action-upgrade { background:#4DAD4C; } .microchip-action-evolve { background:#FED233; }
+        .microchip-cost-row { display:flex; align-items:center; justify-content:center; gap:4px; margin-top:2px; font-size:10px; line-height:1; white-space:nowrap; }
+        .microchip-cost-row .currency-symbol { position:static; left:auto; top:auto; width:13px; height:13px; flex:0 0 13px; transform:none; }
+        .microchip-upgrade-confirm, .microchip-evolve-confirm { height:42px; min-height:42px; max-height:42px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0; padding:3px 8px !important; line-height:1.05; }
+        .microchip-upgrade-actions { display:flex; gap:8px; padding:8px; } .microchip-auto-select-wrap { position:relative; display:flex; flex:1; gap:4px; } .microchip-auto-select { flex:1; border:2px solid #939298 !important; background:#fff; color:#000; } .microchip-auto-filter-button { order:-1; width:36px; padding:8px 4px !important; border:2px solid #939298 !important; background:#fff; color:#000; font-size:16px; line-height:1; } .microchip-upgrade-confirm { flex:1; }
+        .microchip-auto-filter { position:absolute; right:0; bottom:calc(100% + 5px); z-index:5; display:none; width:150px; padding:8px; border:2px solid #939298; border-radius:6px; background:#fff; box-shadow:0 3px 10px rgba(0,0,0,.2); color:#000; font-size:10px; font-weight:800; }
+        .microchip-auto-filter.open { display:block; } .microchip-auto-filter-title { margin-bottom:5px; color:#000; font-size:11px; font-weight:1000; } .microchip-auto-filter-options { display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; } .microchip-auto-filter-option { display:flex; align-items:center; gap:2px; white-space:nowrap; } .microchip-auto-filter-option input { margin:0; accent-color:#51E255; }
+        .microchip-upgrade-top { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:7px 10px 3px; background:
+    radial-gradient(
+        ellipse 55% 55% at 15% 30%,
+        #B09EAE 0%,
+        #8F879B 45%,
+        transparent 80%
+    ),
+    radial-gradient(
+        ellipse 55% 55% at 85% 30%,
+        #817A8E 0%,
+        #626A7C 50%,
+        transparent 80%
+    ),
+    radial-gradient(
+        ellipse 55% 50% at 50% 78%,
+        #D5AA98 0%,
+        #B99C9A 40%,
+        transparent 80%
+    ),
+    linear-gradient(
+        to bottom,
+        #8F9BAB 0%,
+        #596777 42%,
+        #4C5664 60%,
+        #9D8D8D 100%
+    ); }
+        .microchip-upgrade-selected { display:flex; justify-content:center; padding:0; }
+        .microchip-upgrade-selected .microchip-card { width:58px; flex:0 0 58px; }
+        .microchip-upgrade-info { display:flex; flex-direction:column; align-items:stretch; gap:4px; width:min(180px,100%); padding:4px 0 2px; color:#fff; font-size:10px; font-weight:800; text-align:left; }
+        .microchip-upgrade-level { font-size:13px; font-weight:1000; line-height:1; text-align:center; }
+       .microchip-upgrade-exp-track { position:relative; height:18px; overflow:hidden; border:2px solid rgba(200,200,200,.3); border-radius:5px; background:rgba(0,0,0,.5); box-shadow:inset 0 1px 2px rgba(0,0,0,.2); }
+        .microchip-upgrade-exp-fill { position:absolute; inset:0 auto 0 0; width:0; background:#FBB641; transition:width .2s ease; }
+        .microchip-upgrade-exp-text { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-weight:1000; line-height:1; text-shadow:none; }
+        .microchip-upgrade-effect { font-size:10px; font-weight:900; line-height:1.15; text-align:center; }
+        .microchip-upgrade-preview { color:#FFFF3E; font-weight:1000; text-shadow:none; }
+        .microchip-card.selected-material { outline:3px solid #FBB641; outline-offset:-2px; }
         #garageCombatPower {
             position: absolute;
             top: 70px;
@@ -3608,6 +3836,10 @@ background: linear-gradient(
                         <div class="winner-announcement-reward-tile"><span id="winnerAnnouncementChestPreview" class="home-chest-render plain winner-announcement-chest-preview"><span class="home-chest-lid"></span><span class="home-chest-body"></span></span></div>
                         <div id="winnerAnnouncementChestRewardName" class="winner-announcement-reward-amount">x1</div>
                     </div>
+                    <div id="winnerAnnouncementMicrochipEntry" class="winner-announcement-reward-entry" style="display:none;">
+                        <div class="winner-announcement-reward-tile"><div id="winnerAnnouncementMicrochipPreview" class="tower-microchip-reward-preview"></div></div>
+                        <div class="winner-announcement-reward-amount">x1</div>
+                    </div>
                     <div id="winnerAnnouncementAdventureDrops" aria-label="Adventure enemy part drops"><div id="winnerAnnouncementAdventureDropCards"></div></div>
                 </div>
             </div>
@@ -3653,7 +3885,7 @@ background: linear-gradient(
             <div class="challenge-mode-list" aria-label="Challenge modes">
                 <button type="button" class="challenge-mode-bar purple locked" aria-label="Survival Mode, unavailable"><span class="challenge-mode-title">Survival Mode</span><span class="challenge-mode-description">Break out from 81 players</span><span class="challenge-keep-out"><span>KEEP</span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg><span>OUT</span></span></button>
                 <button type="button" class="challenge-mode-bar red locked" aria-label="My Gym, unavailable"><span class="challenge-mode-title">My Gym</span><span class="challenge-mode-description">Run your own Gym</span><span class="challenge-keep-out"><span>KEEP</span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg><span>OUT</span></span></button>
-                <button type="button" class="challenge-mode-bar blue" data-challenge-mode="tower" aria-label="Tower of Trials"><span class="challenge-mode-title">Tower of Trials</span><span class="challenge-mode-description">Endless golds</span></button>
+                <button type="button" class="challenge-mode-bar blue" data-challenge-mode="tower" aria-label="Tower of Trials"><span class="challenge-mode-title">Tower of Trials</span><span class="challenge-mode-description">Endless microchips</span></button>
                 <button type="button" class="challenge-mode-bar green" data-challenge-mode="boss" aria-label="All or Nothing"><span class="challenge-mode-title">All or Nothing</span><span class="challenge-mode-description">Are you brave enough?</span></button>
             </div>
         </div>
@@ -3788,7 +4020,26 @@ background: linear-gradient(
         <div class="tower-shell">
             <div class="tower-header"><div><h2>TOWER OF TRIALS</h2></div></div>
             <div id="towerFloorList" class="tower-floor-list"></div>
+            <button id="towerSmashButton" class="tower-smash-button" type="button" aria-label="Smash - Tower of Trials" title="Smash">SMASH</button>
+            <button id="towerScrollLatestButton" class="tower-scroll-latest-button" type="button" aria-label="Scroll to latest Tower floor" title="Scroll to latest floor"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
             <div class="tower-ranking-launcher-wrap"><button id="towerRankingButton" class="tower-ranking-launcher" type="button">LEADERBOARD</button></div>
+        </div>
+    </div>
+    <div id="towerSmashModal" class="tower-detail-modal hidden" role="dialog" aria-modal="true" aria-labelledby="towerSmashTitle">
+        <div class="tower-detail-box adventure-encounter-box tower-smash-box">
+            <div class="tower-detail-title-row"><h3 id="towerSmashTitle">Smash - Tower of Trials</h3><button id="towerSmashClose" class="tower-detail-close" type="button">X</button></div>
+            <div id="towerSmashSelectionView" class="adventure-encounter-dialog-row">
+                <p id="towerSmashStatus">Select up to 30 previously cleared floors to smash.</p>
+                <div class="tower-smash-range"><label>FROM <input id="towerSmashFrom" type="number" min="1" value="1"></label><span>—</span><label>TO <input id="towerSmashTo" type="number" min="1" value="1"></label></div>
+                <p class="tower-smash-hint">Only cleared floors can be selected. Smash is available once per day.</p>
+                <button id="towerSmashConfirm" class="tower-battle-btn adventure-treasure-confirm" type="button">SMASH</button>
+            </div>
+        </div>
+    </div>
+    <div id="towerSmashResultModal" class="tower-detail-modal hidden" role="dialog" aria-modal="true" aria-labelledby="towerSmashResultTitle">
+        <div class="tower-detail-box adventure-encounter-box tower-smash-box">
+            <div class="tower-detail-title-row"><h3 id="towerSmashResultTitle">Smash Rewards</h3><button id="towerSmashResultClose" class="tower-detail-close" type="button">X</button></div>
+            <div class="adventure-encounter-dialog-row"><p>Rewards received</p><div id="towerSmashResults" class="tower-smash-results"></div><button id="towerSmashResultConfirm" class="tower-battle-btn adventure-treasure-confirm" type="button">CONFIRM</button></div>
         </div>
     </div>
     <div id="towerRankingScreen" class="screen hidden tower-ranking-screen">
@@ -3821,7 +4072,8 @@ background: linear-gradient(
                     <div class="tower-reward-detail" aria-label="Tower gold reward"><span class="tower-reward-icon currency-symbol currency-gold-icon" aria-hidden="true"></span><span class="tower-reward-amount">x<span id="towerDetailReward">0</span></span></div>
                     <div id="towerDetailAdventureLoot" class="tower-detail-adventure-loot" aria-label="Possible enemy part loot"><div id="towerDetailAdventureLootCards" class="tower-detail-adventure-loot-cards"></div></div>
                     <div id="towerDetailGemRewardEntry" class="tower-reward-detail" aria-label="Tower gem first-clear reward"><span class="tower-reward-icon currency-symbol currency-gem-icon" aria-hidden="true"></span><span class="tower-reward-amount">x<span id="towerDetailGemReward">10</span></span></div>
-                    <div id="towerDetailChestRewardEntry" class="tower-reward-detail" aria-label="Tower chest reward"><span id="towerDetailChestRewardPreview" class="tower-chest-reward-preview home-chest-render plain"><span class="home-chest-lid"></span><span class="home-chest-body"></span></span><span id="towerDetailChestRewardName" class="tower-reward-amount">x1</span></div>
+                    <div id="towerDetailChestRewardEntry" class="tower-reward-detail" aria-label="Tower chest reward" style="display:none;"><span id="towerDetailChestRewardPreview" class="tower-chest-reward-preview home-chest-render plain"><span class="home-chest-lid"></span><span class="home-chest-body"></span></span><span id="towerDetailChestRewardName" class="tower-reward-amount"></span></div>
+                    <div id="towerDetailMicrochipRewardEntry" class="tower-reward-detail" aria-label="Tower Microchip reward" style="display:none;"><span id="towerDetailMicrochipRewardPreview" class="tower-microchip-reward-preview"></span><span class="tower-reward-amount">x1</span></div>
                 </div>
                 <div id="towerDetailBossActions" class="tower-detail-boss-actions" style="display:none;">
                     <button id="towerDetailBossContinue" class="tower-battle-btn tower-detail-boss-action">CONTINUE<span id="towerDetailBossContinueReward"></span></button>
@@ -4051,7 +4303,9 @@ background: linear-gradient(
                     <div class="modal-stats" id="modalStatsGrid"></div>
                 </div>
             </div>
-            <div id="modalMicrochipPanel" class="modal-tab-panel modal-placeholder-panel" data-panel="microchip" hidden>Microchip information placeholder</div>
+            <div id="modalMicrochipPanel" class="modal-tab-panel microchip-panel" data-panel="microchip" hidden>
+                <div class="microchip-panel-section"><div id="microchipLayout" class="microchip-layout"></div></div>
+            </div>
             <div id="modalSourcePanel" class="modal-tab-panel modal-placeholder-panel" data-panel="source" hidden>Source information placeholder</div>
             <div id="modalUnknownPanel" class="modal-tab-panel modal-placeholder-panel" data-panel="unknown" hidden>Placeholder information</div>
             <div id="modalActionsRow" class="modal-row modal-actions-row">
@@ -4061,6 +4315,45 @@ background: linear-gradient(
                     <button id="modalEquipBtn" class="equip-action-btn">Use</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div id="microchipInventoryModal" class="microchip-inventory-modal hidden" role="dialog" aria-modal="true" aria-labelledby="microchipInventoryTitle">
+        <div class="microchip-inventory-box">
+            <div class="microchip-inventory-header"><h3 id="microchipInventoryTitle">Microchips</h3><button id="microchipInventoryClose" class="microchip-inventory-close" type="button" aria-label="Close Microchip inventory">X</button></div>
+            <div class="microchip-category-tabs" role="tablist" aria-label="Microchip categories">
+                <button class="microchip-category-tab active" type="button" data-microchip-category="All">All</button>
+                <button class="microchip-category-tab" type="button" data-microchip-category="Attack">Attack</button>
+                <button class="microchip-category-tab" type="button" data-microchip-category="Defense">Defense</button>
+                <button class="microchip-category-tab" type="button" data-microchip-category="Stamina">Stamina</button>
+            </div>
+            <div id="microchipInventoryList" class="microchip-inventory-list"></div>
+        </div>
+    </div>
+    <div id="microchipIncompatibleWarning" class="microchip-incompatible-warning" role="alert" aria-live="assertive">Incompatible Microchip!</div>
+    <div id="microchipManageModal" class="microchip-manage-modal hidden" role="dialog" aria-modal="true">
+        <div class="microchip-manage-box">
+            <div class="microchip-inventory-header"><h3 class="microchip-manage-title">Manage Microchips</h3><button id="microchipManageClose" class="microchip-inventory-close" type="button">X</button></div>
+            <div class="microchip-category-tabs" role="tablist"><button class="microchip-category-tab active" type="button" data-manage-category="All">All</button><button class="microchip-category-tab" type="button" data-manage-category="Attack">Attack</button><button class="microchip-category-tab" type="button" data-manage-category="Defense">Defense</button><button class="microchip-category-tab" type="button" data-manage-category="Stamina">Stamina</button></div>
+            <div id="microchipManageList" class="microchip-inventory-list"></div>
+        </div>
+    </div>
+    <div id="microchipActionChoice" class="microchip-action-choice hidden"><div class="microchip-action-box"><div id="microchipActionVisual" class="microchip-action-visual"></div><div id="microchipActionStat" class="microchip-action-stat"></div><div class="microchip-action-buttons"><button id="microchipActionUpgrade" class="microchip-action-upgrade" type="button" hidden>Upgrade</button><button id="microchipActionEvolve" class="microchip-action-evolve" type="button" hidden>Evolve</button></div></div></div>
+    <div id="microchipUpgradeModal" class="microchip-upgrade-modal hidden" role="dialog" aria-modal="true">
+        <div class="microchip-upgrade-box">
+            <div class="microchip-inventory-header"><h3 class="microchip-manage-title">Upgrade Microchip</h3><button id="microchipUpgradeClose" class="microchip-inventory-close" type="button">X</button></div>
+            <div class="microchip-upgrade-top"><div id="microchipUpgradeSelected" class="microchip-upgrade-selected"></div><div id="microchipUpgradeInfo" class="microchip-upgrade-info"></div></div>
+            <div class="microchip-category-tabs" role="tablist"><button class="microchip-category-tab active" type="button" data-upgrade-category="All">All</button><button class="microchip-category-tab" type="button" data-upgrade-category="Attack">Attack</button><button class="microchip-category-tab" type="button" data-upgrade-category="Defense">Defense</button><button class="microchip-category-tab" type="button" data-upgrade-category="Stamina">Stamina</button></div>
+            <div id="microchipUpgradeList" class="microchip-inventory-list"></div>
+            <div class="microchip-upgrade-actions"><div class="microchip-auto-select-wrap"><button id="microchipAutoSelect" class="microchip-auto-select" type="button">Auto Select</button><button id="microchipAutoFilterButton" class="microchip-auto-filter-button" type="button" aria-label="Auto Select filters" aria-expanded="false">⚙</button><div id="microchipAutoFilter" class="microchip-auto-filter" role="group" aria-label="Auto Select star-grade filters"><div class="microchip-auto-filter-title">Filter by Grade</div><div class="microchip-auto-filter-options"><label class="microchip-auto-filter-option"><input type="checkbox" data-auto-star="1" checked><span>1★</span></label><label class="microchip-auto-filter-option"><input type="checkbox" data-auto-star="2" checked><span>2★</span></label><label class="microchip-auto-filter-option"><input type="checkbox" data-auto-star="3" checked><span>3★</span></label><label class="microchip-auto-filter-option"><input type="checkbox" data-auto-star="4" checked><span>4★</span></label><label class="microchip-auto-filter-option"><input type="checkbox" data-auto-star="5" checked><span>5★</span></label><label class="microchip-auto-filter-option"><input type="checkbox" data-auto-star="6" checked><span>6★</span></label></div></div></div><button id="microchipUpgradeConfirm" class="microchip-upgrade-confirm" type="button">Upgrade</button></div>
+        </div>
+    </div>
+    <div id="microchipEvolveModal" class="microchip-evolve-modal hidden" role="dialog" aria-modal="true">
+        <div class="microchip-upgrade-box microchip-evolve-box">
+            <div class="microchip-inventory-header"><h3 class="microchip-manage-title">Evolve Microchip</h3><button id="microchipEvolveClose" class="microchip-inventory-close" type="button">X</button></div>
+            <div class="microchip-upgrade-top"><div id="microchipEvolveSelected" class="microchip-upgrade-selected"></div><div id="microchipEvolveInfo" class="microchip-upgrade-info"></div></div>
+            <div id="microchipEvolveList" class="microchip-inventory-list"></div>
+            <div class="microchip-upgrade-actions"><button id="microchipEvolveConfirm" class="microchip-evolve-confirm" type="button" disabled>Evolve</button></div>
         </div>
     </div>
 
@@ -4145,7 +4438,7 @@ const BC_QING_1 = 'data:audio/mpeg;base64,SUQzAwAAAAABLFRFTkMAAAALAAAAUHJvIFRvb2
                 { id: "bc_hattori_hanzo", rarity: "Rare", name: "Hattori Hanzo", color: "#FDD035", type: "Attack", spinType: "right", atk: 102, def: 24, health: 1302, stamina: 32, weight: 13.0, interval: 1.8, desc: "Ultimate: When in effect, all impact deal a trippe combo. Special Effect: Grants extra charge to Ultimate through impact with the chance of double combo.", effects: [{ type: 'hattori_hanzo_ultimate', desc: 'Ultimate: Triple Impact Combo for 6s (3x Impact damage with three white claw marks)' }] },               
                 { id: "bc_atum", rarity: "Epic", name: "Atum", color: "#F9C07A", type: "Attack", spinType: "right", atk: 119, def: 19, health: 1598, stamina: 30, weight: 15.0, interval: 2.0, desc: "Ultimate: Launched slashes from all sides on normal opponent and double slashes on opponents inflicted with break. Special effect: Grants extra charge to Ultimate through impact.", effects: [{ type: 'atum_ultimate', desc: 'Ultimate: 4-Directional Sun Strike (4x 100% ATK guaranteed hits)' }] },
                 { id: "bc_beelzebub", rarity: "Legendary", name: "Beelzebub", color: "#c0392b", type: "Stamina", spinType: "left", atk: 133, def: 27, health: 1533, stamina: 52, weight: 15.0, interval: 0, desc: "Ultimate: Unleashes spines that pierce surrounding opponents and absorb their HP. Special effect: Cannot use Impacts. Grants a chance of absorbing HP and charging Ultimate when hitting opponents.", effects: [{ type: "beelzebub_absorb", chance: 0.30, gaugeGain: 25, desc: "No Impacts. 30% chance on collision to heal HP = damage dealt & gain +25 Ultimate Gauge." }, { type: "beelzebub_ultimate", desc: "Ultimate: Red Spine Tether (60% ATK damage/s for 4s, heals caster. Cuts off if too far.)" }] },
-                { id: "bc_chronos", rarity: "Legendary", name: "Chronos", color: "#FBDA79", type: "Balance", spinType: "right", atk: 140, def: 30, health: 1578, stamina: 43, weight: 13.0, interval: 4.0, desc: "Ultimate: Stops all opponents, creations, and Projectiles, and greatly speeds up the Bey's skill cooldown. Special effect: Increases Ultimate charging and skill cooldown speed based on remaining HP percentage.", effects: [{ type: "chronos_time_stop", duration: 210, cooldownMultiplier: 0.50, desc: "Ultimate: Selective time stop for 3.5s. Opponent systems are paused while Chronos acts normally." }] },
+                { id: "bc_chronos", rarity: "Legendary", name: "Chronos", color: "#FBDA79", type: "Balance", spinType: "right", atk: 140, def: 30, health: 1578, stamina: 43, weight: 13.0, interval: 4.0, desc: "Ultimate: Stops all opponents, creations, and Projectiles, and greatly speeds up the Bey's skill cooldown. Special effect: Increases Ultimate charging and skill cooldown speed based on remaining HP percentage.", effects: [{ type: "chronos_time_stop", duration: 210, cooldownMultiplier: 0.50, desc: "Ultimate: Selective time stop for 3.5s. Opponent systems are paused while Chronos and allies act normally." }] },
                 { id: "bc_death_knight", rarity: "Epic", name: "Death Knight", color: "#F5DB8E", type: "Attack", spinType: "right", atk: 151, def: 27, health: 1597, stamina: 30, weight: 16.0, interval: 2.2, desc: "Ultimate: Enters Revelation mode, sacrificing all Defense for greater attack power, and launch an additional impact every time collide with outer wall of arena. Special effect: Increases charging through impacts when not in Revelation mode.", effects: [{ type: "death_knight_revelation", defenseToAttackMultiplier: 2.0, wallImpact: true, desc: "Permanent Revelation mode: converts Defense into Attack and triggers an extra Impact on wall collision." }] },
                 { id: "bc_mermaid", rarity: "Epic", name: "Mermaid", color: "#FED058", type: "Balance", spinType: "right", atk: 153, def: 22, health: 1578, stamina: 43, weight: 13.0, interval: 3.0, desc: "Ultimate: Unleashes a slow-moving but large sonic wave Projectile. Special effect: Speeds up automatic charging to charge Ultimate. Impacts become long-range sonic wave Projectiles.", effects: [{ type: "mermaid_sonic_impact", autoChargeMultiplier: 2.0, speed: 6, size: 15, shape: "note", color: "#FFFFFF", shadowColor: "#4B9DFF", attackRatio: 1.0, hitCooldownFrames: 45, lifetime: 600, desc: "Impacts become persistent music-note sonic waves." }, { type: "mermaid_ultimate", attackRatio: 1.80, speed: 3, size: 50, shape: "sonic_wave", color: "#FFFFFF", shadowColor: "#4B9DFF", hitCooldownFrames: 45, lifetime: 600, desc: "Ultimate: Large persistent two-arc sonic wave." }] },
             { id: "bc_camus", rarity: "Legendary", name: "Camus", color: "#A4C1D2", type: "Balance", spinType: "right", atk: 136, def: 32, health: 1610, stamina: 44, weight: 14.0, interval: 3.5, desc: "Ultimate: Ultimate: Summons a mirage that Seals all beys in the stadium during its duration, and also periodically makes you enter the Void status. Special effect: When the opponent's Ultimate charge is full, switches Ultimate charge level with theirs.", effects: [{ type: "camus_seal_ultimate", duration: 360, desc: "Ultimate: Seals every Bey in the stadium for 6s, preventing Ultimate charge and casting." }, { type: "camus_gauge_swap", cooldown: 1800, desc: "Special Effect: When the opponent's Ultimate gauge is full, swaps current Ultimate gauge with theirs. Cooldown: 30s." }] },
@@ -4179,8 +4472,8 @@ const BC_QING_1 = 'data:audio/mpeg;base64,SUQzAwAAAAABLFRFTkMAAAALAAAAUHJvIFRvb2
             weightRing: [
                 { 
                     id: "wr_devil", rarity: "Normal", name: "Devil", color: "#3E4C77", type: "Attack", atk: 84, def: 12, health: 920, stamina: 17, weight: 37.0, interval: 0, 
-                    desc: "Increases Attack when HP is high.",
-                    effects: [{ type: 'devil_atk', trigger: 'hp_above', threshold: 0.8, bonus: 0.3, desc: '+30% ATK when HP > 80%' }] 
+                    desc: "Increases Attack when HP is above 60%.",
+                    effects: [{ type: 'devil_atk', trigger: 'hp_above', threshold: 0.6, bonus: 0.3, desc: '+30% ATK when HP > 60%' }]
                 },
                 { 
                     id: "wr_divinestar", rarity: "Normal", name: "Divine Star", color: "#5dade2", type: "Stamina", atk: 46, def: 14, health: 1092, stamina: 21, weight: 25.0, interval: 0, 
@@ -4378,7 +4671,7 @@ const BC_QING_1 = 'data:audio/mpeg;base64,SUQzAwAAAAABLFRFTkMAAAALAAAAUHJvIFRvb2
                 { 
                     id: "drv_shock", rarity: "Rare", type: "Defense", name: "Shock", color: "#f1c40f", atk: 55, def: 30, health: 920, stamina: 13, weight: 19.0, interval: 0, tip: "flat",
                     desc: "Inflict opponent with break when blocking.",
-                    effects: [{ type: 'shock_break', trigger: 'block_occurred', desc: 'Inflicts Break ailment on successful block' }] 
+                    effects: [{ type: 'shock_break', trigger: 'block_occurred', chance: 0.50, desc: '50% chance to inflict Break on successful block' }] 
                 },
                 { 
                     id: "drv_batter", rarity: "Rare", type: "Attack", name: "Batter", color: "#7C7EA7", atk: 82, def: 11, health: 796, stamina: 13, weight: 12.0, interval: 0, tip: "flat",
@@ -4840,6 +5133,127 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
         let partUpgradeLevels = {};
         let partAmounts = {};
         let acquiredPartIds = {};
+        const MICROCHIP_DATABASE = Object.freeze([
+            { id: 'mc_force', name: 'Force', category: 'Attack', level: 1, star: 1, effect: 'flatAttack', value: 10, description: 'Part Attack +10' },
+            { id: 'mc_kinetic', name: 'Kinetic', category: 'Attack', level: 1, star: 1, effect: 'attackPercent', value: 0.068, description: 'Part Attack +6.8%' },
+            { id: 'mc_acceleration', name: 'Acceleration', category: 'Attack', level: 1, star: 1, effect: 'impactIntervalPercent', value: 0.043, description: 'Impact interval -4.3%' },
+            { id: 'mc_pendulum', name: 'Pendulum', category: 'Attack', level: 1, star: 1, effect: 'skillCooldownPercent', value: 0.043, description: 'Part Skill Cooldown -4.3%' },
+            { id: 'mc_restrain', name: 'Restrain', category: 'Attack', level: 1, star: 1, effect: 'enemyAutomaticGaugePercent', value: 0.034, description: 'Enemy automatic Ultimate charging -3.4%' },
+            { id: 'mc_radiation', name: 'Radiation', category: 'Attack', level: 1, star: 1, effect: 'skillDamageDealtPercent', value: 0.034, description: 'Skill damage dealt +3.4% (excluding normal collision)' },
+            { id: 'mc_crystal', name: 'Crystal', category: 'Defense', level: 1, star: 1, effect: 'flatDefense', value: 3, description: 'Part Defense +3' },
+            { id: 'mc_barrier', name: 'Barrier', category: 'Defense', level: 1, star: 1, effect: 'defensePercent', value: 0.142, description: 'Part Defense +14.2%' },
+            { id: 'mc_shield', name: 'Shield', category: 'Defense', level: 1, star: 1, effect: 'shieldReceivedPercent', value: 0.04, description: 'Shield received +4%' },
+            { id: 'mc_antibody', name: 'Antibody', category: 'Defense', level: 1, star: 1, effect: 'ailmentDurationReductionPercent', value: 0.043, description: 'Ailment duration received -4.3%' },
+            { id: 'mc_focus', name: 'Focus', category: 'Defense', level: 1, star: 1, effect: 'blockGaugeGainPercent', value: 0.10, description: 'Ultimate gauge gained from successful Blocks +10%' },
+            { id: 'mc_interference', name: 'Interference', category: 'Defense', level: 1, star: 1, effect: 'skillDamageTakenPercent', value: 0.03, description: 'Skill damage taken -3% (excluding normal collision)' },
+            { id: 'mc_eternal', name: 'Eternal', category: 'Stamina', level: 1, star: 1, effect: 'flatHealth', value: 100, description: 'Part HP +100' },
+            { id: 'mc_infinite', name: 'Infinite', category: 'Stamina', level: 1, star: 1, effect: 'healthPercent', value: 0.07, description: 'Part HP +7%' },
+            { id: 'mc_repair', name: 'Repair', category: 'Stamina', level: 1, star: 1, effect: 'healingReceivedPercent', value: 0.04, description: 'Healing received +4%' },
+            { id: 'mc_resource', name: 'Resource', category: 'Stamina', level: 1, star: 1, effect: 'automaticGaugePercent', value: 0.04, description: 'Automatic Ultimate charging +4%' },
+            { id: 'mc_causality', name: 'Causality', category: 'Stamina', level: 1, star: 1, effect: 'startingGaugePoints', value: 4.2, description: 'Starting Ultimate gauge +4.2 pts' }
+        ]);
+        const MICROCHIP_SLOT_LAYOUT_SEED = 'SWMicrochipsSlotV1';
+        let microchipInventory = Object.fromEntries(MICROCHIP_DATABASE.map(chip => [chip.id, []]));
+        let microchipStars = Object.fromEntries(MICROCHIP_DATABASE.map(chip => [chip.id, chip.star || 1]));
+        let microchipLevels = Object.fromEntries(MICROCHIP_DATABASE.map(chip => [chip.id, chip.level || 1]));
+        let microchipExperience = Object.fromEntries(MICROCHIP_DATABASE.map(chip => [chip.id, 0]));
+        let microchipSlotsByPart = {};
+        function createMicrochipUid() { return `mcinst_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`; }
+        function createMicrochipInstance(chipId, data = {}) { const chip = MICROCHIP_DATABASE.find(candidate => candidate.id === chipId); const stars = Math.max(1, Math.min(6, Number(data.stars) || chip?.star || 1)); const maxLevel = [0, 5, 10, 15, 20, 25, 30][stars]; return { uid: String(data.uid || createMicrochipUid()), chipId, level: Math.max(1, Math.min(maxLevel, Number(data.level) || chip?.level || 1)), stars, experience: Math.max(0, Number(data.experience) || 0) }; }
+        function normalizeMicrochipInventory(raw) {
+            const result = Object.fromEntries(MICROCHIP_DATABASE.map(chip => [chip.id, []]));
+            MICROCHIP_DATABASE.forEach(chip => {
+                const value = raw && raw[chip.id];
+                if (Array.isArray(value)) value.forEach(instance => { if (instance && instance.uid) result[chip.id].push(createMicrochipInstance(chip.id, instance)); });
+                else for (let i = 0; i < Math.max(0, Math.floor(Number(value) || 0)); i++) result[chip.id].push(createMicrochipInstance(chip.id));
+            });
+            return result;
+        }
+        function getAllMicrochipInstances() { return Object.values(microchipInventory).flat(); }
+        function getMicrochipInstance(uid) { return getAllMicrochipInstances().find(instance => instance.uid === uid) || null; }
+        function ensureMicrochipSlots(partId) {
+            if (!partId) return { attack: null, attack2: null, defense: null, stamina: null };
+            if (!microchipSlotsByPart[partId] || typeof microchipSlotsByPart[partId] !== 'object') microchipSlotsByPart[partId] = { attack: null, attack2: null, defense: null, stamina: null };
+            ['attack', 'attack2', 'defense', 'stamina'].forEach(slot => { if (!(slot in microchipSlotsByPart[partId])) microchipSlotsByPart[partId][slot] = null; });
+            return microchipSlotsByPart[partId];
+        }
+        function getMicrochipDataForPart(part) { return part && part.__microchips && typeof part.__microchips === 'object' ? part.__microchips : null; }
+        function isBattleCapMicrochipPart(part) { return !!part && Array.isArray(PARTS.battleCap) && PARTS.battleCap.some(candidate => candidate && candidate.id === part.id); }
+        function getMicrochipSlotDefinitions(part) {
+            const battleCap = isBattleCapMicrochipPart(part);
+            const partLevel = getPartLevel(part);
+            const randomizedKeys = battleCap ? ['attack', 'attack2', 'defense', 'stamina'] : ['attack', 'defense'];
+            const categoryByKey = { attack: 'attack', attack2: 'attack', defense: 'defense', stamina: 'stamina' };
+            if (part?.id === 'bc_mermaid') {
+                categoryByKey.attack = 'attack';
+                categoryByKey.attack2 = 'defense';
+                categoryByKey.defense = 'attack';
+                categoryByKey.stamina = 'stamina';
+            } else {
+                const random = makeSeededRandom(normalizeSeed(`${MICROCHIP_SLOT_LAYOUT_SEED}:${part?.id || 'unknown'}`));
+                const categoryCounts = { attack: 0, defense: 0, stamina: 0 };
+                const randomizedCategories = randomizedKeys.map(() => {
+                    const availableCategories = ['attack', 'defense', 'stamina'].filter(category => categoryCounts[category] < 2);
+                    const category = availableCategories[Math.floor(random() * availableCategories.length)];
+                    categoryCounts[category] += 1;
+                    return category;
+                });
+                randomizedKeys.forEach((key, index) => {
+                    categoryByKey[key] = randomizedCategories[index];
+                });
+            }
+            return [
+                { key: 'attack', label: 'Microchip Slot', category: categoryByKey.attack, unlockLevel: 3, disabled: false, locked: partLevel < 3 },
+                { key: 'attack2', label: 'Microchip Slot', category: categoryByKey.attack2, unlockLevel: 9, disabled: !battleCap, locked: partLevel < 9 },
+                { key: 'defense', label: 'Microchip Slot', category: categoryByKey.defense, unlockLevel: 6, disabled: false, locked: partLevel < 6 },
+                { key: 'stamina', label: 'Microchip Slot', category: categoryByKey.stamina, unlockLevel: 12, disabled: !battleCap, locked: partLevel < 12 }
+            ];
+        }
+        function isSavedMicrochipCompatible(partId, slot, chip) {
+            const part = Object.values(PARTS).flatMap(parts => parts || []).find(candidate => candidate && candidate.id === partId);
+            const definition = part ? getMicrochipSlotDefinitions(part).find(candidate => candidate.key === slot) : null;
+            return !!(chip && definition && String(chip.category || '').toLowerCase() === definition.category);
+        }
+        function getMicrochipBonuses(part) {
+            const bonuses = { flatAttack: 0, attackPercent: 0, flatDefense: 0, defensePercent: 0, flatHealth: 0, healthPercent: 0, impactIntervalPercent: 0, skillCooldownPercent: 0, healingReceivedPercent: 0, automaticGaugePercent: 0, startingGaugePoints: 0, enemyAutomaticGaugePercent: 0, shieldReceivedPercent: 0, skillDamageDealtPercent: 0, skillDamageTakenPercent: 0, ailmentDurationReductionPercent: 0, blockGaugeGainPercent: 0, chips: [] };
+            if (!part) return bonuses;
+            const slots = getMicrochipDataForPart(part) || ensureMicrochipSlots(part.id);
+            const activeSlots = new Set(getMicrochipSlotDefinitions(part).filter(definition => !definition.disabled && !definition.locked).map(definition => definition.key));
+            Object.entries(slots).filter(([slot]) => activeSlots.has(slot)).forEach(([, value]) => {
+                const instance = typeof value === 'string' ? getMicrochipInstance(value) : value;
+                const chip = MICROCHIP_DATABASE.find(candidate => candidate.id === (instance?.chipId || value));
+                if (!chip) return;
+                const level = instance ? getMicrochipLevel(instance) : getMicrochipLevel(chip);
+                const starBaseMultiplier = getMicrochipStarBaseMultiplier(instance || chip);
+                bonuses[chip.effect] += (Number(chip.value) || 0) * starBaseMultiplier * getMicrochipLevelMultiplier(instance || chip, level);
+                bonuses.chips.push(chip);
+            });
+            return bonuses;
+        }
+        function getMicrochipStarCount(chip) { return Math.max(1, Math.min(6, Number(chip?.stars || microchipStars[chip && chip.id] || chip?.star || 1))); }
+        function isMicrochipPercentageEffect(chip) { return chip && ['attackPercent', 'defensePercent', 'healthPercent', 'impactIntervalPercent', 'skillCooldownPercent', 'healingReceivedPercent', 'automaticGaugePercent', 'startingGaugePoints', 'enemyAutomaticGaugePercent', 'shieldReceivedPercent', 'skillDamageDealtPercent', 'skillDamageTakenPercent', 'ailmentDurationReductionPercent', 'blockGaugeGainPercent'].includes(chip.effect); }
+        function isMicrochipPercentDisplayEffect(chip) { return chip && chip.effect !== 'startingGaugePoints' && isMicrochipPercentageEffect(chip); }
+        function isMicrochipReductionEffect(chip) { return chip && (chip.effect === 'impactIntervalPercent' || chip.effect === 'skillCooldownPercent' || chip.effect === 'enemyAutomaticGaugePercent' || chip.effect === 'skillDamageTakenPercent' || chip.effect === 'ailmentDurationReductionPercent'); }
+        function getMicrochipStarBaseMultiplier(chip) { return Math.pow(isMicrochipPercentageEffect(chip) ? 1.12 : 1.25, getMicrochipStarCount(chip) - 1); }
+        function getMicrochipLevelMultiplier(chip, level = getMicrochipLevel(chip)) { return 1 + (Math.max(1, Number(level) || 1) - 1) * (isMicrochipPercentageEffect(chip) ? 0.05 : 0.10); }
+        function getMicrochipEffectTotal(owner, effect) {
+            if (!owner || !owner.parts || !effect) return 0;
+            return Object.values(owner.parts).reduce((total, part) => total + (getMicrochipBonuses(part)[effect] || 0), 0);
+        }
+        function formatMicrochipNumber(value) { const rounded = Number(Number(value || 0).toFixed(4)); return String(rounded); }
+        function getMicrochipUpgradeGoldCost(level) { return Math.ceil(50 * Math.pow(1.16, Math.max(0, Number(level) - 1))); }
+        function getMicrochipUpgradeTotalGoldCost(startLevel, endLevel) { let total = 0; for (let level = startLevel; level < endLevel; level += 1) total += getMicrochipUpgradeGoldCost(level); return total; }
+        function getMicrochipEvolveGoldCost(star) { return Math.max(1, Number(star) || 1) * 2000; }
+        function getMicrochipCostMarkup(cost) { return `<span class="microchip-cost-row">${getShopCurrencyMarkup('gold')}<span>${Math.max(0, Math.floor(Number(cost) || 0)).toLocaleString()}</span></span>`; }
+        function getMicrochipLevel(chip) { return Math.max(1, Math.min(getMicrochipMaxLevel(chip), Number(chip?.level || microchipLevels[chip && chip.id] || chip?.level || 1))); }
+        function getMicrochipMaxLevel(chip) { return [0, 5, 10, 15, 20, 25, 30][getMicrochipStarCount(chip)]; }
+        function getMicrochipLevelExpNeed(chip, level = getMicrochipLevel(chip)) { return 400 + (100 * Math.max(1, Number(level) || 1)); }
+        function getMicrochipSacrificeExp(chip) {
+            const starBaseExp = 720 * Math.pow(2, getMicrochipStarCount(chip) - 1);
+            const currentExp = Math.max(0, Number(chip?.experience) || 0);
+            return Math.floor(starBaseExp + (currentExp * 0.5));
+        }
+        function getMicrochipStarsMarkup(chip, additionalStars = 0) { const stars = getMicrochipStarCount(chip); const previewStars = Math.max(0, Math.floor(Number(additionalStars) || 0)); return `<span class="microchip-star" aria-label="${stars + previewStars} star grade">${'★'.repeat(stars + previewStars)}</span>`; }
         const INITIAL_UNLOCKED_PART_IDS = new Set(Object.values(PARTS).flatMap(parts => (parts || []).slice(0, 3).map(part => part.id)));
         function isPartAcquired(part) { return !!part && (INITIAL_UNLOCKED_PART_IDS.has(part.id) || acquiredPartIds[part.id] === true || getPartAmount(part) > 0); }
         // Upgrade levels and part amounts are intentionally session-only until the user presses Save.
@@ -4889,7 +5303,11 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
         }
         function getEffectivePartStats(part) {
             const multiplier = Math.pow(1.10, getPartLevel(part) - 1);
-            return { ...part, atk:Math.round((Number(part.atk) || 0) * multiplier), def:Math.round((Number(part.def) || 0) * multiplier), health:Math.round((Number(part.health) || 0) * multiplier), stamina:Number(part.stamina) || 0, weight:Number(part.weight) || 0, interval:Number(part.interval) || 0 };
+            const bonuses = getMicrochipBonuses(part);
+            const baseAtk = (Number(part.atk) || 0) * multiplier;
+            const baseDef = (Number(part.def) || 0) * multiplier;
+            const baseHealth = (Number(part.health) || 0) * multiplier;
+            return { ...part, atk:Math.round(baseAtk * (1 + bonuses.attackPercent) + bonuses.flatAttack), def:Math.round(baseDef * (1 + bonuses.defensePercent) + bonuses.flatDefense), health:Math.round(baseHealth * (1 + bonuses.healthPercent) + bonuses.flatHealth), stamina:Number(part.stamina) || 0, weight:Number(part.weight) || 0, interval:Number(part.interval) || 0 };
         }
                 function getUpgradeCost(part) { const level = getPartLevel(part); return level >= 15 ? 0 : UPGRADE_COSTS[level]; }
         function getPartCombatPower(part) {
@@ -4937,6 +5355,8 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
         function getPartsSkillCooldownFrames(baseFrames, owner = null, excludeTimeBuff = false) {
             const flatReducedFrames = Math.max(0, baseFrames - (partsSkillCooldownFlatReductionSeconds * 60));
             let multiplier = partsSkillCooldownMultiplier;
+            const microchipSkillReduction = getMicrochipEffectTotal(owner, 'skillCooldownPercent');
+            multiplier *= Math.max(0.01, 1 - microchipSkillReduction);
             if (owner && owner.parts && owner.parts.weightRing && owner.parts.weightRing.id === 'wr_surge') {
                 multiplier *= 0.60;
             }
@@ -5022,7 +5442,8 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
             const sagittariusMultiplier = hasSagittarius && liveOuterCircle && sagittariusEffect
                 ? Math.max(0.01, Number(sagittariusEffect.intervalMultiplier) || 0.60)
                 : 1.0;
-            const reduction = (hasSurge ? 0.60 : 1.0) * (hasRampage ? 0.75 : 1.0) * (hasGush ? (1 - gushReduction) : 1.0) * odeMultiplier * sagittariusMultiplier;
+            const microchipImpactReduction = getMicrochipEffectTotal(owner, 'impactIntervalPercent');
+            const reduction = (hasSurge ? 0.60 : 1.0) * (hasRampage ? 0.75 : 1.0) * (hasGush ? (1 - gushReduction) : 1.0) * odeMultiplier * sagittariusMultiplier * Math.max(0.01, 1 - microchipImpactReduction);
             // Cap total Impact interval reduction at -50%.
             const cappedReduction = Math.max(0.50, reduction);
             return Math.max(120, Math.round((baseSeconds || 3) * 60 * cappedReduction * gladiatorIntervalMultiplier));
@@ -5149,6 +5570,7 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
         // Universal deterministic seed. It is shared by future procedural systems and Tower floors.
         let universalSeed = (Date.now() >>> 0) || 1;
         const TOWER_GENERATION_SEED = 'SpiralWarriorTOWERV1';
+        const TOWER_MICROCHIP_DROP_SEED = 'TowerMicrochipsV1';
         let towerCurrentFloor = 1;
         let towerUnlockedFloor = 1;
         let towerActiveFloor = null;
@@ -5156,6 +5578,10 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
         const TOWER_FIRST_CLEAR_GEMS = 10;
         let towerFirstClearGems = {};
         let towerFirstClearChests = {};
+        let towerSmashLastDate = '';
+        const TOWER_SMASH_PREFERENCE_KEY = 'spiralWarrior.towerSmashRange';
+        let towerSmashFromPreference = 1;
+        let towerSmashToPreference = 30;
         const TOWER_RANKING_FALLBACK_DATA = [{ uid: '000', player_name: 'Dummy', floor_achieved: 999, achieved_at: null }];
         let towerRankingData = JSON.parse(JSON.stringify(TOWER_RANKING_FALLBACK_DATA));
         let towerRankingFetchPromise = null;
@@ -5185,7 +5611,7 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
             if (next === null) { setManualSaveStatus('Enter a valid seed.', '#ff7777'); return; }
             universalSeed = next;
             updateDebugSeedInput();
-            towerCurrentFloor = 1; towerUnlockedFloor = 1; towerActiveFloor = null;
+            towerCurrentFloor = 1; towerUnlockedFloor = 1; towerActiveFloor = null; towerSmashLastDate = '';
             renderTowerFloors();
             setManualSaveStatus('Seed applied. Tower reset.');
         }
@@ -5293,18 +5719,52 @@ const parts = {
             return normalizedFloor > 100 ? 1 + ((normalizedFloor - 100) * 0.01) : 1;
         }
         function towerStat(part, level, key) { return Math.round((part[key] || 0) * Math.pow(1.10, level - 1)); }
-        function getTowerReward(floor) { return Math.min(100000, Math.round(1000 * Math.pow(1.054, floor - 1))); }
-        function getTowerChestDrop(floor) {
-            const normalizedFloor = Number(floor);
-            if (!Number.isInteger(normalizedFloor) || normalizedFloor < 10 || normalizedFloor > TOWER_MAX_FLOOR || normalizedFloor % 10 !== 0) return null;
-            if (normalizedFloor <= 100) return 'plain';
-            if (normalizedFloor <= 200) return 'uncommon';
-            if (normalizedFloor <= 500) return 'superior';
-            if (normalizedFloor <= 800) return 'epic';
-            return towerFirstClearChests[normalizedFloor] ? 'epic' : 'legendary';
+        function getTowerReward(floor) { return Math.min(10000, Math.round(1000 * Math.pow(1.054, floor - 1))); }
+        function getTowerMicrochipDrop(floor) {
+            const normalizedFloor = Math.max(1, Math.min(TOWER_MAX_FLOOR, Math.floor(Number(floor) || 1)));
+            const fixedDrops = { 1: 'mc_force', 2: 'mc_crystal', 3: 'mc_eternal', 4: 'mc_kinetic', 5: 'mc_barrier', 6: 'mc_infinite' };
+            let chipPool;
+            let starMin = 1;
+            let starMax = 1;
+            let rangeStart;
+            if (normalizedFloor <= 6) {
+                const chipId = fixedDrops[normalizedFloor];
+                return { chipId, stars: 1, level: 1, experience: 0 };
+            } else if (normalizedFloor <= 50) {
+                chipPool = ['mc_force', 'mc_kinetic', 'mc_crystal', 'mc_barrier', 'mc_eternal', 'mc_infinite']; rangeStart = 7;
+            } else if (normalizedFloor <= 100) {
+                chipPool = ['mc_force', 'mc_kinetic', 'mc_crystal', 'mc_barrier', 'mc_eternal', 'mc_infinite', 'mc_acceleration', 'mc_pendulum', 'mc_shield', 'mc_antibody', 'mc_repair', 'mc_resource']; rangeStart = 51;
+            } else if (normalizedFloor <= 150) {
+                chipPool = ['mc_force', 'mc_kinetic', 'mc_crystal', 'mc_barrier', 'mc_eternal', 'mc_infinite', 'mc_acceleration', 'mc_pendulum', 'mc_shield', 'mc_antibody', 'mc_repair', 'mc_resource']; rangeStart = 101; starMin = 2; starMax = 2;
+            } else if (normalizedFloor <= 200) {
+                chipPool = ['mc_force', 'mc_kinetic', 'mc_crystal', 'mc_barrier', 'mc_eternal', 'mc_infinite', 'mc_acceleration', 'mc_pendulum', 'mc_shield', 'mc_antibody', 'mc_repair', 'mc_resource', 'mc_restrain', 'mc_focus', 'mc_interference']; rangeStart = 151; starMin = 2; starMax = 2;
+            } else if (normalizedFloor <= 300) {
+                chipPool = ['mc_force', 'mc_kinetic', 'mc_crystal', 'mc_barrier', 'mc_eternal', 'mc_infinite', 'mc_acceleration', 'mc_pendulum', 'mc_shield', 'mc_antibody', 'mc_repair', 'mc_resource', 'mc_restrain', 'mc_focus', 'mc_interference', 'mc_radiation', 'mc_causality']; rangeStart = 201; starMin = 3; starMax = 3;
+            } else if (normalizedFloor <= 400) {
+                chipPool = ['mc_force', 'mc_kinetic', 'mc_crystal', 'mc_barrier', 'mc_eternal', 'mc_infinite', 'mc_acceleration', 'mc_pendulum', 'mc_shield', 'mc_antibody', 'mc_repair', 'mc_resource', 'mc_restrain', 'mc_focus', 'mc_interference', 'mc_radiation', 'mc_causality']; rangeStart = 301; starMin = 4; starMax = 4;
+            } else if (normalizedFloor <= 500) {
+                chipPool = ['mc_kinetic', 'mc_barrier', 'mc_infinite', 'mc_acceleration', 'mc_pendulum', 'mc_shield', 'mc_antibody', 'mc_repair', 'mc_resource', 'mc_restrain', 'mc_focus', 'mc_interference', 'mc_radiation', 'mc_causality']; rangeStart = 401; starMin = 4; starMax = 4;
+            } else {
+                chipPool = ['mc_kinetic', 'mc_barrier', 'mc_infinite', 'mc_acceleration', 'mc_pendulum', 'mc_shield', 'mc_antibody', 'mc_repair', 'mc_resource', 'mc_restrain', 'mc_focus', 'mc_interference', 'mc_radiation', 'mc_causality']; rangeStart = 501; starMin = 4; starMax = 5;
+            }
+            const rangeRng = makeSeededRandom(`${TOWER_MICROCHIP_DROP_SEED}:${rangeStart}`);
+            const shuffledPool = chipPool.slice();
+            for (let index = shuffledPool.length - 1; index > 0; index--) { const swapIndex = Math.floor(rangeRng() * (index + 1)); [shuffledPool[index], shuffledPool[swapIndex]] = [shuffledPool[swapIndex], shuffledPool[index]]; }
+            const offset = normalizedFloor - rangeStart;
+            const chipId = offset < shuffledPool.length ? shuffledPool[offset] : chipPool[Math.floor(makeSeededRandom(`${TOWER_MICROCHIP_DROP_SEED}:${normalizedFloor}:chip`)() * chipPool.length)];
+            const starRng = makeSeededRandom(`${TOWER_MICROCHIP_DROP_SEED}:${normalizedFloor}:star`);
+            const stars = starMin + Math.floor(starRng() * (starMax - starMin + 1));
+            return { chipId, stars, level: 1, experience: 0 };
+        }
+        function addTowerMicrochipDrop(drop) {
+            if (!drop || !MICROCHIP_DATABASE.some(chip => chip.id === drop.chipId)) return null;
+            const instance = createMicrochipInstance(drop.chipId, { stars: 1, level: 1, experience: 0 });
+            if (!Array.isArray(microchipInventory[drop.chipId])) microchipInventory[drop.chipId] = [];
+            microchipInventory[drop.chipId].push(instance);
+            return instance;
         }
         function getTowerPartDrop(floor) {
-            // Tower floors grant chests instead of direct Beyblade part amounts.
+            // Tower floors grant Microchips on the designated early floors instead of direct part amounts.
             return null;
         }
         function setTowerStatus() { /* Tower announcements are intentionally hidden. */ }
@@ -5403,7 +5863,7 @@ const parts = {
                 const cap = enemy.parts.battleCap;
                 const combination = `${cap.name} / ${enemy.parts.weightRing.name} / ${enemy.parts.driver.name}`;
                 row.setAttribute('data-tower-row', 'true');
-                if (!locked) row.setAttribute('data-tower-floor', floor);
+                row.setAttribute('data-tower-floor', floor);
                 row.innerHTML = `<div class="tower-floor-number">FLOOR<br>${floor}</div><div class="tower-enemy-preview"><div class="tower-enemy-name">${combination}</div></div><canvas class="tower-enemy-canvas" width="120" height="120" aria-hidden="true"></canvas>`;
                 const enemyCanvas = row.querySelector('.tower-enemy-canvas');
                 const enemyCtx = enemyCanvas.getContext('2d');
@@ -5428,11 +5888,94 @@ const parts = {
                 };
                 list.addEventListener('scroll', list._towerVirtualScrollHandler, { passive: true });
             }
-            // Automatically center the player’s current or most recently unlocked floor.
-            const focusFloor = Math.max(1, Math.min(TOWER_MAX_FLOOR, towerCurrentFloor || towerUnlockedFloor || 1));
-            const focusIndex = TOWER_MAX_FLOOR - focusFloor;
-            list.scrollTop = Math.max(0, focusIndex * TOWER_ROW_HEIGHT - Math.max(0, (list.clientHeight - TOWER_ROW_HEIGHT) / 2));
+            // Start at the top so the player can freely inspect every upper floor.
+            // The floating down-arrow button provides an explicit jump to the latest floor.
             renderTowerFloorViewport(list);
+        }
+        function scrollTowerToLatestFloor() {
+            const list = document.getElementById('towerFloorList');
+            if (!list) return;
+            const latestFloor = Math.max(1, Math.min(TOWER_MAX_FLOOR, towerCurrentFloor || towerUnlockedFloor || 1));
+            const latestIndex = TOWER_MAX_FLOOR - latestFloor;
+            list.scrollTop = Math.max(0, latestIndex * TOWER_ROW_HEIGHT - Math.max(0, (list.clientHeight - TOWER_ROW_HEIGHT) / 2));
+            renderTowerFloorViewport(list);
+        }
+        function getTowerSmashDate() { return getChampionshipDayKey(getTrustedDate()); }
+        function normalizeTowerSmashDailyState() {
+            const todayKey = getTowerSmashDate();
+            if (towerSmashLastDate !== todayKey && towerSmashLastDate) towerSmashLastDate = '';
+        }
+        function isTowerSmashUsedToday() { normalizeTowerSmashDailyState(); return towerSmashLastDate === getTowerSmashDate(); }
+        function loadTowerSmashPreferences() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(TOWER_SMASH_PREFERENCE_KEY) || '{}');
+                if (Number.isInteger(Number(saved.from)) && Number(saved.from) >= 1) towerSmashFromPreference = Math.min(TOWER_MAX_FLOOR, Number(saved.from));
+                if (Number.isInteger(Number(saved.to)) && Number(saved.to) >= 1) towerSmashToPreference = Math.min(TOWER_MAX_FLOOR, Number(saved.to));
+            } catch (error) {}
+        }
+        function rememberTowerSmashSelection() {
+            const from = Number(document.getElementById('towerSmashFrom')?.value);
+            const to = Number(document.getElementById('towerSmashTo')?.value);
+            if (Number.isInteger(from) && from >= 1) towerSmashFromPreference = Math.min(TOWER_MAX_FLOOR, from);
+            if (Number.isInteger(to) && to >= 1) towerSmashToPreference = Math.min(TOWER_MAX_FLOOR, to);
+            try { localStorage.setItem(TOWER_SMASH_PREFERENCE_KEY, JSON.stringify({ from: towerSmashFromPreference, to: towerSmashToPreference })); } catch (error) {}
+        }
+        function validateTowerSmashSelection() {
+            const maxCleared = Math.max(0, Math.min(TOWER_MAX_FLOOR, Number(towerUnlockedFloor) - 1));
+            const from = Number(document.getElementById('towerSmashFrom')?.value);
+            const to = Number(document.getElementById('towerSmashTo')?.value);
+            const used = isTowerSmashUsedToday();
+            let message = used ? 'Smash has already been used today.' : `Select up to 30 of your ${maxCleared} cleared floors.`;
+            let valid = !used && maxCleared > 0 && Number.isInteger(from) && Number.isInteger(to) && from >= 1 && to >= 1 && from <= maxCleared && to <= maxCleared && to >= from && (to - from + 1) <= 30;
+            if (!used && maxCleared < 1) message = 'Clear at least one floor before using Smash.';
+            else if (!used && Number.isFinite(from) && Number.isFinite(to) && (from < 1 || to < 1 || from > maxCleared || to > maxCleared)) message = `Invalid range: select floors 1–${maxCleared}. Locked floors cannot be smashed.`;
+            else if (!used && Number.isFinite(from) && Number.isFinite(to) && to < from) message = 'Invalid range: the TO floor must be equal to or higher than FROM.';
+            else if (!used && Number.isFinite(from) && Number.isFinite(to) && to - from + 1 > 30) message = 'Invalid range: Smash is limited to 30 floors.';
+            const status = document.getElementById('towerSmashStatus'); if (status) status.textContent = message;
+            const confirm = document.getElementById('towerSmashConfirm'); if (confirm) confirm.disabled = !valid;
+            return { valid, from, to, maxCleared };
+        }
+        function openTowerSmashModal() {
+            const selection = document.getElementById('towerSmashSelectionView');
+            const status = document.getElementById('towerSmashStatus');
+            const maxCleared = Math.max(0, Math.min(TOWER_MAX_FLOOR, Number(towerUnlockedFloor) - 1));
+            loadTowerSmashPreferences();
+            document.getElementById('towerSmashFrom').max = String(Math.max(1, maxCleared));
+            document.getElementById('towerSmashTo').max = String(Math.max(1, maxCleared));
+            const preferredFrom = maxCleared ? Math.min(maxCleared, Math.max(1, towerSmashFromPreference)) : 1;
+            const preferredTo = maxCleared ? Math.min(maxCleared, Math.max(preferredFrom, Math.min(towerSmashToPreference, preferredFrom + 29))) : 1;
+            document.getElementById('towerSmashFrom').value = String(preferredFrom);
+            document.getElementById('towerSmashTo').value = String(preferredTo);
+            selection?.classList.remove('hidden');
+            if (status) status.textContent = maxCleared ? `Select up to 30 of your ${maxCleared} cleared floors.` : 'Clear at least one floor before using Smash.';
+            validateTowerSmashSelection();
+            document.getElementById('towerSmashModal')?.classList.remove('hidden');
+        }
+        function performTowerSmash() {
+            const selection = validateTowerSmashSelection();
+            if (!selection.valid) return;
+            const { from, to } = selection;
+            let gold = 0; const rewardCards = [];
+            for (let floor = from; floor <= to; floor++) {
+                gold += getTowerReward(floor);
+                const drop = getTowerMicrochipDrop(floor);
+                const instance = addTowerMicrochipDrop(drop);
+                if (instance) rewardCards.push(`<div class="tower-smash-result-card"><span class="smash-floor-label">FLOOR ${floor}</span><div class="tower-microchip-reward-preview">${getMicrochipCardMarkup(instance)}</div><span class="tower-reward-amount">x1</span></div>`);
+            }
+            rewardCards.unshift(`<div class="tower-smash-result-card tower-smash-gold-card"><span class="smash-floor-label">GOLD</span><div class="tower-reward-detail"><span class="tower-reward-icon currency-symbol currency-gold-icon" aria-hidden="true"></span><span class="tower-reward-amount">x${gold.toLocaleString()}</span></div></div>`);
+            currencyState.gold = Math.max(0, Number(currencyState.gold || 0) + gold);
+            towerSmashLastDate = getTowerSmashDate();
+            if (typeof updateCurrencyUI === 'function') updateCurrencyUI();
+            if (typeof updateMicrochipInventoryUI === 'function') updateMicrochipInventoryUI();
+            if (typeof manualSaveGame === 'function') manualSaveGame();
+            const results = document.getElementById('towerSmashResults'); if (results) results.innerHTML = rewardCards.join('');
+            if (typeof renderMicrochipCardPartVisuals === 'function') renderMicrochipCardPartVisuals(results);
+            document.getElementById('towerSmashModal')?.classList.add('hidden');
+            document.getElementById('towerSmashResultModal')?.classList.remove('hidden');
+        }
+        function closeTowerSmashModal() {
+            document.getElementById('towerSmashModal')?.classList.add('hidden');
+            document.getElementById('towerSmashResultModal')?.classList.add('hidden');
         }
         function openTowerTrialsScreen() {
             screens.forEach(screen => screen.classList.add('hidden'));
@@ -5440,7 +5983,22 @@ const parts = {
             navItems.forEach(nav => nav.classList.toggle('active', nav.getAttribute('data-screen') === 'challengeScreen'));
             updateGameBgmForScreen('towerScreen');
             renderTowerFloors();
+            scrollTowerToLatestFloor();
         }
+        document.getElementById('towerScrollLatestButton')?.addEventListener('click', scrollTowerToLatestFloor);
+        document.getElementById('towerSmashButton')?.addEventListener('click', openTowerSmashModal);
+        document.getElementById('towerSmashConfirm')?.addEventListener('click', performTowerSmash);
+        document.getElementById('towerSmashFrom')?.addEventListener('input', () => { rememberTowerSmashSelection(); validateTowerSmashSelection(); });
+        document.getElementById('towerSmashTo')?.addEventListener('input', () => { rememberTowerSmashSelection(); validateTowerSmashSelection(); });
+        document.getElementById('towerSmashResultConfirm')?.addEventListener('click', closeTowerSmashModal);
+        document.getElementById('towerSmashResultClose')?.addEventListener('click', closeTowerSmashModal);
+        document.getElementById('towerSmashClose')?.addEventListener('click', closeTowerSmashModal);
+        document.getElementById('towerSmashModal')?.addEventListener('click', event => {
+            if (event.target.id === 'towerSmashModal') closeTowerSmashModal();
+        });
+        document.getElementById('towerSmashResultModal')?.addEventListener('click', event => {
+            if (event.target.id === 'towerSmashResultModal') closeTowerSmashModal();
+        });
         function openTowerEnemyDetails(floor) {
             const enemy = getTowerEnemy(floor); const level = enemy.level;
             towerActiveFloor = floor;
@@ -5471,19 +6029,23 @@ const parts = {
                 }
             }
             document.getElementById('towerDetailReward').textContent = getTowerReward(floor).toLocaleString();
-            const towerChestId = getTowerChestDrop(floor);
+            const towerMicrochipDrop = getTowerMicrochipDrop(floor);
+            const towerMicrochipEntry = document.getElementById('towerDetailMicrochipRewardEntry');
+            const towerMicrochipPreview = document.getElementById('towerDetailMicrochipRewardPreview');
             const towerChestEntry = document.getElementById('towerDetailChestRewardEntry');
-            const towerChestPreview = document.getElementById('towerDetailChestRewardPreview');
-            const towerChestName = document.getElementById('towerDetailChestRewardName');
-            if (towerChestEntry) towerChestEntry.style.display = towerChestId ? 'flex' : 'none';
-            if (towerChestId && towerChestPreview) towerChestPreview.className = `tower-chest-reward-preview home-chest-render ${chestDefinitions[towerChestId].rarityClass}`;
-            if (towerChestName) towerChestName.textContent = towerChestId ? 'x1' : '';
+            if (towerChestEntry) towerChestEntry.style.display = 'none';
+            if (towerMicrochipEntry) towerMicrochipEntry.style.display = towerMicrochipDrop ? 'flex' : 'none';
+            if (towerMicrochipDrop && towerMicrochipPreview) {
+                const previewInstance = createMicrochipInstance(towerMicrochipDrop.chipId, towerMicrochipDrop);
+                towerMicrochipPreview.innerHTML = getMicrochipCardMarkup(previewInstance);
+                renderMicrochipCardPartVisuals(towerMicrochipPreview);
+            } else if (towerMicrochipPreview) towerMicrochipPreview.innerHTML = '';
             const towerDetailGemReward = document.getElementById('towerDetailGemReward');
             if (towerDetailGemReward) towerDetailGemReward.textContent = TOWER_FIRST_CLEAR_GEMS.toLocaleString();
             const towerDetailGemRewardEntry = document.getElementById('towerDetailGemRewardEntry');
             if (towerDetailGemRewardEntry) towerDetailGemRewardEntry.style.display = towerFirstClearGems[floor] ? 'none' : 'flex';
             const battle = document.getElementById('towerDetailBattle');
-            battle.style.display = 'block';
+            battle.style.display = floor <= towerUnlockedFloor ? 'block' : 'none';
             battle.disabled = floor > towerUnlockedFloor;
             battle.dataset.towerBattle = floor;
             battle.onclick = (event) => {
@@ -5510,7 +6072,7 @@ const parts = {
             if (bey2.dead && !bey1.dead) return bey2;
             return bey1.dead ? bey1 : bey2;
         }
-        function showWinnerAnnouncement(title, won, finalMatch, continueAction, backAction, roundScore, rewardAmount = 0, rewardGemAmount = 0, rewardChestId = null) {
+        function showWinnerAnnouncement(title, won, finalMatch, continueAction, backAction, roundScore, rewardAmount = 0, rewardGemAmount = 0, rewardChestId = null, rewardMicrochip = null) {
             const winnerScreen = document.getElementById('winnerAnnouncementScreen');
             const titleEl = document.getElementById('winnerAnnouncementTitle');
             const scoreEl = document.getElementById('winnerAnnouncementScore');
@@ -5522,6 +6084,8 @@ const parts = {
             const rewardChestEntry = document.getElementById('winnerAnnouncementChestEntry');
             const rewardChestPreview = document.getElementById('winnerAnnouncementChestPreview');
             const rewardChestName = document.getElementById('winnerAnnouncementChestRewardName');
+            const rewardMicrochipEntry = document.getElementById('winnerAnnouncementMicrochipEntry');
+            const rewardMicrochipPreview = document.getElementById('winnerAnnouncementMicrochipPreview');
             const backBtn = document.getElementById('winnerAnnouncementBack');
             const nextBtn = document.getElementById('winnerAnnouncementNext');
             if (!winnerScreen || !titleEl || !scoreEl || !backBtn || !nextBtn) return;
@@ -5533,7 +6097,8 @@ const parts = {
             const hasGoldReward = finalMatch && Number(rewardAmount) > 0;
             const hasGemReward = finalMatch && Number(rewardGemAmount) > 0;
             const hasChestReward = finalMatch && !!rewardChestId && !!chestDefinitions[rewardChestId];
-            const hasReward = hasGoldReward || hasGemReward || hasChestReward;
+            const hasMicrochipReward = finalMatch && !!rewardMicrochip && !!MICROCHIP_DATABASE.find(chip => chip.id === rewardMicrochip.chipId);
+            const hasReward = hasGoldReward || hasGemReward || hasChestReward || hasMicrochipReward;
             if (rewardLabelEl) rewardLabelEl.style.display = hasReward ? 'block' : 'none';
             if (rewardBoxEl) rewardBoxEl.style.display = hasReward ? 'flex' : 'none';
             if (rewardAmountEl) rewardAmountEl.textContent = hasGoldReward ? `x${Number(rewardAmount).toLocaleString()}` : '';
@@ -5544,6 +6109,11 @@ const parts = {
             if (rewardChestEntry) rewardChestEntry.style.display = hasChestReward ? 'flex' : 'none';
             if (hasChestReward && rewardChestPreview) rewardChestPreview.className = `home-chest-render ${chestDefinitions[rewardChestId].rarityClass} winner-announcement-chest-preview`;
             if (rewardChestName) rewardChestName.textContent = hasChestReward ? 'x1' : '';
+            if (rewardMicrochipEntry) rewardMicrochipEntry.style.display = hasMicrochipReward ? 'flex' : 'none';
+            if (hasMicrochipReward && rewardMicrochipPreview) {
+                rewardMicrochipPreview.innerHTML = getMicrochipCardMarkup(createMicrochipInstance(rewardMicrochip.chipId, rewardMicrochip));
+                renderMicrochipCardPartVisuals(rewardMicrochipPreview);
+            } else if (rewardMicrochipPreview) rewardMicrochipPreview.innerHTML = '';
             const adventureDropsBox = document.getElementById('winnerAnnouncementAdventureDrops');
             const showAdventureDrops = adventureBattleMode && adventureBattleRewardDrops.length;
             if (adventureDropsBox) adventureDropsBox.style.display = showAdventureDrops ? 'block' : 'none';
@@ -5566,7 +6136,7 @@ const parts = {
                 requestAnimationFrame(() => winnerScreen.classList.add('visible'));
             });
         }
-        function showBattleResultSequence(won, finalMatch, title, continueAction, backAction, roundScore, showWinnerScreen = true, rewardAmount = 0, rewardGemAmount = 0, rewardChestId = null, defeatedBeyOverride = null) {
+        function showBattleResultSequence(won, finalMatch, title, continueAction, backAction, roundScore, showWinnerScreen = true, rewardAmount = 0, rewardGemAmount = 0, rewardChestId = null, defeatedBeyOverride = null, rewardMicrochip = null) {
             const announcement = document.getElementById('battleResultAnnouncement');
             const announcementPanel = announcement ? announcement.querySelector('.battle-result-announcement-panel') : null;
             const announcementText = document.getElementById('battleResultAnnouncementText');
@@ -5591,7 +6161,7 @@ const parts = {
                 announcement.classList.remove('active');
                 announcement.onclick = null;
                 if (showWinnerScreen) {
-                    showWinnerAnnouncement(title, won, finalMatch, continueAction, backAction, roundScore, rewardAmount, rewardGemAmount, rewardChestId);
+                    showWinnerAnnouncement(title, won, finalMatch, continueAction, backAction, roundScore, rewardAmount, rewardGemAmount, rewardChestId, rewardMicrochip);
                 } else {
                     announcement.classList.remove('active');
                 }
@@ -6663,6 +7233,7 @@ const parts = {
             }
             document.getElementById('towerDetailReward').textContent = String(getAdventureEnemyReward(node));
             document.getElementById('towerDetailChestRewardEntry')?.style.setProperty('display', 'none');
+            document.getElementById('towerDetailMicrochipRewardEntry')?.style.setProperty('display', 'none');
             document.getElementById('towerDetailGemRewardEntry')?.style.setProperty('display', 'none');
             const battle = document.getElementById('towerDetailBattle');
             battle.disabled = false;
@@ -7359,7 +7930,7 @@ const parts = {
             const reward = won ? getTowerReward(towerActiveFloor) : 0;
             const firstClearGemReward = won && !towerFirstClearGems[towerActiveFloor] ? TOWER_FIRST_CLEAR_GEMS : 0;
             const partDrop = won ? getTowerPartDrop(towerActiveFloor) : null;
-            const chestDrop = won ? getTowerChestDrop(towerActiveFloor) : null;
+            const microchipDrop = won ? getTowerMicrochipDrop(towerActiveFloor) : null;
             if (won) {
                 addCurrency('gold', reward);
                 if (firstClearGemReward > 0) {
@@ -7367,10 +7938,7 @@ const parts = {
                     towerFirstClearGems[towerActiveFloor] = true;
                 }
                 if (partDrop) addPartAmount(partDrop.partId, partDrop.amount);
-                if (chestDrop) {
-                    addChestToInventory(chestDrop);
-                    if (towerActiveFloor >= 801 && towerActiveFloor <= TOWER_MAX_FLOOR) towerFirstClearChests[towerActiveFloor] = true;
-                }
+                if (microchipDrop) addTowerMicrochipDrop(microchipDrop);
                 towerUnlockedFloor = Math.max(towerUnlockedFloor, Math.min(TOWER_MAX_FLOOR, towerActiveFloor + 1));
                 towerCurrentFloor = Math.min(TOWER_MAX_FLOOR, towerActiveFloor + 1);
                 setTowerStatus(`Floor ${towerActiveFloor} cleared! +${reward} Gold.`, '#7dff9b');
@@ -7380,7 +7948,7 @@ const parts = {
             updateCurrencyUI(); renderTowerFloors();
             if (won && typeof manualSaveGame === 'function') manualSaveGame();
             if (won) syncTowerRankingProgress(towerActiveFloor);
-            showBattleResultSequence(won, true, won ? 'VICTORY' : 'DEFEATED', null, () => returnFromFinalBattle({ returnScreen: 'towerScreen' }), won ? '1:0' : '0:1', true, reward, firstClearGemReward, chestDrop);
+            showBattleResultSequence(won, true, won ? 'VICTORY' : 'DEFEATED', null, () => returnFromFinalBattle({ returnScreen: 'towerScreen' }), won ? '1:0' : '0:1', true, reward, firstClearGemReward, null, null, microchipDrop);
         }
         function handleStandardBattleEnd() {
             const context = threeBeybladeSelectContext;
@@ -7411,7 +7979,20 @@ const parts = {
             if (won) {
                 showBattleResultSequence(true, false, 'ROUND WIN', () => {
                     resetArenaBattle();
-                    openAllOrNothingRewardDetails();
+                    if (bossBattleNumber >= ALL_OR_NOTHING_MAX_ROUNDS) {
+                        markAllOrNothingBossCompletedToday();
+                        const finalReward = Math.max(0, Number(bossCurrentReward) || 0);
+                        addCurrency('gold', finalReward);
+                        if (typeof manualSaveGame === 'function') manualSaveGame();
+                        bossCurrentReward = 50000;
+                        bossNextReward = 100000;
+                        bossBattleNumber = 1;
+                        showWinnerAnnouncement('VICTORY', true, true, null, () => {
+                            openAllOrNothingLobby();
+                        }, '1:0', finalReward, 0, null);
+                    } else {
+                        openAllOrNothingRewardDetails();
+                    }
                 }, null, '1:0', true, 0, 0, null, bey2);
             } else {
                 markAllOrNothingBossCompletedToday();
@@ -7481,7 +8062,7 @@ const parts = {
                 if (record) openThreeBeybladeSelect({ mode: 'championship', returnScreen: 'challengeChampionshipScreen', rankerUid: record.uid, enemyLoadouts: (record.loadouts || []).map(normalizeRankerLoadout).filter(Boolean) });
                 return;
             }
-            if (preview) { const floor = Number(preview.dataset.towerFloor); if (floor <= towerUnlockedFloor) openTowerEnemyDetails(floor); }
+            if (preview) { const floor = Number(preview.dataset.towerFloor); if (floor >= 1 && floor <= TOWER_MAX_FLOOR) openTowerEnemyDetails(floor); }
         });
         document.getElementById('towerDetailClose').addEventListener('click', closeTowerDetails);
         document.getElementById('towerDetailModal').addEventListener('click', e => { if (e.target.id === 'towerDetailModal' && !e.currentTarget.classList.contains('boss-detail-layer')) closeTowerDetails(); });
@@ -7891,7 +8472,8 @@ const parts = {
                 loadouts[index] = {
                     battle_cap: row.battle_cap_id ? { id: String(row.battle_cap_id), level: Number(row.battle_cap_level) || 1 } : null,
                     weight_ring: row.weight_ring_id ? { id: String(row.weight_ring_id), level: Number(row.weight_ring_level) || 1 } : null,
-                    driver: row.driver_id ? { id: String(row.driver_id), level: Number(row.driver_level) || 1 } : null
+                    driver: row.driver_id ? { id: String(row.driver_id), level: Number(row.driver_level) || 1 } : null,
+                    microchips: row.microchips && typeof row.microchips === 'object' ? row.microchips : {}
                 };
                 loadoutsByUid.set(uid, loadouts);
             });
@@ -7924,7 +8506,7 @@ const parts = {
                 try {
                     const [playerRows, loadoutRows] = await Promise.all([
                         fetchSupabaseChampionshipJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.playersUrl}?select=uid,player_name,total_wins,combat_power` , { headers: getSupabaseChampionshipHeaders() }),
-                        fetchSupabaseChampionshipJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.loadoutsUrl}?select=player_uid,loadout_index,battle_cap_id,battle_cap_level,weight_ring_id,weight_ring_level,driver_id,driver_level` , { headers: getSupabaseChampionshipHeaders() })
+                        fetchSupabaseChampionshipJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.loadoutsUrl}?select=player_uid,loadout_index,battle_cap_id,battle_cap_level,weight_ring_id,weight_ring_level,driver_id,driver_level,microchips` , { headers: getSupabaseChampionshipHeaders() })
                     ]);
                     const onlineRecords = normalizeSupabaseRankerData(playerRows, loadoutRows);
                     if (!onlineRecords.length) throw new Error('No player records were returned.');
@@ -7948,11 +8530,19 @@ const parts = {
             return championshipFetchPromise;
         }
 
+        function getMicrochipSnapshotForPart(part) {
+            if (!part) return {};
+            const slots = getMicrochipDataForPart(part) || ensureMicrochipSlots(part.id);
+            return Object.fromEntries(Object.entries(slots).map(([slot, uid]) => { const instance = typeof uid === 'string' ? getMicrochipInstance(uid) : uid; return [slot, instance ? { uid: instance.uid, chipId: instance.chipId, level: instance.level, stars: instance.stars, experience: instance.experience } : null]; }));
+        }
+        function getMicrochipSnapshotForLoadout(loadout) { return { battleCap: getMicrochipSnapshotForPart(loadout?.battleCap), weightRing: getMicrochipSnapshotForPart(loadout?.weightRing), driver: getMicrochipSnapshotForPart(loadout?.driver) }; }
+        function attachRemoteMicrochips(part, snapshot) { return part ? { ...part, __microchips: snapshot || {} } : null; }
         function getPlayerRankerLoadouts() {
             return playerLoadouts.map(loadout => ({
                 battle_cap: loadout && loadout.battleCap ? { id: loadout.battleCap.id, level: getPartLevel(loadout.battleCap) } : null,
                 weight_ring: loadout && loadout.weightRing ? { id: loadout.weightRing.id, level: getPartLevel(loadout.weightRing) } : null,
-                driver: loadout && loadout.driver ? { id: loadout.driver.id, level: getPartLevel(loadout.driver) } : null
+                driver: loadout && loadout.driver ? { id: loadout.driver.id, level: getPartLevel(loadout.driver) } : null,
+                microchips: getMicrochipSnapshotForLoadout(loadout)
             }));
         }
 
@@ -7987,6 +8577,7 @@ const parts = {
                     weight_ring_level: loadout.weight_ring ? loadout.weight_ring.level : 1,
                     driver_id: loadout.driver ? loadout.driver.id : null,
                     driver_level: loadout.driver ? loadout.driver.level : 1,
+                    microchips: loadout.microchips || {},
                     updated_at: now
                 }));
                 await fetchSupabaseChampionshipJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.loadoutsUrl}?on_conflict=player_uid%2Cloadout_index`, {
@@ -8040,9 +8631,9 @@ const parts = {
             const weightRing = findChampionshipPart(ring && ring.id);
             const driverPart = findChampionshipPart(driver && driver.id);
             return {
-                battleCap: battleCap ? { ...battleCap, __rankerLevel: Math.max(1, Math.min(15, Number(cap.__rankerLevel || cap.level) || 1)) } : null,
-                weightRing: weightRing ? { ...weightRing, __rankerLevel: Math.max(1, Math.min(15, Number(ring.__rankerLevel || ring.level) || 1)) } : null,
-                driver: driverPart ? { ...driverPart, __rankerLevel: Math.max(1, Math.min(15, Number(driver.__rankerLevel || driver.level) || 1)) } : null
+                battleCap: battleCap ? { ...battleCap, __rankerLevel: Math.max(1, Math.min(15, Number(cap.__rankerLevel || cap.level) || 1)), __microchips: rawLoadout.microchips?.battleCap || {} } : null,
+                weightRing: weightRing ? { ...weightRing, __rankerLevel: Math.max(1, Math.min(15, Number(ring.__rankerLevel || ring.level) || 1)), __microchips: rawLoadout.microchips?.weightRing || {} } : null,
+                driver: driverPart ? { ...driverPart, __rankerLevel: Math.max(1, Math.min(15, Number(driver.__rankerLevel || driver.level) || 1)), __microchips: rawLoadout.microchips?.driver || {} } : null
             };
         }
         function getRankerLoadoutCombatPower(loadout) {
@@ -8060,7 +8651,8 @@ const parts = {
             const playerRankerLoadouts = playerLoadouts.map(loadout => ({
                 battle_cap: loadout && loadout.battleCap ? { id: loadout.battleCap.id, level: partUpgradeLevels[loadout.battleCap.id] || 1 } : null,
                 weight_ring: loadout && loadout.weightRing ? { id: loadout.weightRing.id, level: partUpgradeLevels[loadout.weightRing.id] || 1 } : null,
-                driver: loadout && loadout.driver ? { id: loadout.driver.id, level: partUpgradeLevels[loadout.driver.id] || 1 } : null
+                driver: loadout && loadout.driver ? { id: loadout.driver.id, level: partUpgradeLevels[loadout.driver.id] || 1 } : null,
+                microchips: getMicrochipSnapshotForLoadout(loadout)
             }));
             const localPlayerRecord = { uid: playerUid, player_name: playerName || 'Player', loadouts: playerRankerLoadouts, total_wins: playerChampionshipWins, isPlayer: true };
             const populated = championshipRankerData
@@ -8311,6 +8903,7 @@ const parts = {
         ];
         // All or Nothing daily boss limit. Set to true to restore one-clear-per-boss-per-day.
         const ALL_OR_NOTHING_DAILY_LIMIT_ENABLED = true;
+        const ALL_OR_NOTHING_MAX_ROUNDS = 12;
         let allOrNothingBossDailyState = { dayKey: '', completed: {} };
         function normalizeAllOrNothingBossDailyState() {
             const todayKey = getChampionshipDayKey(getTrustedDate());
@@ -8441,6 +9034,7 @@ const parts = {
             document.getElementById('towerDetailReward').textContent = bossCurrentReward.toLocaleString();
             document.getElementById('towerDetailGemRewardEntry')?.style.setProperty('display', 'none');
             document.getElementById('towerDetailChestRewardEntry')?.style.setProperty('display', 'none');
+            document.getElementById('towerDetailMicrochipRewardEntry')?.style.setProperty('display', 'none');
             const battle = document.getElementById('towerDetailBattle');
             battle.disabled = false;
             battle.style.display = 'block';
@@ -8491,13 +9085,15 @@ const parts = {
         function startBossModeBattle(context) {
             if (!context || context.mode !== 'boss') return;
             const contextBossIndex = Math.max(0, Math.min(allOrNothingBosses.length - 1, Number(context.bossIndex) || 0));
-            if (isAllOrNothingBossCompletedToday(allOrNothingBosses[contextBossIndex])) {
+            const contextBattleNumber = Math.max(1, Number(context.bossBattleNumber) || Number(bossBattleNumber) || 1);
+            if (contextBattleNumber === 1 && isAllOrNothingBossCompletedToday(allOrNothingBosses[contextBossIndex])) {
                 openAllOrNothingLobby();
                 return;
             }
             const playerTeam = Array.isArray(context.selectedPlayer) ? context.selectedPlayer.slice(0, 3) : playerLoadouts.slice(0, 3);
             const bossLoadout = Array.isArray(context.selectedEnemy) ? context.selectedEnemy[0] : (context.selectedEnemy || getBossModeTestEnemyLoadout());
             if (playerTeam.length < 3 || !bossLoadout) return;
+            if (contextBattleNumber === 1) markAllOrNothingBossCompletedToday(allOrNothingBosses[contextBossIndex]);
             const bossStatMultiplier = getAllOrNothingBossStatMultiplier(context.bossBattleNumber || bossBattleNumber);
             if (bossStartTimer) clearTimeout(bossStartTimer);
             resetArenaBattle();
@@ -10658,7 +11254,7 @@ arena_7: './arena_7.mp3'
                 this.maxRpm = 3000;
                 this.rpm = this.maxRpm;
 
-                this.ultimateGauge = 0;
+                this.ultimateGauge = getMicrochipEffectTotal(this, 'startingGaugePoints');
                 this.aiolosArrowPending = false;
                 this.aiolosArrowFollowUpTimer = 0;
                 this.aiolosImpactArrowQueue = 0;
@@ -10877,7 +11473,11 @@ arena_7: './arena_7.mp3'
                 if (!this.upgradeLevels) return getEffectivePartStats(part);
                 const level = Math.max(1, Math.min(15, Number(this.upgradeLevels[part.id] || 1)));
                 const multiplier = Math.pow(1.10, level - 1);
-                return { ...part, atk: Math.round((Number(part.atk) || 0) * multiplier), def: Math.round((Number(part.def) || 0) * multiplier), health: Math.round((Number(part.health) || 0) * multiplier), stamina: Number(part.stamina) || 0, weight: Number(part.weight) || 0, interval: Number(part.interval) || 0 };
+                const bonuses = getMicrochipBonuses(part);
+                const baseAtk = (Number(part.atk) || 0) * multiplier;
+                const baseDef = (Number(part.def) || 0) * multiplier;
+                const baseHealth = (Number(part.health) || 0) * multiplier;
+                return { ...part, atk: Math.round(baseAtk * (1 + bonuses.attackPercent) + bonuses.flatAttack), def: Math.round(baseDef * (1 + bonuses.defensePercent) + bonuses.flatDefense), health: Math.round(baseHealth * (1 + bonuses.healthPercent) + bonuses.flatHealth), stamina: Number(part.stamina) || 0, weight: Number(part.weight) || 0, interval: Number(part.interval) || 0 };
             }
             calculateStats() {
                 const s = { atk: 0, def: 0, health: 0, stamina: 0, weight: 0, interval: 0 };
@@ -11097,7 +11697,9 @@ arena_7: './arena_7.mp3'
                 const duration = Math.max(0, Number(baseDuration) || 0);
                 const sourceEffects = inflictor && typeof inflictor.getAllEffects === 'function' ? inflictor.getAllEffects() : [];
                 const extension = sourceEffects.find(eff => eff.type === 'curse_duration_extension');
-                return Math.round(duration * (extension ? (Number(extension.multiplier) || 2.0) : 1));
+                const extensionMultiplier = extension ? (Number(extension.multiplier) || 2.0) : 1;
+                const antibodyReduction = Math.min(1, Math.max(0, getMicrochipEffectTotal(this, 'ailmentDurationReductionPercent')));
+                return Math.round(duration * extensionMultiplier * (1 - antibodyReduction));
             }
             getBreakDuration(baseDuration, inflictor = this) {
                 const duration = this.getAilmentDuration(baseDuration, inflictor);
@@ -11122,7 +11724,7 @@ arena_7: './arena_7.mp3'
                 const effects = this.getAllEffects();
                 effects.forEach((eff, idx) => {
                     if (eff.trigger === 'battle_start' && eff.type === 'shield') {
-                        let shieldVal = this.stats[eff.scaleStat] * eff.scaleFactor;
+                        let shieldVal = this.stats[eff.scaleStat] * eff.scaleFactor * (1 + getMicrochipEffectTotal(this, 'shieldReceivedPercent'));
                         this.shield = shieldVal;
                         this.maxShield = shieldVal;
                         this.shieldTimer = eff.duration;
@@ -11169,7 +11771,7 @@ arena_7: './arena_7.mp3'
                 this.health = this.maxHealth;
                 this.hyperspaceCycleTimer = getPartsSkillCooldownFrames(360, this);
                 this.rpm = this.maxRpm;
-                this.ultimateGauge = 0;
+                this.ultimateGauge = getMicrochipEffectTotal(this, 'startingGaugePoints');
                 this.libraUltimateReductionStacks = 0;
                 this.thetisBulletTimeActive = false;
                 this.thetisBulletTimeTimer = 0;
@@ -11517,7 +12119,7 @@ arena_7: './arena_7.mp3'
                 this.health = this.maxHealth;
                 this.hyperspaceCycleTimer = getPartsSkillCooldownFrames(360, this);
                 this.rpm = this.maxRpm;
-                this.ultimateGauge = 0;
+                this.ultimateGauge = getMicrochipEffectTotal(this, 'startingGaugePoints');
                 this.aiolosArrowPending = false;
                 this.aiolosArrowFollowUpTimer = 0;
                 this.aiolosImpactArrowQueue = 0;
@@ -11608,6 +12210,7 @@ arena_7: './arena_7.mp3'
             applyHeal(amount) {
                 if (this.dead || this.health >= this.maxHealth) return;
                 let healingAmount = Math.max(0, Number(amount) || 0);
+                healingAmount *= 1 + getMicrochipEffectTotal(this, 'healingReceivedPercent');
                 const angelEffect = this.getAllEffects().find(eff => eff.type === 'angel_lost_hp_scaling');
                 if (angelEffect && this.maxHealth > 0) {
                     const lostHpRatio = Math.max(0, Math.min(1, (this.maxHealth - this.health) / this.maxHealth));
@@ -11926,7 +12529,7 @@ arena_7: './arena_7.mp3'
                     this.registerLibraUltimateUnleashed();
                     const blessEffect = this.getAllEffects().find(eff => eff.type === 'bless_ultimate_shield' && eff.trigger === 'ultimate_unleashed');
                     if (blessEffect) {
-                        const shieldAmount = this.stats.atk * (Number(blessEffect.attackRatio) || 0.80);
+                        const shieldAmount = this.stats.atk * (Number(blessEffect.attackRatio) || 0.80) * (1 + getMicrochipEffectTotal(this, 'shieldReceivedPercent'));
                         if (shieldAmount > 0) {
                             this.shield = Math.max(this.shield, shieldAmount);
                             this.maxShield = Math.max(this.maxShield, shieldAmount);
@@ -12256,7 +12859,7 @@ arena_7: './arena_7.mp3'
                         });
                     }                     else if (this.parts.battleCap.id === 'bc_atlas') {
                         let lostHp = this.maxHealth - this.health;
-                        let shieldAmt = lostHp * 1.0;
+                        let shieldAmt = lostHp * 1.0 * (1 + getMicrochipEffectTotal(this, 'shieldReceivedPercent'));
                         this.shield = Math.max(this.shield, shieldAmt);
                         this.maxShield = this.shield;
                         this.shieldTimer = 360; // 6 seconds duration
@@ -14204,6 +14807,9 @@ ctx.fill();
                     this.autoGaugeTickTimer = 0;
                     if (!this.deathKnightRevelationActive) {
                     let addAmount = 1;
+                    addAmount *= 1 + getMicrochipEffectTotal(this, 'automaticGaugePercent');
+                    const enemyRestrainReduction = getCombatBeys().filter(enemy => enemy && !enemy.dead && enemy.side !== this.side).reduce((total, enemy) => total + getMicrochipEffectTotal(enemy, 'enemyAutomaticGaugePercent'), 0);
+                    addAmount *= Math.max(0.01, 1 - enemyRestrainReduction);
                     if (this.isLurkLocked()) {
                         addAmount *= 2.0;
                     }
@@ -14251,6 +14857,9 @@ ctx.fill();
                     const catalyzeEffect = this.getAllEffects().find(eff => eff.type === 'catalyze_break');
                     if (catalyzeEffect && target && !target.dead && target.breakTimer > 0) {
                         addAmount *= 1 + (Number(catalyzeEffect.chargeMultiplierPerBrokenEnemy) || 0.50);
+                    }
+                    if (this.rpm <= 0) {
+                        addAmount *= 0.50; // At 0 RPM: automatic Ultimate charging rate is reduced by 50%.
                     }
                     this.gainUltimateCharge(addAmount);
                     if (!isPlayerBey && debugOverrides.enemyUltimateAlwaysEmpty) this.ultimateGauge = 0;
@@ -14557,7 +15166,7 @@ ctx.fill();
                         this.pietyTimer -= gameSpeed;
                         if (this.pietyTimer <= 0) {
                             this.pietyTimer = getPartsSkillCooldownFrames(eff.interval, this);
-                            let shieldVal = this.stats[eff.scaleStat] * eff.scaleFactor;
+                            let shieldVal = this.stats[eff.scaleStat] * eff.scaleFactor * (1 + getMicrochipEffectTotal(this, 'shieldReceivedPercent'));
                             this.shield = Math.max(this.shield, shieldVal);
                             this.maxShield = Math.max(this.maxShield, this.shield);
                             this.shieldTimer = Math.max(this.shieldTimer, eff.duration);
@@ -14825,7 +15434,7 @@ ctx.fill();
                 }
                 if (this.side === 'left') updateSkillHexagons();
                 if (!target.dead) {
-                    const chronosRpmStopped = chronosTimeStopFrames > 0 && this === chronosTimeStopOwner;
+                    const chronosRpmStopped = isChronosStaminaProtectedEntity(this);
                     const staminaFactor = Math.max(20, this.stats.stamina);
                     let drainMult = 1.0;
                     const rpmDrainRate = chronosRpmStopped || this.iltheusUltimateActive ? 0 : (100 / staminaFactor) * drainMult * gameSpeed;
@@ -15101,7 +15710,11 @@ ctx.fill();
                                 this.aliceImpactAuraTimer = Math.max(1, Number(aliceIntervalEffect.auraDuration) || 18);
                                 const aliceSpecialEffectMultiplier = 1 + 0.25 * Math.max(0, this.aliceSpecialEffectStacks || 0);
                                 const healAmount = Math.max(0, this.stats.atk * (Number(aliceIntervalEffect.healAttackRatio) || 0.50) * aliceSpecialEffectMultiplier);
-                                if (healAmount > 0) this.applyHeal(healAmount);
+                                if (healAmount > 0) {
+                                    getLivingCombatTeam(this).forEach(ally => {
+                                        if (ally && !ally.dead) ally.applyHeal(healAmount);
+                                    });
+                                }
                                 this.gainUltimateCharge((Number(aliceIntervalEffect.gaugeGain) || 20) * aliceSpecialEffectMultiplier);
                                 if (this.side === 'left') updateSkillHexagons();
                             } else {
@@ -15168,7 +15781,7 @@ ctx.fill();
                             || (previousDistanceFromCenter > ARENA_INNER_RADIUS && currentDistanceFromCenter <= ARENA_INNER_RADIUS);
                         const colorfulCooldown = Number(this.effectCooldowns[colorfulEffectIndex] || 0);
                         if (crossedInnerOuterBoundary && colorfulCooldown <= 0) {
-                            const shieldAmount = this.stats.def * (Number(colorfulEffect.defenseRatio) || 6.00);
+                            const shieldAmount = this.stats.def * (Number(colorfulEffect.defenseRatio) || 6.00) * (1 + getMicrochipEffectTotal(this, 'shieldReceivedPercent'));
                             if (shieldAmount > 0) {
                                 this.shield = Math.max(this.shield, shieldAmount);
                                 this.maxShield = Math.max(this.maxShield, shieldAmount);
@@ -15416,7 +16029,7 @@ ctx.fill();
                     const enlightenEffect = this.getAllEffects().find(eff => eff.type === 'enlighten_block_shield' && eff.trigger === 'block_occurred');
                     if (enlightenEffect) {
                         const lostHp = Math.max(0, this.maxHealth - this.health);
-                        const shieldAmount = lostHp * (Number(enlightenEffect.lostHpRatio) || 0.30);
+                        const shieldAmount = lostHp * (Number(enlightenEffect.lostHpRatio) || 0.30) * (1 + getMicrochipEffectTotal(this, 'shieldReceivedPercent'));
                         if (shieldAmount > 0) {
                             this.shield = Math.max(this.shield, shieldAmount);
                             this.maxShield = Math.max(this.maxShield, shieldAmount);
@@ -15442,8 +16055,9 @@ ctx.fill();
                         addAilmentText(this.x, this.y, "IMPACT", '#000000', '#ffffff');
                     }
 
-                    // Shock driver: inflict Break ailment to opponent upon successful block
-                    if (this.parts.driver && this.parts.driver.id === 'drv_shock') {
+                    // Shock driver: 50% chance to inflict Break on the opponent after a successful block.
+                    const shockEffect = this.getAllEffects().find(eff => eff.type === 'shock_break' && eff.trigger === 'block_occurred');
+                    if (this.parts.driver && this.parts.driver.id === 'drv_shock' && shockEffect && Math.random() < (Number(shockEffect.chance) || 0.50)) {
                         const opponent = getUltimateEnemyTarget(this);
                         if (opponent && !opponent.dead) {
                             opponent.breakTimer = opponent.getBreakDuration(240, this); // 4s base duration, modified by Catalyze
@@ -15469,6 +16083,7 @@ ctx.fill();
                     this.updateUI();
                     // Blocker gains +20 Ultimate gauge on successful block.
                     let blockerGaugeGain = 20;
+                    blockerGaugeGain *= (1 + Math.max(0, getMicrochipEffectTotal(this, 'blockGaugeGainPercent')));
                     this.gainUltimateCharge(blockerGaugeGain);
 
                     let gaugeGain = 0;
@@ -15495,6 +16110,17 @@ ctx.fill();
                     : this.getAllEffects().find(eff => eff.type === 'shatter_freeze_damage' && eff.trigger === 'damage_dealt');
                 if (shatterEffect && wasFrozen && amount > 0) {
                     amount *= Number(shatterEffect.damageMultiplier) || 2.0;
+                }
+                // Radiation and Interference affect skill/special damage, but not
+                // small normal Bey-to-Bey collision damage. The existing flag is
+                // passed by the collision resolver for that ordinary collision.
+                if (!isNormalCollisionDamage && amount > 0) {
+                    if (attacker && attacker !== this) {
+                        const dealtBonus = Math.max(0, getMicrochipEffectTotal(attacker, 'skillDamageDealtPercent'));
+                        if (dealtBonus > 0) amount *= (1 + dealtBonus);
+                    }
+                    const takenReduction = Math.min(1, Math.max(0, getMicrochipEffectTotal(this, 'skillDamageTakenPercent')));
+                    if (takenReduction > 0) amount *= (1 - takenReduction);
                 }
                 if (isProjectileHit && attacker && attacker !== this) {
                     const flameEffect = this.getAllEffects().find(eff => eff.type === 'flame_projectile_damage_taken' && eff.trigger === 'projectile_damage_received');
@@ -15536,7 +16162,7 @@ ctx.fill();
                 }
 
                 if (this.rpm <= 0) {
-                    amount *= 2.0;
+                    amount *= 5.0;
                 }
 
                 if (amount <= 0) return;
@@ -15733,6 +16359,9 @@ ctx.fill();
             return !!(chronosTimeStopFrames > 0 && chronosTimeStopOwner && entity &&
                 entity !== chronosTimeStopOwner && entity !== chronosTimeStopProtected &&
                 entity.side !== chronosTimeStopOwner.side && !alliedNilthotepEntity);
+        }
+        function isChronosStaminaProtectedEntity(entity) {
+            return !!(chronosTimeStopFrames > 0 && chronosTimeStopOwner && entity && entity.side === chronosTimeStopOwner.side);
         }
 
         function dismissPuppeteerPuppet(owner = null, specificPuppet = null) {
@@ -16741,7 +17370,7 @@ ctx.fill();
                     if (collector) {
                         // The caster and allies get 4x; an enemy collector gets the base 1x amount.
                         const casterPickupMultiplier = collector.side === c.caster.side ? 4.0 : 1.0;
-                        const shieldAmount = collector.stats.atk * (Number(c.shieldAttackRatio) || 0.20) * casterPickupMultiplier;
+                        const shieldAmount = collector.stats.atk * (Number(c.shieldAttackRatio) || 0.20) * casterPickupMultiplier * (1 + getMicrochipEffectTotal(collector, 'shieldReceivedPercent'));
                         const healAmount = collector.stats.atk * (Number(c.healAttackRatio) || 0.20) * casterPickupMultiplier;
                         collector.shield = Math.max(collector.shield || 0, shieldAmount);
                         collector.maxShield = Math.max(collector.maxShield || 0, shieldAmount);
@@ -19872,9 +20501,388 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         const modalStatsGrid = document.getElementById('modalStatsGrid');
         const modalEquipBtn = document.getElementById('modalEquipBtn');
         const upgradePartBtn = document.getElementById('upgradePartBtn');
-                const upgradeInfo = document.getElementById('upgradeInfo');
+        const upgradeInfo = document.getElementById('upgradeInfo');
         const modalContentTabs = document.querySelectorAll('.modal-content-tab');
         const modalTabPanels = document.querySelectorAll('.modal-tab-panel');
+        let microchipInventoryCategory = 'All';
+        let microchipInventoryTarget = null;
+        function microchipCategoryClass(category) { return String(category || '').toLowerCase(); }
+        function getMicrochipPartName(partId) {
+            const found = Object.values(PARTS).flatMap(parts => parts || []).find(part => part && part.id === partId);
+            return found ? found.name : 'another Part';
+        }
+        function getMicrochipEffectStat(chip) { return chip?.effect === 'impactIntervalPercent' ? 'Impact CD' : chip?.effect === 'skillCooldownPercent' ? 'Skill CD' : chip?.effect === 'healingReceivedPercent' ? 'Recovery' : chip?.effect === 'automaticGaugePercent' ? 'Charge' : chip?.effect === 'startingGaugePoints' ? 'Landing Charge' : chip?.effect === 'enemyAutomaticGaugePercent' ? 'Enemy Charge' : chip?.effect === 'shieldReceivedPercent' ? 'Shield' : chip?.effect === 'skillDamageDealtPercent' ? 'Skill Damage' : chip?.effect === 'skillDamageTakenPercent' ? 'Skill Damage Taken' : chip?.effect === 'ailmentDurationReductionPercent' ? 'Debuff Duration' : chip?.effect === 'blockGaugeGainPercent' ? 'Block Charge' : chip?.category === 'Attack' ? 'Attack' : chip?.category === 'Defense' ? 'Defense' : 'HP'; }
+        function findMicrochipEquipments(chipIdOrUid) {
+            const instance = getMicrochipInstance(chipIdOrUid);
+            const found = [];
+            if (!instance) return found;
+            Object.entries(microchipSlotsByPart).forEach(([partId, slots]) => Object.entries(slots || {}).forEach(([slot, equippedId]) => { if (equippedId === instance.uid) found.push({ partId, slot }); }));
+            return found;
+        }
+        function renderMicrochipPanel(part) {
+            const layout = document.getElementById('microchipLayout');
+            if (!layout || !part) return;
+            const slots = ensureMicrochipSlots(part.id);
+            const slotDefinitions = getMicrochipSlotDefinitions(part);
+            const partUnlocked = isPartAcquired(part);
+            const chips = Object.values(slots).map(uid => { const instance = getMicrochipInstance(uid); return instance ? MICROCHIP_DATABASE.find(chip => chip.id === instance.chipId) : null; }).filter(Boolean);
+            const bonus = getMicrochipBonuses(part);
+            const bonusLines = [];
+            if (bonus.flatAttack) bonusLines.push(`Attack +${formatMicrochipNumber(bonus.flatAttack)}`);
+            if (bonus.attackPercent) bonusLines.push(`Attack +${(bonus.attackPercent * 100).toFixed(1)}%`);
+            if (bonus.flatDefense) bonusLines.push(`Defense +${formatMicrochipNumber(bonus.flatDefense)}`);
+            if (bonus.defensePercent) bonusLines.push(`Defense +${(bonus.defensePercent * 100).toFixed(1)}%`);
+            if (bonus.flatHealth) bonusLines.push(`HP +${formatMicrochipNumber(bonus.flatHealth)}`);
+            if (bonus.healthPercent) bonusLines.push(`HP +${(bonus.healthPercent * 100).toFixed(1)}%`);
+            if (bonus.impactIntervalPercent) bonusLines.push(`Impact CD -${(bonus.impactIntervalPercent * 100).toFixed(1)}%`);
+            if (bonus.skillCooldownPercent) bonusLines.push(`Skill CD -${(bonus.skillCooldownPercent * 100).toFixed(1)}%`);
+            if (bonus.healingReceivedPercent) bonusLines.push(`Recovery +${(bonus.healingReceivedPercent * 100).toFixed(1)}%`);
+            if (bonus.automaticGaugePercent) bonusLines.push(`Charge +${(bonus.automaticGaugePercent * 100).toFixed(1)}%`);
+            if (bonus.startingGaugePoints) bonusLines.push(`Landing Charge +${formatMicrochipNumber(bonus.startingGaugePoints)}%`);
+            if (bonus.enemyAutomaticGaugePercent) bonusLines.push(`Enemy Charge -${(bonus.enemyAutomaticGaugePercent * 100).toFixed(1)}%`);
+            if (bonus.shieldReceivedPercent) bonusLines.push(`Shield +${(bonus.shieldReceivedPercent * 100).toFixed(1)}%`);
+            if (bonus.skillDamageDealtPercent) bonusLines.push(`Skill Damage +${(bonus.skillDamageDealtPercent * 100).toFixed(1)}%`);
+            if (bonus.skillDamageTakenPercent) bonusLines.push(`Skill Damage Taken -${(bonus.skillDamageTakenPercent * 100).toFixed(1)}%`);
+            if (bonus.ailmentDurationReductionPercent) bonusLines.push(`Debuff duration -${(bonus.ailmentDurationReductionPercent * 100).toFixed(1)}%`);
+            if (bonus.blockGaugeGainPercent) bonusLines.push(`Block Charge +${(bonus.blockGaugeGainPercent * 100).toFixed(1)}%`);
+            const summary = `<div class="microchip-bonus-summary">${bonusLines.length ? bonusLines.map(line => `<div class="microchip-bonus-line">${line}</div>`).join('') : '<div class="microchip-bonus-line">No embedded microchips</div>'}</div>`;
+            layout.innerHTML = slotDefinitions.map(definition => {
+                const instance = slots[definition.key] ? getMicrochipInstance(slots[definition.key]) : null;
+                const chip = instance ? MICROCHIP_DATABASE.find(candidate => candidate.id === instance.chipId) : null;
+                const unavailable = !!definition.disabled;
+                const locked = !unavailable && !!definition.locked;
+                const slotClass = unavailable ? 'disabled' : (locked ? 'empty locked' : (chip ? '' : 'empty'));
+                const slotText = unavailable
+                    ? '<span class="microchip-slot-label">DISABLED</span>'
+                    : locked
+                        ? `<span class="microchip-slot-label microchip-slot-unlock-label">Lv.${definition.unlockLevel} Unlock</span>`
+                        : chip
+                            ? `<span class="microchip-slot-level">Lv. ${getMicrochipLevel(instance)}</span><span class="microchip-slot-name">${chip.name}</span>${getMicrochipStarsMarkup(instance)}`
+                            : '<span class="microchip-slot-label">EMPTY</span>';
+                const blocked = unavailable || locked || !partUnlocked;
+                return `<button type="button" class="microchip-slot ${definition.category} ${slotClass}" data-microchip-slot="${definition.key}" data-microchip-slot-blocked="${blocked ? 'true' : 'false'}"${blocked ? ' aria-disabled="true"' : ''}>${slotText}</button>`;
+            }).join('') + '<div class="microchip-center-stack">' + summary + `<button id="microchipManageButton" class="microchip-manage-button" type="button"${partUnlocked ? '' : ' aria-disabled="true"'}>Manage</button></div>`;
+            layout.querySelectorAll('[data-microchip-slot]').forEach(button => button.addEventListener('click', () => {
+                if (button.disabled || button.dataset.microchipSlotBlocked === 'true' || !partUnlocked) return;
+                playGameSfx(MENU_SFX_CLICK_GEAR);
+                microchipInventoryTarget = { partId: part.id, slot: button.dataset.microchipSlot };
+                const selectedSlotDefinition = slotDefinitions.find(definition => definition.key === button.dataset.microchipSlot);
+                microchipInventoryCategory = selectedSlotDefinition ? selectedSlotDefinition.category.charAt(0).toUpperCase() + selectedSlotDefinition.category.slice(1) : 'All';
+                renderMicrochipInventory();
+                document.getElementById('microchipInventoryModal')?.classList.remove('hidden');
+            }));
+            document.getElementById('microchipManageButton')?.addEventListener('click', () => {
+                if (!partUnlocked) return;
+                playGameSfx(MENU_SFX_CLICK_GEAR);
+                microchipManageCategory = 'All';
+                renderMicrochipManageList();
+                document.getElementById('microchipManageModal')?.classList.remove('hidden');
+            });
+        }
+        function renderMicrochipInventory() {
+            const list = document.getElementById('microchipInventoryList');
+            if (!list) return;
+            document.querySelectorAll('[data-microchip-category]').forEach(button => button.classList.toggle('active', button.dataset.microchipCategory === microchipInventoryCategory));
+            const target = microchipInventoryTarget;
+            const targetPart = target ? Object.values(PARTS).flatMap(parts => parts || []).find(part => part && part.id === target.partId) : null;
+            const targetSlotDefinition = targetPart ? getMicrochipSlotDefinitions(targetPart).find(definition => definition.key === target.slot) : null;
+            const slotCategory = targetSlotDefinition ? targetSlotDefinition.category : null;
+            const chips = MICROCHIP_DATABASE.filter(chip => (microchipInventory[chip.id] || []).length > 0).filter(chip => microchipInventoryCategory === 'All' || chip.category === microchipInventoryCategory);
+            list.innerHTML = chips.length ? chips.flatMap(chip => getMicrochipCopies(chip).map(({ token }) => {
+                const equipment = findMicrochipEquipments(token)[0];
+                const isCurrentPart = equipment && target && equipment.partId === target.partId;
+                const incompatible = !!(slotCategory && chip.category.toLowerCase() !== slotCategory);
+                return getMicrochipCopyMarkup(chip, '', token).replace('data-microchip-id="'+chip.id+'"', `data-microchip-id="${chip.id}" data-microchip-token="${token}" data-microchip-incompatible="${incompatible}"`);
+            })).join('') : '<div style="grid-column:1/-1;padding:24px;text-align:center;font-weight:800;color:#26313D;">No Microchips in this category.</div>';
+            renderMicrochipCardPartVisuals(list);
+            list.querySelectorAll('[data-microchip-id]').forEach(card => card.addEventListener('click', () => {
+                const chipId = card.dataset.microchipId;
+                const token = card.dataset.microchipToken;
+                const instance = getMicrochipInstance(token);
+                if (!microchipInventoryTarget || !instance) return;
+                playGameSfx(MENU_SFX_CLICK_GEAR);
+                const targetPartForEquip = Object.values(PARTS).flatMap(parts => parts || []).find(part => part && part.id === microchipInventoryTarget.partId);
+                if (!targetPartForEquip || !isPartAcquired(targetPartForEquip)) return;
+                if (card.dataset.microchipIncompatible === 'true') {
+                    const warning = document.getElementById('microchipIncompatibleWarning');
+                    warning?.classList.add('show');
+                    setTimeout(() => warning?.classList.remove('show'), 1100);
+                    return;
+                }
+                const equipment = findMicrochipEquipments(instance.uid)[0];
+                if (equipment && equipment.partId !== microchipInventoryTarget.partId) return;
+                const slots = ensureMicrochipSlots(microchipInventoryTarget.partId);
+                if (equipment && equipment.partId === microchipInventoryTarget.partId) {
+                    slots[equipment.slot] = null;
+                } else {
+                    Object.keys(slots).forEach(slot => { if (slots[slot] === instance.uid) slots[slot] = null; });
+                    slots[microchipInventoryTarget.slot] = instance.uid;
+                }
+                document.getElementById('microchipInventoryModal')?.classList.add('hidden');
+                const updatedPartTarget = modalTargetPart && modalTargetPart.part && modalTargetPart.part.id === microchipInventoryTarget.partId ? { ...modalTargetPart } : null;
+                microchipInventoryTarget = null;
+                if (typeof bey1 !== 'undefined' && bey1 && updatedPartTarget) bey1.updateParts(playerEquipped);
+                scheduleChampionshipPlayerSync();
+                if (typeof manualSaveGame === 'function') manualSaveGame();
+                updateGarageUI();
+                if (typeof updateHomeUI === 'function') updateHomeUI();
+                if (updatedPartTarget) {
+                    openPartModal(updatedPartTarget.type, updatedPartTarget.part);
+                    document.querySelector('.modal-content-tab[data-tab="microchip"]')?.click();
+                }
+            }));
+        }
+        let microchipManageCategory = 'All';
+        let microchipManageTarget = null;
+        let microchipUpgradeCategory = 'All';
+        let microchipUpgradeTarget = null;
+        let microchipUpgradeMaterials = new Set();
+        let microchipAutoSelectStars = new Set([1, 2, 3, 4, 5, 6]);
+        let microchipEvolveTarget = null;
+        let microchipEvolveMaterials = new Set();
+        function getMicrochipCardMarkup(chipOrInstance, extra = '', previewStar = false) {
+            const instance = chipOrInstance && chipOrInstance.chipId ? chipOrInstance : null;
+            const chip = instance ? MICROCHIP_DATABASE.find(candidate => candidate.id === instance.chipId) : chipOrInstance;
+            const equipment = instance ? findMicrochipEquipments(instance.uid)[0] : null;
+            const equippedPart = equipment ? Object.values(PARTS).flatMap(parts => parts || []).find(part => part && part.id === equipment.partId) : null;
+            const equippedPartType = equippedPart ? getAdventurePartType(equippedPart) : null;
+            const equippedVisual = equippedPart && equippedPartType
+                ? `<span class="microchip-card-equipped-visual" title="Equipped on ${getMicrochipPartName(equipment.partId)}"><canvas data-equipped-part-visual="true" data-equipped-part-id="${equippedPart.id}" data-equipped-part-type="${equippedPartType}" width="50" height="50"></canvas></span>`
+                : '';
+            return `<button type="button" class="microchip-card ${microchipCategoryClass(chip.category)}" data-microchip-id="${chip.id}"><span class="microchip-card-level">Lv. ${getMicrochipLevel(instance || chip)}</span><span class="microchip-card-name">${chip.name}</span>${equippedVisual}${getMicrochipStarsMarkup(instance || chip, previewStar ? 1 : 0)}${extra}</button>`;
+        }
+        function getMicrochipEvolveCardMarkup(instance, showNextStar) {
+            return getMicrochipCardMarkup(instance, '', showNextStar);
+        }
+        function renderMicrochipCardPartVisuals(container) {
+            if (!container) return;
+            container.querySelectorAll('[data-equipped-part-visual="true"]').forEach(canvas => {
+                const partId = canvas.dataset.equippedPartId;
+                const partType = canvas.dataset.equippedPartType;
+                const part = partId ? Object.values(PARTS).flatMap(parts => parts || []).find(candidate => candidate && candidate.id === partId) : null;
+                const context = canvas.getContext('2d');
+                if (part && partType && context) drawPartIcon(context, 25, 25, 22, partType, part);
+            });
+        }
+        function getMicrochipCopyMarkup(chip, extra = '', token = '') { const instance = token ? getMicrochipInstance(token) : null; return getMicrochipCardMarkup(instance || chip, extra).replace(`data-microchip-id="${chip.id}"`, `data-microchip-id="${chip.id}" data-microchip-token="${token}"`); }
+        function getMicrochipCopies(chip) { return (microchipInventory[chip.id] || []).map(instance => ({ chip, instance, token: instance.uid })); }
+        function getMaterialChipId(token) { const instance = getMicrochipInstance(token); return instance ? instance.chipId : String(token || '').split('#')[0]; }
+        function renderMicrochipEvolve() {
+            const targetInstance = getMicrochipInstance(microchipEvolveTarget);
+            const chip = MICROCHIP_DATABASE.find(candidate => candidate.id === targetInstance?.chipId);
+            const selected = document.getElementById('microchipEvolveSelected');
+            const info = document.getElementById('microchipEvolveInfo');
+            const list = document.getElementById('microchipEvolveList');
+            const confirm = document.getElementById('microchipEvolveConfirm');
+            if (!targetInstance || !chip || !selected || !info || !list || !confirm) return;
+            const currentStar = getMicrochipStarCount(targetInstance);
+            const nextStar = currentStar + 1;
+            const currentLevel = getMicrochipLevel(targetInstance);
+            const currentMax = getMicrochipMaxLevel(targetInstance);
+            const nextMax = [0, 5, 10, 15, 20, 25, 30][nextStar] || currentMax;
+            const levelMultiplier = getMicrochipLevelMultiplier(targetInstance, currentLevel);
+            const currentEffectValue = (Number(chip.value) || 0) * getMicrochipStarBaseMultiplier(targetInstance) * levelMultiplier;
+            const nextEffectValue = (Number(chip.value) || 0) * getMicrochipStarBaseMultiplier({ ...targetInstance, stars: nextStar }) * levelMultiplier;
+            const formatEffectValue = value => isMicrochipPercentDisplayEffect(chip) ? `${isMicrochipReductionEffect(chip) ? '-' : '+'}${(value * 100).toFixed(1)}%` : `+${formatMicrochipNumber(value)}`;
+            const effectStat = getMicrochipEffectStat(chip);
+            const readyToPreview = microchipEvolveMaterials.size === 2;
+            const materialInstances = [...microchipEvolveMaterials].map(uid => getMicrochipInstance(uid)).filter(Boolean);
+            const emptyMaterialMarkup = '<div class="microchip-evolve-material-slot"><div class="microchip-card attack" aria-label="Empty sacrifice slot"><span class="microchip-card-name">EMPTY</span></div></div>';
+            const materialMarkup = index => materialInstances[index] ? `<div class="microchip-evolve-material-slot filled">${getMicrochipCardMarkup(materialInstances[index])}</div>` : emptyMaterialMarkup;
+            selected.innerHTML = `<div class="microchip-evolve-preview-row">${materialMarkup(0)}<div class="microchip-evolve-target-slot">${getMicrochipEvolveCardMarkup(targetInstance, readyToPreview)}</div>${materialMarkup(1)}</div>`;
+            renderMicrochipCardPartVisuals(selected);
+            info.innerHTML = readyToPreview
+                ? `<div class="microchip-upgrade-level">Max Lv.${currentMax} <span class="microchip-upgrade-preview">&gt; Lv.${nextMax}</span></div><div class="microchip-upgrade-effect">${effectStat} ${formatEffectValue(currentEffectValue)} <span class="microchip-upgrade-preview">&gt; ${formatEffectValue(nextEffectValue)}</span></div>`
+                : `<div class="microchip-upgrade-level">Max Lv.${currentMax}</div><div class="microchip-upgrade-effect">${effectStat} ${formatEffectValue(currentEffectValue)}</div>`;
+            const candidates = currentStar < 6 ? getMicrochipCopies(chip).filter(({ instance }) => instance.uid !== targetInstance.uid && getMicrochipStarCount(instance) === currentStar && findMicrochipEquipments(instance.uid).length === 0) : [];
+            list.innerHTML = candidates.length ? candidates.map(({ token }) => getMicrochipCopyMarkup(chip, '', token)).join('') : '<div style="grid-column:1/-1;padding:24px;text-align:center;font-weight:800;color:#26313D;">No matching Microchips available.</div>';
+            renderMicrochipCardPartVisuals(list);
+            list.querySelectorAll('[data-microchip-token]').forEach(card => {
+                card.classList.toggle('selected-material', microchipEvolveMaterials.has(card.dataset.microchipToken));
+                card.addEventListener('click', () => {
+                    playGameSfx(MENU_SFX_CLICK_GEAR);
+                    const token = card.dataset.microchipToken;
+                    if (microchipEvolveMaterials.has(token)) microchipEvolveMaterials.delete(token);
+                    else if (microchipEvolveMaterials.size < 2) microchipEvolveMaterials.add(token);
+                    renderMicrochipEvolve();
+                });
+            });
+            const evolveGoldCost = getMicrochipEvolveGoldCost(currentStar);
+            const eligible = currentStar < 6 && currentLevel >= currentMax && microchipEvolveMaterials.size === 2;
+            confirm.disabled = !eligible || currencyState.gold < evolveGoldCost;
+            confirm.innerHTML = `Evolve${eligible ? getMicrochipCostMarkup(evolveGoldCost) : getMicrochipCostMarkup(0)}`;
+        }
+        function openMicrochipEvolve(uid) {
+            const targetInstance = getMicrochipInstance(uid);
+            if (!targetInstance || getMicrochipLevel(targetInstance) < getMicrochipMaxLevel(targetInstance) || getMicrochipStarCount(targetInstance) >= 6) return;
+            microchipEvolveTarget = targetInstance.uid;
+            microchipEvolveMaterials = new Set();
+            document.getElementById('microchipActionChoice')?.classList.add('hidden');
+            document.getElementById('microchipEvolveModal')?.classList.remove('hidden');
+            renderMicrochipEvolve();
+        }
+        function confirmMicrochipEvolve() {
+            const targetInstance = getMicrochipInstance(microchipEvolveTarget);
+            const chip = MICROCHIP_DATABASE.find(candidate => candidate.id === targetInstance?.chipId);
+            const currentStar = getMicrochipStarCount(targetInstance);
+            if (!targetInstance || !chip || currentStar >= 6 || getMicrochipLevel(targetInstance) < getMicrochipMaxLevel(targetInstance) || microchipEvolveMaterials.size !== 2) return;
+            const evolveGoldCost = getMicrochipEvolveGoldCost(currentStar);
+            if (currencyState.gold < evolveGoldCost) return;
+            const materials = [...microchipEvolveMaterials].map(uid => getMicrochipInstance(uid));
+            if (materials.some(instance => !instance || instance.uid === targetInstance.uid || instance.chipId !== targetInstance.chipId || getMicrochipStarCount(instance) !== currentStar || findMicrochipEquipments(instance.uid).length > 0)) return;
+            currencyState.gold -= evolveGoldCost;
+            updateCurrencyUI();
+            materials.forEach(instance => { microchipInventory[instance.chipId] = (microchipInventory[instance.chipId] || []).filter(candidate => candidate.uid !== instance.uid); });
+            targetInstance.stars = currentStar + 1;
+            microchipEvolveMaterials = new Set();
+            microchipEvolveTarget = targetInstance.uid;
+            renderMicrochipEvolve();
+            document.querySelector('#microchipEvolveSelected .microchip-evolve-target-slot .microchip-card')?.classList.add('microchip-evolve-glow');
+            renderMicrochipManageList();
+            renderMicrochipPanel(modalTargetPart?.part);
+            if (typeof bey1 !== 'undefined' && bey1 && findMicrochipEquipments(targetInstance.uid).length) bey1.updateParts(playerEquipped);
+            updateGarageUI();
+            if (typeof updateHomeUI === 'function') updateHomeUI();
+            if (typeof manualSaveGame === 'function') manualSaveGame();
+            setTimeout(() => {
+                if (microchipEvolveTarget !== targetInstance.uid) return;
+                microchipEvolveTarget = null;
+                document.getElementById('microchipEvolveModal')?.classList.add('hidden');
+                openMicrochipUpgrade(targetInstance.uid);
+            }, 800);
+        }
+        function renderMicrochipManageList() {
+            const list = document.getElementById('microchipManageList'); if (!list) return;
+            document.querySelectorAll('[data-manage-category]').forEach(tab => tab.classList.toggle('active', tab.dataset.manageCategory === microchipManageCategory));
+            const chips = MICROCHIP_DATABASE.filter(chip => microchipManageCategory === 'All' || chip.category === microchipManageCategory).filter(chip => (microchipInventory[chip.id] || []).length > 0);
+            list.innerHTML = chips.length ? chips.flatMap(chip => getMicrochipCopies(chip).map(({ token }) => getMicrochipCopyMarkup(chip, '', token))).join('') : '<div style="grid-column:1/-1;padding:24px;text-align:center;font-weight:800;color:#26313D;">No Microchips available.</div>';
+            renderMicrochipCardPartVisuals(list);
+            list.querySelectorAll('[data-microchip-id]').forEach(card => card.addEventListener('click', () => { playGameSfx(MENU_SFX_CLICK_GEAR); microchipManageTarget = card.dataset.microchipToken; renderMicrochipActionChoice(); document.getElementById('microchipActionChoice')?.classList.remove('hidden'); }));
+        }
+        function renderMicrochipActionChoice() {
+            const instance = getMicrochipInstance(microchipManageTarget);
+            const chip = MICROCHIP_DATABASE.find(candidate => candidate.id === instance?.chipId);
+            const visual = document.getElementById('microchipActionVisual');
+            const stat = document.getElementById('microchipActionStat');
+            const upgrade = document.getElementById('microchipActionUpgrade');
+            const evolve = document.getElementById('microchipActionEvolve');
+            if (!instance || !chip || !visual || !stat || !upgrade || !evolve) return;
+            visual.innerHTML = getMicrochipCardMarkup(instance);
+            renderMicrochipCardPartVisuals(visual);
+            const level = getMicrochipLevel(instance);
+            const value = (Number(chip.value) || 0) * getMicrochipStarBaseMultiplier(instance) * getMicrochipLevelMultiplier(instance, level);
+            const valueText = isMicrochipPercentDisplayEffect(chip) ? `${isMicrochipReductionEffect(chip) ? '-' : '+'}${(value * 100).toFixed(1)}%` : `+${formatMicrochipNumber(value)}`;
+            stat.textContent = `${getMicrochipEffectStat(chip)} ${valueText}`;
+            const canUpgrade = level < getMicrochipMaxLevel(instance);
+            const canEvolve = !canUpgrade && getMicrochipStarCount(instance) < 6;
+            upgrade.hidden = !canUpgrade;
+            evolve.hidden = !canEvolve;
+        }
+        function openMicrochipUpgrade(chipId) {
+            const targetInstance = getMicrochipInstance(chipId); const chip = MICROCHIP_DATABASE.find(candidate => candidate.id === (targetInstance?.chipId || chipId)); if (!chip || !targetInstance) return;
+            microchipUpgradeTarget = targetInstance.uid; microchipUpgradeMaterials = new Set(); microchipUpgradeCategory = 'All';
+            document.getElementById('microchipManageModal')?.classList.add('hidden'); document.getElementById('microchipActionChoice')?.classList.add('hidden'); document.getElementById('microchipUpgradeModal')?.classList.remove('hidden');
+            renderMicrochipUpgrade();
+        }
+        function renderMicrochipUpgrade() {
+            const targetInstance = getMicrochipInstance(microchipUpgradeTarget); const chip = MICROCHIP_DATABASE.find(candidate => candidate.id === targetInstance?.chipId); const selected = document.getElementById('microchipUpgradeSelected'); const list = document.getElementById('microchipUpgradeList'); const info = document.getElementById('microchipUpgradeInfo'); if (!chip || !selected || !list || !info) return;
+            selected.innerHTML = getMicrochipCardMarkup(targetInstance);
+            renderMicrochipCardPartVisuals(selected);
+            document.querySelectorAll('[data-upgrade-category]').forEach(tab => tab.classList.toggle('active', tab.dataset.upgradeCategory === microchipUpgradeCategory));
+            const candidates = MICROCHIP_DATABASE.filter(candidate => microchipUpgradeCategory === 'All' || candidate.category === microchipUpgradeCategory).filter(candidate => (microchipInventory[candidate.id] || []).length > 0);
+            const candidateCopies = candidates.flatMap(candidate => getMicrochipCopies(candidate)).filter(({ instance }) => instance.uid !== targetInstance.uid && findMicrochipEquipments(instance.uid).length === 0);
+            list.innerHTML = candidateCopies.length ? candidateCopies.map(({ chip: candidate, token }) => getMicrochipCopyMarkup(candidate, '', token)).join('') : '<div style="grid-column:1/-1;padding:24px;text-align:center;font-weight:800;color:#26313D;">No Microchip available.</div>';
+            renderMicrochipCardPartVisuals(list);
+            list.querySelectorAll('[data-microchip-token]').forEach(card => card.classList.toggle('selected-material', microchipUpgradeMaterials.has(card.dataset.microchipToken)));
+            list.querySelectorAll('[data-microchip-token]').forEach(card => card.addEventListener('click', () => { playGameSfx(MENU_SFX_CLICK_GEAR); const token = card.dataset.microchipToken; if (microchipUpgradeMaterials.has(token)) microchipUpgradeMaterials.delete(token); else microchipUpgradeMaterials.add(token); renderMicrochipUpgrade(); }));
+            const level = getMicrochipLevel(targetInstance), max = getMicrochipMaxLevel(targetInstance), currentExp = Math.max(0, Number(targetInstance.experience) || 0), materialExp = [...microchipUpgradeMaterials].reduce((sum, token) => { const material = getMicrochipInstance(token); return sum + (material ? getMicrochipSacrificeExp(material) : 0); }, 0), projectedTotalExp = currentExp + materialExp;
+            let previewLevel = level, previewExp = projectedTotalExp;
+            while (previewLevel < max && previewExp >= getMicrochipLevelExpNeed(targetInstance, previewLevel)) { previewExp -= getMicrochipLevelExpNeed(targetInstance, previewLevel); previewLevel += 1; }
+            const previewNeed = getMicrochipLevelExpNeed(targetInstance, previewLevel), displayedExp = previewLevel >= max ? Math.max(0, previewExp) : Math.min(previewNeed, previewExp), progress = previewNeed > 0 ? Math.min(100, (displayedExp / previewNeed) * 100) : 0;
+            const formatEffectValue = previewLevelValue => isMicrochipPercentDisplayEffect(chip) ? `${isMicrochipReductionEffect(chip) ? '-' : '+'}${(previewLevelValue * 100).toFixed(1)}%` : `+${formatMicrochipNumber(previewLevelValue)}`;
+            const effectStat = getMicrochipEffectStat(chip);
+            const starBaseMultiplier = getMicrochipStarBaseMultiplier(targetInstance);
+            const currentEffectValue = (Number(chip.value) || 0) * starBaseMultiplier * getMicrochipLevelMultiplier(targetInstance, level), previewEffectValue = (Number(chip.value) || 0) * starBaseMultiplier * getMicrochipLevelMultiplier(targetInstance, previewLevel);
+            const levelText = previewLevel > level ? `Lv.${level} <span class="microchip-upgrade-preview">&gt; Lv.${previewLevel}</span>` : `Lv.${level}`;
+            const effectText = previewLevel > level ? `${effectStat} ${formatEffectValue(currentEffectValue)} <span class="microchip-upgrade-preview">&gt; ${formatEffectValue(previewEffectValue)}</span>` : `${effectStat} ${formatEffectValue(currentEffectValue)}`;
+            info.innerHTML = `<div class="microchip-upgrade-level">${levelText}</div><div class="microchip-upgrade-exp-track"><div class="microchip-upgrade-exp-fill" style="width:${progress.toFixed(2)}%"></div><div class="microchip-upgrade-exp-text">${Math.floor(displayedExp)}/${previewNeed}</div></div><div class="microchip-upgrade-effect">${effectText}</div>`;
+            const upgradeConfirm = document.getElementById('microchipUpgradeConfirm');
+            const upgradeGoldCost = getMicrochipUpgradeTotalGoldCost(level, previewLevel);
+            const upgradeReady = previewLevel > level;
+            if (upgradeConfirm) { upgradeConfirm.disabled = !upgradeReady || currencyState.gold < upgradeGoldCost; upgradeConfirm.innerHTML = `Upgrade${upgradeReady ? getMicrochipCostMarkup(upgradeGoldCost) : getMicrochipCostMarkup(0)}`; }
+        }
+        function autoSelectMicrochipMaterials() {
+            const targetInstance = getMicrochipInstance(microchipUpgradeTarget); const target = MICROCHIP_DATABASE.find(chip => chip.id === targetInstance?.chipId); if (!targetInstance || !target) return;
+            const maxLevel = getMicrochipMaxLevel(targetInstance); let projectedLevel = getMicrochipLevel(targetInstance); let projectedExp = Math.max(0, Number(targetInstance.experience) || 0);
+            if (microchipUpgradeMaterials.size > 0) { microchipUpgradeMaterials = new Set(); renderMicrochipUpgrade(); return; }
+            microchipUpgradeMaterials = new Set();
+            if (projectedLevel < maxLevel) {
+                const candidates = MICROCHIP_DATABASE.filter(chip => (microchipUpgradeCategory === 'All' || chip.category === microchipUpgradeCategory) && (microchipInventory[chip.id] || []).length > 0).flatMap(chip => getMicrochipCopies(chip)).filter(({ instance }) => instance.uid !== targetInstance.uid && microchipAutoSelectStars.has(getMicrochipStarCount(instance)) && findMicrochipEquipments(instance.uid).length === 0).sort((a,b) => getMicrochipSacrificeExp(a.instance) - getMicrochipSacrificeExp(b.instance));
+                for (const { instance, token } of candidates) {
+                    microchipUpgradeMaterials.add(token);
+                    projectedExp += getMicrochipSacrificeExp(instance);
+                    while (projectedLevel < maxLevel && projectedExp >= getMicrochipLevelExpNeed(targetInstance, projectedLevel)) {
+                        projectedExp -= getMicrochipLevelExpNeed(targetInstance, projectedLevel);
+                        projectedLevel += 1;
+                    }
+                    if (projectedLevel >= maxLevel) break;
+                }
+            }
+            renderMicrochipUpgrade();
+        }
+        function confirmMicrochipUpgrade() {
+            const targetInstance = getMicrochipInstance(microchipUpgradeTarget); const target = MICROCHIP_DATABASE.find(chip => chip.id === targetInstance?.chipId); if (!targetInstance || !target || getMicrochipLevel(targetInstance) >= getMicrochipMaxLevel(targetInstance)) return;
+            const startingLevel = getMicrochipLevel(targetInstance);
+            let exp = Number(targetInstance.experience || 0) + [...microchipUpgradeMaterials].reduce((sum, token) => { const material = getMicrochipInstance(token); return sum + (material ? getMicrochipSacrificeExp(material) : 0); }, 0);
+            let level = getMicrochipLevel(targetInstance);
+            while (level < getMicrochipMaxLevel(targetInstance) && exp >= getMicrochipLevelExpNeed(targetInstance, level)) { exp -= getMicrochipLevelExpNeed(targetInstance, level); level += 1; }
+            const upgradeGoldCost = getMicrochipUpgradeTotalGoldCost(startingLevel, level);
+            if (level <= startingLevel || currencyState.gold < upgradeGoldCost) return;
+            currencyState.gold -= upgradeGoldCost;
+            updateCurrencyUI();
+            [...microchipUpgradeMaterials].forEach(token => { const id = getMaterialChipId(token); microchipInventory[id] = (microchipInventory[id] || []).filter(instance => instance.uid !== token); });
+            targetInstance.level = level; targetInstance.experience = exp;
+            const reachedMaxLevel = level >= getMicrochipMaxLevel(targetInstance);
+            microchipUpgradeMaterials = new Set(); renderMicrochipUpgrade(); document.querySelector('#microchipUpgradeSelected .microchip-card')?.classList.add('microchip-level-up-glow'); renderMicrochipManageList(); renderMicrochipPanel(modalTargetPart?.part); if (typeof bey1 !== 'undefined' && bey1 && microchipUpgradeTarget && findMicrochipEquipments(microchipUpgradeTarget).length) bey1.updateParts(playerEquipped); updateGarageUI(); if (typeof updateHomeUI === 'function') updateHomeUI(); if (typeof manualSaveGame === 'function') manualSaveGame();
+            if (reachedMaxLevel && getMicrochipStarCount(targetInstance) < 6) {
+                setTimeout(() => {
+                    document.getElementById('microchipUpgradeModal')?.classList.add('hidden');
+                    openMicrochipEvolve(targetInstance.uid);
+                }, 800);
+            }
+        }
+        document.getElementById('microchipManageButton')?.addEventListener('click', () => { playGameSfx(MENU_SFX_CLICK_GEAR); microchipManageCategory = 'All'; renderMicrochipManageList(); document.getElementById('microchipManageModal')?.classList.remove('hidden'); });
+        document.getElementById('microchipManageClose')?.addEventListener('click', () => document.getElementById('microchipManageModal')?.classList.add('hidden'));
+        document.querySelectorAll('[data-manage-category]').forEach(tab => tab.addEventListener('click', () => { playGameSfx(MENU_SFX_CLICK_GEAR); microchipManageCategory = tab.dataset.manageCategory; renderMicrochipManageList(); }));
+        document.getElementById('microchipActionUpgrade')?.addEventListener('click', () => { playGameSfx(MENU_SFX_CLICK_GEAR); openMicrochipUpgrade(microchipManageTarget); });
+        document.getElementById('microchipActionEvolve')?.addEventListener('click', () => { playGameSfx(MENU_SFX_CLICK_GEAR); openMicrochipEvolve(microchipManageTarget); });
+        function returnToMicrochipManage() {
+            document.getElementById('microchipUpgradeModal')?.classList.add('hidden');
+            document.getElementById('microchipEvolveModal')?.classList.add('hidden');
+            document.getElementById('microchipActionChoice')?.classList.add('hidden');
+            microchipUpgradeTarget = null;
+            microchipUpgradeMaterials = new Set();
+            microchipEvolveTarget = null;
+            microchipEvolveMaterials = new Set();
+            microchipManageCategory = 'All';
+            renderMicrochipManageList();
+            document.getElementById('microchipManageModal')?.classList.remove('hidden');
+        }
+        document.getElementById('microchipUpgradeClose')?.addEventListener('click', returnToMicrochipManage);
+        document.getElementById('microchipEvolveClose')?.addEventListener('click', returnToMicrochipManage);
+        document.getElementById('microchipManageModal')?.addEventListener('click', event => { if (event.target === event.currentTarget) { event.currentTarget.classList.add('hidden'); microchipManageTarget = null; } });
+        document.getElementById('microchipActionChoice')?.addEventListener('click', event => { if (event.target === event.currentTarget) event.currentTarget.classList.add('hidden'); });
+        document.getElementById('microchipUpgradeModal')?.addEventListener('click', event => { if (event.target === event.currentTarget) returnToMicrochipManage(); });
+        document.getElementById('microchipEvolveModal')?.addEventListener('click', event => { if (event.target === event.currentTarget) returnToMicrochipManage(); });
+        document.querySelectorAll('[data-upgrade-category]').forEach(tab => tab.addEventListener('click', () => { playGameSfx(MENU_SFX_CLICK_GEAR); microchipUpgradeCategory = tab.dataset.upgradeCategory; renderMicrochipUpgrade(); }));
+        document.getElementById('microchipAutoSelect')?.addEventListener('click', () => { playGameSfx(MENU_SFX_CLICK_GEAR); autoSelectMicrochipMaterials(); });
+        document.getElementById('microchipAutoFilterButton')?.addEventListener('click', event => { playGameSfx(MENU_SFX_CLICK_GEAR); event.stopPropagation(); const filter = document.getElementById('microchipAutoFilter'); const button = event.currentTarget; const open = !filter?.classList.contains('open'); filter?.classList.toggle('open', open); button.setAttribute('aria-expanded', String(open)); });
+        document.querySelectorAll('[data-auto-star]').forEach(input => input.addEventListener('change', event => { const star = Number(event.currentTarget.dataset.autoStar); if (event.currentTarget.checked) microchipAutoSelectStars.add(star); else microchipAutoSelectStars.delete(star); }));
+        document.getElementById('microchipUpgradeConfirm')?.addEventListener('click', () => { playGameSfx(MENU_SFX_CLICK_GEAR); confirmMicrochipUpgrade(); });
+        document.getElementById('microchipEvolveConfirm')?.addEventListener('click', () => { playGameSfx(MENU_SFX_CLICK_GEAR); confirmMicrochipEvolve(); });
+        document.querySelectorAll('[data-microchip-category]').forEach(button => button.addEventListener('click', () => { playGameSfx(MENU_SFX_CLICK_GEAR); microchipInventoryCategory = button.dataset.microchipCategory; renderMicrochipInventory(); }));
+        document.getElementById('microchipInventoryClose')?.addEventListener('click', () => { document.getElementById('microchipInventoryModal')?.classList.add('hidden'); microchipInventoryTarget = null; });
+        document.getElementById('microchipInventoryModal')?.addEventListener('click', event => { if (event.target.id === 'microchipInventoryModal') { event.currentTarget.classList.add('hidden'); microchipInventoryTarget = null; } });
         modalContentTabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 const target = tab.dataset.tab;
@@ -19888,6 +20896,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                     panel.classList.toggle('active', isActive);
                     panel.hidden = !isActive;
                 });
+                if (target === 'microchip' && modalTargetPart) renderMicrochipPanel(modalTargetPart.part);
             });
         });
         function openPartModal(type, part) {
@@ -19896,6 +20905,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             upgradePartBtn.style.flex = '';
             upgradePartBtn.innerHTML = 'Upgrade<span class="upgrade-cost"></span>';
             modalTargetPart = { type, part };
+            ensureMicrochipSlots(part.id);
             const isAcquired = isPartAcquired(part);
             const abilityTab = document.querySelector('.modal-content-tab[data-tab="ability"]');
             if (abilityTab) abilityTab.click();
@@ -20357,12 +21367,13 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 revision: Date.now(),
                 partsProgressResetVersion: PARTS_PROGRESS_RESET_VERSION,
                 seed: universalSeed,
-                tower: { currentFloor: towerCurrentFloor, unlockedFloor: towerUnlockedFloor, firstClearGems: { ...towerFirstClearGems }, firstClearChests: { ...towerFirstClearChests } },
+                tower: { currentFloor: towerCurrentFloor, unlockedFloor: towerUnlockedFloor, firstClearGems: { ...towerFirstClearGems }, firstClearChests: { ...towerFirstClearChests }, smashLastDate: towerSmashLastDate },
                 currency: { gold: Math.max(0, Math.floor(currencyState.gold || 0)), gems: Math.max(0, Math.floor(currencyState.gems || 0)), ascendedStones: Math.max(0, Math.floor(currencyState.ascendedStones || 0)), luckyTickets: Math.max(0, Math.floor(currencyState.luckyTickets || 0)) },
                 spiralGacha: { ascendedPity: Math.max(0, Math.min(99, Math.floor(spiralGachaState.ascendedPity || 0))), totalDraws: Math.max(0, Math.floor(spiralGachaState.totalDraws || 0)) },
                 battlePreferences: { speed2x: gameSpeed === 2, autoUltimate: !!autoUltimateToggle.checked },
                 partAmounts: { ...partAmounts },
                 acquiredPartIds: { ...acquiredPartIds },
+                microchips: { version: 2, inventory: JSON.parse(JSON.stringify(microchipInventory)), stars: { ...microchipStars }, levels: { ...microchipLevels }, experience: { ...microchipExperience }, slotsByPart: JSON.parse(JSON.stringify(microchipSlotsByPart)) },
                 playerName,
                 playerUid,
                     playerChampionshipWins,
@@ -20760,6 +21771,22 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 for (let index = 0; index < amount; index += 1) addChestToInventory(chestId);
                 rewards.push(`${definition.name}: x${amount.toLocaleString()}`);
             });
+            (Array.isArray(reward.microchips) ? reward.microchips : []).forEach(entry => {
+                const chipId = String(entry?.chipId || entry?.id || '').trim();
+                const chip = MICROCHIP_DATABASE.find(candidate => candidate.id === chipId);
+                const amount = Math.max(0, Math.floor(Number(entry?.amount ?? entry?.quantity ?? 1) || 0));
+                if (!chip || !amount) return;
+                const stars = Math.max(1, Math.min(6, Math.floor(Number(entry?.stars ?? entry?.star ?? chip.star ?? 1) || 1)));
+                const maxLevel = [0, 5, 10, 15, 20, 25, 30][stars];
+                const level = Math.max(1, Math.min(maxLevel, Math.floor(Number(entry?.level) || 1)));
+                const experience = Math.max(0, Number(entry?.experience ?? entry?.exp ?? 0) || 0);
+                for (let index = 0; index < amount; index += 1) {
+                    const instance = createMicrochipInstance(chipId, { stars, level, experience });
+                    if (!Array.isArray(microchipInventory[chipId])) microchipInventory[chipId] = [];
+                    microchipInventory[chipId].push(instance);
+                }
+                rewards.push(`${chip.name} ${stars}★ Lv.${level}: x${amount.toLocaleString()}`);
+            });
             updateCurrencyUI();
             renderChestSlots();
             return rewards;
@@ -20875,6 +21902,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 towerUnlockedFloor = Math.max(1, Math.min(TOWER_MAX_FLOOR, Number(data.tower && data.tower.unlockedFloor) || 1));
                 towerFirstClearGems = Object.fromEntries(Object.entries((data.tower && data.tower.firstClearGems) || {}).filter(([floor, claimed]) => /^(?:[1-9]|[1-9][0-9]{0,2}|1000)$/.test(floor) && Number(floor) <= TOWER_MAX_FLOOR && claimed === true));
                 towerFirstClearChests = Object.fromEntries(Object.entries((data.tower && data.tower.firstClearChests) || {}).filter(([floor, claimed]) => /^(?:[1-9]|[1-9][0-9]{0,2}|1000)$/.test(floor) && Number(floor) >= 801 && Number(floor) <= TOWER_MAX_FLOOR && claimed === true));
+                towerSmashLastDate = typeof data.tower?.smashLastDate === 'string' ? data.tower.smashLastDate : '';
                 currencyState = { gold: Math.max(0, Number(data.currency && data.currency.gold) || 0), gems: Math.max(0, Number(data.currency && data.currency.gems) || 0), ascendedStones: Math.max(0, Math.floor(Number(data.currency && data.currency.ascendedStones) || 0)), luckyTickets: Math.max(0, Math.floor(Number(data.currency && data.currency.luckyTickets) || 0)) };
                 spiralGachaState = { ascendedPity: Math.max(0, Math.min(99, Math.floor(Number(data.spiralGacha && data.spiralGacha.ascendedPity) || 0))), totalDraws: Math.max(0, Math.floor(Number(data.spiralGacha && data.spiralGacha.totalDraws) || 0)) };
                 const savedBattlePreferences = data.battlePreferences || {};
@@ -20884,6 +21912,13 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 if (autoToggleBtn) autoToggleBtn.classList.toggle('active', autoUltimateToggle.checked);
                 partAmounts = Object.fromEntries(Object.entries(data.partAmounts || {}).map(([id, amount]) => [id, Math.max(0, Math.floor(Number(amount) || 0))]));
                 acquiredPartIds = Object.fromEntries(Object.entries(data.acquiredPartIds || {}).filter(([id, acquired]) => acquired === true));
+                const savedMicrochips = data.microchips || {};
+                microchipInventory = normalizeMicrochipInventory(savedMicrochips.inventory || Object.fromEntries(MICROCHIP_DATABASE.map(chip => [chip.id, 0])));
+                microchipStars = { ...Object.fromEntries(MICROCHIP_DATABASE.map(chip => [chip.id, chip.star || 1])), ...(savedMicrochips.stars && typeof savedMicrochips.stars === 'object' ? Object.fromEntries(Object.entries(savedMicrochips.stars).filter(([id]) => MICROCHIP_DATABASE.some(chip => chip.id === id)).map(([id, star]) => [id, Math.max(1, Math.min(6, Math.floor(Number(star) || 1)))])) : {}) };
+                microchipLevels = { ...Object.fromEntries(MICROCHIP_DATABASE.map(chip => [chip.id, chip.level || 1])), ...(savedMicrochips.levels && typeof savedMicrochips.levels === 'object' ? Object.fromEntries(Object.entries(savedMicrochips.levels).filter(([id]) => MICROCHIP_DATABASE.some(chip => chip.id === id)).map(([id, level]) => { const chip = MICROCHIP_DATABASE.find(candidate => candidate.id === id); return [id, Math.max(1, Math.min(getMicrochipMaxLevel(chip), Math.floor(Number(level) || 1)))]; })) : {}) };
+                microchipExperience = { ...Object.fromEntries(MICROCHIP_DATABASE.map(chip => [chip.id, 0])), ...(savedMicrochips.experience && typeof savedMicrochips.experience === 'object' ? Object.fromEntries(Object.entries(savedMicrochips.experience).filter(([id]) => MICROCHIP_DATABASE.some(chip => chip.id === id)).map(([id, exp]) => [id, Math.max(0, Number(exp) || 0)])) : {}) };
+                microchipSlotsByPart = {};
+                if (savedMicrochips.slotsByPart && typeof savedMicrochips.slotsByPart === 'object') Object.entries(savedMicrochips.slotsByPart).forEach(([partId, slots]) => { if (!slots || typeof slots !== 'object') return; microchipSlotsByPart[partId] = {}; const getSavedChipCategory = savedId => { const instance = getMicrochipInstance(savedId); return MICROCHIP_DATABASE.find(chip => chip.id === (instance?.chipId || savedId))?.category; }; const savedSlots = { attack: slots.attack, attack2: slots.attack2 ?? (getSavedChipCategory(slots.defense2) === 'Attack' ? slots.defense2 : getSavedChipCategory(slots.universal) === 'Attack' ? slots.universal : null), defense: slots.defense, stamina: slots.stamina }; Object.entries(savedSlots).forEach(([slot, savedId]) => { const instance = getMicrochipInstance(savedId) || (MICROCHIP_DATABASE.some(chip => chip.id === savedId) ? (microchipInventory[savedId] || [])[0] : null); const chip = instance && MICROCHIP_DATABASE.find(candidate => candidate.id === instance.chipId); microchipSlotsByPart[partId][slot] = instance && isSavedMicrochipCompatible(partId, slot, chip) ? instance.uid : null; }); });
                 playerName = String(data.playerName || 'Player').trim().slice(0, 20) || 'Player';
                 playerUid = isValidPlayerUid(data.playerUid) ? data.playerUid : playerUid;
                 playerChampionshipWins = Math.max(0, Math.floor(Number(data.playerChampionshipWins) || 0));
@@ -21006,9 +22041,14 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             partUpgradeLevels = {};
             partAmounts = {};
             acquiredPartIds = {};
+            microchipInventory = normalizeMicrochipInventory(Object.fromEntries(MICROCHIP_DATABASE.map(chip => [chip.id, 0])));
+            microchipStars = Object.fromEntries(MICROCHIP_DATABASE.map(chip => [chip.id, chip.star || 1]));
+            microchipLevels = Object.fromEntries(MICROCHIP_DATABASE.map(chip => [chip.id, chip.level || 1]));
+            microchipExperience = Object.fromEntries(MICROCHIP_DATABASE.map(chip => [chip.id, 0]));
+            microchipSlotsByPart = {};
             universalSeed = (Date.now() >>> 0) || 1;
             updateDebugSeedInput();
-            towerCurrentFloor = 1; towerUnlockedFloor = 1; towerActiveFloor = null;
+            towerCurrentFloor = 1; towerUnlockedFloor = 1; towerActiveFloor = null; towerSmashLastDate = '';
             towerFirstClearGems = {};
             towerFirstClearChests = {};
             chestSlots = [null, null, null, null];
