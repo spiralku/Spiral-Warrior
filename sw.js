@@ -2,9 +2,12 @@ const AUDIO_CACHE = 'spiral-warrior-audio-v1';
 const IMAGE_CACHE = 'spiral-warrior-images-v2';
 
 const AUDIO_FILES = [
-    './bgm_home.mp3',
-    './bgm_tower.mp3',
-    './bgm_championship.mp3',
+    './Audios/BGMs/bgm_home.mp3',
+    './Audios/BGMs/bgm_tower.mp3',
+    './Audios/BGMs/bgm_championship.mp3',
+    './Audios/BGMs/bgm_survival_lobby.mp3',
+    './Audios/BGMs/bgm_survival_explore.mp3',
+    './Audios/BGMs/bgm_my_gym.mp3',
     './arena_1.mp3',
     './arena_2.mp3',
     './arena_3.mp3',
@@ -24,10 +27,10 @@ const AUDIO_FILES = [
 // prevent the Service Worker from installing, and future PNG requests are cached
 // automatically by handleImageRequest().
 const IMAGE_FILES = [
-    './actual_arena.png',
-    './stadium_arena.png',
-    ...Array.from({ length: 12 }, (_, index) => `./actual_arena_${index + 1}.png`),
-    ...Array.from({ length: 12 }, (_, index) => `./stadium_arena_${index + 1}.png`),
+    './Images/Arenas/actual_arena.png',
+    './Images/Arenas/stadium_arena.png',
+    ...Array.from({ length: 12 }, (_, index) => `./Images/Arenas/actual_arena_${index + 1}.png`),
+    ...Array.from({ length: 12 }, (_, index) => `./Images/Arenas/stadium_arena_${index + 1}.png`),
     './bc_behemoth.png',
     './bc_kaguyahime.png',
     './bc_athena.png',
