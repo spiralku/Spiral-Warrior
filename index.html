@@ -3626,7 +3626,7 @@ background: linear-gradient(
         #firstNicknameInput { width:100%; box-sizing:border-box; padding:11px 12px; border:2px solid #89909a; border-radius:8px; background:#fff; color:#1b2430; font-size:16px; font-weight:700; text-align:center; outline:none; }
         #firstNicknameInput:focus { border-color:#315b92; box-shadow:0 0 0 3px rgba(49,91,146,.18); }
         .first-nickname-error { min-height:17px; margin-top:7px; color:#c52e38; font-size:11px; font-weight:900; }
-        #firstNicknameOkBtn { min-width:112px; margin-top:8px; padding:10px 24px; border:2px solid #fff; border-radius:9px; background:#f4c53e; color:#17100a; font-size:15px; font-weight:1000; cursor:pointer; box-shadow:0 3px 8px rgba(0,0,0,.25); }
+        #firstNicknameOkBtn, #suspiciousAccountOkBtn { min-width:112px; margin-top:8px; padding:10px 24px; border:2px solid #fff; border-radius:9px; background:#f4c53e; color:#17100a; font-size:15px; font-weight:1000; cursor:pointer; box-shadow:0 3px 8px rgba(0,0,0,.25); }
         #firstNicknameOkBtn:active { transform:translateY(1px); }
         #firstNicknameOkBtn:disabled { opacity:.55; cursor:default; }
         .donate-box { position:relative; }
@@ -4801,6 +4801,15 @@ background: linear-gradient(
                 <input id="firstNicknameInput" type="text" minlength="4" maxlength="16" autocomplete="nickname" placeholder="Enter nickname">
                 <div id="firstNicknameError" class="first-nickname-error" role="alert" aria-live="polite"></div>
                 <button id="firstNicknameOkBtn" type="button">OK</button>
+            </div>
+        </div>
+    </div>
+    <div id="suspiciousAccountModal" class="first-nickname-modal hidden" role="dialog" aria-modal="true" aria-labelledby="suspiciousAccountTitle">
+        <div class="first-nickname-box">
+            <div class="first-nickname-title-row"><h3 id="suspiciousAccountTitle">Suspicious Account</h3></div>
+            <div class="first-nickname-body">
+                <p id="suspiciousAccountDescription" class="first-nickname-description">Your local game data was reset because suspicious account data was detected.</p>
+                <button id="suspiciousAccountOkBtn" type="button">OK</button>
             </div>
         </div>
     </div>
@@ -6032,6 +6041,21 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
             modal.classList.add('hidden');
             modal.style.display = 'none';
         }
+        function showSuspiciousAccountAlert(uid) {
+            if (String(uid || '').trim() !== TARGETED_SUSPICIOUS_ACCOUNT_UID) return;
+            const modal = document.getElementById('suspiciousAccountModal');
+            const description = document.getElementById('suspiciousAccountDescription');
+            if (!modal) return;
+            if (description) description.textContent = `Suspicious data was detected. This account's progress has been reset.`;
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+        }
+        function closeSuspiciousAccountAlert() {
+            const modal = document.getElementById('suspiciousAccountModal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+        }
         function openFirstNicknamePrompt(force = false) {
             let completed = false;
             try { completed = localStorage.getItem(FIRST_NICKNAME_PROMPT_KEY) === '1'; } catch (e) {}
@@ -6112,6 +6136,7 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
             else show();
         }
         document.getElementById('firstNicknameOkBtn')?.addEventListener('click', confirmFirstNickname);
+        document.getElementById('suspiciousAccountOkBtn')?.addEventListener('click', closeSuspiciousAccountAlert);
         document.getElementById('firstNicknameInput')?.addEventListener('keydown', event => {
             if (event.key === 'Enter') { event.preventDefault(); confirmFirstNickname(); }
         });
@@ -12142,6 +12167,8 @@ bc_thetis: [BC_THETIS_1]
         const SHOP_SAVE_KEY = 'bey_shop_state_v2';
         const PARTS_PROGRESS_RESET_VERSION = 1;
         const PARTS_PROGRESS_RESET_KEY = 'bey_parts_progress_reset_v1';
+        const TARGETED_SUSPICIOUS_ACCOUNT_UID = 'nc8SSqxFuuRb';
+        const TARGETED_SUSPICIOUS_ACCOUNT_RESET_KEY = 'bey_targeted_suspicious_reset_v1_nc8SSqxFuuRb';
         const LOCAL_SAVE_ENVELOPE_VERSION = 1;
         const LOCAL_SAVE_SECRET_KEY = 'bey_local_save_secret_v1';
         let localSavePayloadCache = null;
@@ -12193,6 +12220,25 @@ bc_thetis: [BC_THETIS_1]
             localSavePayloadCache = payload;
             return true;
         }
+        async function runTargetedSuspiciousAccountReset(savedUid) {
+            if (String(savedUid || '').trim() !== TARGETED_SUSPICIOUS_ACCOUNT_UID) return false;
+            if (localStorage.getItem(TARGETED_SUSPICIOUS_ACCOUNT_RESET_KEY) === '1') return false;
+            localStorage.setItem(TARGETED_SUSPICIOUS_ACCOUNT_RESET_KEY, '1');
+            manualResetGame();
+            playerUid = TARGETED_SUSPICIOUS_ACCOUNT_UID;
+            playerName = 'Player';
+            currencyState = { gold: 0, gems: 0, ascendedStones: 0, luckyTickets: 0 };
+            playerChampionshipWins = 0;
+            survivalModeWins = 0;
+            championshipEnrollmentActive = false;
+            localSavePayloadCache = null;
+            updateCurrencyUI();
+            updateProfileNameUI();
+            updatePlayerUidUI();
+            await writeEncryptedLocalSave(getUniversalSaveData());
+            showSuspiciousAccountAlert(TARGETED_SUSPICIOUS_ACCOUNT_UID);
+            return true;
+        }
         function resetRareAndHigherPartProgressInSavePayload(payload) {
             if (!payload || typeof payload !== 'object') return payload;
             const resetRarities = new Set(['Rare', 'Epic', 'Legendary', 'Ascended']);
@@ -12228,7 +12274,6 @@ bc_thetis: [BC_THETIS_1]
                 localStorage.setItem(PARTS_PROGRESS_RESET_KEY, String(PARTS_PROGRESS_RESET_VERSION));
             } catch (e) {}
         }
-        runOneTimeRareAndHigherPartProgressReset();
         let shopRefreshCost = 100;
         const SHOP_AMOUNT_OPTIONS = [10, 20, 50, 100];
         const SHOP_RARITY_WEIGHTS = { Normal: 60, Rare: 35, Epic: 10, Legendary: 4, Ascended: 1 };
@@ -24301,6 +24346,10 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         }
         async function cloudSyncAfterLogin(showConflict = false) {
             if (!SUPABASE_ENABLED || !cloudUser || cloudSyncInProgress) return;
+            if (autoLoadInProgress) {
+                setTimeout(() => cloudSyncAfterLogin(showConflict), 500);
+                return;
+            }
             cloudSyncInProgress = true;
             try {
                 const localPayload = getLocalSavePayload();
@@ -24574,6 +24623,10 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 localSavePayloadCache = data;
                 if (!parsedEnvelope?.a) {
                     try { await writeEncryptedLocalSave(data); } catch (e) {}
+                }
+                if (await runTargetedSuspiciousAccountReset(data.playerUid)) {
+                    setManualSaveStatus('Suspicious account data reset.');
+                    return true;
                 }
                 universalSeed = normalizeSeed(data.seed) || universalSeed;
                 updateDebugSeedInput();
