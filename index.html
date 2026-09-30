@@ -7364,7 +7364,7 @@ const parts = {
             try { return await towerRankingFetchPromise; } finally { towerRankingFetchPromise = null; }
         }
         async function syncTowerRankingProgress(floor) {
-            if (!SUPABASE_CHAMPIONSHIP_ENABLED || !Number.isFinite(Number(floor)) || Number(floor) < 1) return;
+            if (!SUPABASE_CHAMPIONSHIP_ENABLED || !isAuthenticatedCloudUser() || !Number.isFinite(Number(floor)) || Number(floor) < 1) return;
             try {
                 await fetchSupabaseChampionshipJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.towerRankingUpsertUrl}`, {
                     method: 'POST',
@@ -7383,7 +7383,7 @@ const parts = {
             setTowerRankingStatus(SUPABASE_CHAMPIONSHIP_ENABLED ? 'Loading online ranking...' : 'Offline: showing local fallback data.');
             renderTowerRanking();
             loadTowerRanking({ force: true });
-            if (SUPABASE_CHAMPIONSHIP_ENABLED) syncTowerRankingProgress(Math.max(0, towerUnlockedFloor - 1));
+            if (SUPABASE_CHAMPIONSHIP_ENABLED && isAuthenticatedCloudUser()) syncTowerRankingProgress(Math.max(0, towerUnlockedFloor - 1));
         }
         window.openTowerRankingScreen = openTowerRankingScreen;
         const TOWER_ROW_HEIGHT = 138;
@@ -7887,6 +7887,20 @@ const parts = {
             } catch (error) { popularChampionshipPart = null; renderGlobalLeaderboard(); console.warn('Supabase Popular Parts sync failed:', error); }
         }
         async function syncGlobalLeaderboard() {
+            if (!isAuthenticatedCloudUser()) {
+                try {
+                    setGlobalLeaderboardStatus('Loading public rankings...', false);
+                    const result = await fetchSupabaseChampionshipJson(SUPABASE_CHAMPIONSHIP_CONFIG.globalLeaderboardReadRpcUrl, { method: 'POST', headers: getSupabaseChampionshipHeaders(), body: '{}' });
+                    globalLeaderboardRows = Array.isArray(result) ? result : (Array.isArray(result?.rows) ? result.rows : (result ? [result] : []));
+                    renderGlobalLeaderboard();
+                    setGlobalLeaderboardStatus('Guest view-only mode. Sign in to publish your rankings.', false);
+                } catch (error) {
+                    renderGlobalLeaderboard();
+                    setGlobalLeaderboardStatus('Public rankings are unavailable. Sign in to participate.', true);
+                    console.warn('Public global leaderboard read failed:', error);
+                }
+                return;
+            }
             const candidate = getGlobalLeaderboardCandidate();
             if (!candidate.p_player_uid) { setGlobalLeaderboardStatus('Player identity is not ready.', true); return; }
             try {
@@ -10225,9 +10239,8 @@ const parts = {
             total_wins: 9
         }];
         const championshipRankerFallbackData = JSON.parse(JSON.stringify(championshipRankerData));
-        // Account-based Auth/cloud saves remain separately controlled from public Championship sync.
-        // Championship ranker sync uses the public key anonymously, but only while a Championship
-        // screen is visible; no account is required to enter or use Championship.
+        // Account-based Auth/cloud saves control all ranked publishing. Guests may view public data
+        // and play locally, but Championship/Leaderboard/Survival/Tower uploads require a session.
         const SUPABASE_ENABLED = true;
         const SUPABASE_CHAMPIONSHIP_ENABLED = SUPABASE_ENABLED;
         const SUPABASE_CHAMPIONSHIP_CONFIG = Object.freeze({
@@ -10238,6 +10251,7 @@ const parts = {
             towerRankingsUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co/rest/v1/tower_rankings',
             towerRankingUpsertUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co/rest/v1/rpc/upsert_tower_ranking',
             globalLeaderboardRpcUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co/rest/v1/rpc/submit_global_leaderboard',
+            globalLeaderboardReadRpcUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co/rest/v1/rpc/get_global_leaderboard',
             popularChampionshipPartRpcUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co/rest/v1/rpc/refresh_popular_championship_part',
             survivalOpponentsUrl: 'https://dcswmlplwnxsvdchiigl.supabase.co/rest/v1/survival_players',
             publicKey: 'sb_publishable_9vExJ6KsV1wwlF4PbVrZag_eDAIb4Ih',
@@ -10429,7 +10443,7 @@ const parts = {
         }
 
         async function syncPlayerChampionshipData() {
-            if (!SUPABASE_CHAMPIONSHIP_ENABLED || !isChampionshipSyncScreenActive()) return;
+            if (!SUPABASE_CHAMPIONSHIP_ENABLED || !isAuthenticatedCloudUser() || !isChampionshipSyncScreenActive()) return;
             ensureChampionshipProgress();
             if (championshipSyncInProgress) {
                 championshipSyncQueued = true;
@@ -10484,7 +10498,7 @@ const parts = {
         }
 
         function scheduleChampionshipPlayerSync(delayMs = 1200) {
-            if (!SUPABASE_CHAMPIONSHIP_ENABLED || !isChampionshipSyncScreenActive()) return;
+            if (!SUPABASE_CHAMPIONSHIP_ENABLED || !isAuthenticatedCloudUser() || !isChampionshipSyncScreenActive()) return;
             clearTimeout(championshipSyncTimer);
             championshipSyncTimer = setTimeout(() => {
                 championshipSyncTimer = null;
@@ -11011,11 +11025,13 @@ const parts = {
                 try {
                     const endpoint = SUPABASE_CHAMPIONSHIP_CONFIG.survivalOpponentsUrl;
                     const snapshot = getSurvivalPlayerSnapshot();
-                    if (SUPABASE_CHAMPIONSHIP_ENABLED && endpoint && snapshot.player_uid) {
+                    if (SUPABASE_CHAMPIONSHIP_ENABLED && endpoint && snapshot.player_uid && isAuthenticatedCloudUser()) {
                         await fetchSupabaseChampionshipJson(`${endpoint}?on_conflict=player_uid`, { method: 'POST', headers: getSupabaseChampionshipHeaders({ Prefer: 'resolution=merge-duplicates,return=minimal' }), body: JSON.stringify(snapshot) });
-                        const query = `${endpoint}?select=player_uid,player_name,loadouts&player_uid=neq.${encodeURIComponent(snapshot.player_uid)}&limit=64`;
+                    }
+                    if (SUPABASE_CHAMPIONSHIP_ENABLED && endpoint) {
+                        const query = `${endpoint}?select=player_uid,player_name,loadouts&limit=64`;
                         const rows = await fetchSupabaseChampionshipJson(query, { headers: getSupabaseChampionshipHeaders(), cache: 'no-store' });
-                        const remote = shuffleSurvivalArray((Array.isArray(rows) ? rows : []).map(normalizeSurvivalOpponentRow).filter(Boolean));
+                        const remote = shuffleSurvivalArray((Array.isArray(rows) ? rows : []).map(normalizeSurvivalOpponentRow).filter(Boolean).filter(player => player.uid !== snapshot.player_uid));
                         survivalRunOpponents = remote.slice(0, 8);
                     }
                 } catch (error) {
@@ -11644,8 +11660,10 @@ const parts = {
                 if (playerWon && context.mode === 'championship' && context.rankerUid) markChampionshipChallengeVictory(context.rankerUid);
                 if (championshipReward > 0) {
                     addCurrency('gold', championshipReward);
-                    playerChampionshipWins += 1;
-                    try { localStorage.setItem(MANUAL_SAVE_KEY, JSON.stringify(getUniversalSaveData())); } catch (e) {}
+                    if (isAuthenticatedCloudUser()) {
+                        playerChampionshipWins += 1;
+                        manualSaveGame();
+                    }
                 }
                 threeBeybladeSelectContext = null;
                 returnFromFinalBattle(context);
@@ -12124,6 +12142,57 @@ bc_thetis: [BC_THETIS_1]
         const SHOP_SAVE_KEY = 'bey_shop_state_v2';
         const PARTS_PROGRESS_RESET_VERSION = 1;
         const PARTS_PROGRESS_RESET_KEY = 'bey_parts_progress_reset_v1';
+        const LOCAL_SAVE_ENVELOPE_VERSION = 1;
+        const LOCAL_SAVE_SECRET_KEY = 'bey_local_save_secret_v1';
+        let localSavePayloadCache = null;
+        let trustedLocalSaveWriteDepth = 0;
+        function bytesToBase64(bytes) {
+            let binary = '';
+            bytes.forEach(byte => { binary += String.fromCharCode(byte); });
+            return btoa(binary);
+        }
+        function base64ToBytes(value) {
+            const binary = atob(String(value || ''));
+            return Uint8Array.from(binary, character => character.charCodeAt(0));
+        }
+        function getOrCreateLocalSaveSecret() {
+            let secret = localStorage.getItem(LOCAL_SAVE_SECRET_KEY);
+            if (!secret) {
+                const bytes = crypto.getRandomValues(new Uint8Array(32));
+                secret = bytesToBase64(bytes);
+                localStorage.setItem(LOCAL_SAVE_SECRET_KEY, secret);
+            }
+            return base64ToBytes(secret);
+        }
+        async function encryptLocalSavePayload(payload) {
+            const json = JSON.stringify(payload);
+            if (!globalThis.crypto?.subtle) return { v: LOCAL_SAVE_ENVELOPE_VERSION, a: 'obfuscated', d: btoa(unescape(encodeURIComponent(json.split('').reverse().join('')))) };
+            const key = await crypto.subtle.importKey('raw', getOrCreateLocalSaveSecret(), { name: 'AES-GCM' }, false, ['encrypt']);
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(json));
+            return { v: LOCAL_SAVE_ENVELOPE_VERSION, a: 'AES-GCM', i: bytesToBase64(iv), d: bytesToBase64(new Uint8Array(encrypted)) };
+        }
+        async function decryptLocalSaveEnvelope(raw) {
+            if (!raw) return null;
+            try {
+                const envelope = JSON.parse(raw);
+                if (envelope && envelope.a === 'AES-GCM' && envelope.v === LOCAL_SAVE_ENVELOPE_VERSION) {
+                    const key = await crypto.subtle.importKey('raw', getOrCreateLocalSaveSecret(), { name: 'AES-GCM' }, false, ['decrypt']);
+                    const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: base64ToBytes(envelope.i) }, key, base64ToBytes(envelope.d));
+                    return JSON.parse(new TextDecoder().decode(decrypted));
+                }
+                if (envelope && envelope.a === 'obfuscated' && envelope.v === LOCAL_SAVE_ENVELOPE_VERSION) return JSON.parse(decodeURIComponent(escape(atob(envelope.d))).split('').reverse().join(''));
+                return envelope;
+            } catch (error) { return null; }
+        }
+        async function writeEncryptedLocalSave(payload) {
+            const envelope = await encryptLocalSavePayload(payload);
+            trustedLocalSaveWriteDepth += 1;
+            try { localStorage.setItem(MANUAL_SAVE_KEY, JSON.stringify(envelope)); }
+            finally { trustedLocalSaveWriteDepth = Math.max(0, trustedLocalSaveWriteDepth - 1); }
+            localSavePayloadCache = payload;
+            return true;
+        }
         function resetRareAndHigherPartProgressInSavePayload(payload) {
             if (!payload || typeof payload !== 'object') return payload;
             const resetRarities = new Set(['Rare', 'Epic', 'Legendary', 'Ascended']);
@@ -12156,13 +12225,6 @@ bc_thetis: [BC_THETIS_1]
                     partAmounts[part.id] = 0;
                 });
                 currencyState.ascendedStones = 0;
-                const rawSave = localStorage.getItem('bey_manual_universal_save');
-                if (rawSave) {
-                    try {
-                        const payload = JSON.parse(rawSave);
-                        localStorage.setItem('bey_manual_universal_save', JSON.stringify(resetRareAndHigherPartProgressInSavePayload(payload)));
-                    } catch (e) {}
-                }
                 localStorage.setItem(PARTS_PROGRESS_RESET_KEY, String(PARTS_PROGRESS_RESET_VERSION));
             } catch (e) {}
         }
@@ -22740,6 +22802,10 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         function updateWorldChatQuotaCue() {
             const cue = document.getElementById('worldChatQuotaCue');
             if (!cue) return;
+            if (!isAuthenticatedCloudUser()) {
+                cue.textContent = 'Sign in to chat';
+                return;
+            }
             const usage = getWorldChatUsage();
             cue.innerHTML = usage.freeUsed < WORLD_CHAT_DAILY_FREE_LIMIT
                 ? `(${Math.max(0, WORLD_CHAT_DAILY_FREE_LIMIT - usage.freeUsed)}/${WORLD_CHAT_DAILY_FREE_LIMIT})`
@@ -22766,6 +22832,17 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             } catch (error) { return { dayKey, freeUsed: 0 }; }
         }
         function saveWorldChatUsage(usage) { try { localStorage.setItem(WORLD_CHAT_USAGE_KEY, JSON.stringify(usage)); } catch (error) {} }
+        function updateWorldChatComposerUI() {
+            const input = document.getElementById('chatComposeInput');
+            const send = document.getElementById('chatComposeSend');
+            const signedIn = isAuthenticatedCloudUser();
+            if (input) {
+                input.disabled = !signedIn;
+                input.placeholder = signedIn ? 'Type a message...' : 'Sign in to send messages';
+            }
+            if (send) send.disabled = !signedIn;
+            updateWorldChatQuotaCue();
+        }
         function renderWorldChatMessages(scrollToLatest = false) {
             const list = document.getElementById('chatMessageList');
             if (!list) return;
@@ -22813,6 +22890,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             worldChatPollTimer = null;
         }
         async function purgeExpiredWorldChatMessages() {
+            if (!isAuthenticatedCloudUser()) return;
             const endpoint = getWorldChatEndpoint();
             const headers = getWorldChatHeaders();
             if (!endpoint || !headers) return;
@@ -22827,7 +22905,8 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             await purgeExpiredWorldChatMessages();
             await loadWorldChatMessages(true);
             startWorldChatPolling();
-            updateWorldChatQuotaCue();
+            updateWorldChatComposerUI();
+            if (!isAuthenticatedCloudUser()) setWorldChatStatus('View-only guest mode. Sign in to send messages.');
             setTimeout(() => document.getElementById('chatComposeInput')?.focus(), 30);
         }
         window.openLocalChat = openLocalChat;
@@ -22839,6 +22918,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         }
         window.closeLocalChat = closeLocalChat;
         async function sendLocalChatMessage() {
+            if (!isAuthenticatedCloudUser()) { setWorldChatStatus('Sign in to send messages.', 'error'); return; }
             const input = document.getElementById('chatComposeInput');
             const text = String(input?.value || '').trim().slice(0, WORLD_CHAT_MAX_LENGTH);
             if (!text) return;
@@ -22864,6 +22944,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         }
         function initializeLocalChat() {
             renderChatPreview();
+            updateWorldChatComposerUI();
             document.getElementById('homeChatIconButton')?.addEventListener('click', openLocalChat);
             document.getElementById('homeChatPreview')?.addEventListener('click', openLocalChat);
             document.getElementById('homeChatPreview')?.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openLocalChat(); } });
@@ -23994,6 +24075,10 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         let pendingCloudConflict = null;
         let authDialogMode = 'login';
 
+        function isAuthenticatedCloudUser() {
+            return !!(cloudUser && cloudSession?.access_token);
+        }
+
         function setCloudStatus(message, tone = '') {
             const status = document.getElementById('settingsAccountStatus');
             if (!status) return;
@@ -24014,6 +24099,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             if (resetButton) resetButton.disabled = !signedIn;
             if (manualSaveButton) { manualSaveButton.style.display = signedIn ? 'block' : 'none'; manualSaveButton.disabled = !signedIn; }
             setCloudStatus(signedIn ? `Signed in: ${cloudUser.email || 'account'}` : 'Offline guest save', signedIn ? 'online' : '');
+            if (typeof updateWorldChatComposerUI === 'function') updateWorldChatComposerUI();
         }
         function saveCloudSession() {
             try {
@@ -24105,7 +24191,13 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             finally { if (submit) submit.disabled = false; }
         }
         function getLocalSavePayload() {
-            try { const raw = localStorage.getItem(MANUAL_SAVE_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
+            if (localSavePayloadCache) return localSavePayloadCache;
+            try {
+                const raw = localStorage.getItem(MANUAL_SAVE_KEY);
+                if (!raw) return null;
+                const legacy = JSON.parse(raw);
+                return legacy && legacy.version >= 2 && !legacy.a ? (localSavePayloadCache = legacy) : null;
+            } catch (e) { return null; }
         }
         function getCloudSavePayload(row) { return row && row.save_payload && typeof row.save_payload === 'object' ? row.save_payload : null; }
         function mergeMissingSaveSections(localPayload, cloudPayload) {
@@ -24141,10 +24233,10 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         function isValidSavePayload(payload) {
             return !!(payload && typeof payload === 'object' && Number(payload.version) >= 2 && typeof payload.playerUid === 'string' && isValidPlayerUid(payload.playerUid) && payload.currency && typeof payload.currency === 'object' && Number.isFinite(Number(payload.currency.gold)) && Number.isFinite(Number(payload.currency.gems)) && payload.tower && typeof payload.tower === 'object');
         }
-        function applyCloudSavePayload(payload) {
+        async function applyCloudSavePayload(payload) {
             if (!payload) return false;
-            try { localStorage.setItem(MANUAL_SAVE_KEY, JSON.stringify(payload)); } catch (e) { return false; }
-            const loaded = manualLoadGame() === true;
+            try { await writeEncryptedLocalSave(payload); } catch (e) { return false; }
+            const loaded = await manualLoadGame() === true;
             if (loaded) autoLoadReady = true;
             return loaded;
         }
@@ -24204,7 +24296,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             if (!pendingCloudConflict) return;
             const selected = choice === 'cloud' ? pendingCloudConflict.cloudPayload : pendingCloudConflict.localPayload;
             closeCloudConflict();
-            if (choice === 'cloud') { applyCloudSavePayload(selected); setCloudStatus('Cloud save loaded.', 'online'); }
+            if (choice === 'cloud') { await applyCloudSavePayload(selected); setCloudStatus('Cloud save loaded.', 'online'); }
             else { autoLoadReady = true; await upsertCloudSave(selected); }
         }
         async function cloudSyncAfterLogin(showConflict = false) {
@@ -24228,7 +24320,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                     cloudPayload = resetRareAndHigherPartProgressInSavePayload(migrationBase);
                     await upsertCloudSave(cloudPayload);
                     if (localPayload && migrationBase === localPayload) {
-                        try { localStorage.setItem(MANUAL_SAVE_KEY, JSON.stringify(cloudPayload)); } catch (e) {}
+                        try { await writeEncryptedLocalSave(cloudPayload); } catch (e) {}
                     }
                 }
                 const reconciledCloudPayload = mergeMissingSaveSections(localPayload, cloudPayload);
@@ -24246,15 +24338,15 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                         return;
                     }
                     if (cloudRevision > localRevision) {
-                        applyCloudSavePayload(cloudPayload);
+                        await applyCloudSavePayload(cloudPayload);
                         setCloudStatus('Newer cloud save loaded.', 'online');
                         return;
                     }
                     const cloudWasIncomplete = JSON.stringify(cloudPayload) !== JSON.stringify(reconciledCloudPayload);
-                    if (!same) { applyCloudSavePayload(reconciledCloudPayload); await upsertCloudSave(reconciledCloudPayload); setCloudStatus('Cloud save loaded.', 'online'); }
+                    if (!same) { await applyCloudSavePayload(reconciledCloudPayload); await upsertCloudSave(reconciledCloudPayload); setCloudStatus('Cloud save loaded.', 'online'); }
                     else if (cloudWasIncomplete) { await upsertCloudSave(localPayload); setCloudStatus('Cloud save repaired.', 'online'); }
                     else setCloudStatus('Cloud save is up to date.', 'online');
-                } else if (cloudPayload) { applyCloudSavePayload(cloudPayload); setCloudStatus('Cloud save loaded.', 'online'); }
+                } else if (cloudPayload) { await applyCloudSavePayload(cloudPayload); setCloudStatus('Cloud save loaded.', 'online'); }
                 else if (localPayload) { await upsertCloudSave(localPayload); }
                 else setCloudStatus('Signed in; no save found yet.', 'online');
             } catch (error) { setCloudStatus(`Cloud sync unavailable: ${error.message}`, 'error');             } finally {
@@ -24404,7 +24496,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             setCloudStatus('Saving to cloud...', 'online');
             try {
                 const payload = getUniversalSaveData();
-                try { localStorage.setItem(MANUAL_SAVE_KEY, JSON.stringify(payload)); } catch (e) {}
+                await writeEncryptedLocalSave(payload);
                 const saved = await upsertCloudSave(payload);
                 if (!saved) throw new Error('Cloud save unavailable.');
                 setCloudStatus('Manual save successful.', 'online');
@@ -24432,11 +24524,11 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
 
         // Debug Menu announcements are intentionally disabled; controls remain functional.
         function setManualSaveStatus() {}
-        function manualSaveGame() {
+        async function manualSaveGame() {
             if (!autoLoadCompleted || !autoLoadReady || autoLoadInProgress) return false;
             try {
                 const savePayload = getUniversalSaveData();
-                localStorage.setItem(MANUAL_SAVE_KEY, JSON.stringify(savePayload));
+                await writeEncryptedLocalSave(savePayload);
                 if (typeof queueCloudSave === 'function') queueCloudSave(savePayload);
                 setManualSaveStatus('Game saved manually.');
                 return true;
@@ -24471,11 +24563,18 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             if (typeof renderShopOffers === 'function') renderShopOffers();
             scheduleChampionshipPlayerSync();
         }
-        function manualLoadGame() {
+        async function manualLoadGame() {
             try {
                 const raw = localStorage.getItem(MANUAL_SAVE_KEY);
                 if (!raw) { setManualSaveStatus('No manual save found.', '#f6d365'); return; }
-                const data = JSON.parse(raw);
+                let parsedEnvelope = null;
+                try { parsedEnvelope = JSON.parse(raw); } catch (e) {}
+                const data = await decryptLocalSaveEnvelope(raw);
+                if (!data || typeof data !== 'object') { setManualSaveStatus('Save could not be decrypted.', '#ff7777'); return false; }
+                localSavePayloadCache = data;
+                if (!parsedEnvelope?.a) {
+                    try { await writeEncryptedLocalSave(data); } catch (e) {}
+                }
                 universalSeed = normalizeSeed(data.seed) || universalSeed;
                 updateDebugSeedInput();
                 towerCurrentFloor = Math.max(1, Math.min(TOWER_MAX_FLOOR, Number(data.tower && data.tower.currentFloor) || 1));
@@ -24746,7 +24845,7 @@ function autoSaveGame() {
     }
 }
 
-function autoLoadGame() {
+        async function autoLoadGame() {
     if (autoLoadCompleted || autoLoadInProgress) return;
     autoLoadInProgress = true;
 
@@ -24754,7 +24853,7 @@ function autoLoadGame() {
         const savedData = localStorage.getItem(MANUAL_SAVE_KEY);
 
         // Do not overwrite the default game if no save exists.
-        if (savedData) autoLoadReady = manualLoadGame() === true;
+        if (savedData) autoLoadReady = await manualLoadGame() === true;
         else autoLoadReady = true;
 
     } catch (error) {
@@ -24916,6 +25015,52 @@ document.addEventListener('visibilitychange', () => {
         battleTimeSeconds = 0;
         getCachedElement('battleTimer').textContent = '00:00';
         startIconSvg.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+
+        // Browser-side anti-tamper deterrents. These discourage casual editing only;
+        // Supabase validation remains the real security boundary.
+        (() => {
+            const originalStorageSetItem = Storage.prototype.setItem;
+            const antiTamperEventKey = 'bey_anti_tamper_events_v1';
+            const recordAntiTamperEvent = type => {
+                try {
+                    const events = JSON.parse(localStorage.getItem(antiTamperEventKey) || '[]');
+                    events.push({ type, at: Date.now() });
+                    localStorage.setItem(antiTamperEventKey, JSON.stringify(events.slice(-50)));
+                } catch (error) {}
+            };
+            Storage.prototype.setItem = function(key, value) {
+                if (key === MANUAL_SAVE_KEY && trustedLocalSaveWriteDepth <= 0) {
+                    recordAntiTamperEvent('direct_save_overwrite_blocked');
+                    return;
+                }
+                return originalStorageSetItem.call(this, key, value);
+            };
+            const blockBrowserEditing = event => {
+                const key = String(event.key || '').toLowerCase();
+                const blockedShortcut = key === 'f12'
+                    || ((event.ctrlKey || event.metaKey) && event.shiftKey && ['i', 'j', 'c'].includes(key))
+                    || ((event.ctrlKey || event.metaKey) && ['u', 's'].includes(key));
+                if (blockedShortcut) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    recordAntiTamperEvent(`blocked_shortcut_${key}`);
+                }
+            };
+            document.addEventListener('contextmenu', event => {
+                event.preventDefault();
+                event.stopPropagation();
+                recordAntiTamperEvent('context_menu_blocked');
+            }, true);
+            document.addEventListener('keydown', blockBrowserEditing, true);
+            let devtoolsPreviouslyOpen = false;
+            setInterval(() => {
+                const widthGap = Math.abs(window.outerWidth - window.innerWidth);
+                const heightGap = Math.abs(window.outerHeight - window.innerHeight);
+                const devtoolsOpen = widthGap > 180 || heightGap > 180;
+                if (devtoolsOpen && !devtoolsPreviouslyOpen) recordAntiTamperEvent('devtools_likely_open');
+                devtoolsPreviouslyOpen = devtoolsOpen;
+            }, 2000);
+        })();
         
 
         bey1.x = centerX + 120;
