@@ -498,8 +498,8 @@ background: radial-gradient(ellipse 85% 55% at 50% 108%, #286d70 0%, #1b555b 38%
         #initialBattleCapUnlockOverlay .initial-unlock-content { width:100vw; min-height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px 0 34px; }
         #initialBattleCapUnlockOverlay .initial-unlock-canvas-wrap { width:100vw; height:min(68vh, 620px); display:flex; align-items:center; justify-content:center; }
         #initialBattleCapUnlockOverlay canvas { width:100%; height:100%; display:block; }
-        #initialBattleCapUnlockOverlay .initial-unlock-name { width:100%; margin-top:18px; padding:10px 0; color:#352200; background:linear-gradient(to right, transparent 0%, #FCDF53 18%, #FCDF53 82%, transparent 100%); font-size:clamp(21px, 6vw, 30px); font-weight:1000; line-height:1; text-align:center; text-shadow:0 1px 0 rgba(255,255,255,.25); }
-        #initialBattleCapUnlockOverlay .initial-unlock-tap { position:absolute; left:0; right:0; bottom:22px; color:#fff; font-size:clamp(14px, 4vw, 19px); font-weight:900; text-align:center; text-shadow:0 2px 3px rgba(0,0,0,.55); }
+        #initialBattleCapUnlockOverlay .initial-unlock-name { position:relative; z-index:2; width:100%; margin-top:18px; padding:10px 0; color:#352200; background:linear-gradient(to right, transparent 0%, #FCDF53 18%, #FCDF53 82%, transparent 100%); font-size:clamp(21px, 6vw, 30px); font-weight:1000; line-height:1; text-align:center; text-shadow:0 1px 0 rgba(255,255,255,.25); transform:translateY(-16vh); }
+        #initialBattleCapUnlockOverlay .initial-unlock-tap { position:absolute; left:0; right:0; bottom:calc(22px + 16vh); z-index:2; color:#fff; font-size:clamp(14px, 4vw, 19px); font-weight:900; text-align:center; text-shadow:0 2px 3px rgba(0,0,0,.55); }
         body.game-preload-active > .screen { display:none !important; }
         body.game-preload-active > #bottomNav { display:none !important; }
         .game-preload-screen { position:relative; width:100%; height:auto; flex:1 1 auto; min-height:0; display:flex; align-items:center; justify-content:center; overflow:hidden; color:#fff; background:url('./Images/Menu/preload.png') center/cover no-repeat, linear-gradient(to bottom, #B0C7F8 0%, #3B3B85 50%, #1C1C42 100%); }
@@ -1811,6 +1811,8 @@ background:
         .microchip-category-tabs { display:grid; grid-template-columns:repeat(4,1fr); gap:3px; padding:5px; background:#474D6D; }
         .microchip-category-tab { min-height:28px; border:0; border-radius:3px; background:#fff; color:#222; font-size:9px; font-weight:900; cursor:pointer; }
         .microchip-category-tab.active { background:#FDD035; }
+        .microchip-inventory-capacity { padding:4px 8px 5px; background:#474D6D; color:#fff; font-size:10px; font-weight:1000; line-height:1; text-align:center; }
+        .microchip-inventory-capacity.at-capacity { color:#ff4d4d; }
         .microchip-inventory-list { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:5px; max-height:420px; overflow-y:auto; overscroll-behavior-y:contain; -webkit-overflow-scrolling:touch; padding:8px; }
         .microchip-card { position:relative; width:100%; aspect-ratio:4 / 5; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:4px 2px; border:2px solid rgba(255,255,255,.9); border-radius:5px; color:#fff; cursor:pointer; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,.3); }
         @keyframes microchipLevelUpGlow { 0% { border-color:#FFF8A6; box-shadow:0 0 4px 1px rgba(255,232,43,.55); } 45% { border-color:#FFE21F; box-shadow:0 0 18px 6px rgba(255,220,24,.98); } 100% { border-color:rgba(255,255,255,.9); box-shadow:0 1px 3px rgba(0,0,0,.3); } }
@@ -4778,6 +4780,7 @@ background: linear-gradient(
                     <label class="settings-row"><span class="settings-row-label">SFX Volume</span><span class="settings-range-wrap"><input id="settingsSfxVolume" class="settings-range" type="range" min="0" max="100" step="1" value="100"><output id="settingsSfxVolumeValue" class="settings-range-value">100%</output></span></label>
                     <h4 id="settingsVisualTitle" class="settings-section-title">Visual</h4>
                     <label class="settings-row"><span class="settings-row-label">Use SW assets</span><input id="settingsUseSwAssets" type="checkbox" checked></label>
+                    <label class="settings-row"><span class="settings-row-label">Skip Loading Screen</span><input id="settingsSkipLoadingScreen" type="checkbox"></label>
                 </section>
                 <section class="settings-section" aria-labelledby="settingsAccountTitle">
                     <h4 id="settingsAccountTitle" class="settings-section-title">Account</h4>
@@ -4957,6 +4960,7 @@ background: linear-gradient(
                 <button class="microchip-category-tab" type="button" data-microchip-category="Defense">Defense</button>
                 <button class="microchip-category-tab" type="button" data-microchip-category="Stamina">Stamina</button>
             </div>
+            <div id="microchipInventoryCapacity" class="microchip-inventory-capacity" aria-live="polite">0/150</div>
             <div id="microchipInventoryList" class="microchip-inventory-list"></div>
         </div>
     </div>
@@ -4965,6 +4969,7 @@ background: linear-gradient(
         <div class="microchip-manage-box">
             <div class="microchip-inventory-header"><h3 class="microchip-manage-title">Manage Microchips</h3><button id="microchipManageClose" class="microchip-inventory-close" type="button">X</button></div>
             <div class="microchip-category-tabs" role="tablist"><button class="microchip-category-tab active" type="button" data-manage-category="All">All</button><button class="microchip-category-tab" type="button" data-manage-category="Attack">Attack</button><button class="microchip-category-tab" type="button" data-manage-category="Defense">Defense</button><button class="microchip-category-tab" type="button" data-manage-category="Stamina">Stamina</button></div>
+            <div id="microchipManageCapacity" class="microchip-inventory-capacity" aria-live="polite">0/150</div>
             <div id="microchipManageList" class="microchip-inventory-list"></div>
         </div>
     </div>
@@ -4974,6 +4979,7 @@ background: linear-gradient(
             <div class="microchip-inventory-header"><h3 class="microchip-manage-title">Upgrade Microchip</h3><button id="microchipUpgradeClose" class="microchip-inventory-close" type="button">X</button></div>
             <div class="microchip-upgrade-top"><div id="microchipUpgradeSelected" class="microchip-upgrade-selected"></div><div id="microchipUpgradeInfo" class="microchip-upgrade-info"></div></div>
             <div class="microchip-category-tabs" role="tablist"><button class="microchip-category-tab active" type="button" data-upgrade-category="All">All</button><button class="microchip-category-tab" type="button" data-upgrade-category="Attack">Attack</button><button class="microchip-category-tab" type="button" data-upgrade-category="Defense">Defense</button><button class="microchip-category-tab" type="button" data-upgrade-category="Stamina">Stamina</button></div>
+            <div id="microchipUpgradeCapacity" class="microchip-inventory-capacity" aria-live="polite">0/150</div>
             <div id="microchipUpgradeList" class="microchip-inventory-list"></div>
             <div class="microchip-upgrade-actions"><div class="microchip-auto-select-wrap"><button id="microchipAutoSelect" class="microchip-auto-select" type="button">Auto Select</button><button id="microchipAutoFilterButton" class="microchip-auto-filter-button" type="button" aria-label="Auto Select filters" aria-expanded="false">⚙</button><div id="microchipAutoFilter" class="microchip-auto-filter" role="group" aria-label="Auto Select star-grade filters"><div class="microchip-auto-filter-title">Filter by Grade</div><div class="microchip-auto-filter-options"><label class="microchip-auto-filter-option"><input type="checkbox" data-auto-star="1" checked><span>1★</span></label><label class="microchip-auto-filter-option"><input type="checkbox" data-auto-star="2" checked><span>2★</span></label><label class="microchip-auto-filter-option"><input type="checkbox" data-auto-star="3" checked><span>3★</span></label><label class="microchip-auto-filter-option"><input type="checkbox" data-auto-star="4" checked><span>4★</span></label><label class="microchip-auto-filter-option"><input type="checkbox" data-auto-star="5" checked><span>5★</span></label><label class="microchip-auto-filter-option"><input type="checkbox" data-auto-star="6" checked><span>6★</span></label></div></div></div><button id="microchipUpgradeConfirm" class="microchip-upgrade-confirm" type="button">Upgrade</button></div>
         </div>
@@ -5963,8 +5969,9 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
             if (reward.kind === 'chest') {
                 for (let index = 0; index < reward.amount; index += 1) addChestToInventory(reward.chestId);
             } else if (reward.kind === 'microchip') {
-                if (!Array.isArray(microchipInventory[reward.chipId])) microchipInventory[reward.chipId] = [];
-                for (let index = 0; index < reward.amount; index += 1) microchipInventory[reward.chipId].push(createMicrochipInstance(reward.chipId, reward));
+                for (let index = 0; index < reward.amount; index += 1) {
+                    if (!addMicrochipInstanceToInventory(reward.chipId, reward)) break;
+                }
                 if (typeof updateGarageUI === 'function') updateGarageUI();
             } else addCurrency(reward.kind, reward.amount);
             missionsState[scope].rewardClaims[milestoneIndex] = true;
@@ -6762,6 +6769,7 @@ if (relativeSpeed < 0) {
             { id: 'mc_causality', name: 'Causality', category: 'Stamina', level: 1, star: 1, effect: 'startingGaugePoints', value: 4.2, description: 'Starting Ultimate gauge +4.2 pts' }
         ]);
         const MICROCHIP_SLOT_LAYOUT_SEED = 'SWMicrochipsSlotV1';
+        const MICROCHIP_MAX_TOTAL = 150;
         let microchipInventory = Object.fromEntries(MICROCHIP_DATABASE.map(chip => [chip.id, []]));
         let microchipStars = Object.fromEntries(MICROCHIP_DATABASE.map(chip => [chip.id, chip.star || 1]));
         let microchipLevels = Object.fromEntries(MICROCHIP_DATABASE.map(chip => [chip.id, chip.level || 1]));
@@ -6779,6 +6787,14 @@ if (relativeSpeed < 0) {
             return result;
         }
         function getAllMicrochipInstances() { return Object.values(microchipInventory).flat(); }
+        function getMicrochipTotalCount() { return getAllMicrochipInstances().length; }
+        function addMicrochipInstanceToInventory(chipId, data = {}) {
+            if (!MICROCHIP_DATABASE.some(chip => chip.id === chipId) || getMicrochipTotalCount() >= MICROCHIP_MAX_TOTAL) return null;
+            if (!Array.isArray(microchipInventory[chipId])) microchipInventory[chipId] = [];
+            const instance = createMicrochipInstance(chipId, data);
+            microchipInventory[chipId].push(instance);
+            return instance;
+        }
         function getMicrochipInstance(uid) { return getAllMicrochipInstances().find(instance => instance.uid === uid) || null; }
         function ensureMicrochipSlots(partId) {
             if (!partId) return { attack: null, attack2: null, defense: null, stamina: null };
@@ -7381,10 +7397,7 @@ const parts = {
             if (!drop || !MICROCHIP_DATABASE.some(chip => chip.id === drop.chipId)) return null;
             const chip = MICROCHIP_DATABASE.find(candidate => candidate.id === drop.chipId);
             const stars = Math.max(1, Math.min(6, Math.floor(Number(drop.stars) || chip?.star || 1)));
-            const instance = createMicrochipInstance(drop.chipId, { stars, level: Math.max(1, Math.floor(Number(drop.level) || 1)), experience: Math.max(0, Number(drop.experience) || 0) });
-            if (!Array.isArray(microchipInventory[drop.chipId])) microchipInventory[drop.chipId] = [];
-            microchipInventory[drop.chipId].push(instance);
-            return instance;
+            return addMicrochipInstanceToInventory(drop.chipId, { stars, level: Math.max(1, Math.floor(Number(drop.level) || 1)), experience: Math.max(0, Number(drop.experience) || 0) });
         }
         function getTowerPartDrop(floor) {
             // Tower floors grant Microchips on the designated early floors instead of direct part amounts.
@@ -11044,6 +11057,15 @@ const parts = {
             }
             return copy;
         }
+        function uniqueSurvivalPlayers(players) {
+            const seen = new Set();
+            return (Array.isArray(players) ? players : []).filter(player => {
+                const uid = String(player?.uid || '').trim();
+                if (!uid || seen.has(uid)) return false;
+                seen.add(uid);
+                return true;
+            });
+        }
         function makeRandomSurvivalLoadout() {
             const pick = type => {
                 const pool = type === 'battleCap' ? getAvailableBattleCaps() : (Array.isArray(PARTS[type]) ? PARTS[type].filter(Boolean) : []);
@@ -11106,7 +11128,7 @@ const parts = {
                     if (SUPABASE_CHAMPIONSHIP_ENABLED && endpoint) {
                         const query = `${endpoint}?select=player_uid,player_name,loadouts&limit=64`;
                         const rows = await fetchSupabaseChampionshipJson(query, { headers: getSupabaseChampionshipHeaders(), cache: 'no-store' });
-                        const remote = shuffleSurvivalArray((Array.isArray(rows) ? rows : []).map(normalizeSurvivalOpponentRow).filter(Boolean).filter(player => player.uid !== snapshot.player_uid));
+                        const remote = uniqueSurvivalPlayers(shuffleSurvivalArray((Array.isArray(rows) ? rows : []).map(normalizeSurvivalOpponentRow).filter(Boolean).filter(player => player.uid !== snapshot.player_uid)));
                         survivalRunOpponents = remote.slice(0, 8);
                     }
                 } catch (error) {
@@ -11114,8 +11136,8 @@ const parts = {
                 }
                 if (survivalRunOpponents.length < 8) {
                     const existingUids = new Set(survivalRunOpponents.map(player => player.uid));
-                    const fallback = getFallbackSurvivalOpponents().filter(player => !existingUids.has(player.uid));
-                    survivalRunOpponents = survivalRunOpponents.concat(fallback.slice(0, Math.max(0, 8 - survivalRunOpponents.length)));
+                    const fallback = uniqueSurvivalPlayers(getFallbackSurvivalOpponents()).filter(player => !existingUids.has(player.uid));
+                    survivalRunOpponents = uniqueSurvivalPlayers(survivalRunOpponents.concat(fallback.slice(0, Math.max(0, 8 - survivalRunOpponents.length))));
                 }
                 survivalOpponentPoolReady = survivalRunOpponents.length >= 8;
                 return survivalRunOpponents;
@@ -11843,7 +11865,8 @@ arena_7: './arena_7.mp3'
         let bgmPausedByPageLifecycle = false;
         const DEFAULT_AUDIO_SETTINGS = Object.freeze({ masterVolume: 1, bgmVolume: 1, sfxVolume: 1 });
         let audioSettings = { ...DEFAULT_AUDIO_SETTINGS };
-        const DEFAULT_VISUAL_SETTINGS = Object.freeze({ useSwAssets: true });
+        const DEFAULT_VISUAL_SETTINGS = Object.freeze({ useSwAssets: true, skipLoadingScreen: false });
+        const SKIP_LOADING_SCREEN_KEY = 'bey_skip_loading_screen_v1';
         let visualSettings = { ...DEFAULT_VISUAL_SETTINGS };
         function clampAudioVolume(value, fallback = 1) {
             const numeric = Number(value);
@@ -11857,7 +11880,16 @@ arena_7: './arena_7.mp3'
             };
         }
         function normalizeVisualSettings(saved = {}) {
-            return { useSwAssets: saved.useSwAssets !== false };
+            return { useSwAssets: saved.useSwAssets !== false, skipLoadingScreen: saved.skipLoadingScreen === true };
+        }
+        function persistSkipLoadingScreenPreference() {
+            try {
+                if (visualSettings.skipLoadingScreen === true) localStorage.setItem(SKIP_LOADING_SCREEN_KEY, '1');
+                else localStorage.removeItem(SKIP_LOADING_SCREEN_KEY);
+            } catch (e) {}
+        }
+        function isSkipLoadingScreenEnabled() {
+            return visualSettings.skipLoadingScreen === true;
         }
         function isSwAssetsEnabled() {
             return visualSettings.useSwAssets === true;
@@ -11898,6 +11930,8 @@ arena_7: './arena_7.mp3'
             });
             const swAssetsInput = document.getElementById('settingsUseSwAssets');
             if (swAssetsInput) swAssetsInput.checked = isSwAssetsEnabled();
+            const skipLoadingInput = document.getElementById('settingsSkipLoadingScreen');
+            if (skipLoadingInput) skipLoadingInput.checked = isSkipLoadingScreenEnabled();
         }
         function saveAudioSettings() {
             if (typeof manualSaveGame === 'function') manualSaveGame();
@@ -11912,6 +11946,7 @@ arena_7: './arena_7.mp3'
         function setVisualSetting(settingName, enabled) {
             if (!Object.prototype.hasOwnProperty.call(DEFAULT_VISUAL_SETTINGS, settingName)) return;
             visualSettings[settingName] = enabled === true;
+            if (settingName === 'skipLoadingScreen') persistSkipLoadingScreenPreference();
             applyVisualSettings();
             updateSettingsAudioUI();
             saveAudioSettings();
@@ -11944,6 +11979,9 @@ arena_7: './arena_7.mp3'
         });
         document.getElementById('settingsUseSwAssets')?.addEventListener('change', event => {
             setVisualSetting('useSwAssets', event.target.checked);
+        });
+        document.getElementById('settingsSkipLoadingScreen')?.addEventListener('change', event => {
+            setVisualSetting('skipLoadingScreen', event.target.checked);
         });
         document.getElementById('settingsResetAudioButton')?.addEventListener('click', () => {
             audioSettings = { ...DEFAULT_AUDIO_SETTINGS };
@@ -23451,9 +23489,17 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 document.getElementById('microchipManageModal')?.classList.remove('hidden');
             });
         }
+        function updateMicrochipInventoryCapacityUI() {
+            const total = getMicrochipTotalCount();
+            document.querySelectorAll('.microchip-inventory-capacity').forEach(counter => {
+                counter.textContent = `${total}/${MICROCHIP_MAX_TOTAL}`;
+                counter.classList.toggle('at-capacity', total >= MICROCHIP_MAX_TOTAL);
+            });
+        }
         function renderMicrochipInventory() {
             const list = document.getElementById('microchipInventoryList');
             if (!list) return;
+            updateMicrochipInventoryCapacityUI();
             document.querySelectorAll('[data-microchip-category]').forEach(button => button.classList.toggle('active', button.dataset.microchipCategory === microchipInventoryCategory));
             const target = microchipInventoryTarget;
             const targetPart = target ? Object.values(PARTS).flatMap(parts => parts || []).find(part => part && part.id === target.partId) : null;
@@ -23627,6 +23673,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         }
         function renderMicrochipManageList() {
             const list = document.getElementById('microchipManageList'); if (!list) return;
+            updateMicrochipInventoryCapacityUI();
             document.querySelectorAll('[data-manage-category]').forEach(tab => tab.classList.toggle('active', tab.dataset.manageCategory === microchipManageCategory));
             const chips = MICROCHIP_DATABASE.filter(chip => microchipManageCategory === 'All' || chip.category === microchipManageCategory).filter(chip => (microchipInventory[chip.id] || []).length > 0);
             list.innerHTML = chips.length ? chips.flatMap(chip => getMicrochipCopies(chip).map(({ token }) => getMicrochipCopyMarkup(chip, '', token))).join('') : '<div style="grid-column:1/-1;padding:24px;text-align:center;font-weight:800;color:#26313D;">No Microchips available.</div>';
@@ -23660,6 +23707,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         }
         function renderMicrochipUpgrade() {
             const targetInstance = getMicrochipInstance(microchipUpgradeTarget); const chip = MICROCHIP_DATABASE.find(candidate => candidate.id === targetInstance?.chipId); const selected = document.getElementById('microchipUpgradeSelected'); const list = document.getElementById('microchipUpgradeList'); const info = document.getElementById('microchipUpgradeInfo'); if (!chip || !selected || !list || !info) return;
+            updateMicrochipInventoryCapacityUI();
             selected.innerHTML = getMicrochipCardMarkup(targetInstance);
             renderMicrochipCardPartVisuals(selected);
             document.querySelectorAll('[data-upgrade-category]').forEach(tab => tab.classList.toggle('active', tab.dataset.upgradeCategory === microchipUpgradeCategory));
@@ -24691,9 +24739,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 const level = Math.max(1, Math.min(maxLevel, Math.floor(Number(entry?.level) || 1)));
                 const experience = Math.max(0, Number(entry?.experience ?? entry?.exp ?? 0) || 0);
                 for (let index = 0; index < amount; index += 1) {
-                    const instance = createMicrochipInstance(chipId, { stars, level, experience });
-                    if (!Array.isArray(microchipInventory[chipId])) microchipInventory[chipId] = [];
-                    microchipInventory[chipId].push(instance);
+                    if (!addMicrochipInstanceToInventory(chipId, { stars, level, experience })) break;
                 }
                 rewards.push(`${chip.name} ${stars}★ Lv.${level}: x${amount.toLocaleString()}`);
             });
@@ -24863,6 +24909,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 championshipEnrollmentActive = data.championshipEnrollmentActive === true;
                 audioSettings = normalizeAudioSettings(data.audioSettings || {});
                 visualSettings = normalizeVisualSettings(data.visualSettings || {});
+                persistSkipLoadingScreenPreference();
                 applyAudioSettings();
                 applyVisualSettings();
                 updateSettingsAudioUI();
@@ -24972,6 +25019,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             championshipEnrollmentActive = false;
             audioSettings = { ...DEFAULT_AUDIO_SETTINGS };
             visualSettings = { ...DEFAULT_VISUAL_SETTINGS };
+            persistSkipLoadingScreenPreference();
             applyAudioSettings();
             applyVisualSettings();
             updateSettingsAudioUI();
@@ -25502,7 +25550,24 @@ document.addEventListener('visibilitychange', () => {
         preloadEnter?.addEventListener('pointerdown', startPreloadBgm, true);
         preloadScreen?.addEventListener('pointerdown', continueFromPreload, true);
         preloadEnter?.addEventListener('click', enterGameFromPreload);
-        preparePreloadEnterScreen();
+        function shouldSkipLoadingScreenAtStartup() {
+            try { return localStorage.getItem(SKIP_LOADING_SCREEN_KEY) === '1'; } catch (e) { return false; }
+        }
+        function skipPreloadAndOpenHome() {
+            window.gamePreloadReady = true;
+            preloadEnterScreen?.classList.add('hidden');
+            preloadScreen?.classList.add('hidden', 'is-hidden');
+            preloadScreen?.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('game-preload-active');
+            screens.forEach(screen => screen.classList.add('hidden'));
+            const homeScreen = document.getElementById('homeScreen');
+            homeScreen?.classList.remove('hidden');
+            navItems.forEach(nav => nav.classList.toggle('active', nav.getAttribute('data-screen') === 'homeScreen'));
+            if (typeof updateHomeUI === 'function') updateHomeUI();
+            if (typeof updateGameBgmForScreen === 'function') updateGameBgmForScreen('homeScreen');
+        }
+        if (shouldSkipLoadingScreenAtStartup()) skipPreloadAndOpenHome();
+        else preparePreloadEnterScreen();
     })();
     </script>
     <script>
