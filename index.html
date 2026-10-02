@@ -5104,6 +5104,11 @@ const BC_THETIS_1 = 'data:audio/mpeg;base64,SUQzAwAAAAABLFRFTkMAAAALAAAAUHJvIFRv
             ],
             weightRing: [
                 { 
+                    id: "wr_devil", rarity: "Normal", name: "Devil", color: "#3E4C77", type: "Attack", atk: 84, def: 12, health: 920, stamina: 17, weight: 37.0, interval: 0, 
+                    desc: "Increases Attack when HP is above 60%.",
+                    effects: [{ type: 'devil_atk', trigger: 'hp_above', threshold: 0.6, bonus: 0.3, desc: '+30% ATK when HP > 60%' }]
+                },
+                { 
                     id: "wr_divinestar", rarity: "Normal", name: "Divine Star", color: "#5dade2", type: "Stamina", atk: 46, def: 14, health: 1092, stamina: 21, weight: 25.0, interval: 0, 
                     desc: "Creates starlight orbs in the stadium at regular intervals. Pick them up recover HP.",
                     effects: [{ type: 'divinestar_creation', trigger: 'creation_timer', interval: 300, healRatio: 0.5, desc: 'Regularly creates healing Creation orbs every 5s (Heal = 50% ATK)' }] 
