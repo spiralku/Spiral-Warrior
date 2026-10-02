@@ -495,11 +495,31 @@ background: radial-gradient(ellipse 85% 55% at 50% 108%, #286d70 0%, #1b555b 38%
         }
         #initialBattleCapUnlockOverlay { position: fixed; inset: 0; z-index: 6000; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; opacity:0; pointer-events:none; background:linear-gradient(to bottom, #211847 0%, #190828 50%, #47BFCF 100%); transition:opacity .35s ease; }
         #initialBattleCapUnlockOverlay.visible { opacity:1; pointer-events:auto; }
-        #initialBattleCapUnlockOverlay .initial-unlock-content { width:min(100%, 420px); min-height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px 16px 34px; }
-        #initialBattleCapUnlockOverlay .initial-unlock-canvas-wrap { width:min(70vw, 270px); height:min(70vw, 270px); display:flex; align-items:center; justify-content:center; }
+        #initialBattleCapUnlockOverlay .initial-unlock-content { width:100vw; min-height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px 0 34px; }
+        #initialBattleCapUnlockOverlay .initial-unlock-canvas-wrap { width:100vw; height:min(68vh, 620px); display:flex; align-items:center; justify-content:center; }
         #initialBattleCapUnlockOverlay canvas { width:100%; height:100%; display:block; }
         #initialBattleCapUnlockOverlay .initial-unlock-name { width:100%; margin-top:18px; padding:10px 0; color:#352200; background:linear-gradient(to right, transparent 0%, #FCDF53 18%, #FCDF53 82%, transparent 100%); font-size:clamp(21px, 6vw, 30px); font-weight:1000; line-height:1; text-align:center; text-shadow:0 1px 0 rgba(255,255,255,.25); }
         #initialBattleCapUnlockOverlay .initial-unlock-tap { position:absolute; left:0; right:0; bottom:22px; color:#fff; font-size:clamp(14px, 4vw, 19px); font-weight:900; text-align:center; text-shadow:0 2px 3px rgba(0,0,0,.55); }
+        body.game-preload-active > .screen { display:none !important; }
+        body.game-preload-active > #bottomNav { display:none !important; }
+        .game-preload-screen { position:relative; width:100%; height:auto; flex:1 1 auto; min-height:0; display:flex; align-items:center; justify-content:center; overflow:hidden; color:#fff; background:url('./Images/Menu/preload.png') center/cover no-repeat, linear-gradient(to bottom, #B0C7F8 0%, #3B3B85 50%, #1C1C42 100%); }
+        .game-preload-screen.hidden { display:none !important; }
+        .game-preload-screen.is-ready { cursor:pointer; }
+        .game-preload-screen.is-hidden { display:none !important; }
+        #gamePreloadEnterScreen.preload-background-ready .game-preload-enter { display:block; }
+        .game-preload-shade { position:absolute; inset:0; background:linear-gradient(to bottom, rgba(120,201,249,.05), rgba(28,28,66,.48)); pointer-events:none; }
+        .game-preload-content { position:relative; z-index:1; width:min(88vw, 620px); display:flex; flex-direction:column; align-items:center; gap:12px; padding:24px 0 30px; transform:translateY(30vh); text-align:center; }
+        .game-preload-progress-shell { width:100%; height:24px; padding:4px; border:2px solid rgba(255,244,152,.95); border-radius:999px; background:rgba(25,10,48,.72); }
+        #gamePreloadProgress { width:0%; height:100%; border-radius:999px; background:#F6B91A; transition:width .18s ease; }
+        @keyframes gamePreloadTapPulse { 0%,100% { opacity:.55; } 50% { opacity:1; } }
+        .game-preload-tap { display:none; min-height:24px; color:#fff; font-size:clamp(15px, 4vw, 23px); font-weight:1000; animation:gamePreloadTapPulse 2.2s ease-in-out infinite; text-shadow:0 2px 4px rgba(0,0,0,.55); }
+        #gamePreloadScreen.is-ready .game-preload-progress-shell { display:none; }
+        #gamePreloadScreen.is-ready .game-preload-tap { display:block; }
+        .game-preload-enter { display:none; min-width:200px; min-height:38px; padding:8px 28px; border:2px solid #9C6500; border-radius:7px; background:#F6C431; color:#3D2900; font-family:inherit; font-size: clamp(17px, 4.5vw, 25px); font-weight:1000; cursor:pointer; }
+        #gamePreloadScreen.awaiting-enter .game-preload-progress-shell, #gamePreloadScreen.awaiting-enter .game-preload-tap { display:none; }
+        #gamePreloadScreen.awaiting-enter .game-preload-enter { display:block; }
+        #gamePreloadInputGuard { display:none; position:fixed; inset:0; z-index:10001; background:transparent; pointer-events:auto; }
+        #gamePreloadInputGuard.active { display:block; }
         #winnerAnnouncementScreen.round-result {
             background: rgba(0, 0, 0, 0.42);
             cursor: pointer;
@@ -3865,7 +3885,24 @@ background: linear-gradient(
         .my-gym-upgrade-max { color:#fff; font-size:11px; font-weight:1000; }
 </style>
 </head>
-<body>
+<body class="game-preload-active">
+    <div id="gamePreloadEnterScreen" class="game-preload-screen" role="dialog" aria-modal="true" aria-label="Enter game">
+        <div class="game-preload-shade"></div>
+        <div class="game-preload-content">
+            <button id="gamePreloadEnter" class="game-preload-enter" type="button">Enter</button>
+        </div>
+    </div>
+    <div id="gamePreloadScreen" class="game-preload-screen hidden" role="dialog" aria-modal="true" aria-label="Loading game">
+        <div class="game-preload-shade"></div>
+        <div class="game-preload-content">
+            <div class="game-preload-progress-shell" role="progressbar" aria-label="Game loading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <div id="gamePreloadProgress"></div>
+            </div>
+            <div id="gamePreloadTap" class="game-preload-tap">Tap anywhere to continue</div>
+        </div>
+    </div>
+    <div id="gamePreloadInputGuard" aria-hidden="true"></div>
+
     <div id="flashOverlay"></div>
     <canvas id="valkyriePetalCanvas"></canvas>
 
@@ -5035,14 +5072,14 @@ const BC_THETIS_1 = 'data:audio/mpeg;base64,SUQzAwAAAAABLFRFTkMAAAALAAAAUHJvIFRv
                 { id: "bc_atum", rarity: "Epic", name: "Atum", color: "#F9C07A", type: "Attack", spinType: "right", atk: 119, def: 19, health: 1598, stamina: 30, weight: 15.0, interval: 2.0, desc: "Ultimate: Launched slashes from all sides on normal opponent and double slashes on opponents inflicted with break. Special effect: Grants extra charge to Ultimate through impact.", effects: [{ type: 'atum_ultimate', desc: 'Ultimate: 4-Directional Sun Strike (4x 100% ATK guaranteed hits)' }] },
                 { id: "bc_beelzebub", rarity: "Legendary", name: "Beelzebub", color: "#c0392b", type: "Stamina", spinType: "left", atk: 133, def: 27, health: 1533, stamina: 52, weight: 15.0, interval: 0, desc: "Ultimate: Unleashes spines that pierce surrounding opponents and absorb their HP. Special effect: Cannot use Impacts. Grants a chance of absorbing HP and charging Ultimate when hitting opponents.", effects: [{ type: "beelzebub_absorb", chance: 0.30, gaugeGain: 25, desc: "No Impacts. 30% chance on collision to heal HP = damage dealt & gain +25 Ultimate Gauge." }, { type: "beelzebub_ultimate", desc: "Ultimate: Red Spine Tether (60% ATK damage/s for 4s, heals caster. Cuts off if too far.)" }] },
                 { id: "bc_chronos", rarity: "Legendary", name: "Chronos", color: "#FBDA79", type: "Balance", spinType: "right", atk: 140, def: 30, health: 1578, stamina: 43, weight: 13.0, interval: 4.0, desc: "Ultimate: Stops all opponents, creations, and Projectiles, and greatly speeds up the Bey's skill cooldown. Special effect: Increases Ultimate charging and skill cooldown speed based on remaining HP percentage.", effects: [{ type: "chronos_time_stop", duration: 210, cooldownMultiplier: 0.50, desc: "Ultimate: Selective time stop for 3.5s. Opponent systems are paused while Chronos and allies act normally." }] },
+                { id: "bc_solfian", rarity: "Legendary", name: "Solfian", color: "#F47C20", type: "Defense", spinType: "right", atk: 140, def: 34, health: 1650, stamina: 40, weight: 14.0, interval: 3.0, desc: "Ultimate: Launches a giant fireball that can rebound through enemies, allies are protected, and even Solfian can be hit. Each rebound increases Attack and Defense. Special Effect: Successful Blocks launch a smaller fireball.", effects: [{ type: "solfian_fireball", duration: 300, attackRatio: 0.75, speed: 14, size: 28, reboundCount: 8, reboundStatBonus: 0.02, knockbackForce: 4, color: "#FF7A18", outlineColor: "#FFD166", shadowColor: "#F0441E", desc: "Ultimate: A Bey-sized fire Projectile lasts 5s and deals 75% ATK minus Defense with variance. It can hit enemies or Solfian, never allies; each rebound grants +2% Attack and Defense." }, { type: "solfian_block_fireball", duration: 150, attackRatio: 0.50, speed: 14, size: 20, reboundCount: 8, knockbackForce: 4, color: "#FF9D2E", outlineColor: "#FFE08A", shadowColor: "#F0441E", desc: "Special Effect: After a successful Block, launches a smaller 2.5s fire Projectile that deals 50% ATK minus Defense with variance. Rebounds do not grant Attack or Defense." }] },
                 { id: "bc_death_knight", rarity: "Epic", name: "Death Knight", color: "#F5DB8E", type: "Attack", spinType: "right", atk: 151, def: 27, health: 1597, stamina: 30, weight: 16.0, interval: 2.2, desc: "Ultimate: Enters Revelation mode, sacrificing all Defense for greater attack power, and launch an additional impact every time collide with outer wall of arena. Special effect: Increases charging through impacts when not in Revelation mode.", effects: [{ type: "death_knight_revelation", defenseToAttackMultiplier: 2.0, wallImpact: true, desc: "Permanent Revelation mode: converts Defense into Attack and triggers an extra Impact on wall collision." }] },
                 { id: "bc_mermaid", rarity: "Epic", name: "Mermaid", color: "#FED058", type: "Balance", spinType: "right", atk: 153, def: 22, health: 1578, stamina: 43, weight: 13.0, interval: 3.0, desc: "Ultimate: Unleashes a slow-moving but large sonic wave Projectile. Special effect: Speeds up automatic charging to charge Ultimate. Impacts become long-range sonic wave Projectiles.", effects: [{ type: "mermaid_sonic_impact", autoChargeMultiplier: 2.0, speed: 6, size: 15, shape: "note", color: "#FFFFFF", shadowColor: "#4B9DFF", attackRatio: 1.0, hitCooldownFrames: 45, lifetime: 600, desc: "Impacts become persistent music-note sonic waves." }, { type: "mermaid_ultimate", attackRatio: 1.80, speed: 3, size: 50, shape: "sonic_wave", color: "#FFFFFF", shadowColor: "#4B9DFF", hitCooldownFrames: 45, lifetime: 600, desc: "Ultimate: Large persistent two-arc sonic wave." }] },
-            { id: "bc_camus", rarity: "Legendary", name: "Camus", color: "#A4C1D2", type: "Balance", spinType: "right", atk: 136, def: 32, health: 1610, stamina: 44, weight: 14.0, interval: 3.5, desc: "Ultimate: Ultimate: Summons a mirage that Seals all beys in the stadium during its duration, and also periodically makes you enter the Void status. Special effect: When the opponent's Ultimate charge is full, switches Ultimate charge level with theirs.", effects: [{ type: "camus_seal_ultimate", duration: 360, desc: "Ultimate: Seals every Bey in the stadium for 6s, preventing Ultimate charge and casting." }, { type: "camus_gauge_swap", cooldown: 1800, desc: "Special Effect: When the opponent's Ultimate gauge is full, swaps current Ultimate gauge with theirs. Cooldown: 30s." }] },
-                                            { id: "bc_hodur", rarity: "Ascended", name: "Hodur", color: "#FFD460", type: "Attack", spinType: "right", atk: 158, def: 24, health: 1625, stamina: 36, weight: 15.0, interval: 2.5, desc: "Ultimate: Control all blades to project towards arena, deals multiple damage to all enemies. Special effect: Granrs a chance of lauching an extra impacr after your last one.", effects: [{ type: "hodur_ultimate", delay: 30, hits: 3, attackRatio: 0.70, lostHpBonusPerPercent: 0.008, desc: "Ultimate: Three hits of 70% ATK minus Defense with variance; +0.8% damage per 1% enemy HP lost." }, { type: "hodur_follow_up", cooldown: 300, desc: "Special Effect: After hitting with an Impact, chance to launch a Follow-up Impact equal to current Ultimate charge percentage. Cooldown: 5s." }] },
+                { id: "bc_camus", rarity: "Legendary", name: "Camus", color: "#A4C1D2", type: "Balance", spinType: "right", atk: 136, def: 32, health: 1610, stamina: 44, weight: 14.0, interval: 3.5, desc: "Ultimate: Ultimate: Summons a mirage that Seals all beys in the stadium during its duration, and also periodically makes you enter the Void status. Special effect: When the opponent's Ultimate charge is full, switches Ultimate charge level with theirs.", effects: [{ type: "camus_seal_ultimate", duration: 360, desc: "Ultimate: Seals every Bey in the stadium for 6s, preventing Ultimate charge and casting." }, { type: "camus_gauge_swap", cooldown: 1800, desc: "Special Effect: When the opponent's Ultimate gauge is full, swaps current Ultimate gauge with theirs. Cooldown: 30s." }] },
+                { id: "bc_hodur", rarity: "Ascended", name: "Hodur", color: "#FFD460", type: "Attack", spinType: "right", atk: 158, def: 24, health: 1625, stamina: 36, weight: 15.0, interval: 2.5, desc: "Ultimate: Control all blades to project towards arena, deals multiple damage to all enemies. Special effect: Granrs a chance of lauching an extra impacr after your last one.", effects: [{ type: "hodur_ultimate", delay: 30, hits: 3, attackRatio: 0.70, lostHpBonusPerPercent: 0.008, desc: "Ultimate: Three hits of 70% ATK minus Defense with variance; +0.8% damage per 1% enemy HP lost." }, { type: "hodur_follow_up", cooldown: 300, desc: "Special Effect: After hitting with an Impact, chance to launch a Follow-up Impact equal to current Ultimate charge percentage. Cooldown: 5s." }] },
                 { id: "bc_mercury", rarity: "Rare", name: "Mercury", color: "#77E6FA", type: "Stamina", spinType: "right", atk: 124, def: 34, health: 1600, stamina: 52, weight: 12.0, interval: 3.6, desc: "Ultimate: Remove all disables, become invulnerable and fly across the arena, inflicts unbalance on surrounding enemy when approaching again. Special effect: Grants extra charging when moving in the arena.", effects: [{ type: "mercury_jump", jumpFrames: 60, maxScale: 1.75, landingRadius: 150, unbalanceDuration: 180, desc: "Ultimate: Slower leap across the arena with temporary immunity, ailment cleansing, and a landing wind effect that inflicts Unbalance on nearby opponents." }, { type: "mercury_distance_charge", distance: 300, charge: 1, desc: "Special Effect: Grants 1 Ultimate-charge point for every 300 distance traveled in the arena." }] },
                 { id: "bc_venus", rarity: "Rare", name: "Venus", color: "#FFDA4D", type: "Stamina", spinType: "right", atk: 118, def: 30, health: 1500, stamina: 45, weight: 13.0, interval: 3.3, desc: "Ultimate: Creates 3 magical orbs that revolve around the Bey, and recover HP when they hit an opponent. Special effect: Speeds up automatic charging to charge Ultimate.", effects: [{ type: "venus_orbs", count: 3, duration: 180, color: "#FF77A2", radius: 16, attackRatio: 0.50, knockbackForce: 12, desc: "Ultimate: Creates 3 pink Creation orbs for 3s; each orb deals 50% ATK minus DEF with variance, knockback, and heals Venus for the damage dealt." }, { type: "venus_auto_charge", autoChargeMultiplier: 2.20, desc: "Special Effect: +120% automatic Ultimate charging rate." }] },
-                                { id: "bc_plague_knight", rarity: "Epic", name: "Plague Knight", color: "#FFDB8D", type: "Defense", spinType: "right", atk: 118, def: 39, health: 1640, stamina: 34, weight: 15.0, interval: 3.2, desc: "Ultimate: Creates gas of plague continuously while moving, gas will inflict break on opponents. Special effect: Granrs extra charge to Ultimate when blocking enemy's impacts.", effects: [{ type: "plague_knight_gas", totalDuration: 360, spawnInterval: 15, areaDuration: 120, radius: 33, breakDuration: 240,
- breakTickInterval: 15, desc: "Ultimate: Spawns a plague gas Creation every 0.25s for 6s; each lasts 2s and inflicts Break on opponents." }] },
+                { id: "bc_plague_knight", rarity: "Epic", name: "Plague Knight", color: "#FFDB8D", type: "Defense", spinType: "right", atk: 118, def: 39, health: 1640, stamina: 34, weight: 15.0, interval: 3.2, desc: "Ultimate: Creates gas of plague continuously while moving, gas will inflict break on opponents. Special effect: Granrs extra charge to Ultimate when blocking enemy's impacts.", effects: [{ type: "plague_knight_gas", totalDuration: 360, spawnInterval: 15, areaDuration: 120, radius: 33, breakDuration: 240,breakTickInterval: 15, desc: "Ultimate: Spawns a plague gas Creation every 0.25s for 6s; each lasts 2s and inflicts Break on opponents." }] },
                 { id: "bc_himiko", rarity: "Rare", name: "Himiko", color: "#FFB963", type: "Balance", spinType: "right", atk: 132, def: 30, health: 1580, stamina: 43, weight: 13.0, interval: 3.4, desc: "Ultimate: Inflicts Seal on enemy and deals damage based on enemu's current Ultimate charging. Special effect: The charge required to release the Ultimate decreases, but the charge limit stay constant.", effects: [{ type: "himiko_charge_attack", attackPercentPerEnemyGaugePercent: 0.015, sealDuration: 180, dashFrames: 24, desc: "Ultimate: Deals 1.5% ATK damage per 1% of the opponent's Ultimate charge, with variance, and inflicts Seal for 3s. This attack is not an Impact." }] },
                 { id: "bc_valkyrie", rarity: "Legendary", name: "Valkyrie", color: "#CF261F", type: "Attack", spinType: "right", atk: 158, def: 30, health: 1640, stamina: 34, weight: 15.0, interval: 2.4, desc: "Ultimate: Unleashes an ultimate attack after a short delay, dealing damage to all opponents. Special effect: Grants extra charge to Ultimate through impacts. Continuously increase Attack by moving until colliding with an opponent.", effects: [{ type: "valkyrie_delayed_ultimate", preDelay: 180, attackRatio: 3.0, flashDuration: 60, desc: "Ultimate: 3s pre-delay, then standard Ultimate pause/wind-up, followed by a 300% Attack all-opponent strike with a 1s white flash." }, { type: "valkyrie_attack_charging", distance: 100, bonusPerMilestone: 0.01, maxBonus: 1.0, desc: "Special Effect: Attack Charging — gains 1% Attack for every 100 distance traveled, up to 100%; resets on collision." }] },
                 { id: "bc_baldr", rarity: "Ascended", name: "Baldr", color: "#FFC854", type: "Attack", spinType: "right", atk: 168, def: 28, health: 1660, stamina: 35, weight: 16.0, interval: 2.4, desc: "Ultimate: Tap Ultimate to unleash whirlslash up to 3 times. The third whirlslash has larger range and massive damage. But once your slash missed, the Ultimate will be terminated. Special effect: Grants extra charge to Ultimate through impacts on enemy with higher HP percentage.", effects: [{ type: "baldr_ultimate", attackRatio: 1.0, attackRadius: 120, thirdAttackRatio: 1.8, thirdAttackRadiusMultiplier: 1.5, swordColor: "#AEEBFF", desc: "Ultimate: One-time 100% Attack minus Defense strike with variance around Baldr; sword length matches the attack radius." }] },
@@ -5066,11 +5103,6 @@ const BC_THETIS_1 = 'data:audio/mpeg;base64,SUQzAwAAAAABLFRFTkMAAAALAAAAUHJvIFRv
                 { id: "bc_enchantrees", rarity: "Ascended", name: "Enchantress", color: "#20FFE8", type: "Stamina", spinType: "right", atk: 132, def: 42, health: 1760, stamina: 50, weight: 14.0, interval: 3.0, desc: "Ultimate: Create 6 obstacles around the central area, which can invalidate opponent's impacts. After 1 second the obstacles will move towards the area you are not in. Special effect: Increase automatic charge speed, Project slow tracking few follet that deals damage and Recover HP", effects: [{ type: "enchantrees_hex_circles", count: 6, attackRatio: 0.20, radius: 12, hexagonRadius: 110, damageInterval: 15, duration: 300, color: "#05070A", glowColor: "#20FFE8", outlineColor: "#20FFE8", desc: "Ultimate: Six small black circle Creations with cyan shadow glow form a tight inner hexagon. They are solid bouncing obstacles and deal 20% Attack minus Defense with variance every 0.25s for 5s." }, { type: "enchantrees_special_projectile", cooldown: 300, attackRatio: 0.50, speed: 2.4, size: 12, lifetime: 300, turnRate: 0.08, shape: "enchantrees_circle", color: "#05070A", outlineColor: "#20FFE8", shadowColor: "#20FFE8", healOwner: true, desc: "Special Effect: Every 5 seconds, launches a slow homing black circle Projectile with cyan glow. On hit, deals 50% Attack minus Defense with variance and restores the same damage to the caster." }, { type: "enchantress_auto_charge", autoChargeMultiplier: 2.0, desc: "Special Effect: Increases automatic Ultimate charging by 100%." }] },
             ],
             weightRing: [
-                { 
-                    id: "wr_devil", rarity: "Normal", name: "Devil", color: "#3E4C77", type: "Attack", atk: 84, def: 12, health: 920, stamina: 17, weight: 37.0, interval: 0, 
-                    desc: "Increases Attack when HP is above 60%.",
-                    effects: [{ type: 'devil_atk', trigger: 'hp_above', threshold: 0.6, bonus: 0.3, desc: '+30% ATK when HP > 60%' }]
-                },
                 { 
                     id: "wr_divinestar", rarity: "Normal", name: "Divine Star", color: "#5dade2", type: "Stamina", atk: 46, def: 14, health: 1092, stamina: 21, weight: 25.0, interval: 0, 
                     desc: "Creates starlight orbs in the stadium at regular intervals. Pick them up recover HP.",
@@ -5411,8 +5443,8 @@ const BC_THETIS_1 = 'data:audio/mpeg;base64,SUQzAwAAAAABLFRFTkMAAAALAAAAUHJvIFRv
                 },
                 {
                     id: "drv_leaf", rarity: "Rare", type: "Stamina", name: "Leaf", color: "#53CB48", atk: 54, def: 22, health: 1320, stamina: 28, weight: 11.0, interval: 0, tip: "sharp",
-                    desc: "When Projectile hits an enemy, recovers HP and increases Attack.",
-                    effects: [{ type: 'leaf_projectile_hit', trigger: 'projectile_hit', healMaxHpRatio: 0.02, attackBonus: 0.01, duration: 90, maxStacks: 20, desc: 'Projectile hits recover 2% Max HP and grant +1% Attack per stack for 1.5s, up to 20 stacks' }]
+                    desc: "Every 2% of Max HP recovered permanently increases Attack by 1% until the battle resets.",
+                    effects: [{ type: 'leaf_recovery', trigger: 'self_recover_hp', recoveryMaxHpRatio: 0.02, attackBonus: 0.01, desc: 'Every 2% Max HP recovered grants a permanent +1% Attack stack until the battle resets' }]
                 },
                 {
                     id: "drv_pain", rarity: "Rare", type: "Defense", name: "Pain", color: "#FFE3DA", atk: 48, def: 36, health: 1450, stamina: 20, weight: 13.0, interval: 0, tip: "flat",
@@ -5456,7 +5488,10 @@ const BC_THETIS_1 = 'data:audio/mpeg;base64,SUQzAwAAAAABLFRFTkMAAAALAAAAUHJvIFRv
                 }
             ]
         };
-
+        // Temporarily remove unfinished Solfian from every Battle Cap catalog-based
+        // pool: shop, chests, Gym, Adventure rewards, Garage, and random enemies.
+        // Its definition remains above so it can be restored by deleting this line.
+        PARTS.battleCap = PARTS.battleCap.filter(part => part && part.id !== 'bc_solfian');
 
         let debugOverrides = {
             playerUnlimitedHealth: false,
@@ -6899,6 +6934,16 @@ if (relativeSpeed < 0) {
                 { battleCap: PARTS.battleCap[2], weightRing: PARTS.weightRing[2], driver: PARTS.driver[2] }
             ];
         }
+        // Temporarily hidden content remains defined so it can be restored later
+        // by removing its ID from this set. Hidden Battle Caps are omitted from
+        // inventory selection and procedural/random enemy pools.
+        const HIDDEN_BATTLE_CAP_IDS = new Set(['bc_solfian']);
+        function isBattleCapHidden(part) {
+            return !!(part && HIDDEN_BATTLE_CAP_IDS.has(part.id));
+        }
+        function getAvailableBattleCaps() {
+            return (Array.isArray(PARTS.battleCap) ? PARTS.battleCap : []).filter(part => !isBattleCapHidden(part));
+        }
         const LOADOUT_TEAM_NAMES = ['Team A', 'Team B', 'Team C'];
         let loadoutTeams = [createDefaultLoadouts(), createDefaultLoadouts(), createDefaultLoadouts()];
         let activeTeamIndex = 0;
@@ -7260,12 +7305,12 @@ function getTowerEnemy(floor) {
 const allowedRarities = getTowerAllowedRarities(floor);
 
 const pick = list => {
-    const eligibleParts = list.filter(part => allowedRarities.includes(part.rarity));
+    const eligibleParts = list.filter(part => allowedRarities.includes(part.rarity) && !isBattleCapHidden(part));
     return eligibleParts[Math.floor(rng() * eligibleParts.length)];
 };
 
 const parts = {
-    battleCap: pick(PARTS.battleCap),
+    battleCap: pick(getAvailableBattleCaps()),
     weightRing: pick(PARTS.weightRing),
     driver: pick(PARTS.driver)
 };
@@ -9904,7 +9949,7 @@ const parts = {
             arenaCreations = [];
             shuraLinks = [];
             shuraRepeatQueue = [];
-            const caps = PARTS.battleCap;
+            const caps = getAvailableBattleCaps();
             const rings = PARTS.weightRing;
             const drivers = PARTS.driver;
             enemyEquipped = {
@@ -10996,7 +11041,7 @@ const parts = {
         }
         function makeRandomSurvivalLoadout() {
             const pick = type => {
-                const pool = Array.isArray(PARTS[type]) ? PARTS[type].filter(Boolean) : [];
+                const pool = type === 'battleCap' ? getAvailableBattleCaps() : (Array.isArray(PARTS[type]) ? PARTS[type].filter(Boolean) : []);
                 return pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
             };
             const battleCap = pick('battleCap');
@@ -12168,7 +12213,7 @@ bc_thetis: [BC_THETIS_1]
         const PARTS_PROGRESS_RESET_VERSION = 1;
         const PARTS_PROGRESS_RESET_KEY = 'bey_parts_progress_reset_v1';
         const TARGETED_SUSPICIOUS_ACCOUNT_UID = 'nc8SSqxFuuRb';
-        const TARGETED_SUSPICIOUS_ACCOUNT_RESET_KEY = 'bey_targeted_suspicious_reset_v10_nc8SSqxFuuRb';
+        const TARGETED_SUSPICIOUS_ACCOUNT_RESET_KEY = 'bey_targeted_suspicious_reset_v1_nc8SSqxFuuRb';
         const LOCAL_SAVE_ENVELOPE_VERSION = 1;
         const LOCAL_SAVE_SECRET_KEY = 'bey_local_save_secret_v1';
         let localSavePayloadCache = null;
@@ -13228,11 +13273,14 @@ bc_thetis: [BC_THETIS_1]
             const ghostCount = blurActive ? BEY_SPIN_BLUR_GHOSTS : 0;
             const spinDirection = parts && parts.battleCap && parts.battleCap.spinType === 'left' ? 1 : -1;
             const ghostArc = blurActive ? BEY_SPIN_BLUR_ARC : 0;
+            // Preserve a filter supplied by the caller, such as Chronos's enemy-side
+            // invert filter, while still using a clean default when no filter is active.
+            const inheritedFilter = context.filter || 'none';
             context.save();
-            // Keep the PNG smear completely isolated from auras, battle text, filters,
-            // and any shadow state left by other effects on the shared battle context.
+            // Keep the PNG smear isolated from auras, battle text, and shadow state while
+            // retaining the caller's filter for the artwork itself.
             context.globalCompositeOperation = 'source-over';
-            context.filter = 'none';
+            context.filter = inheritedFilter;
             context.shadowBlur = 0;
             context.shadowColor = 'transparent';
             context.imageSmoothingEnabled = true;
@@ -13366,27 +13414,6 @@ bc_thetis: [BC_THETIS_1]
                         context.strokeStyle = "rgba(0,0,0,0.3)";
             context.lineWidth = 3;
             context.stroke();
-            if (freezeActive) {
-                context.save();
-                context.beginPath();
-                context.arc(0, 0, radius * 0.80, 0, Math.PI * 2);
-                context.fillStyle = 'rgba(126, 219, 255, 0.14)';
-                context.fill();
-                context.beginPath();
-                context.arc(0, 0, radius - 2.5, 0, Math.PI * 2);
-                context.strokeStyle = '#8FE8FF';
-                context.lineWidth = 11;
-                context.shadowColor = '#8FE8FF';
-                context.shadowBlur = radius * 0.38;
-                context.stroke();
-                context.beginPath();
-                context.arc(0, 0, radius * 0.78, 0, Math.PI * 2);
-                context.strokeStyle = 'rgba(190, 244, 255, 0.82)';
-                context.lineWidth = 4;
-                context.shadowBlur = radius * 0.20;
-                context.stroke();
-                context.restore();
-            }
             if (isImpact) {
                 context.shadowBlur = 0;
                 context.shadowColor = 'transparent';
@@ -13421,6 +13448,30 @@ bc_thetis: [BC_THETIS_1]
                 context.arc(0, 0, r * 0.6, 0, Math.PI * 2);
                 context.fillStyle = "rgba(255,255,255,0.15)";
                 context.fill();
+                context.restore();
+            }
+
+            // Freeze is an outer Bey effect, so it must also render when the
+            // Battle Cap uses completed PNG artwork instead of procedural parts.
+            if (freezeActive) {
+                context.save();
+                context.beginPath();
+                context.arc(0, 0, radius * 0.80, 0, Math.PI * 2);
+                context.fillStyle = 'rgba(126, 219, 255, 0.14)';
+                context.fill();
+                context.beginPath();
+                context.arc(0, 0, radius - 2.5, 0, Math.PI * 2);
+                context.strokeStyle = '#8FE8FF';
+                context.lineWidth = 11;
+                context.shadowColor = '#8FE8FF';
+                context.shadowBlur = radius * 0.38;
+                context.stroke();
+                context.beginPath();
+                context.arc(0, 0, radius * 0.78, 0, Math.PI * 2);
+                context.strokeStyle = 'rgba(190, 244, 255, 0.82)';
+                context.lineWidth = 4;
+                context.shadowBlur = radius * 0.20;
+                context.stroke();
                 context.restore();
             }
 
@@ -13808,6 +13859,8 @@ bc_thetis: [BC_THETIS_1]
                 this.leafAttackBuffTimer = 0;
                 this.leafAttackStacks = 0;
                 this.leafAttackStackTimers = [];
+                this.leafRecoveryAccumulator = 0;
+                this.solfianReboundStacks = 0;
                 this.windTipBlend = 1;
                 this.windTargetZone = null;
                 this.enthropyElapsedFrames = 0;
@@ -14131,6 +14184,11 @@ bc_thetis: [BC_THETIS_1]
                 if (this.berserkerAttackStacks) {
                     atkMult += Math.min(0.90, this.berserkerAttackStacks * 0.03);
                 }
+                if (this.solfianReboundStacks) {
+                    const solfianBonus = Math.max(0, Number(this.solfianReboundStacks) || 0) * 0.02;
+                    atkMult += solfianBonus;
+                    defMult += solfianBonus;
+                }
                 const allEffects = this.getAllEffects ? this.getAllEffects() : [];
                 const dreamsEffect = allEffects.find(eff => eff.type === 'dreams_recovery_buff');
                 if (dreamsEffect && this.dreamsAttackBuffTimer > 0) {
@@ -14149,9 +14207,9 @@ bc_thetis: [BC_THETIS_1]
                     if (eff.type === 'valkyrie_attack_charging') {
                         atkMult += Math.min(Math.max(0, Number(eff.maxBonus) || 1.0), Math.max(0, this.valkyrieAttackCharge || 0));
                     }
-                    if (eff.type === 'leaf_projectile_hit' && this.leafAttackStacks > 0) {
-                        const maxStacks = Math.max(0, Number(eff.maxStacks) || 20);
-                        atkMult += Math.max(0, Number(eff.attackBonus) || 0.01) * Math.min(maxStacks, this.leafAttackStacks);
+                    if (eff.type === 'leaf_recovery' && this.leafAttackStacks > 0) {
+                        // Leaf stacks are permanent and uncapped until the battle resets.
+                        atkMult += Math.max(0, Number(eff.attackBonus) || 0.01) * this.leafAttackStacks;
                     }
                 });
 
@@ -14362,6 +14420,8 @@ bc_thetis: [BC_THETIS_1]
                 this.leafAttackBuffTimer = 0;
                 this.leafAttackStacks = 0;
                 this.leafAttackStackTimers = [];
+                this.leafRecoveryAccumulator = 0;
+                this.solfianReboundStacks = 0;
                 this.windTipBlend = 1;
                 this.windTargetZone = null;
                 this.enthropyElapsedFrames = 0;
@@ -14648,6 +14708,8 @@ bc_thetis: [BC_THETIS_1]
                 this.leafAttackBuffTimer = 0;
                 this.leafAttackStacks = 0;
                 this.leafAttackStackTimers = [];
+                this.leafRecoveryAccumulator = 0;
+                this.solfianReboundStacks = 0;
                 this.windTipBlend = 1;
                 this.windTargetZone = null;
                 this.enthropyElapsedFrames = 0;
@@ -14830,6 +14892,20 @@ bc_thetis: [BC_THETIS_1]
                                 const actualHeal = Math.min(this.maxHealth - this.health, healingAmount);
                 this.health += actualHeal;
                 if (actualHeal > 0) {
+                    // Leaf converts every 2% of Max HP actually recovered into one
+                    // temporary Attack stack. Partial recovery carries over to the
+                    // next heal, so several smaller heals can combine into a stack.
+                    const leafEffect = this.getAllEffects().find(eff => eff.type === 'leaf_recovery' && eff.trigger === 'self_recover_hp');
+                    if (leafEffect) {
+                        const recoveryPerStack = this.maxHealth * Math.max(0.0001, Number(leafEffect.recoveryMaxHpRatio) || 0.02);
+                        this.leafRecoveryAccumulator = Math.max(0, Number(this.leafRecoveryAccumulator) || 0) + actualHeal;
+                        const earnedStacks = Math.floor(this.leafRecoveryAccumulator / recoveryPerStack);
+                        if (earnedStacks > 0) {
+                            this.leafRecoveryAccumulator -= earnedStacks * recoveryPerStack;
+                            this.leafAttackStacks = Math.max(0, Number(this.leafAttackStacks) || 0) + earnedStacks;
+                            this.stats = this.calculateStats();
+                        }
+                    }
                     const dreamsEffect = this.getAllEffects().find(eff => eff.type === 'dreams_recovery_buff' && eff.trigger === 'self_recover_hp');
                     if (dreamsEffect) {
                         this.dreamsAttackBuffTimer = Math.max(1, Number(dreamsEffect.duration) || 90);
@@ -15312,6 +15388,32 @@ bc_thetis: [BC_THETIS_1]
                             innerColor: qingEffect.innerColor || '#C9F8FF',
                             outlineColor: qingEffect.outlineColor || '#8CF0FF'
                         });
+                    } else if (this.parts.battleCap.id === 'bc_solfian') {
+                        const solfianEffect = this.getAllEffects().find(eff => eff.type === 'solfian_fireball') || {};
+                        const solfianTarget = getUltimateEnemyTarget(this) || this;
+                        projectiles.push(new Projectile(this, solfianTarget, {
+                            solfianFireball: true,
+                            attackRatio: Number(solfianEffect.attackRatio) || 0.75,
+                            speed: Number(solfianEffect.speed) || 14,
+                            size: Number(solfianEffect.size) || 28,
+                            knockbackForce: Number(solfianEffect.knockbackForce) || 4,
+                            shape: 'solfian_fireball',
+                            color: solfianEffect.color || '#FF7A18',
+                            outlineColor: solfianEffect.outlineColor || '#FFD166',
+                            shadowColor: solfianEffect.shadowColor || '#F0441E',
+                            lifetime: Number(solfianEffect.duration) || 180,
+                            reboundCount: Math.max(0, Math.floor(Number(solfianEffect.reboundCount) || 8)),
+                            reboundStatBoost: Number(solfianEffect.reboundStatBonus) || 0.02,
+                            reboundCooldownFrames: 8,
+                            ownerHitDelay: 30,
+                            destinationX: solfianTarget.x,
+                            destinationY: solfianTarget.y
+                        }));
+                        this.isImpact = false;
+                        this.isUltimateImpact = false;
+                        this.impactState = 'normal';
+                        this.stats = this.calculateStats();
+                        this.updateUI();
                     } else if (this.parts.battleCap.id === 'bc_thor') {
                         const thorEffect = this.getAllEffects().find(eff => eff.type === 'thor_ultimate');
                         this.thorUltimateActive = true;
@@ -17232,8 +17334,13 @@ ctx.fill();
                                 const scalingMultiplier = 1 + ((lostHpPercent * 100) * lostHpBonus);
                                 const varianceMultiplier = 1 + (Math.random() - 0.5) * 0.10;
                                 const hodurDamage = Math.max(0, rawDamage * scalingMultiplier * varianceMultiplier);
-                                if (hodurDamage > 0) {
-                                    enemy.takeDamage(hodurDamage, true, true, this, false);
+                                const projectileDefenseEffect = enemy.getAllEffects().find(eff => eff.type === 'projectile_damage_reduction');
+                                const projectileReduction = projectileDefenseEffect ? Math.max(0, Math.min(1, Number(projectileDefenseEffect.reduction) || 0)) : 0;
+                                const mitigatedHodurDamage = hodurDamage * (1 - projectileReduction);
+                                if (mitigatedHodurDamage > 0) {
+                                    // Hodur's sword strikes are classified as projectile damage so
+                                    // Leo, Flame, and other projectile-hit mechanics recognize them.
+                                    enemy.takeDamage(mitigatedHodurDamage, true, true, this, false, true, false);
                                     // Small knockback after each damaging Hodur hit.
                                     let knockbackDx = enemy.x - this.x;
                                     let knockbackDy = enemy.y - this.y;
@@ -17747,23 +17854,8 @@ ctx.fill();
                         this.updateUI();
                     }
                 }
-                if (Array.isArray(this.leafAttackStackTimers) && this.leafAttackStackTimers.length) {
-                    const previousStackCount = this.leafAttackStackTimers.length;
-                    this.leafAttackStackTimers = this.leafAttackStackTimers
-                        .map(timer => Math.max(0, timer - gameSpeed))
-                        .filter(timer => timer > 0);
-                    this.leafAttackStacks = this.leafAttackStackTimers.length;
-                    this.leafAttackBuffTimer = this.leafAttackStackTimers.length
-                        ? Math.max(...this.leafAttackStackTimers)
-                        : 0;
-                    if (this.leafAttackStackTimers.length !== previousStackCount) {
-                        this.stats = this.calculateStats();
-                        this.updateUI();
-                    }
-                } else {
-                    this.leafAttackStacks = 0;
-                    this.leafAttackBuffTimer = 0;
-                }
+                // Leaf recovery stacks are permanent for the current battle.
+                // They are cleared by the existing battle initialization/reset paths.
                 // Bloom & Piety driver passive timer checks
                 const allEffectsList = this.getAllEffects();
                 allEffectsList.forEach(eff => {
@@ -18691,6 +18783,32 @@ ctx.fill();
                         }
                     }
 
+                    // Solfian Defense effect: every successful Block launches a
+                    // smaller fireball. It uses the same enemy/self/ally collision
+                    // rules, but its rebounds never grant Solfian stat bonuses.
+                    if (this.parts.battleCap && this.parts.battleCap.id === 'bc_solfian') {
+                        const solfianBlockEffect = this.getAllEffects().find(eff => eff.type === 'solfian_block_fireball') || {};
+                        const blockTarget = getUltimateEnemyTarget(this) || this;
+                        projectiles.push(new Projectile(this, blockTarget, {
+                            solfianFireball: true,
+                            solfianNoReboundStats: true,
+                            attackRatio: Number(solfianBlockEffect.attackRatio) || 0.50,
+                            speed: Number(solfianBlockEffect.speed) || 14,
+                            size: Number(solfianBlockEffect.size) || 20,
+                            knockbackForce: Number(solfianBlockEffect.knockbackForce) || 4,
+                            shape: 'solfian_fireball',
+                            color: solfianBlockEffect.color || '#FF9D2E',
+                            outlineColor: solfianBlockEffect.outlineColor || '#FFE08A',
+                            shadowColor: solfianBlockEffect.shadowColor || '#F0441E',
+                            lifetime: Number(solfianBlockEffect.duration) || 150,
+                            reboundCount: Math.max(0, Math.floor(Number(solfianBlockEffect.reboundCount) || 8)),
+                            reboundCooldownFrames: 8,
+                            ownerHitDelay: 30,
+                            destinationX: blockTarget.x,
+                            destinationY: blockTarget.y
+                        }));
+                    }
+
                                         this.registerCelestialTerm('Block');
                     const blockObserver = this === bey1 ? bey2 : bey1;
                     if (blockObserver && blockObserver.getAllEffects().some(eff => eff.type === 'celestial_battle_terms')) {
@@ -18812,23 +18930,6 @@ ctx.fill();
                     }
                     this.damagePreviewAmount = actualHealthDamage;
                     this.damagePreviewTimer = 18; // Keep the red damage segment visible briefly before fading.
-                }
-                if (isBeyHit && isProjectileHit && attacker && attacker !== this && attacker.parts && attacker.parts.driver && attacker.parts.driver.id === 'drv_leaf') {
-                    const leafEffect = attacker.getAllEffects().find(eff => eff.type === 'leaf_projectile_hit');
-                    if (leafEffect) {
-                        attacker.applyHeal(attacker.maxHealth * (Number(leafEffect.healMaxHpRatio) || 0.02));
-                        const maxStacks = Math.max(1, Number(leafEffect.maxStacks) || 20);
-                        const stackDuration = Math.max(1, Number(leafEffect.duration) || 90);
-                        if (!Array.isArray(attacker.leafAttackStackTimers)) attacker.leafAttackStackTimers = [];
-                        attacker.leafAttackStackTimers.push(stackDuration);
-                        if (attacker.leafAttackStackTimers.length > maxStacks) attacker.leafAttackStackTimers.splice(0, attacker.leafAttackStackTimers.length - maxStacks);
-                        attacker.leafAttackStacks = attacker.leafAttackStackTimers.length;
-                        attacker.leafAttackBuffTimer = attacker.leafAttackStackTimers.length
-                            ? Math.max(...attacker.leafAttackStackTimers)
-                            : 0;
-                        attacker.stats = attacker.calculateStats();
-                        attacker.updateUI();
-                    }
                 }
                 if (attacker && attacker !== this && attacker.parts && attacker.parts.driver && attacker.parts.driver.id === 'drv_berserker') {
                     attacker.berserkerAttackStacks = Math.min(30, (attacker.berserkerAttackStacks || 0) + 1);
@@ -19879,18 +19980,25 @@ ctx.fill();
                         removeArenaCreationAt(i);
                         continue;
                     }
-                    const pairedEmitters = arenaCreations
-                        .filter(other => other && other.type === 'crystal_emitter' && other.casterSide === c.casterSide)
+                    // Every emitter connects to every other living emitter from the same Crystal Bey.
+                    // Process each unordered connection once, using the lower emitter id as the owner.
+                    const sameSideEmitters = arenaCreations
+                        .filter(other => other && other.type === 'crystal_emitter' && other.casterSide === c.casterSide && other.duration > 0)
                         .sort((left, right) => left.id - right.id);
-                    const pairIndex = pairedEmitters.indexOf(c);
-                    const partner = pairIndex >= 0 && pairIndex % 2 === 0 ? pairedEmitters[pairIndex + 1] : null;
-                    if (partner && partner.duration > 0) {
-                        if (c.laserHitCooldown > 0) c.laserHitCooldown = Math.max(0, c.laserHitCooldown - gameSpeed);
+                    const emitterIndex = sameSideEmitters.indexOf(c);
+                    if (emitterIndex < 0) continue;
+                    if (!c.laserHitCooldownByPair) c.laserHitCooldownByPair = Object.create(null);
+                    sameSideEmitters.slice(emitterIndex + 1).forEach(partner => {
+                        if (!partner || partner.duration <= 0) return;
+                        const pairKey = String(partner.id);
+                        const pairCooldown = Math.max(0, Number(c.laserHitCooldownByPair[pairKey]) || 0);
+                        if (pairCooldown > 0) c.laserHitCooldownByPair[pairKey] = Math.max(0, pairCooldown - gameSpeed);
+                        if (pairCooldown > 0) return;
                         const lineDx = partner.x - c.x;
                         const lineDy = partner.y - c.y;
                         const lineLengthSquared = (lineDx * lineDx) + (lineDy * lineDy) || 1;
                         getCombatBeys().forEach(target => {
-                            if (!target || target.dead || target.side === c.casterSide || c.laserHitCooldown > 0) return;
+                            if (!target || target.dead || target.side === c.casterSide) return;
                             const pointX = target.x - c.x;
                             const pointY = target.y - c.y;
                             const projection = Math.max(0, Math.min(1, ((pointX * lineDx) + (pointY * lineDy)) / lineLengthSquared));
@@ -19902,10 +20010,10 @@ ctx.fill();
                                 const variance = 1 + ((Math.random() * 2 - 1) * 0.05);
                                 const laserDamage = Math.max(0, rawDamage * variance);
                                 if (laserDamage > 0) target.takeDamage(laserDamage, true, true, c.caster, false, false);
-                                c.laserHitCooldown = c.laserCooldownFrames || 15;
+                                c.laserHitCooldownByPair[pairKey] = c.laserCooldownFrames || 15;
                             }
                         });
-                    }
+                    });
                 } else if (c.type === 'plague_gas') {
                     c.tickTimer -= gameSpeed;
                     if (c.tickTimer <= 0) {
@@ -20135,31 +20243,31 @@ ctx.fill();
                 ctx.restore();
             });
 
-            // Draw paired Crystal Emitter lasers beneath the Emitter Creations.
+            // Draw a complete same-side Crystal Emitter network: every emitter connects to every other emitter.
             const crystalEmitters = arenaCreations
-                .filter(c => c && c.type === 'crystal_emitter')
+                .filter(c => c && c.type === 'crystal_emitter' && c.duration > 0)
                 .sort((left, right) => left.id - right.id);
             ctx.save();
             ctx.lineCap = 'round';
             crystalEmitters.forEach((emitter, index) => {
-                if (index % 2 !== 0) return;
-                const partner = crystalEmitters[index + 1];
-                if (!partner || partner.casterSide !== emitter.casterSide) return;
-                ctx.beginPath();
-                ctx.moveTo(emitter.x * scale, emitter.y * scale);
-                ctx.lineTo(partner.x * scale, partner.y * scale);
-                ctx.strokeStyle = '#9B4DFF';
-                ctx.lineWidth = 5 * scale;
-                ctx.shadowColor = '#9B4DFF';
-                ctx.shadowBlur = 12 * scale;
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(emitter.x * scale, emitter.y * scale);
-                ctx.lineTo(partner.x * scale, partner.y * scale);
-                ctx.strokeStyle = '#D9B8FF';
-                ctx.lineWidth = 1.5 * scale;
-                ctx.shadowBlur = 0;
-                ctx.stroke();
+                crystalEmitters.slice(index + 1).forEach(partner => {
+                    if (!partner || partner.casterSide !== emitter.casterSide) return;
+                    ctx.beginPath();
+                    ctx.moveTo(emitter.x * scale, emitter.y * scale);
+                    ctx.lineTo(partner.x * scale, partner.y * scale);
+                    ctx.strokeStyle = '#9B4DFF';
+                    ctx.lineWidth = 5 * scale;
+                    ctx.shadowColor = '#9B4DFF';
+                    ctx.shadowBlur = 12 * scale;
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.moveTo(emitter.x * scale, emitter.y * scale);
+                    ctx.lineTo(partner.x * scale, partner.y * scale);
+                    ctx.strokeStyle = '#D9B8FF';
+                    ctx.lineWidth = 1.5 * scale;
+                    ctx.shadowBlur = 0;
+                    ctx.stroke();
+                });
             });
             ctx.restore();
 
@@ -20466,7 +20574,7 @@ ctx.fill();
                 this.dead = false;
             }
             update() {
-                if (this.dead || !this.target || this.target.dead || this.target.shuraSequenceActive || this.target.mercuryUltimateActive || (this.target.timeTeleportStage === 2 || this.target.camusTeleportStage === 2)) {
+                if (this.dead || !this.target || (!this.config.solfianFireball && this.target.dead) || this.target.shuraSequenceActive || this.target.mercuryUltimateActive || (this.target.timeTeleportStage === 2 || this.target.camusTeleportStage === 2)) {
                     this.dead = true;
                     return;
                 }
@@ -20510,8 +20618,73 @@ ctx.fill();
                 if (this.hitCooldownTimer > 0) {
                     this.hitCooldownTimer = Math.max(0, this.hitCooldownTimer - gameSpeed);
                 }
-                const targetDistance = Math.hypot(this.x - this.target.x, this.y - this.target.y);
                 const arenaDistance = Math.hypot(this.x - centerX, this.y - centerY);
+                if (this.config.solfianFireball) {
+                    const combatants = typeof getCombatBeys === 'function' ? getCombatBeys() : [];
+                    const ownerCanBeHit = this.age >= (Number(this.config.ownerHitDelay) || 30);
+                    const candidates = combatants.filter(bey => bey && !bey.dead && (bey.side !== this.owner.side || (bey === this.owner && ownerCanBeHit)));
+                    const hitTarget = candidates.find(bey => Math.hypot(this.x - bey.x, this.y - bey.y) <= bey.radius + this.config.size);
+                    if (hitTarget && this.hitCooldownTimer <= 0) {
+                        const attackerAttack = this.owner.stats.atk || 0;
+                        const defenderDefense = hitTarget.stats.def || 0;
+                        const rawDamage = (attackerAttack * (Number(this.config.attackRatio) || 0.75)) - defenderDefense;
+                        const damage = Math.max(0, rawDamage * (1 + ((Math.random() * 2 - 1) * 0.05)));
+                        const projectileDefenseEffect = hitTarget.getAllEffects().find(eff => eff.type === 'projectile_damage_reduction');
+                        const projectileReduction = projectileDefenseEffect ? Math.max(0, Math.min(1, Number(projectileDefenseEffect.reduction) || 0)) : 0;
+                        const mitigatedDamage = damage * (1 - projectileReduction);
+                        hitTarget.takeDamage(mitigatedDamage, true, true, this.owner, false, true, false, this.config);
+                        const knockbackForce = Math.max(0, Number(this.config.knockbackForce) || 4);
+                        const projectileSpeed = Math.hypot(this.vx, this.vy) || 1;
+                        hitTarget.vx += (this.vx / projectileSpeed) * knockbackForce;
+                        hitTarget.vy += (this.vy / projectileSpeed) * knockbackForce;
+                        hitTarget.movementRecoveryTimer = Math.max(hitTarget.movementRecoveryTimer || 0, 30);
+                        playGameSfx(SFX_PROJECTILE_HIT);
+                        if (this.reboundsRemaining > 0) {
+                            this.reboundsRemaining--;
+                            if (!this.config.solfianNoReboundStats) {
+                                this.owner.solfianReboundStacks = Math.max(0, Number(this.owner.solfianReboundStacks) || 0) + 1;
+                                this.owner.stats = this.owner.calculateStats();
+                            }
+                            const awayDx = this.x - hitTarget.x;
+                            const awayDy = this.y - hitTarget.y;
+                            const reboundAngle = Math.atan2(awayDy, awayDx) + (Math.random() - 0.5) * 0.55;
+                            this.vx = Math.cos(reboundAngle) * this.config.speed;
+                            this.vy = Math.sin(reboundAngle) * this.config.speed;
+                            this.x = hitTarget.x + Math.cos(reboundAngle) * (hitTarget.radius + this.config.size + 2);
+                            this.y = hitTarget.y + Math.sin(reboundAngle) * (hitTarget.radius + this.config.size + 2);
+                            this.hitCooldownTimer = Math.max(3, Number(this.config.reboundCooldownFrames) || 8);
+                            this.owner.updateUI();
+                        } else {
+                            this.dead = true;
+                            return;
+                        }
+                    }
+                    if (this.reboundsRemaining > 0 && arenaDistance + this.config.size >= ARENA_RADIUS) {
+                        const wallDistance = arenaDistance || 1;
+                        const nx = (this.x - centerX) / wallDistance;
+                        const ny = (this.y - centerY) / wallDistance;
+                        const dot = this.vx * nx + this.vy * ny;
+                        if (dot > 0) {
+                            this.vx -= 2 * dot * nx;
+                            this.vy -= 2 * dot * ny;
+                            const wallReboundAngle = Math.atan2(this.vy, this.vx) + (Math.random() - 0.5) * 0.45;
+                            this.vx = Math.cos(wallReboundAngle) * this.config.speed;
+                            this.vy = Math.sin(wallReboundAngle) * this.config.speed;
+                            this.reboundsRemaining--;
+                            if (!this.config.solfianNoReboundStats) {
+                                this.owner.solfianReboundStacks = Math.max(0, Number(this.owner.solfianReboundStacks) || 0) + 1;
+                                this.owner.stats = this.owner.calculateStats();
+                            }
+                            this.x = centerX + nx * (ARENA_RADIUS - this.config.size - 1);
+                            this.y = centerY + ny * (ARENA_RADIUS - this.config.size - 1);
+                            this.hitCooldownTimer = Math.max(3, Number(this.config.reboundCooldownFrames) || 8);
+                            this.owner.updateUI();
+                        }
+                    }
+                    if (this.age >= this.config.lifetime) this.dead = true;
+                    return;
+                }
+                const targetDistance = Math.hypot(this.x - this.target.x, this.y - this.target.y);
                 const guaranteedHitReady = this.config.guaranteedHit && !this.hitResolved;
                 if ((guaranteedHitReady || targetDistance <= this.target.radius + this.config.size) && this.hitCooldownTimer <= 0) {
                     if (this.shuraRibbon) {
@@ -20813,7 +20986,19 @@ ctx.fill();
                 ctx.shadowColor = this.config.shadowColor || this.config.color;
                 ctx.shadowBlur = 8 * scale;
                 ctx.beginPath();
-                if (this.config.shape === 'enchantrees_circle') {
+                if (this.config.shape === 'solfian_fireball') {
+                    const gradient = ctx.createRadialGradient(-radius * 0.22, -radius * 0.22, radius * 0.08, 0, 0, radius);
+                    gradient.addColorStop(0, '#FFF7B2');
+                    gradient.addColorStop(0.28, '#FFD166');
+                    gradient.addColorStop(0.68, this.config.color || '#FF7A18');
+                    gradient.addColorStop(1, '#D92D20');
+                    ctx.fillStyle = gradient;
+                    ctx.strokeStyle = this.config.outlineColor || '#FFD166';
+                    ctx.lineWidth = Math.max(2, 2.5 * scale);
+                    ctx.shadowColor = this.config.shadowColor || '#F0441E';
+                    ctx.shadowBlur = 20 * scale;
+                    ctx.arc(0, 0, radius, 0, Math.PI * 2);
+                } else if (this.config.shape === 'enchantrees_circle') {
                     ctx.arc(0, 0, radius, 0, Math.PI * 2);
                     ctx.fillStyle = this.config.color || '#05070A';
                     ctx.strokeStyle = this.config.outlineColor || '#20FFE8';
@@ -23089,7 +23274,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             const listEl = document.getElementById('inventoryList');
             listEl.innerHTML = '';
 
-            const catalogItems = PARTS[activeTab] || [];
+            const catalogItems = (PARTS[activeTab] || []).filter(part => activeTab !== 'battleCap' || !isBattleCapHidden(part));
             const equippedPartsInLoadoutOrder = (Array.isArray(playerLoadouts) ? playerLoadouts : []).slice(0, 3)
                 .map(loadout => loadout && loadout[activeTab])
                 .filter(Boolean);
@@ -24850,7 +25035,41 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         window.manualLoadGame = manualLoadGame;
         window.manualResetGame = manualResetGame;
 
+        let initialBattleCapUnlockRenderToken = 0;
+        function drawInitialBattleCapUnlockFallback(context, battleCap) {
+            if (!context || !battleCap) return;
+            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+            // drawPartIcon keeps the existing PNG-then-procedural fallback order.
+            drawPartIcon(context, context.canvas.width / 2, context.canvas.height / 2, Math.min(context.canvas.width, context.canvas.height) * 0.30, 'battleCap', battleCap);
+        }
+        function drawInitialBattleCapUnlockCasterArtwork(context, battleCap, token) {
+            if (!context || !battleCap || typeof getCasterArtPath !== 'function') return;
+            const path = getCasterArtPath({ parts: { battleCap } });
+            if (!path) return;
+            let entry = homeSilhouetteArtworkCache.get(path);
+            if (!entry) {
+                const image = new Image();
+                entry = { image, status: 'loading' };
+                homeSilhouetteArtworkCache.set(path, entry);
+                image.onload = () => {
+                    entry.status = 'loaded';
+                    if (typeof updateHomeUI === 'function') updateHomeUI();
+                };
+                image.onerror = () => { entry.status = 'failed'; };
+                image.src = path;
+            }
+            if (entry.status !== 'loaded' || !entry.image.naturalWidth || !entry.image.naturalHeight) return;
+            if (token !== initialBattleCapUnlockRenderToken) return;
+            // Fit by width so the artwork reaches the screen edges while retaining its native aspect ratio.
+            const imageScale = (context.canvas.width * 0.99) / entry.image.naturalWidth;
+            const width = entry.image.naturalWidth * imageScale;
+            const height = entry.image.naturalHeight * imageScale;
+            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+            context.drawImage(entry.image, (context.canvas.width - width) / 2, (context.canvas.height - height) / 2, width, height);
+        }
+
         function closeInitialBattleCapUnlock() {
+            initialBattleCapUnlockRenderToken += 1;
             const overlay = document.getElementById('initialBattleCapUnlockOverlay');
             if (!overlay) return;
             overlay.classList.remove('visible');
@@ -24864,13 +25083,28 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             const initialBattleCap = unlockedPart || (playerLoadouts && playerLoadouts[0] ? playerLoadouts[0].battleCap : PARTS.battleCap[0]);
             if (!overlay || !canvas || !nameEl || !initialBattleCap) return;
             nameEl.textContent = initialBattleCap.name;
-            canvas.width = 270;
-            canvas.height = 270;
+            canvas.width = Math.max(1, Math.round(window.innerWidth || 270));
+            canvas.height = Math.max(270, Math.round(Math.min(window.innerHeight * 0.68, 620)));
             const context = canvas.getContext('2d');
             if (context) {
+                const token = ++initialBattleCapUnlockRenderToken;
                 context.clearRect(0, 0, canvas.width, canvas.height);
-                drawPartIcon(context, canvas.width / 2, canvas.height / 2, 92, 'battleCap', initialBattleCap);
+                drawPartIcon(context, canvas.width / 2, canvas.height / 2, Math.min(canvas.width, canvas.height) * 0.30, 'battleCap', initialBattleCap);
+                const artworkPath = typeof getCasterArtPath === 'function'
+                    ? getCasterArtPath({ parts: { battleCap: initialBattleCap } })
+                    : '';
+                drawInitialBattleCapUnlockCasterArtwork(context, initialBattleCap, token);
+                const artworkEntry = artworkPath ? homeSilhouetteArtworkCache.get(artworkPath) : null;
+                if (artworkEntry && artworkEntry.status === 'loading') {
+                    artworkEntry.image.addEventListener('load', () => {
+                        drawInitialBattleCapUnlockCasterArtwork(context, initialBattleCap, token);
+                    }, { once: true });
+                    artworkEntry.image.addEventListener('error', () => {
+                        if (token === initialBattleCapUnlockRenderToken) drawInitialBattleCapUnlockFallback(context, initialBattleCap);
+                    }, { once: true });
+                }
             }
+            if (typeof playUltimateCastSfx === 'function') playUltimateCastSfx(initialBattleCap.id);
             overlay.onclick = closeInitialBattleCapUnlock;
             overlay.classList.remove('hidden');
             requestAnimationFrame(() => overlay.classList.add('visible'));
@@ -25124,6 +25358,147 @@ document.addEventListener('visibilitychange', () => {
         bey2.vx = 0; bey2.vy = 0;
 
         animate();
+    </script>
+    <script>
+    (() => {
+        const preloadEnterScreen = document.getElementById('gamePreloadEnterScreen');
+        const preloadScreen = document.getElementById('gamePreloadScreen');
+        const preloadProgress = document.getElementById('gamePreloadProgress');
+        const preloadBar = preloadProgress?.parentElement;
+        const preloadTap = document.getElementById('gamePreloadTap');
+        const preloadEnter = document.getElementById('gamePreloadEnter');
+        const preloadInputGuard = document.getElementById('gamePreloadInputGuard');
+        BGM_TRACKS.preload = './Audios/BGMs/bgm_preload.mp3';
+
+        function startPreloadBgm() {
+            // Use the game's existing BGM player directly. The Enter button's
+            // pointer gesture has already granted playback permission here.
+            bgmAudioUnlocked = true;
+            playGameBgm('preload');
+        }
+        function preparePreloadEnterScreen() {
+            if (!preloadEnterScreen) return;
+            const backdrop = new Image();
+            let settled = false;
+            const revealEnter = () => {
+                if (settled) return;
+                settled = true;
+                preloadEnterScreen.classList.add('preload-background-ready');
+                // Attempt autoplay as soon as the Enter screen is ready. The
+                // Enter pointer handler below retries this through the same
+                // playGameBgm system if the browser blocks autoplay.
+                startPreloadBgm();
+            };
+            backdrop.onload = revealEnter;
+            backdrop.onerror = revealEnter;
+            backdrop.src = './Images/Menu/preload.png';
+            setTimeout(revealEnter, 6000);
+        }
+
+        function uniqueNonEmpty(values) {
+            return [...new Set(values.filter(value => typeof value === 'string' && value.trim()))];
+        }
+        function buildGamePreloadManifest() {
+            const images = ['./Images/Menu/preload.png'];
+            const partsByType = [
+                ['battleCap', PARTS && PARTS.battleCap],
+                ['weightRing', PARTS && PARTS.weightRing],
+                ['driver', PARTS && PARTS.driver]
+            ];
+            partsByType.forEach(([type, parts]) => (parts || []).forEach(part => {
+                const iconPath = typeof getPartIconArtworkPath === 'function' ? getPartIconArtworkPath(type, part) : '';
+                if (iconPath) images.push(iconPath);
+                if (type === 'battleCap') {
+                    const casterPath = typeof getCasterArtPath === 'function' ? getCasterArtPath({ parts: { battleCap: part } }) : '';
+                    const beyPath = typeof getBeyArtworkPath === 'function' ? getBeyArtworkPath({ battleCap: part }) : '';
+                    if (casterPath) images.push(casterPath);
+                    if (beyPath) images.push(beyPath);
+                }
+            }));
+            const audio = ['./Audios/BGMs/bgm_preload.mp3', ...(typeof GAME_AUDIO_MANIFEST !== 'undefined' ? GAME_AUDIO_MANIFEST : [])];
+            return { images: uniqueNonEmpty(images), audio: uniqueNonEmpty(audio) };
+        }
+        function loadPreloadImage(source, settle) {
+            const image = new Image();
+            let finished = false;
+            const finish = () => { if (finished) return; finished = true; settle(); };
+            image.onload = finish;
+            image.onerror = finish;
+            image.src = source;
+            setTimeout(finish, 6000);
+        }
+        function loadPreloadAudio(source, settle) {
+            const audio = new Audio();
+            let finished = false;
+            const finish = () => { if (finished) return; finished = true; audio.removeEventListener('canplaythrough', finish); audio.removeEventListener('loadeddata', finish); audio.removeEventListener('error', finish); settle(); };
+            audio.preload = 'auto';
+            audio.addEventListener('canplaythrough', finish, { once: true });
+            audio.addEventListener('loadeddata', finish, { once: true });
+            audio.addEventListener('error', finish, { once: true });
+            audio.src = source;
+            audio.load();
+            setTimeout(finish, 8000);
+        }
+        let gamePreloadStarted = false;
+        function startGamePreload() {
+            if (!preloadScreen || gamePreloadStarted) return;
+            gamePreloadStarted = true;
+            preloadEnterScreen?.classList.add('hidden');
+            preloadScreen.classList.remove('hidden');
+            const manifest = buildGamePreloadManifest();
+            const assets = [
+                ...manifest.images.map(source => ({ type: 'visual', source })),
+                ...manifest.audio.map(source => ({ type: 'audio', source }))
+            ];
+            let completed = 0;
+            const total = Math.max(1, assets.length);
+            const updateProgress = () => {
+                completed += 1;
+                const percent = Math.min(100, Math.round((completed / total) * 100));
+                if (preloadProgress) preloadProgress.style.width = `${percent}%`;
+                if (preloadBar) preloadBar.setAttribute('aria-valuenow', String(percent));
+                if (completed >= assets.length) finishGamePreload();
+            };
+            window.gamePreloadReady = false;
+            startPreloadBgm();
+            if (!assets.length) finishGamePreload();
+            assets.forEach(asset => asset.type === 'audio'
+                ? loadPreloadAudio(asset.source, updateProgress)
+                : loadPreloadImage(asset.source, updateProgress));
+
+            function finishGamePreload() {
+                if (window.gamePreloadReady) return;
+                window.gamePreloadReady = true;
+                preloadScreen.classList.add('is-ready');
+            }
+        }
+        function enterGameFromPreload(event) {
+            if (event) { event.preventDefault(); event.stopPropagation(); }
+            if (gamePreloadStarted) return;
+            startGamePreload();
+        }
+        function continueFromPreload(event) {
+            if (event) { event.preventDefault(); event.stopPropagation(); }
+            if (!window.gamePreloadReady || !preloadScreen || preloadScreen.classList.contains('hidden')) return;
+            preloadScreen.classList.add('hidden', 'is-hidden');
+            preloadScreen.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('game-preload-active');
+            // Follow the same order as normal bottom-navigation transitions:
+            // show the destination screen first, then route its BGM.
+            screens.forEach(screen => screen.classList.add('hidden'));
+            const homeScreen = document.getElementById('homeScreen');
+            homeScreen?.classList.remove('hidden');
+            navItems.forEach(nav => nav.classList.toggle('active', nav.getAttribute('data-screen') === 'homeScreen'));
+            if (typeof updateGameBgmForScreen === 'function') updateGameBgmForScreen('homeScreen');
+            else playGameBgm('home');
+            preloadInputGuard?.classList.add('active');
+            window.setTimeout(() => preloadInputGuard?.classList.remove('active'), 450);
+        }
+        preloadEnter?.addEventListener('pointerdown', startPreloadBgm, true);
+        preloadScreen?.addEventListener('pointerdown', continueFromPreload, true);
+        preloadEnter?.addEventListener('click', enterGameFromPreload);
+        preparePreloadEnterScreen();
+    })();
     </script>
     <script>
 if ('serviceWorker' in navigator) {
