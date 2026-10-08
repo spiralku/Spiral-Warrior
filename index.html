@@ -39,28 +39,6 @@
             overflow: hidden;
         }
 
-        /* One reusable, GPU-friendly blue energy ring for ordinary UI taps. */
-        .ui-tap-ripple {
-            position: fixed;
-            z-index: 10000;
-            width: 32px;
-            height: 32px;
-            pointer-events: none;
-            border: 2px solid rgba(143, 246, 255, .98);
-            border-radius: 50%;
-            background: transparent;
-            box-shadow: 0 0 3px 1px rgba(225, 255, 255, .98), 0 0 9px 3px rgba(62, 226, 255, .98), 0 0 22px 8px rgba(24, 125, 255, .72);
-            transform: translate(-50%, -50%) scale(.28);
-            opacity: 0;
-            will-change: transform, opacity;
-        }
-        .ui-tap-ripple.active { animation: uiTapRipple .24s ease-out forwards; }
-        @keyframes uiTapRipple {
-            0% { opacity: 1; transform: translate(-50%, -50%) scale(.28); }
-            50% { opacity: .9; }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.42); }
-        }
-
         
 
         /* Screen Management */
@@ -446,7 +424,7 @@ background: radial-gradient(ellipse 85% 55% at 50% 108%, #286d70 0%, #1b555b 38%
             overflow: hidden;
         }
 
-        .screen.hidden, #enemyGarageModal.hidden, #partModal.hidden, #launcherModal.hidden {
+        .screen.hidden, #enemyGarageModal.hidden, #partModal.hidden {
             display: none !important;
             opacity: 0;
             pointer-events: none;
@@ -519,14 +497,7 @@ background: radial-gradient(ellipse 85% 55% at 50% 108%, #286d70 0%, #1b555b 38%
         #initialBattleCapUnlockOverlay.visible { opacity:1; pointer-events:auto; }
         #initialBattleCapUnlockOverlay .initial-unlock-content { width:100vw; min-height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px 0 34px; }
         #initialBattleCapUnlockOverlay .initial-unlock-canvas-wrap { width:100vw; height:min(68vh, 620px); display:flex; align-items:center; justify-content:center; }
-        #initialBattleCapUnlockOverlay canvas { width:100%; height:100%; display:block; transform-origin:50% 55%; animation:artworkIdleBreathing 4.8s ease-in-out infinite; will-change:transform; }
-        @keyframes artworkIdleBreathing {
-            0%, 100% { transform:translate3d(0,0,0) scale3d(1,1,1); }
-            25% { transform:translate3d(0,-2px,0) scale3d(1.002,.998,1); }
-            50% { transform:translate3d(0,-4px,0) scale3d(.998,1.006,1); }
-            75% { transform:translate3d(0,-2px,0) scale3d(1.001,.999,1); }
-        }
-        @media (prefers-reduced-motion:reduce) { #initialBattleCapUnlockOverlay canvas { animation:none; } }
+        #initialBattleCapUnlockOverlay canvas { width:100%; height:100%; display:block; }
         #initialBattleCapUnlockOverlay .initial-unlock-name { position:relative; z-index:2; width:100%; margin-top:18px; padding:10px 0; color:#352200; background:linear-gradient(to right, transparent 0%, #FCDF53 18%, #FCDF53 82%, transparent 100%); font-size:clamp(21px, 6vw, 30px); font-weight:1000; line-height:1; text-align:center; text-shadow:0 1px 0 rgba(255,255,255,.25); transform:translateY(-16vh); }
         #initialBattleCapUnlockOverlay .initial-unlock-tap { position:absolute; left:0; right:0; bottom:calc(22px + 16vh); z-index:2; color:#fff; font-size:clamp(14px, 4vw, 19px); font-weight:900; text-align:center; text-shadow:0 2px 3px rgba(0,0,0,.55); }
         body.game-preload-active > .screen { display:none !important; }
@@ -1018,23 +989,7 @@ background: radial-gradient(ellipse 85% 55% at 50% 108%, #286d70 0%, #1b555b 38%
             /* Keep the lower portion of the artwork clipped beneath the diagonal windup lines. */
             clip-path: polygon(0 0, 100% 0, 100% 37%, 0 69%);
             z-index:1;
-            animation:casterArtIdleBreathing 4.8s ease-in-out infinite;
-            will-change:transform;
         }
-        @keyframes casterArtIdleBreathing {
-            0%, 100% { transform:translate(-50%,-50%) translate3d(0,0,0) scale3d(1,1,1); }
-            25% { transform:translate(-50%,-50%) translate3d(0,-2px,0) scale3d(1.002,.998,1); }
-            50% { transform:translate(-50%,-50%) translate3d(0,-4px,0) scale3d(.998,1.006,1); }
-            75% { transform:translate(-50%,-50%) translate3d(0,-2px,0) scale3d(1.001,.999,1); }
-        }
-        @keyframes casterArtEnemyIdleBreathing {
-            0%, 100% { transform:translate(-50%,-50%) scaleX(-1) translate3d(0,0,0) scale3d(1,1,1); }
-            25% { transform:translate(-50%,-50%) scaleX(-1) translate3d(0,-2px,0) scale3d(1.002,.998,1); }
-            50% { transform:translate(-50%,-50%) scaleX(-1) translate3d(0,-4px,0) scale3d(.998,1.006,1); }
-            75% { transform:translate(-50%,-50%) scaleX(-1) translate3d(0,-2px,0) scale3d(1.001,.999,1); }
-        }
-        #casterArtOverlay.enemy-caster-art #casterArtImage { animation-name:casterArtEnemyIdleBreathing; }
-        @media (prefers-reduced-motion:reduce) { #casterArtImage { animation:none; } }
         #casterArtFallbackCanvas {
             position: absolute;
             left: 50%;
@@ -1672,7 +1627,7 @@ background: radial-gradient(ellipse 85% 55% at 50% 108%, #286d70 0%, #1b555b 38%
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: linear-gradient(to bottom, #091732 0%, #2C2962 50%, #3FA8E1 100%);
+            background: linear-gradient(to bottom, #001528 0%, #416484 50%, #8CA0BB 100%);
             padding: 12px;
             border-radius: 0px;                      
             width: 100%;
@@ -1693,9 +1648,9 @@ background: radial-gradient(ellipse 85% 55% at 50% 108%, #286d70 0%, #1b555b 38%
         .loadout-controls { position: absolute; top: 8px; left: 8px; z-index: 6; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
         .loadout-selector { position: relative; top: auto; left: auto; z-index: 1; display: flex; gap: 4px; }
         .loadout-team-selector { position: relative; top: auto; left: auto; z-index: 20; }
-        .loadout-team-button { min-width: 82px; height: 26px; padding: 0 7px; border: 1px solid #22578C; border-radius: 4px; background: #123960; color: #5BFFFF; font-size: 11px; font-weight: 900; cursor: pointer; }
+        .loadout-team-button { min-width: 82px; height: 26px; padding: 0 7px; border: 1px solid #54C8F0; border-radius: 4px; background: #081827; color: #fff; font-size: 11px; font-weight: 900; cursor: pointer; }
         .loadout-team-button .loadout-team-chevron { margin-left: 7px; color: #82E4F1; }
-        .loadout-team-menu { position: absolute; top: 29px; left: 0; z-index: 30; min-width: 100%; padding: 3px; border: 1px solid #22578C; border-radius: 4px; background: #123960; box-shadow: 0 4px 12px rgba(0,0,0,.55); }
+        .loadout-team-menu { position: absolute; top: 29px; left: 0; z-index: 30; min-width: 100%; padding: 3px; border: 1px solid #54C8F0; border-radius: 4px; background: #081827; box-shadow: 0 4px 12px rgba(0,0,0,.55); }
         .loadout-team-menu.hidden { display: none; }
         .loadout-team-option { display: block; width: 100%; padding: 6px 8px; border: 0; border-radius: 3px; background: transparent; color: #fff; font-size: 11px; font-weight: 900; text-align: left; cursor: pointer; }
         .loadout-team-option:hover, .loadout-team-option.active { background: #FDD035; color: #1a1a1a; }
@@ -1703,9 +1658,9 @@ background: radial-gradient(ellipse 85% 55% at 50% 108%, #286d70 0%, #1b555b 38%
             width: 26px;
             height: 26px;
             padding: 0;
-            border: 1px solid #5FCAE5;
+            border: 1px solid #54C8F0;
             border-radius: 4px;
-            background: #0A4F79;
+            background: #081827;
             color: #fff;
             font-size: 12px;
             font-weight: bold;
@@ -1713,8 +1668,8 @@ background: radial-gradient(ellipse 85% 55% at 50% 108%, #286d70 0%, #1b555b 38%
             cursor: pointer;
         }
         .loadout-btn.active {
-            background: #9A6519;
-            border-color: #E0DD0F;
+            background: #FDD035;
+            border-color: #D79E16;
             color: #fff;
         }
 
@@ -1735,84 +1690,6 @@ background: radial-gradient(ellipse 85% 55% at 50% 108%, #286d70 0%, #1b555b 38%
         }
         .combat-power-badge .combat-power-fist { width: 16px; height: 16px; display: inline-block; fill: #fff; flex: 0 0 auto; }
         #garageCombatPower { position: absolute; top: 70px; left: 8px; z-index: 5; }
-        #launchPowerResult { position:absolute; left:15px; top:calc(50% - 35px); transform:translateY(-50%); z-index:41; min-width:100px; padding:5px 8px; color:#fff; font-size:24px; font-weight:1000; font-style:italic; line-height:1; text-align:center; text-shadow:0 2px 4px rgba(0,0,0,.95); white-space:nowrap; pointer-events:none; opacity:0; transition:opacity .12s ease; }
-        #launchPowerResult.visible { opacity:1; }
-        #launchPowerResult.perfect { color:#fff; text-shadow:0 0 12px #ef3b3b, 0 0 24px rgba(239,59,59,.9), 0 2px 4px rgba(0,0,0,.95); }
-        #launchPowerResult.cool { color:#fff; text-shadow:0 0 12px #258cff, 0 0 24px rgba(37,140,255,.9), 0 2px 4px rgba(0,0,0,.95); }
-        #launchPowerResult.nice { color:#fff; text-shadow:0 0 12px #72ddff, 0 0 24px rgba(114,221,255,.9), 0 2px 4px rgba(0,0,0,.95); }
-        #launchPowerResult.bad { color:#fff; text-shadow:0 0 12px #ef3b3b, 0 0 24px rgba(239,59,59,.9), 0 2px 4px rgba(0,0,0,.95); }
-        #garageLauncherMenuButton { position:absolute; top:4px; right:4px; z-index:6; width:42px; height:42px; padding:0; overflow:hidden; border:2px solid #4ca6ff; border-radius:6px; background-color:#707070; background-repeat:no-repeat; background-position:center; background-size:100% 100%; box-shadow:0 1px 3px rgba(0,0,0,.45); cursor:pointer; }
-        #garageLauncherMenuButton:active { transform:scale(.96); }
-        #launcherModal { position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,.82); display:flex; justify-content:center; align-items:center; z-index:1001; transition:opacity .2s ease; }
-        #launcherModal.hidden { display:none; opacity:0; pointer-events:none; }
-        #launcherModal .launcher-modal-content { background:linear-gradient(#222,#222) padding-box,linear-gradient(to bottom,#fff 0%,#444 100%) border-box; border:2px solid transparent; border-radius:12px; width:min(94vw,440px); max-height:92vh; overflow-y:auto; box-shadow:0 10px 30px rgba(0,0,0,.6); }
-        .launcher-category-row { position:relative; min-height:42px; padding:5px 42px 5px 14px; display:flex; align-items:center; justify-content:flex-start; background:#474D6D; color:#62DAF2; font-size:11px; font-weight:800; text-transform:uppercase; }
-        .launcher-category-info { display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:2px; }
-        .launcher-category-name { color:#62DAF2; line-height:1.1; }
-        .launcher-category-rarity { color:#fff; font-size:9px; line-height:1.1; }
-        .launcher-category-rarity.modal-part-upgrade-title { display:inline-block; margin:0; padding:3px 12px; font-size:9px; line-height:1.1; text-align:center; }
-        .launcher-category-icon { position:absolute; top:50%; right:12px; transform:translateY(-50%); display:flex; align-items:center; justify-content:center; width:22px; height:22px; }
-        .launcher-category-icon svg { position:static !important; inset:auto !important; transform:none !important; width:20px; height:20px; }
-        .launcher-visual-row { min-height:150px; display:flex; justify-content:center; align-items:center; padding:16px; background:linear-gradient(135deg,#45699B 0%,#535884 100%); }
-        .launcher-visual { width:156px; height:156px; display:flex; align-items:center; justify-content:center; }
-        .launcher-visual img { display:block; width:100%; height:100%; object-fit:contain; transform:scaleX(-1); }
-        .launcher-upgrade-row { display:flex; align-items:center; gap:10px; width:100%; box-sizing:border-box; padding:9px 10px; background:#6179A5; }
-        .launcher-all-button { flex:0 0 104px; width:104px; min-width:104px; min-height:30px; padding:4px 9px; border:1px solid #fff; border-radius:4px; background:#303846; color:#fff; font-size:10px; font-weight:800; cursor:pointer; }
-        .launcher-durability { flex:0 0 104px; width:104px; margin-left:auto; color:#fff; font-size:10px; font-weight:800; text-align:right; cursor:pointer; }
-        .launcher-durability-bar { width:104px; height:8px; margin-top:4px; overflow:hidden; border:1px solid rgba(255,255,255,.8); border-radius:5px; background:#25302b; }
-        .launcher-durability-fill { display:block; width:100%; height:100%; border-radius:4px; background:#35d36b; }
-        #launcherModal .modal-content-tabs { grid-template-columns:repeat(2,1fr); }
-        .launcher-description-row { min-height:90px; box-sizing:border-box; padding:9px 12px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#edf5fb; text-align:center; }
-        .launcher-description-title { margin:0 0 5px; color:#162021; font-size:12px; font-weight:800; line-height:1.2; }
-        .launcher-description-box { width:100%; min-height:0; box-sizing:border-box; padding:0; background:transparent; border:0; border-radius:0; color:#26313D; font-size:10px; font-weight:800; line-height:1.35; text-align:center; }
-        .launcher-stats-row { height:105px; min-height:105px; max-height:105px; display:flex; align-items:stretch; justify-content:flex-start; padding:20px 12px; box-sizing:border-box; overflow:hidden; background:#dce8f2; color:#26313D; }
-        .launcher-effect-points { width:100%; margin:0; padding:0 8px 0 22px; box-sizing:border-box; overflow-y:auto; text-align:left; font-size:11px; font-weight:400; line-height:1.35; letter-spacing:0; }
-        .launcher-effect-points li { margin:0 0 5px; padding-left:2px; }
-        .launcher-effect-points li:last-child { margin-bottom:0; }
-        .launcher-placeholder-panel { min-height:180px; display:flex; align-items:center; justify-content:center; padding:24px; box-sizing:border-box; background:#dce8f2; color:#507F95; font-size:12px; font-weight:800; text-align:center; }
-        .launcher-all-button.active { background:#FDD035; color:#000; border-color:#FDD035; }
-        .launcher-selector-row { width:100%; padding:8px; box-sizing:border-box; background:#edf5fb; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; }
-        #launcherModal .launcher-selector-row[hidden], #launcherModal .launcher-selector-actions[hidden], #launcherModal #launcherModalTabs[hidden], #launcherModal #launcherInformationPanel[hidden], #launcherModal #launcherUpgradePanel[hidden] { display:none !important; }
-        .launcher-selector-card { position:relative; aspect-ratio:1 / 1; min-width:0; overflow:visible; border:0; border-radius:6px; padding:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 0 #000; }
-        .launcher-selector-card:hover { transform:translateY(-1px); }
-        .launcher-selector-card.selected { outline:2px solid #FDD035; outline-offset:-2px; }
-        .launcher-selector-card.depleted { filter:grayscale(.45); }
-        .launcher-selector-card.locked { filter:brightness(.42) grayscale(.25); cursor:not-allowed; }
-        .launcher-selector-card.locked:hover { transform:none; }
-        .launcher-selector-card.locked::after { content:''; position:absolute; inset:0; pointer-events:none; }
-        .launcher-selector-visual { width:88%; height:88%; display:flex; align-items:center; justify-content:center; transform:translateY(-8%); }
-        .launcher-selector-visual img { display:block; width:100%; height:100%; object-fit:contain; }
-        .launcher-selector-footer { position:absolute; left:4px; right:4px; bottom:4px; padding:3px 3px 2px; border-radius:3px; background:rgba(0,0,0,.58); color:#fff; text-align:center; line-height:1.15; }
-        .launcher-selector-name { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:8px; font-weight:800; }
-        .launcher-selector-durability { position:relative; display:block; width:100%; height:12px; margin-top:2px; overflow:hidden; border:1px solid rgba(255,255,255,.85); border-radius:3px; background:#1A293C; }
-        .launcher-selector-durability-fill { position:absolute; inset:0 auto 0 0; width:100%; background:linear-gradient(to right,#9AFD3E 0%,#56CD01 40%,#57CE02 100%); }
-        .launcher-selector-durability-label { position:relative; z-index:1; display:block; color:#fff; font-size:7px; font-weight:800; line-height:10px; text-shadow:0 0 2px rgba(0,0,0,.9); }
-        .launcher-selector-actions { width:100%; padding:8px; box-sizing:border-box; display:flex; justify-content:center; background:#edf5fb; }
-        .launcher-select-button { min-width:120px; min-height:30px; padding:5px 18px; border:0; border-radius:4px; background:#FDD035; color:#000; font-size:11px; font-weight:900; cursor:pointer; box-shadow:0 1px 2px rgba(0,0,0,.35); }
-        .launcher-select-button:active { transform:scale(.97); }
-        #repairKitsModal { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.82); z-index:1010; }
-        #repairKitsModal.hidden { display:none; }
-        .repair-kits-content { width:min(94vw,440px); max-height:92vh; overflow-y:auto; box-sizing:border-box; background:linear-gradient(#222,#222) padding-box,linear-gradient(to bottom,#fff 0%,#444 100%) border-box; border:2px solid transparent; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,.6); }
-        .repair-kits-box-row { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:12px 10px; background:#edf5fb; }
-        .repair-kit-card { position:relative; min-height:92px; padding:9px; border:2px solid transparent; border-radius:6px; background:#707070; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-        .repair-kit-card.selected { border-color:#FDD035; box-shadow:0 0 0 1px #FDD035; }
-        .repair-kit-card.empty { opacity:.45; }
-        .repair-kit-inner { width:58px; height:38px; border-radius:4px; box-shadow:inset 0 0 0 1px rgba(255,255,255,.45),0 1px 3px rgba(0,0,0,.35); }
-        .repair-kit-card[data-repair-kit="light"] .repair-kit-inner { background:#62C7F4; }
-        .repair-kit-card[data-repair-kit="good"] .repair-kit-inner { background:#7567E8; }
-        .repair-kit-card[data-repair-kit="perfect"] .repair-kit-inner { background:#E9434F; }
-        .shop-gold-preview .repair-kit-inner { width:58px; height:24px; border-radius:4px; box-shadow:inset 0 0 0 1px rgba(255,255,255,.45),0 1px 3px rgba(0,0,0,.35); }
-        .shop-gold-preview .repair-kit-inner[data-repair-kit="light"] { background:#62C7F4; }
-        .shop-gold-preview .repair-kit-inner[data-repair-kit="good"] { background:#7567E8; }
-        .shop-gold-preview .repair-kit-inner[data-repair-kit="perfect"] { background:#E9434F; }
-        .repair-kit-count { position:absolute; right:5px; bottom:4px; color:#fff; font-size:10px; font-weight:900; text-shadow:0 1px 2px #000; }
-        .repair-kits-description { min-height:82px; padding:12px 10px; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#edf5fb; color:#162021; text-align:center; }
-        .repair-kits-target { font-size:12px; font-weight:900; }
-        .repair-kits-effect { margin-top:7px; font-size:14px; font-weight:900; }
-        .repair-kits-actions { padding:10px; display:flex; justify-content:center; background:#dce8f2; }
-        .repair-kits-repair-button { min-width:140px; min-height:34px; padding:6px 22px; border:0; border-radius:4px; background:#FDD035; color:#000; font-size:12px; font-weight:900; cursor:pointer; box-shadow:0 1px 2px rgba(0,0,0,.35); }
-        .repair-kits-repair-button:disabled { opacity:.45; cursor:not-allowed; }
-
         .modal-content-tabs {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -2101,7 +1978,7 @@ background:
             gap: 8px;
             width: 100%;
             margin-top: 8px;
-            background: rgba(0, 0, 0, 0.5);
+            background: #1a1a1a;
             padding: 6px;
             border-radius: 6px;
             text-align: center;
@@ -2163,7 +2040,7 @@ background:
         .inventory-container {
             width: 100%;
             flex: 1;
-            background: linear-gradient(to bottom, #3C396E 0%, #4F6F96 50%, #6B8EB8 100%);
+            background: linear-gradient(to bottom, #465E80 0%, #679AB5 100%);
             border-radius: 0px;
             padding: 6px;
             overflow-y: auto;
@@ -2235,7 +2112,7 @@ background:
             background: linear-gradient(to bottom, #354F70 0%, #7A8EAF 50%, #D4DCE7 100%);
         }
         #garageScreen .preview-stats {
-            background: rgba(0, 0, 0, 0.3);
+            background: #657A8F;
         }
         #garageScreen .preview-stats div span {
             color: #54F5FD;
@@ -2480,7 +2357,7 @@ background:
         #homeScreen, #shopScreen, #garageScreen, #challengeScreen {
             justify-content: flex-start;
             overflow: hidden;
-            background: linear-gradient(to bottom, #0C1E34 0%, #2D346A 50%, #7DC4F2 100%);
+            background: linear-gradient(to bottom, #001528 0%, #6CA2CE 100%);
             padding: clamp(14px, 3vh, 28px) clamp(12px, 4vw, 28px) 10px;
             box-sizing: border-box;
         }
@@ -3228,14 +3105,7 @@ background: linear-gradient(
         }
         #homeBeyCanvas { width: min(250px, 58vw); height: min(250px, 58vw); max-height: 38vh; display: block; }
         #homeScreen .home-dashboard { position: relative; }
-        #homeActiveSilhouetteCanvas { position: absolute; left: clamp(-130px, -24vw, -80px); top: clamp(2%, 2vh, 5%); width: min(620px, 120vw); height: min(620px, 120vw); z-index: 0; opacity: 1; filter: none; pointer-events: none; transform-origin: 50% 65%; animation: homeSilhouetteIdle 4.8s ease-in-out infinite; will-change: transform; }
-        @keyframes homeSilhouetteIdle {
-            0%, 100% { transform: translate3d(0, 0, 0) scale3d(1, 1, 1); }
-            25% { transform: translate3d(0, -2px, 0) scale3d(1.002, .998, 1); }
-            50% { transform: translate3d(0, -4px, 0) scale3d(.998, 1.006, 1); }
-            75% { transform: translate3d(0, -2px, 0) scale3d(1.001, .999, 1); }
-        }
-        @media (prefers-reduced-motion: reduce) { #homeActiveSilhouetteCanvas { animation: none; } }
+        #homeActiveSilhouetteCanvas { position: absolute; left: clamp(-130px, -24vw, -80px); top: clamp(2%, 2vh, 5%); width: min(620px, 120vw); height: min(620px, 120vw); z-index: 0; opacity: 1; filter: none; pointer-events: none; }
         #homeActiveSilhouetteCanvas.home-silhouette-fallback { opacity: .30; }
         .home-bey-arc { position: absolute; top: clamp(7%, 7vh, 10%); right: 0; width: clamp(136px, 38vw, 170px); height: clamp(235px, 52vh, 330px); min-height: 180px; margin: 0; }
         .home-bey-arc canvas { position: absolute; display: block; cursor: pointer; transition: filter .2s ease, transform .2s ease, width .2s ease, height .2s ease; }
@@ -3298,14 +3168,6 @@ background: linear-gradient(
         .mission-exp-badge::before { content:'★ '; color:#f8d445; }
         .mission-claim-button { position:absolute; top:58px; right:7px; min-width:70px; padding:5px 7px; border:1px solid #c49a20; border-radius:4px; background:#f5c83d; color:#3b2b05; font-size:10px; font-weight:1000; cursor:pointer; box-shadow:0 1px 2px rgba(0,0,0,.28); }
         .mission-claim-button:disabled { cursor:default; opacity:.48; filter:grayscale(.7); }
-        .achievement-card { min-height:112px; padding-right:98px; transition:opacity .2s ease, filter .2s ease; }
-        .achievement-card.claimed { opacity:.48; filter:brightness(.55); }
-        .achievement-reward-box { position:absolute; top:18px; right:7px; width:60px; height:60px; min-height:60px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:3px; border:1px solid #d5a72c; border-radius:5px; background:linear-gradient(to bottom,#fff7c7 0%,#f0c83c 100%); color:#3b2b05; box-shadow:0 1px 3px rgba(0,0,0,.35); cursor:pointer; font:inherit; }
-        .achievement-reward-box:disabled { cursor:default; opacity:.42; filter:brightness(.62) grayscale(.25); }
-        .achievement-reward-box .winner-announcement-reward-tile { width:30px; height:24px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(70,48,0,.35); border-radius:3px; background:rgba(255,255,255,.5); }
-        .achievement-reward-box .currency-symbol { width:18px; height:18px; }
-        .achievement-reward-box .achievement-launcher-reward-image { width:32px; height:24px; display:block; object-fit:contain; }
-        .achievement-reward-amount { font-size:10px; font-weight:1000; line-height:1; }
         .settings-modal { position: fixed; inset: 0; z-index: 1300; display: flex; align-items: center; justify-content: center; padding: 14px; box-sizing: border-box; background: rgba(0,0,0,.72); }
         .settings-modal.hidden { display: none !important; }
         .settings-box { width: min(380px, calc(100vw - 28px)); max-height: min(680px, calc(100vh - 28px)); overflow: hidden; border:3px solid #E0E4ED;  background:linear-gradient(to bottom,#E0E4ED 0%, #95ADC7 100%);; color: #1A1C1F; box-shadow: 0 10px 30px rgba(0,0,0,.58); }
@@ -4179,7 +4041,6 @@ background: linear-gradient(
                             <div id="powerIndicatorArrow" style="position: absolute; left: 100%; top: 0%; transform: translateY(-50%); width: 0; height: 0; border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-right: 14px solid #ffffff; filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.8));"></div>
                         </div>
                     </div>
-                    <div id="launchPowerResult" aria-live="polite" aria-hidden="true"></div>
                 </div>
                 <div id="bossPlayerUi" aria-label="Boss Mode player Beys">
                     <section class="boss-player-panel" data-boss-player-ui="0">
@@ -4318,7 +4179,6 @@ background: linear-gradient(
             <div id="previewName" style="font-size: 15px; font-weight: bold; color: #fff;">-</div>
             <div id="previewPartsDesc" style="font-size: 10px; color: #aaa; margin-top: 1px;">-</div>
             
-            <button id="garageLauncherMenuButton" type="button" aria-label="Open Launcher menu" title="Launcher" onclick="if(window.openLauncherMenu) window.openLauncherMenu(event);"></button>
             <div id="previewCanvasContainer">
                 <canvas id="previewBeyCanvas"></canvas>
             </div>
@@ -5038,7 +4898,7 @@ background: linear-gradient(
         <div class="missions-box">
             <div class="missions-title-row"><h3 id="missionsTitle">Mission</h3><button id="missionsCloseButton" class="missions-close-button" type="button" aria-label="Close Missions">×</button></div>
             <div class="missions-body">
-                <div class="missions-tabs" role="tablist" aria-label="Mission categories and achievements"><button class="missions-tab active" type="button" data-mission-tab="daily" role="tab">Daily</button><button class="missions-tab" type="button" data-mission-tab="weekly" role="tab">Weekly</button><button class="missions-tab" type="button" data-mission-tab="feats" role="tab">Achievement</button></div>
+                <div class="missions-tabs" role="tablist" aria-label="Mission categories"><button class="missions-tab active" type="button" data-mission-tab="daily" role="tab">Daily</button><button class="missions-tab" type="button" data-mission-tab="weekly" role="tab">Weekly</button><button class="missions-tab" type="button" data-mission-tab="feats" role="tab">Feats</button></div>
                 <div id="missionsSummary" class="missions-summary"></div>
                 <div id="missionList" class="mission-list"></div>
             </div>
@@ -5112,44 +4972,6 @@ background: linear-gradient(
         </div>
     </div>
 
-    <div id="launcherModal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="launcherModalTitle">
-        <div class="launcher-modal-content">
-            <div class="modal-row modal-title-row">
-                <div id="launcherModalTitle" class="modal-part-name"><span class="modal-part-name-text">Launcher</span></div>
-                <button id="launcherModalClose" class="close-modal-btn" type="button" aria-label="Close Launcher">X</button>
-            </div>
-            <div id="launcherModalCategoryRow" class="modal-row launcher-category-row">
-                <span class="launcher-category-info"><span id="launcherModalName" class="launcher-category-name">Basic Launcher</span><span id="launcherModalRarity" class="launcher-category-rarity modal-part-upgrade-title common">Common</span></span>
-                <span id="launcherModalCategoryIcon" class="launcher-category-icon"></span>
-            </div>
-            <div class="modal-row launcher-visual-row">
-                <div class="launcher-visual"><img id="launcherModalVisual" src="./Images/Launchers/launcher_default.png" alt="Basic Launcher"></div>
-            </div>
-            <div class="launcher-upgrade-row">
-                <button id="launcherAllButton" class="launcher-all-button" type="button">All Launcher</button>
-                <div class="launcher-durability"><div id="launcherDurabilityLabel">Durability ∞</div><div class="launcher-durability-bar"><span id="launcherDurabilityFill" class="launcher-durability-fill"></span></div></div>
-            </div>
-            <div id="launcherSelectorRow" class="launcher-selector-row" hidden aria-label="All Launchers"></div>
-            <div id="launcherSelectorActions" class="launcher-selector-actions" hidden><button id="launcherSelectButton" class="launcher-select-button" type="button">Select</button></div>
-            <div id="launcherModalTabs" class="modal-content-tabs" role="tablist" aria-label="Launcher information sections">
-                <button class="modal-content-tab active" type="button" data-launcher-tab="information" role="tab" aria-selected="true">Information</button>
-                <button class="modal-content-tab" type="button" data-launcher-tab="upgrade" role="tab" aria-selected="false">Upgrade</button>
-            </div>
-            <div id="launcherInformationPanel" class="modal-tab-panel" data-launcher-panel="information">
-                <div class="launcher-description-row"><div id="launcherDescriptionBox" class="launcher-description-box">Design by Neneko Research Academy. Driven by aerodynamics, the performance is stable</div></div>
-                <div class="launcher-stats-row"><ul id="launcherEffectPoints" class="launcher-effect-points" aria-label="Launcher effects"></ul></div>
-            </div>
-            <div id="launcherUpgradePanel" class="launcher-placeholder-panel modal-tab-panel" data-launcher-panel="upgrade" hidden>Launcher upgrades will be available here.</div>
-        </div>
-    </div>
-    <div id="repairKitsModal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="repairKitsTitle">
-        <div class="repair-kits-content">
-            <div class="modal-row modal-title-row"><div id="repairKitsTitle" class="modal-part-name"><span class="modal-part-name-text">Repair Kits</span></div><button id="repairKitsClose" class="close-modal-btn" type="button" aria-label="Close Repair Kits">X</button></div>
-            <div id="repairKitsBoxRow" class="repair-kits-box-row" aria-label="Repair Kit selection"></div>
-            <div class="repair-kits-description"><div id="repairKitsTarget" class="repair-kits-target">Launcher</div><div id="repairKitsEffect" class="repair-kits-effect">0 &gt;&gt; 10</div></div>
-            <div class="repair-kits-actions"><button id="repairKitsRepairButton" class="repair-kits-repair-button" type="button">Repair</button></div>
-        </div>
-    </div>
     <div id="microchipInventoryModal" class="microchip-inventory-modal hidden" role="dialog" aria-modal="true" aria-labelledby="microchipInventoryTitle">
         <div class="microchip-inventory-box">
             <div class="microchip-inventory-header"><h3 id="microchipInventoryTitle">Microchips</h3><button id="microchipInventoryClose" class="microchip-inventory-close" type="button" aria-label="Close Microchip inventory">X</button></div>
@@ -5295,7 +5117,7 @@ const BC_SOLFIAN_1 = 'data:audio/mpeg;base64,SUQzBAAAAAAKe1RYWFgAAAASAAADbWFqb3J
                 { id: "bc_hodur", rarity: "Ascended", name: "Hodur", color: "#FFD460", type: "Attack", spinType: "right", atk: 158, def: 24, health: 1625, stamina: 36, weight: 15.0, interval: 2.5, desc: "Ultimate: Control all blades to project towards arena, deals multiple damage to all enemies. Special effect: Granrs a chance of lauching an extra impacr after your last one.", effects: [{ type: "hodur_ultimate", delay: 30, hits: 3, attackRatio: 0.70, lostHpBonusPerPercent: 0.008, desc: "Ultimate: Three hits of 70% ATK minus Defense with variance; +0.8% damage per 1% enemy HP lost." }, { type: "hodur_follow_up", cooldown: 300, desc: "Special Effect: After hitting with an Impact, chance to launch a Follow-up Impact equal to current Ultimate charge percentage. Cooldown: 5s." }] },
                 { id: "bc_mercury", rarity: "Rare", name: "Mercury", color: "#77E6FA", type: "Stamina", spinType: "right", atk: 124, def: 34, health: 1600, stamina: 52, weight: 12.0, interval: 3.6, desc: "Ultimate: Remove all disables, become invulnerable and fly across the arena, inflicts unbalance on surrounding enemy when approaching again. Special effect: Grants extra charging when moving in the arena.", effects: [{ type: "mercury_jump", jumpFrames: 60, maxScale: 1.75, landingRadius: 150, unbalanceDuration: 180, desc: "Ultimate: Slower leap across the arena with temporary immunity, ailment cleansing, and a landing wind effect that inflicts Unbalance on nearby opponents." }, { type: "mercury_distance_charge", distance: 300, charge: 1, desc: "Special Effect: Grants 1 Ultimate-charge point for every 300 distance traveled in the arena." }] },
                 { id: "bc_venus", rarity: "Rare", name: "Venus", color: "#FFDA4D", type: "Stamina", spinType: "right", atk: 118, def: 30, health: 1500, stamina: 45, weight: 13.0, interval: 3.3, desc: "Ultimate: Creates 3 magical orbs that revolve around the Bey, and recover HP when they hit an opponent. Special effect: Speeds up automatic charging to charge Ultimate.", effects: [{ type: "venus_orbs", count: 3, duration: 180, color: "#FF77A2", radius: 16, attackRatio: 0.50, knockbackForce: 12, desc: "Ultimate: Creates 3 pink Creation orbs for 3s; each orb deals 50% ATK minus DEF with variance, knockback, and heals Venus for the damage dealt." }, { type: "venus_auto_charge", autoChargeMultiplier: 2.20, desc: "Special Effect: +120% automatic Ultimate charging rate." }] },
-                { id: "bc_plague_knight", rarity: "Epic", name: "Plague Knight", color: "#FFDB8D", type: "Defense", spinType: "right", atk: 118, def: 39, health: 1640, stamina: 34, weight: 15.0, interval: 3.2, desc: "Ultimate: Creates gas of plague continuously while moving, gas will inflict break on opponents. Special effect: Grants extra charge to Ultimate when blocking enemy's impacts.", effects: [{ type: "plague_knight_gas", totalDuration: 360, spawnInterval: 15, areaDuration: 120, radius: 33, breakDuration: 240,breakTickInterval: 15, desc: "Ultimate: Spawns a plague gas Creation every 0.25s for 6s; each lasts 2s and inflicts Break on opponents." }] },
+                { id: "bc_plague_knight", rarity: "Epic", name: "Plague Knight", color: "#FFDB8D", type: "Defense", spinType: "right", atk: 118, def: 39, health: 1640, stamina: 34, weight: 15.0, interval: 3.2, desc: "Ultimate: Creates gas of plague continuously while moving, gas will inflict break on opponents. Special effect: Granrs extra charge to Ultimate when blocking enemy's impacts.", effects: [{ type: "plague_knight_gas", totalDuration: 360, spawnInterval: 15, areaDuration: 120, radius: 33, breakDuration: 240,breakTickInterval: 15, desc: "Ultimate: Spawns a plague gas Creation every 0.25s for 6s; each lasts 2s and inflicts Break on opponents." }] },
                 { id: "bc_himiko", rarity: "Rare", name: "Himiko", color: "#FFB963", type: "Balance", spinType: "right", atk: 132, def: 30, health: 1580, stamina: 43, weight: 13.0, interval: 3.4, desc: "Ultimate: Inflicts Seal on enemy and deals damage based on enemu's current Ultimate charging. Special effect: The charge required to release the Ultimate decreases, but the charge limit stay constant.", effects: [{ type: "himiko_charge_attack", attackPercentPerEnemyGaugePercent: 0.015, sealDuration: 180, dashFrames: 24, desc: "Ultimate: Deals 1.5% ATK damage per 1% of the opponent's Ultimate charge, with variance, and inflicts Seal for 3s. This attack is not an Impact." }] },
                 { id: "bc_valkyrie", rarity: "Legendary", name: "Valkyrie", color: "#CF261F", type: "Attack", spinType: "right", atk: 158, def: 30, health: 1640, stamina: 34, weight: 15.0, interval: 2.4, desc: "Ultimate: Unleashes an ultimate attack after a short delay, dealing damage to all opponents. Special effect: Grants extra charge to Ultimate through impacts. Continuously increase Attack by moving until colliding with an opponent.", effects: [{ type: "valkyrie_delayed_ultimate", preDelay: 180, attackRatio: 3.0, flashDuration: 60, desc: "Ultimate: 3s pre-delay, then standard Ultimate pause/wind-up, followed by a 300% Attack all-opponent strike with a 1s white flash." }, { type: "valkyrie_attack_charging", distance: 100, bonusPerMilestone: 0.01, maxBonus: 1.0, desc: "Special Effect: Attack Charging — gains 1% Attack for every 100 distance traveled, up to 100%; resets on collision." }] },
                 { id: "bc_baldr", rarity: "Ascended", name: "Baldr", color: "#FFC854", type: "Attack", spinType: "right", atk: 168, def: 28, health: 1660, stamina: 35, weight: 16.0, interval: 2.4, desc: "Ultimate: Tap Ultimate to unleash whirlslash up to 3 times. The third whirlslash has larger range and massive damage. But once your slash missed, the Ultimate will be terminated. Special effect: Grants extra charge to Ultimate through impacts on enemy with higher HP percentage.", effects: [{ type: "baldr_ultimate", attackRatio: 1.0, attackRadius: 120, thirdAttackRatio: 1.8, thirdAttackRadiusMultiplier: 1.5, swordColor: "#AEEBFF", desc: "Ultimate: One-time 100% Attack minus Defense strike with variance around Baldr; sword length matches the attack radius." }] },
@@ -5318,7 +5140,7 @@ const BC_SOLFIAN_1 = 'data:audio/mpeg;base64,SUQzBAAAAAAKe1RYWFgAAAASAAADbWFqb3J
                 { id: "bc_aiolos", rarity: "Legendary", name: "Aiolos", color: "#8B48F0", type: "Attack", spinType: "right", atk: 158, def: 30, health: 1640, stamina: 34, weight: 15.0, interval: 2.4, desc: "Ultimate: Immediately launch 3 arrow projectiles that can rebound 2 times and knock back enemies. Also follows up all damage dealt with an additional attack. Special effect: Grants extra charge to Ultimate through impact. After on impact hits an enemy, launch 3 arrow projectiles that can each rebound 1 time.", effects: [{ type: "aiolos_arrow_projectile", count: 3, attackRatio: 0.40, speed: 12, size: 8, knockbackForce: 3.5, reboundCount: 2, impactReboundCount: 1, lifetime: 300, spreadAngle: 0.18, color: "#8B48F0", outlineColor: "#E8D9FF", desc: "Ultimate: Fires three simultaneous spread arrows. Each arrow can rebound up to twice after hitting a Bey or the arena wall. Special Effect: Every Impact hit fires three arrows that can rebound once." }] },
                 { id: "bc_enchantrees", rarity: "Ascended", name: "Enchantress", color: "#20FFE8", type: "Stamina", spinType: "right", atk: 132, def: 42, health: 1760, stamina: 50, weight: 14.0, interval: 3.0, desc: "Ultimate: Create 6 obstacles around the central area, which can invalidate opponent's impacts. After 1 second the obstacles will move towards the area you are not in. Special effect: Increase automatic charge speed, Project slow tracking few follet that deals damage and Recover HP", effects: [{ type: "enchantrees_hex_circles", count: 6, attackRatio: 0.20, radius: 12, hexagonRadius: 110, damageInterval: 15, duration: 300, color: "#05070A", glowColor: "#20FFE8", outlineColor: "#20FFE8", desc: "Ultimate: Six small black circle Creations with cyan shadow glow form a tight inner hexagon. They are solid bouncing obstacles and deal 20% Attack minus Defense with variance every 0.25s for 5s." }, { type: "enchantrees_special_projectile", cooldown: 300, attackRatio: 0.50, speed: 2.4, size: 12, lifetime: 300, turnRate: 0.08, shape: "enchantrees_circle", color: "#05070A", outlineColor: "#20FFE8", shadowColor: "#20FFE8", healOwner: true, desc: "Special Effect: Every 5 seconds, launches a slow homing black circle Projectile with cyan glow. On hit, deals 50% Attack minus Defense with variance and restores the same damage to the caster." }, { type: "enchantress_auto_charge", autoChargeMultiplier: 2.0, desc: "Special Effect: Increases automatic Ultimate charging by 100%." }] },
                 { id: "bc_solfian", rarity: "Epic", name: "Solfian", color: "#F47C20", type: "Defense", spinType: "right", atk: 120, def: 34, health: 1650, stamina: 30, weight: 14.0, interval: 2.7, desc: "Ultimate: Project a fireball projectile that may hit the Bey itself. Each bounce increase Bey's Attack and Defense. Special effect: Grants extra charge to Ultimate when blocking enemy's impacts. Each succesful block will also launch a smaller fireball.", effects: [{ type: "solfian_fireball", duration: 300, attackRatio: 0.75, speed: 14, size: 28, reboundCount: 8, reboundStatBonus: 0.02, knockbackForce: 4, color: "#FF7A18", outlineColor: "#FFD166", shadowColor: "#F0441E", desc: "Ultimate: A Bey-sized fire Projectile lasts 5s and deals 75% ATK minus Defense with variance. It can hit enemies or Solfian, never allies; each rebound grants +2% Attack and Defense." }, { type: "solfian_block_fireball", duration: 150, attackRatio: 0.50, speed: 14, size: 20, reboundCount: 8, knockbackForce: 4, color: "#FF9D2E", outlineColor: "#FFE08A", shadowColor: "#F0441E", desc: "Special Effect: After a successful Block, launches a smaller 2.5s fire Projectile that deals 50% ATK minus Defense with variance. Rebounds do not grant Attack or Defense." }] },
-                { id: "bc_code_sting", rarity: "Legendary", name: "Code Sting", color: "#39FF14", type: "Stamina", spinType: "right", atk: 136, def: 27, health: 1780, stamina: 52, weight: 14.0, interval: 2.5, desc: "Ultimate: Swings a toxic sting across the arena, dealt damage and knockback enemies, inflict target with one random debuff. Special effect: Speeds up automatic charging to charge Ultimate. The effect increases if not taking Impact hit within certain period of time.", effects: [{ type: "code_sting_ultimate", attackRatio: 1.0, swingRadius: 300, knockbackForce: 12, ailmentDuration: 240, swordColor: "#39FF14", desc: "Ultimate: One 100% Attack minus Defense strike with variance against all enemies; each enemy receives one random ailment: Break, Unbalance, Freeze, or Seal." }, { type: "code_sting_no_impact_charge", duration: 300, autoChargeMultiplier: 3.2, desc: "Special Effect: After 5 seconds without being hit by an Impact, automatic Ultimate charging increases to 3.2x total. The timer resets when Code Sting is hit by an Impact." }] },
+                { id: "bc_code_sting", rarity: "Legendary", name: "Code Sting", color: "#39FF14", type: "Stamina", spinType: "right", atk: 136, def: 27, health: 1780, stamina: 52, weight: 14.0, interval: 2.5, desc: "Ultimate: Swings a toxic sting across the arena, dealt damage and knockback enemies, inflict target with one random debuff. Special effect: Speeds up automatic charging to charge Ultimate.", effects: [{ type: "code_sting_ultimate", attackRatio: 1.0, swingRadius: 300, knockbackForce: 12, ailmentDuration: 240, swordColor: "#39FF14", desc: "Ultimate: One 100% Attack minus Defense strike with variance against all enemies; each enemy receives one random ailment: Break, Unbalance, Freeze, or Seal." }] },
             ],
             weightRing: [
                 { 
@@ -5351,11 +5173,6 @@ const BC_SOLFIAN_1 = 'data:audio/mpeg;base64,SUQzBAAAAAAKe1RYWFgAAAASAAADbWFqb3J
                     desc: "Throws a shuriken Projectile at opponent after launching several impacts.",
                     effects: [{ type: 'shuriken_volley', trigger: 'three_impacts', impactCount: 3, projectileCount: 3, interval: 15, attackRatio: 0.60, speed: 7.5, size: 8, shape: 'diamond', color: '#00C1F1', desc: 'After 3 Impacts: throws 3 Shuriken projectiles at 0.25s intervals (60% ATK each)' }] 
                 },
-                { 
-                    id: "wr_leo", rarity: "Rare", name: "Leo", color: "#FF7F34", type: "Defense", atk: 70, def: 25, health: 1399, stamina: 18, weight: 37, interval: 0, 
-                    desc: "Greatly reduces damage taken from Projectiles.",
-                    effects: [{ type: 'projectile_damage_reduction', reduction: 0.60, desc: 'Reduces incoming Projectile damage by 60%' }] 
-                },                
                 { 
                     id: "wr_hyperspace", rarity: "Legendary", name: "Hyperspace", color: "#01DEEA", type: "Balance", atk: 88, def: 30, health: 1380, stamina: 24, weight: 34.0, interval: 0, 
                     desc: "Creates orbs at regular intervals that are launched as Projectiles at opponents after a short delay.",
@@ -5501,9 +5318,14 @@ const BC_SOLFIAN_1 = 'data:audio/mpeg;base64,SUQzBAAAAAAKe1RYWFgAAAASAAADbWFqb3J
                     desc: "Obtaining a recovery effect also increases your Attack, and destroys any projectile you touch.",
                     effects: [{ type: 'dreams_recovery_buff', trigger: 'self_recover_hp', attackBonus: 0.40, duration: 90, projectileImmunity: true, desc: 'HP recovery: +40% Attack and Projectile immunity for 1.5s' }]
                 },
-                { id: "wr_scorpio", rarity: "Legendary", name: "Scorpio", color: "#323541", type: "Stamina", atk: 76, def: 36, health: 1780, stamina: 42, weight: 32.0, interval: 0,
-                    desc: "Grants a chance to re-inflict ailments and recover lost HP when it succeeds.",
-                    effects: [{ type: 'scorpio_ailment_reapply', trigger: 'enemy_ailment_ends', chance: 0.50, duration: 240, healLostHpRatio: 0.25, curseStats: ['stamina'], cursePercent: 0.12, desc: "When an enemy Break, Unbalance, Seal, Freeze, or Curse ends: 50% chance to reapply the same ailment and recover 25% of caster lost HP." }]
+                { 
+                    id: "wr_leo", rarity: "Rare", name: "Leo", color: "#FF7F34", type: "Defense", atk: 70, def: 25, health: 1399, stamina: 18, weight: 37, interval: 0, 
+                    desc: "Greatly reduces damage taken from Projectiles.",
+                    effects: [{ type: 'projectile_damage_reduction', reduction: 0.60, desc: 'Reduces incoming Projectile damage by 60%' }] 
+                },                
+                { id: "wr_scorpio", rarity: "Epic", name: "Scorpio", color: "#323541", type: "Stamina", atk: 76, def: 36, health: 1780, stamina: 42, weight: 32.0, interval: 0,
+                    desc: "Grants chance to re-inflict the debuff when it duration ends.",
+                    effects: [{ type: 'scorpio_ailment_reapply', trigger: 'enemy_ailment_ends', chance: 0.50, duration: 240, curseStats: ['stamina'], cursePercent: 0.12, desc: 'When an enemy Break, Unbalance, Seal, Freeze, or Curse ends: 50% chance to reapply the same ailment.' }]
                 },
             ],
             driver: [
@@ -5722,163 +5544,6 @@ const BC_SOLFIAN_1 = 'data:audio/mpeg;base64,SUQzBAAAAAAKe1RYWFgAAAASAAADbWFqb3J
         };
         // Temporarily remove unfinished bey from every Battle Cap catalog-based
         PARTS.battleCap = PARTS.battleCap.filter(part => part && part.id !== 'bc_null');
-        // Launcher catalog: expand this catalog as additional launcher types are introduced.
-        const LAUNCHERS = {
-            launcher: [
-                { id: 'launcher_basic', name: 'Default Launcher', type: 'Balance', rarity: 'Common', durability: 100, maxDurability: 100, unlimited: true, outerAttackBonus: 0.20, innerStaminaBonus: 0.20, launchRpmBonusCap: 0.30, passiveTrigger: 'rightSpin', passiveAttackBonus: 0.10, effectPoints: ['Attack + 20% when launching into the outer circle.', 'Stamina + 20% when launching into the center.', 'Increase RPM up to 30% based on launch rating.', 'Attack +10% when launching rightspin Beys.'],  image: './Images/Launchers/launcher_default.png', description: 'Design by Neneko Research Academy. Driven by aerodynamics, the performance is stable' },
-                { id: 'launcher_mistletoe', name: 'Mistletoe', type: 'Stamina', rarity: 'Rare', durability: 100, maxDurability: 100, outerAttackBonus: 0.20, innerStaminaBonus: 0.20, launchRpmBonusCap: 0.30, launchRatingStaminaCap: 0.15, passiveTrigger: 'leftSpin', passiveStaminaBonus: 0.10, effectPoints: ['Attack + 20% when launching into the outer circle.', 'Stamina + 20% when launching into the center.', 'Increase RPM up to 30% based on launch rating.', 'Stamina +10% when launching leftspin Beys.', 'Increase Stamina by up to 15% based on launch rating, but also reduce Attack equally.'],  image: './Images/Launchers/launcher_mistletoe.png', description: 'Reduce the vibration of energy aggregation, makes the launch more stable.' },
-                { id: 'launcher_kusanagi', name: 'Kusanagi', type: 'Attack', rarity: 'Rare', durability: 100, maxDurability: 100, outerAttackBonus: 0.20, innerAttackBonus: 0.20, launchRpmBonusCap: 0.30, launchRatingImpactIntervalReductionCap: 0.30, passiveTrigger: 'flatTip', passiveAttackBonus: 0.10, effectPoints: ['Attack + 20% when launching into the outer or center circle.', 'Increase RPM up to 30% based on launch rating.', 'Attack +10% when launching Beys with Circle driver.', 'Increase impact cooldown speed by up to 15% based on launch rating, but also reduce Stamina equally.'],  image: './Images/Launchers/launcher_kusanagi.png', description: 'Have a very aggresive launch method for stronger attack effects.' },
-                { id: 'launcher_engine', name: 'Engine', type: 'Defense', rarity: 'Rare', durability: 100, maxDurability: 100, outerAttackBonus: 0.20, innerStaminaBonus: 0.20, launchRpmBonusCap: 0.30, perfectBlockChanceBonus: 0.10, passiveTrigger: 'sharpTip', passiveDefenseBonus: 0.10, passiveStaminaBonus: 0.10, effectPoints: ['Attack + 20% when launching into the outer circle.', 'Stamina + 20% when launching into the center.', 'Increase RPM up to 30% based on launch rating.', 'Defense and Stamina +10% when launching Beys with Central driver.', 'Upon perfect launch, grants 10% block rate.'],  image: './Images/Launchers/launcher_engine.png', description: 'Thick and simple, can improve defense effect.' },
-                { id: 'launcher_undine', name: 'Undine', type: 'Balance', rarity: 'Rare', durability: 100, maxDurability: 100, outerAttackBonus: 0.20, innerStaminaBonus: 0.20, launchRpmBonusCap: 0.30, preemptiveBreakOnPerfect: true, passiveTrigger: 'balanceRing', passiveDefenseBonus: 0.10, passiveStaminaBonus: 0.10, effectPoints: ['Attack + 20% when launching into the outer circle.', 'Stamina + 20% when launching into the center.', 'Increase RPM up to 30% based on launch rating.', 'Defense and Stamina +10% when launching Beys with Balance weight ring.', 'Inflict break upon perfect launch and hitting the opponent, if the Bey is not weak agaisnt the opponent\'s type.'],  image: './Images/Launchers/launcher_undine.png', description: 'Launchers that infuse deep sea potential, can play a preemptive role as long as your tops are not restrained.' },
-                { id: 'launcher_virtues', name: 'Virtues', type: 'Stamina', rarity: 'Epic', durability: 100, maxDurability: 100, outerAttackBonus: 0.20, innerStaminaBonus: 0.25, launchRpmBonusCap: 0.30, launchRatingRpmBonusCap: 0.10, powerBarSpeedMultiplier: 1.15, passiveTrigger: 'staminaCap', passiveStaminaBonus: 0.10, effectPoints: ['Attack + 20% when launching into the outer circle.', 'Stamina + 25% when launching into the center.', 'Increase RPM up to 30% based on launch rating.', 'Stamina +10% when launching Stamina Beys.', 'Increase extra RPM up to 10% based on launch rating, meanwhile, increase Launcher pointer shake by 15%.'],  image: './Images/Launchers/launcher_virtues.png', description: 'Extremely difficult to control, once well controlled, can get high RPM bonus during launch.' },
-                { id: 'launcher_powers', name: 'Powers', type: 'Attack', rarity: 'Epic', durability: 100, maxDurability: 100, outerAttackBonus: 0.30, innerStaminaBonus: 0.30, launchRpmBonusCap: 0, preemptiveDamageMaxHpCap: 0.05, passiveTrigger: 'attackCap', passiveAttackBonus: 0.10, effectPoints: ['Attack + 30% when launching into the outer circle.', 'Stamina + 30% when launching into the center.', 'Attack +10% when launching Attack Beys.', 'Based on launch rating, deals extra damage equivalent up to 5% max HP upon launching and hitting the opponent.'],  image: './Images/Launchers/launcher_powers.png', description: 'The surge of electrical energy makes the launched Beys unstoppable, it is focus on power but weak at RPMs.' },
-                { id: 'launcher_principalities', name: 'Principalities', type: 'Balance', rarity: 'Epic', durability: 100, maxDurability: 100, outerAttackBonus: 0.25, innerStaminaBonus: 0.25, launchRpmBonusCap: 0.30, perfectAutoChargeMultiplier: 1.15, perfectImpactGaugeMultiplier: 0.85, passiveTrigger: 'balanceCap', passiveAttackBonus: 0.05, passiveDefenseBonus: 0.05, passiveStaminaBonus: 0.05, effectPoints: ['Attack + 25% when launching into the outer circle.', 'Stamina + 25% when launching into the center.', 'Increase RPM up to 30% based on launch rating.', 'Attack, Defense, Stamina +5% when launching Balance Beys.', 'Upon perfect launch, increase automatic Ultimate charging rate by 15%, but reduces energy obtained from impacts by the same amount.'],  image: './Images/Launchers/launcher_principalities.png', description: 'Penetrates the power of time and space, which can affect the flow of energy.' }
-            ]
-        };
-        let currentLauncherId = 'launcher_basic';
-        let launcherSelectionId = 'launcher_basic';
-        let teamLauncherIds = ['launcher_basic', 'launcher_basic', 'launcher_basic'];
-        const REPAIR_KIT_TYPES = {
-            light: { name: 'Light Repair', amount: 10, color: '#62C7F4' },
-            good: { name: 'Good Repair', amount: 50, color: '#7567E8' },
-            perfect: { name: 'Perfect Repair', amount: Infinity, color: '#E9434F' }
-        };
-        let repairKitInventory = { light: 0, good: 0, perfect: 0 };
-        let selectedRepairKitType = 'light';
-        function normalizeRepairKitInventory(saved = null) {
-            return {
-                light: Math.max(0, Math.floor(Number(saved?.light) || 0)),
-                good: Math.max(0, Math.floor(Number(saved?.good) || 0)),
-                perfect: Math.max(0, Math.floor(Number(saved?.perfect) || 0))
-            };
-        }
-        function getRepairTargetLauncher() {
-            return getLauncherById(launcherListOpen ? launcherSelectionId : currentLauncherId);
-        }
-        function getLauncherById(id) {
-            return (LAUNCHERS.launcher || []).find(launcher => launcher.id === id) || LAUNCHERS.launcher[0];
-        }
-        function getLauncherDurabilitySnapshot() {
-            return Object.fromEntries((LAUNCHERS.launcher || []).map(launcher => [
-                launcher.id,
-                Math.max(0, Math.min(Number(launcher.maxDurability) || 100, Number(launcher.durability) || 0))
-            ]));
-        }
-        function restoreLauncherDurability(savedDurability) {
-            if (!savedDurability || typeof savedDurability !== 'object') return;
-            (LAUNCHERS.launcher || []).forEach(launcher => {
-                if (launcher.unlimited === true || launcher.id === 'launcher_basic') return;
-                if (!Object.prototype.hasOwnProperty.call(savedDurability, launcher.id)) return;
-                const maxDurability = Math.max(1, Number(launcher.maxDurability) || 100);
-                launcher.durability = Math.max(0, Math.min(maxDurability, Math.floor(Number(savedDurability[launcher.id]) || 0)));
-            });
-        }
-        function resetLauncherDurability() {
-            (LAUNCHERS.launcher || []).forEach(launcher => {
-                if (launcher.unlimited === true || launcher.id === 'launcher_basic') return;
-                launcher.durability = Math.max(1, Number(launcher.maxDurability) || 100);
-            });
-        }
-        function isLauncherDurabilityBattleMode() {
-            return !!(towerBattleMode || adventureBattleMode || championshipBattleMode || bossBattleMode || survivalBattleMode);
-        }
-        function consumePlayerLauncherDurabilityOnLaunch() {
-            if (!isLauncherDurabilityBattleMode()) return;
-            const launcher = getLauncherById(battlePlayerLauncherId || currentLauncherId);
-            if (!launcher || launcher.unlimited === true || launcher.id === 'launcher_basic') return;
-            const maxDurability = Math.max(1, Number(launcher.maxDurability) || 100);
-            launcher.durability = Math.max(0, Math.min(maxDurability, Math.floor(Number(launcher.durability) || 0) - 1));
-            if (launcher.durability <= 0) {
-                currentLauncherId = 'launcher_basic';
-                launcherSelectionId = 'launcher_basic';
-                if (Array.isArray(teamLauncherIds)) teamLauncherIds[activeTeamIndex] = 'launcher_basic';
-                battlePlayerLauncherId = 'launcher_basic';
-                updateGarageLauncherButton();
-            }
-            renderLauncherSelector();
-            if (typeof renderLauncherModal === 'function') renderLauncherModal();
-            if (typeof manualSaveGame === 'function') manualSaveGame();
-        }
-        function getLaunchRatingFactor(progress = 0) {
-            const grade = getLaunchPowerGrade(Number.isFinite(progress) ? progress : 0).label;
-            if (grade === 'Perfect') return 1;
-            if (grade === 'Cool') return 2 / 3;
-            if (grade === 'Nice') return 1 / 3;
-            return 0;
-        }
-        function getBeyLaunchRatingFactor(bey) {
-            return bey && Number.isFinite(bey.launchPowerProgress) ? getLaunchRatingFactor(bey.launchPowerProgress) : 0;
-        }
-        function isPerfectLaunch(bey) {
-            return !!(bey && Number.isFinite(bey.launchPowerProgress) && getLaunchPowerGrade(bey.launchPowerProgress).label === 'Perfect');
-        }
-        function getLauncherImpactGaugeMultiplier(bey) {
-            const launcher = getLauncherById(bey && bey.launcherId);
-            return isPerfectLaunch(bey) && launcher && launcher.id === 'launcher_principalities'
-                ? Math.max(0, Number(launcher.perfectImpactGaugeMultiplier) || 0.85)
-                : 1;
-        }
-        function getLauncherPassiveBonuses(bey) {
-            const launcher = getLauncherById(bey && bey.launcherId);
-            const trigger = launcher && launcher.passiveTrigger;
-            const battleCap = bey && bey.parts && bey.parts.battleCap;
-            const weightRing = bey && bey.parts && bey.parts.weightRing;
-            const driver = bey && bey.parts && bey.parts.driver;
-            const active = trigger === 'rightSpin' && battleCap && battleCap.spinType === 'right'
-                || trigger === 'leftSpin' && battleCap && battleCap.spinType === 'left'
-                || trigger === 'flatTip' && driver && driver.tip === 'flat'
-                || trigger === 'sharpTip' && driver && driver.tip === 'sharp'
-                || trigger === 'balanceRing' && weightRing && weightRing.type === 'Balance'
-                || trigger === 'staminaCap' && battleCap && battleCap.type === 'Stamina'
-                || trigger === 'attackCap' && battleCap && battleCap.type === 'Attack'
-                || trigger === 'balanceCap' && battleCap && battleCap.type === 'Balance';
-            if (!active) return { attack: 0, defense: 0, stamina: 0 };
-            return {
-                attack: Math.max(0, Number(launcher.passiveAttackBonus) || 0),
-                defense: Math.max(0, Number(launcher.passiveDefenseBonus) || 0),
-                stamina: Math.max(0, Number(launcher.passiveStaminaBonus) || 0)
-            };
-        }
-        function getCurrentLauncher() {
-            return getLauncherById(currentLauncherId);
-        }
-        function normalizeTeamLauncherIds(savedIds, fallbackId = 'launcher_basic') {
-            const fallback = getLauncherById(fallbackId)?.id || 'launcher_basic';
-            return [0, 1, 2].map(index => getLauncherById(Array.isArray(savedIds) ? savedIds[index] : fallback)?.id || fallback);
-        }
-        function updateGarageLauncherButton() {
-            const button = document.getElementById('garageLauncherMenuButton');
-            if (!button) return;
-            const launcher = getCurrentLauncher();
-            const imageUrl = launcher.image || './Images/Launchers/launcher_default.png';
-            button.style.background = `url("${imageUrl}") 15% center / 200% 200% no-repeat, ${getRarityBackground(launcher.rarity)}`;
-            button.setAttribute('aria-label', `Open Launcher menu - ${launcher.name}`);
-            button.title = launcher.name;
-        }
-        let battlePlayerLauncherId = 'launcher_basic';
-        let battleEnemyLauncherId = 'launcher_basic';
-        function getLauncherIdFromBattleData(data, fallback = 'launcher_basic') {
-            const id = data?.launcherId || data?.launcher_id || data?.launcher?.equippedId || fallback;
-            return getLauncherById(id)?.id || 'launcher_basic';
-        }
-        function getRandomLauncherId() {
-            const catalog = Array.isArray(LAUNCHERS.launcher) && LAUNCHERS.launcher.length ? LAUNCHERS.launcher : [getLauncherById('launcher_basic')];
-            return catalog[Math.floor(Math.random() * catalog.length)]?.id || 'launcher_basic';
-        }
-        function setBattleLauncherIds(mode = 'generic', enemyData = null) {
-            battlePlayerLauncherId = getLauncherIdFromBattleData({ launcherId: currentLauncherId });
-            // Ranked opponents may include launcher_id/launcherId in newer records. Older records default safely.
-            battleEnemyLauncherId = (mode === 'championship' || mode === 'survival')
-                ? getLauncherIdFromBattleData(enemyData, 'launcher_basic')
-                : getRandomLauncherId();
-        }
-        function applyBattleLauncherArtwork() {
-            const playerImage = document.getElementById('p1LauncherBaseDOM');
-            const enemyImage = document.getElementById('enemyLauncherBaseDOM');
-            if (playerImage) playerImage.src = getLauncherById(battlePlayerLauncherId).image || './Images/Launchers/launcher_default.png';
-            if (enemyImage) enemyImage.src = getLauncherById(battleEnemyLauncherId).image || './Images/Launchers/launcher_default.png';
-        }
-
 
         let debugOverrides = {
             playerUnlimitedHealth: false,
@@ -6108,17 +5773,6 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
         const DAILY_FIXED_MISSION_ID = 'dailyLogin';
         const WEEKLY_MISSION_IDS = ['championshipWin', 'towerWin', 'spendGold', 'adventureComplete10', 'microchipEvolve', 'chestOpen30', 'legendaryPart', 'shopPurchase100', 'luckyTicket', 'survivalChallenge30'];
         const WEEKLY_FIXED_MISSION_ID = 'login7';
-        const ACHIEVEMENT_DEFINITIONS = [
-            { id: 'reachGp1', text: 'Reach GP Level 1.', target: 1, reward: { kind: 'gems', amount: 50, label: '50 Gems' } },
-            { id: 'unlockLauncherMistletoe', text: 'Reach GP Level 10.', target: 10, progressType: 'gp', launcherId: 'launcher_mistletoe', reward: { kind: 'launcher', amount: 1, label: 'Mistletoe Launcher' } },
-            { id: 'unlockLauncherKusanagi', text: 'Clear Adventure Chapter 6 once.', target: 1, progressType: 'adventureChapter6', launcherId: 'launcher_kusanagi', reward: { kind: 'launcher', amount: 1, label: 'Kusanagi Launcher' } },
-            { id: 'unlockLauncherEngine', text: 'Reach GP Level 50.', target: 50, progressType: 'gp', launcherId: 'launcher_engine', reward: { kind: 'launcher', amount: 1, label: 'Engine Launcher' } },
-            { id: 'unlockLauncherUndine', text: 'Clear Tower Floor 100.', target: 100, progressType: 'towerFloor', launcherId: 'launcher_undine', reward: { kind: 'launcher', amount: 1, label: 'Undine Launcher' } },
-            { id: 'unlockLauncherVirtues', text: 'Reach GP Level 100.', target: 100, progressType: 'gp', launcherId: 'launcher_virtues', reward: { kind: 'launcher', amount: 1, label: 'Virtues Launcher' } },
-            { id: 'unlockLauncherPowers', text: 'Clear Adventure Chapter 6 100 times.', target: 100, progressType: 'adventureChapter6', launcherId: 'launcher_powers', reward: { kind: 'launcher', amount: 1, label: 'Powers Launcher' } },
-            { id: 'unlockLauncherPrincipalities', text: 'Clear Tower Floor 500.', target: 500, progressType: 'towerFloor', launcherId: 'launcher_principalities', reward: { kind: 'launcher', amount: 1, label: 'Principalities Launcher' } }
-        ];
-        let achievementsState = { claimed: {} };
         let missionsState = { daily: { cycleKey: '', missionIds: [], progress: [], claimed: [], rewardClaims: [] }, weekly: { cycleKey: '', missionIds: [], progress: [], claimed: [], rewardClaims: [], rewardData: {} } };
         let missionLoginStreak = 0;
         let missionLastLoginDate = '';
@@ -6167,7 +5821,6 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
             if (!gained || gpLevel >= GP_MAX_LEVEL) return;
             gpExperience = Math.min(getGpExpRequired(gpLevel), gpExperience + gained);
             updateGpProfileUI();
-            if (activeMissionTab === 'feats' && !document.getElementById('missionsModal')?.classList.contains('hidden')) renderAchievements();
             if (typeof manualSaveGame === 'function') manualSaveGame();
         }
         function getGpRewardMarkup(level) {
@@ -6366,53 +6019,6 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
             renderMissions();
             if (typeof manualSaveGame === 'function') manualSaveGame();
         }
-        function getAchievementProgress(achievement) {
-            if (!achievement) return 0;
-            if (achievement.id === 'reachGp1') return Math.min(achievement.target, Math.max(0, Number(gpLevel) || 0));
-            if (achievement.progressType === 'gp') return Math.min(achievement.target, Math.max(0, Number(gpLevel) || 0));
-            if (achievement.progressType === 'adventureChapter6') return Math.min(achievement.target, Math.max(0, Number(adventureChapter6ClearCount) || 0));
-            if (achievement.progressType === 'towerFloor') return Math.min(achievement.target, Math.max(0, (Number(towerUnlockedFloor) || 0) - 1));
-            return 0;
-        }
-        function renderAchievements() {
-            const list = document.getElementById('missionList');
-            const summary = document.getElementById('missionsSummary');
-            if (!list) return;
-            if (summary) summary.style.display = 'none';
-            const orderedAchievements = ACHIEVEMENT_DEFINITIONS.slice().sort((a, b) => {
-                const getPriority = achievement => {
-                    if (achievementsState.claimed[achievement.id] === true) return 2;
-                    return getAchievementProgress(achievement) >= achievement.target ? 0 : 1;
-                };
-                return getPriority(a) - getPriority(b);
-            });
-            list.innerHTML = orderedAchievements.map(achievement => {
-                const value = getAchievementProgress(achievement);
-                const percent = achievement.target > 0 ? Math.min(100, (value / achievement.target) * 100) : 0;
-                const claimed = achievementsState.claimed[achievement.id] === true;
-                const completed = value >= achievement.target;
-                const reward = achievement.reward;
-                const rewardVisual = reward.kind === 'launcher' ? `<span class="winner-announcement-reward-tile"><img class="achievement-launcher-reward-image" src="${getLauncherById(achievement.launcherId)?.image || './Images/Launchers/launcher_default.png'}" alt=""></span>` : '<span class="winner-announcement-reward-tile"><span class="currency-symbol currency-gem-icon" aria-hidden="true"></span></span>';
-                return `<div class="mission-card achievement-card${claimed ? ' claimed' : ''}"><div class="mission-text">${achievement.text}</div><div class="mission-progress-track"><div class="mission-progress-fill" style="width:${percent}%"></div></div><div class="mission-progress-label">${value}/${achievement.target}</div><button type="button" class="achievement-reward-box" data-claim-achievement="${achievement.id}" ${(!completed || claimed) ? 'disabled' : ''} aria-label="${claimed ? 'Claimed' : completed ? `Claim ${reward.label}` : `Reach ${achievement.target} for ${reward.label}`}" title="${claimed ? 'Claimed' : completed ? 'Claim reward' : 'Locked'}">${rewardVisual}<span class="achievement-reward-amount">x${reward.amount}</span></button></div>`;
-            }).join('');
-            list.querySelectorAll('[data-claim-achievement]').forEach(button => button.addEventListener('click', () => claimAchievement(button.dataset.claimAchievement)));
-        }
-        function claimAchievement(achievementId) {
-            const achievement = ACHIEVEMENT_DEFINITIONS.find(entry => entry.id === achievementId);
-            if (!achievement || achievementsState.claimed[achievement.id] === true || getAchievementProgress(achievement) < achievement.target) return;
-            const reward = achievement.reward;
-            if (reward.kind === 'gems') addCurrency('gems', reward.amount);
-            else if (reward.kind === 'launcher') {
-                const launcher = getLauncherById(achievement.launcherId);
-                if (!launcher) return;
-            }
-            achievementsState.claimed[achievement.id] = true;
-            if (reward.kind === 'launcher') {
-                renderLauncherModal?.();
-            }
-            renderAchievements();
-            if (typeof manualSaveGame === 'function') manualSaveGame();
-        }
         function renderMissions() {
             ensureMissionCycles();
             const summary = document.getElementById('missionsSummary');
@@ -6420,13 +6026,13 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
             if (!summary || !list) return;
             const isFeats = activeMissionTab === 'feats';
             summary.style.display = isFeats ? 'none' : '';
-            if (isFeats) {
-                renderAchievements();
-                return;
-            }
             const scope = activeMissionTab === 'weekly' ? 'weekly' : 'daily';
             const points = getMissionPoints(scope);
             const progress = Math.min(100, points);
+            if (isFeats) {
+                list.innerHTML = '<div class="mission-card"><div class="mission-text">Feats will be available later.</div></div>';
+                return;
+            }
             const cycleText = scope === 'daily' ? 'Refresh in 00:00:00' : 'Refresh in 0d 00:00:00';
             summary.innerHTML = `<div class="missions-summary-heading"><span>${scope === 'daily' ? 'Daily Mission Points' : 'Weekly Mission Points'}</span><span class="missions-cycle" data-mission-scope="${scope}">${cycleText}</span></div><div class="missions-milestones">${renderMissionMilestones(scope, points)}</div><div class="missions-progress-track"><div class="missions-progress-fill" style="width:${progress}%"></div></div><div class="missions-progress-label">${points}/100</div>`;
             updateMissionCountdown();
@@ -6603,7 +6209,7 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
                 if (button) { button.disabled = false; button.textContent = 'OK'; }
             }
         }
-        const PROFILE_DEBUG_MENU_ENABLED = false;
+        const PROFILE_DEBUG_MENU_ENABLED = true;
         window.handleProfileAvatarClick = function(event) {
             if (event) { event.preventDefault(); event.stopPropagation(); }
             if (PROFILE_DEBUG_MENU_ENABLED && window.openCurrencyDebug) {
@@ -6776,7 +6382,7 @@ const claimed = !!championshipProgress.claimedRewards[reward.id];
             ['Normal', 'Rare', 'Epic', 'Legendary'].forEach(rarity => {
                 const alreadyRolled = gymState.rewardDetails.filter(reward => reward.rarity === rarity).reduce((sum, reward) => sum + Math.max(0, Number(reward.amount) || 0), 0);
                 let remaining = Math.max(0, Math.floor(Number(gymState.pending[rarity]) || 0) - alreadyRolled);
-                const choices = Object.entries(PARTS).flatMap(([type, parts]) => (parts || []).filter(part => part && part.rarity === rarity && !NEW_PARTS_INTRODUCTION_EVENT_PART_IDS.has(part.id)).map(part => ({ type, part })));
+                const choices = Object.entries(PARTS).flatMap(([type, parts]) => (parts || []).filter(part => part && part.rarity === rarity).map(part => ({ type, part })));
                 while (remaining > 0 && choices.length) {
                     const choice = choices[Math.floor(Math.random() * choices.length)];
                     const amount = Math.min(remaining, 1 + Math.floor(Math.random() * 5));
@@ -7518,13 +7124,8 @@ if (relativeSpeed < 0) {
                 : 1.0;
             const microchipImpactReduction = getMicrochipEffectTotal(owner, 'impactIntervalPercent');
             const reduction = (hasSurge ? 0.60 : 1.0) * (hasRampage ? 0.75 : 1.0) * (hasGush ? (1 - gushReduction) : 1.0) * odeMultiplier * sagittariusMultiplier * Math.max(0.01, 1 - microchipImpactReduction);
-            const launcher = owner ? getLauncherById(owner.launcherId) : null;
-            const launcherRatingFactor = getBeyLaunchRatingFactor(owner);
-            const kusanagiReduction = launcher && launcher.id === 'launcher_kusanagi'
-                ? Math.max(0, Number(launcher.launchRatingImpactIntervalReductionCap) || 0) * launcherRatingFactor
-                : 0;
             // Cap total Impact interval reduction at -50%.
-            const cappedReduction = Math.max(0.50, reduction * Math.max(0.01, 1 - kusanagiReduction));
+            const cappedReduction = Math.max(0.50, reduction);
             return Math.max(120, Math.round((baseSeconds || 3) * 60 * cappedReduction * gladiatorIntervalMultiplier));
         }
 
@@ -7650,10 +7251,6 @@ if (relativeSpeed < 0) {
         let universalSeed = (Date.now() >>> 0) || 1;
         const TOWER_GENERATION_SEED = 'SpiralWarriorTOWERV1';
         const TOWER_MICROCHIP_DROP_SEED = 'TowerMicrochipsV1';
-        // New Parts Introduction Event: these parts stay defined for testing/event rewards,
-        // but are excluded from normal acquisition until manually removed from this set.
-        const NEW_PARTS_INTRODUCTION_EVENT_PART_IDS = new Set(['bc_null', 'wr_null']);
-        const TOWER_EXCLUDED_BELOW_500_PART_IDS = NEW_PARTS_INTRODUCTION_EVENT_PART_IDS;
         let towerCurrentFloor = 1;
         let towerUnlockedFloor = 1;
         let towerActiveFloor = null;
@@ -7771,14 +7368,9 @@ function getTowerEnemy(floor) {
     // Floors without a fixed early-game combination are seeded and procedurally generated.
     const rng = makeSeededRandom((normalizeSeed(TOWER_GENERATION_SEED) ^ Math.imul(floor, 2654435761)) >>> 0);
 const allowedRarities = getTowerAllowedRarities(floor);
-const useLegacyTowerPool = Number(floor) < 500;
 
 const pick = list => {
-    const eligibleParts = list.filter(part =>
-        allowedRarities.includes(part.rarity) &&
-        !isBattleCapHidden(part) &&
-        (!useLegacyTowerPool || !NEW_PARTS_INTRODUCTION_EVENT_PART_IDS.has(part.id))
-    );
+    const eligibleParts = list.filter(part => allowedRarities.includes(part.rarity) && !isBattleCapHidden(part));
     return eligibleParts[Math.floor(rng() * eligibleParts.length)];
 };
 
@@ -8812,7 +8404,6 @@ const parts = {
         let adventureCrystal = 0;
         let adventureShopOffers = [];
         let adventureFightWins = 0;
-        let adventureChapter6ClearCount = 0;
         let adventureRewardHistory = [];
         let adventureTotalNodeCount = 0;
         let adventureUnlockedChapter = 1;
@@ -8839,7 +8430,6 @@ const parts = {
             adventureCrystal = 0;
             adventureShopOffers = [];
             adventureFightWins = 0;
-            adventureChapter6ClearCount = 0;
             adventureRewardHistory = [];
             adventureTotalNodeCount = 0;
             adventureUnlockedChapter = 1;
@@ -9132,11 +8722,7 @@ const parts = {
         }
         function confirmAdventureResult() {
             const wasClear = adventureBossCompleted;
-            if (wasClear) {
-                addMissionProgress('adventure');
-                addMissionProgress('adventureComplete10');
-                if (adventureCurrentChapter === 6) adventureChapter6ClearCount += 1;
-            }
+            if (wasClear) { addMissionProgress('adventure'); addMissionProgress('adventureComplete10'); }
             if (wasClear) adventureUnlockedChapter = Math.max(adventureUnlockedChapter, adventureCurrentChapter + 1);
             adventureCompletedNodeIds = new Set();
             adventureBossCompleted = false;
@@ -9358,7 +8944,7 @@ const parts = {
             const configured = chapter.enemyPools?.[enemyClass] || {};
             const pick = (type, configuredKey) => {
                 const ids = Array.isArray(configured[configuredKey]) ? configured[configuredKey] : [];
-                const pool = (ids.length ? ids.map(id => findPartById(typeof id === 'object' ? id.id : id, null)).filter(Boolean) : (Array.isArray(PARTS[type]) ? PARTS[type] : [])).filter(part => !NEW_PARTS_INTRODUCTION_EVENT_PART_IDS.has(part.id));
+                const pool = ids.length ? ids.map(id => findPartById(typeof id === 'object' ? id.id : id, null)).filter(Boolean) : (Array.isArray(PARTS[type]) ? PARTS[type] : []);
                 const part = pool[Math.floor(Math.random() * pool.length)];
                 return part ? { ...part, __rankerLevel: Number((Array.isArray(configured.levels) && configured.levels.length ? configured.levels : [1])[Math.floor(Math.random() * (configured.levels?.length || 1))]) || 1 } : null;
             };
@@ -9375,11 +8961,11 @@ const parts = {
         }
         function getAdventureEnemyDrops(node) {
             if (!node) return [];
-            if (Array.isArray(node.adventureEnemyDrops)) return node.adventureEnemyDrops.filter(drop => drop?.part && !NEW_PARTS_INTRODUCTION_EVENT_PART_IDS.has(drop.part.id)).map(drop => ({ ...drop, type: getAdventurePartType(drop.part, drop.type) }));
+            if (Array.isArray(node.adventureEnemyDrops)) return node.adventureEnemyDrops.filter(drop => drop?.part).map(drop => ({ ...drop, type: getAdventurePartType(drop.part, drop.type) }));
             const enemy = node.adventureEnemy;
             if (!enemy) return [];
             const dropChances = { battleCap: 0.05, weightRing: 0.20, driver: 0.20 };
-            const drops = ['battleCap', 'weightRing', 'driver'].filter(partKey => enemy[partKey] && !NEW_PARTS_INTRODUCTION_EVENT_PART_IDS.has(enemy[partKey].id) && Math.random() < dropChances[partKey]).map(partKey => ({ type: partKey, part: enemy[partKey], amount: Math.floor(Math.random() * 16) + 5 }));
+            const drops = ['battleCap', 'weightRing', 'driver'].filter(partKey => enemy[partKey] && Math.random() < dropChances[partKey]).map(partKey => ({ type: partKey, part: enemy[partKey], amount: Math.floor(Math.random() * 16) + 5 }));
             node.adventureEnemyDrops = drops;
             updateAdventureMapSnapshotNode(node);
             return drops;
@@ -9567,11 +9153,11 @@ const parts = {
             if (typeof manualSaveGame === 'function') manualSaveGame();
         }
         function getAdventureTreasureRewards(node) {
-            if (node && Array.isArray(node.adventureTreasureRewards) && node.adventureTreasureRewards.length && node.adventureTreasureRewards.every(reward => reward.part && !NEW_PARTS_INTRODUCTION_EVENT_PART_IDS.has(reward.part.id) && (reward.part.rarity === 'Normal' || reward.part.rarity === 'Rare'))) return node.adventureTreasureRewards;
+            if (node && Array.isArray(node.adventureTreasureRewards) && node.adventureTreasureRewards.length && node.adventureTreasureRewards.every(reward => reward.part && (reward.part.rarity === 'Normal' || reward.part.rarity === 'Rare'))) return node.adventureTreasureRewards;
             const treasure = getAdventureChapterContent().treasure || {};
             const allowedRarities = Array.isArray(treasure.allowedRarities) && treasure.allowedRarities.length ? treasure.allowedRarities : ['Normal', 'Rare'];
             const allowedParts = Array.isArray(treasure.allowedParts) ? treasure.allowedParts : [];
-            const entries = Object.entries(PARTS).flatMap(([type, parts]) => (parts || []).filter(part => allowedRarities.includes(part.rarity) && (!allowedParts.length || allowedParts.includes(part.id)) && !NEW_PARTS_INTRODUCTION_EVENT_PART_IDS.has(part.id)).map(part => ({ type, part })));
+            const entries = Object.entries(PARTS).flatMap(([type, parts]) => (parts || []).filter(part => allowedRarities.includes(part.rarity) && (!allowedParts.length || allowedParts.includes(part.id))).map(part => ({ type, part })));
             const minRewards = Math.max(1, Number(treasure.minRewards) || 1);
             const maxRewards = Math.max(minRewards, Number(treasure.maxRewards) || 4);
             const count = Math.floor(Math.random() * (maxRewards - minRewards + 1)) + minRewards;
@@ -10009,7 +9595,7 @@ const parts = {
             const shop = getAdventureChapterContent().shop || {};
             const allowedRarities = Array.isArray(shop.allowedRarities) && shop.allowedRarities.length ? shop.allowedRarities : ['Normal', 'Rare'];
             const allowedParts = Array.isArray(shop.allowedParts) ? shop.allowedParts : [];
-            if (node && Array.isArray(node.adventureShopOffers) && node.adventureShopOffers.length && node.adventureShopOffers.every(offer => offer.part && allowedRarities.includes(offer.part.rarity) && (!allowedParts.length || allowedParts.includes(offer.part.id)) && !NEW_PARTS_INTRODUCTION_EVENT_PART_IDS.has(offer.part.id))) return node.adventureShopOffers;
+            if (node && Array.isArray(node.adventureShopOffers) && node.adventureShopOffers.length && node.adventureShopOffers.every(offer => offer.part && allowedRarities.includes(offer.part.rarity) && (!allowedParts.length || allowedParts.includes(offer.part.id)))) return node.adventureShopOffers;
             const catalog = getShopCatalogParts().filter(entry => entry.part && allowedRarities.includes(entry.part.rarity) && (!allowedParts.length || allowedParts.includes(entry.part.id)));
             const offerRules = shop.offers || {};
             const minOffers = Math.max(1, Number(offerRules.minOffers) || 3);
@@ -10439,8 +10025,6 @@ const parts = {
                 weightRing: rings[Math.floor(Math.random() * rings.length)],
                 driver: drivers[Math.floor(Math.random() * drivers.length)]
             };
-            setBattleLauncherIds('generic', enemyEquipped);
-            applyBattleLauncherArtwork();
         }
         function ensurePrimaryArenaBeys() {
             if (!bey1) bey1 = new Beyblade(centerX + 120, centerY + 120, playerEquipped || playerLoadouts[0], 'left');
@@ -10453,20 +10037,16 @@ const parts = {
             threeBeybladeSelectedIndex = activeLoadoutIndex;
             document.getElementById('threeBeybladeSelect')?.classList.add('hidden');
             document.getElementById('adventureLoadoutOverlay')?.classList.remove('active');
-            if (typeof resetArenaBattle === 'function') resetArenaBattle();
             randomizeEnemy();
+            if (typeof resetArenaBattle === 'function') resetArenaBattle();
             ensurePrimaryArenaBeys();
             puppetBeys = [];
             const playerLevelMap = Object.fromEntries(Object.values(playerEquipped || {}).filter(Boolean).map(part => [part.id, 1]));
             const enemyLevelMap = Object.fromEntries(Object.values(enemyEquipped || {}).filter(Boolean).map(part => [part.id, 1]));
             bey1.upgradeLevels = playerLevelMap;
             bey2.upgradeLevels = enemyLevelMap;
-            bey1.launcherId = battlePlayerLauncherId;
-            bey2.launcherId = battleEnemyLauncherId;
             bey1.updateParts(playerEquipped);
             bey2.updateParts(enemyEquipped);
-            bey1.stats = bey1.calculateStats();
-            bey2.stats = bey2.calculateStats();
             bey2.adventureEnemyStatMultiplier = 1;
             bey2.towerStatMultiplier = 1;
             updateSkillHexagons();
@@ -10520,13 +10100,10 @@ const parts = {
         }
         function selectLoadoutTeam(index) {
             if (index < 0 || index >= loadoutTeams.length || index === activeTeamIndex) { closeLoadoutTeamMenu(); return; }
-            teamLauncherIds[activeTeamIndex] = getLauncherById(currentLauncherId)?.id || 'launcher_basic';
             activeTeamIndex = index;
             playerLoadouts = loadoutTeams[activeTeamIndex];
             activeLoadoutIndex = 0;
             playerEquipped = playerLoadouts[activeLoadoutIndex];
-            currentLauncherId = getLauncherById(teamLauncherIds[activeTeamIndex] || 'launcher_basic')?.id || 'launcher_basic';
-            launcherSelectionId = currentLauncherId;
             if (typeof bey1 !== 'undefined' && bey1) bey1.updateParts(playerEquipped);
             closeLoadoutTeamMenu();
             updateLoadoutSelector();
@@ -10930,7 +10507,6 @@ const parts = {
                     battle_cap: row.battle_cap_id ? { id: String(row.battle_cap_id), level: Number(row.battle_cap_level) || 1 } : null,
                     weight_ring: row.weight_ring_id ? { id: String(row.weight_ring_id), level: Number(row.weight_ring_level) || 1 } : null,
                     driver: row.driver_id ? { id: String(row.driver_id), level: Number(row.driver_level) || 1 } : null,
-                    launcher_id: row.launcher_id ? String(row.launcher_id) : 'launcher_basic',
                     microchips: row.microchips && typeof row.microchips === 'object' ? row.microchips : {}
                 };
                 loadoutsByUid.set(uid, loadouts);
@@ -11000,7 +10576,6 @@ const parts = {
                 battle_cap: loadout && loadout.battleCap ? { id: loadout.battleCap.id, level: getPartLevel(loadout.battleCap) } : null,
                 weight_ring: loadout && loadout.weightRing ? { id: loadout.weightRing.id, level: getPartLevel(loadout.weightRing) } : null,
                 driver: loadout && loadout.driver ? { id: loadout.driver.id, level: getPartLevel(loadout.driver) } : null,
-                launcher_id: getLauncherIdFromBattleData({ launcherId: currentLauncherId }),
                 microchips: getMicrochipSnapshotForLoadout(loadout)
             }));
         }
@@ -11093,8 +10668,7 @@ const parts = {
             return {
                 battleCap: battleCap ? { ...battleCap, __rankerLevel: Math.max(1, Math.min(15, Number(cap.__rankerLevel || cap.level) || 1)), __microchips: rawLoadout.microchips?.battleCap || {} } : null,
                 weightRing: weightRing ? { ...weightRing, __rankerLevel: Math.max(1, Math.min(15, Number(ring.__rankerLevel || ring.level) || 1)), __microchips: rawLoadout.microchips?.weightRing || {} } : null,
-                driver: driverPart ? { ...driverPart, __rankerLevel: Math.max(1, Math.min(15, Number(driver.__rankerLevel || driver.level) || 1)), __microchips: rawLoadout.microchips?.driver || {} } : null,
-                launcherId: getLauncherIdFromBattleData(rawLoadout, 'launcher_basic')
+                driver: driverPart ? { ...driverPart, __rankerLevel: Math.max(1, Math.min(15, Number(driver.__rankerLevel || driver.level) || 1)), __microchips: rawLoadout.microchips?.driver || {} } : null
             };
         }
         function getRankerLoadoutCombatPower(loadout) {
@@ -11113,7 +10687,6 @@ const parts = {
                 battle_cap: loadout && loadout.battleCap ? { id: loadout.battleCap.id, level: partUpgradeLevels[loadout.battleCap.id] || 1 } : null,
                 weight_ring: loadout && loadout.weightRing ? { id: loadout.weightRing.id, level: partUpgradeLevels[loadout.weightRing.id] || 1 } : null,
                 driver: loadout && loadout.driver ? { id: loadout.driver.id, level: partUpgradeLevels[loadout.driver.id] || 1 } : null,
-                launcher_id: getLauncherIdFromBattleData({ launcherId: currentLauncherId }),
                 microchips: getMicrochipSnapshotForLoadout(loadout)
             }));
             const localPlayerRecord = { uid: playerUid, player_name: playerName || 'Player', loadouts: playerRankerLoadouts, total_wins: playerChampionshipWins, isPlayer: true };
@@ -11566,11 +11139,10 @@ const parts = {
                 const battleCapId = loadout?.battle_cap_id || loadout?.battleCap?.id;
                 const weightRingId = loadout?.weight_ring_id || loadout?.weightRing?.id;
                 const driverId = loadout?.driver_id || loadout?.driver?.id;
-                const launcherId = getLauncherIdFromBattleData(loadout, 'launcher_basic');
                 const battleCap = getPartById('battleCap', battleCapId);
                 const weightRing = getPartById('weightRing', weightRingId);
                 const driver = getPartById('driver', driverId);
-                return battleCap && weightRing && driver ? { battleCap: { ...battleCap }, weightRing: { ...weightRing }, driver: { ...driver }, launcherId } : null;
+                return battleCap && weightRing && driver ? { battleCap: { ...battleCap }, weightRing: { ...weightRing }, driver: { ...driver } } : null;
             }).filter(Boolean).slice(0, 3);
             const name = String(row?.player_name || row?.name || '').trim().slice(0, 20);
             const uid = String(row?.player_uid || row?.uid || '').trim();
@@ -11890,8 +11462,6 @@ const parts = {
             standardBattleResultHandled = false;
             playerEquipped = playerTeam;
             enemyEquipped = enemyA;
-            setBattleLauncherIds('survival', enemyA);
-            applyBattleLauncherArtwork();
             const playerSpawnRadius = 220;
             bey1 = new Beyblade(centerX, centerY + playerSpawnRadius, playerTeam, 'left');
             bey2 = enemyA ? new Beyblade(centerX - playerSpawnRadius * 0.8660254, centerY - playerSpawnRadius * 0.5, enemyA, 'right') : null;
@@ -11908,7 +11478,6 @@ const parts = {
             if (survivalBey3) survivalBey3.survivalModuleState = survivalEnemyModuleStates[1];
             activeArenaBeys = [bey1, bey2, survivalBey3].filter(Boolean);
             [[bey1, playerTeam], [bey2, enemyA], [survivalBey3, enemyB]].filter(entry => entry[0]).forEach(([bey, loadout], index) => {
-                bey.launcherId = bey === bey1 ? battlePlayerLauncherId : battleEnemyLauncherId;
                 bey.upgradeLevels = getSurvivalLevel10Map(loadout);
                 bey.updateParts(loadout);
                 bey.stats = bey.calculateStats();
@@ -12038,13 +11607,11 @@ const parts = {
             // Keep the full Boss Mode roster available to targeting, pickups, and collisions.
             activeArenaBeys = [...bossPlayerBeys, bey2];
             bossPlayerBeys.forEach((bey, index) => {
-                bey.launcherId = battlePlayerLauncherId;
                 bey.upgradeLevels = getLoadoutLevelMap(playerTeam[index]);
                 bey.updateParts(playerTeam[index]);
                 bey.vx = 3.2 + Math.random() * 1.4;
                 bey.vy = (centerY - bey.y) * 0.012;
             });
-            bey2.launcherId = battleEnemyLauncherId;
             bey2.upgradeLevels = getLoadoutLevelMap(bossLoadout);
             bey2.updateParts(bossLoadout);
             // Boss scaling is recalculated for this battle only. Size remains +50%.
@@ -12190,8 +11757,6 @@ const parts = {
                     standardBattleResultHandled = false;
                     playerEquipped = selectedPlayer;
                     enemyEquipped = selectedEnemy;
-                    setBattleLauncherIds(activeContext.mode, selectedEnemy);
-                    applyBattleLauncherArtwork();
                     bey1.upgradeLevels = getLoadoutLevelMap(selectedPlayer);
                     bey2.upgradeLevels = getLoadoutLevelMap(selectedEnemy);
                     bey2.adventureEnemyStatMultiplier = adventureBattleMode ? Math.max(1, Number(selectedEnemy.__adventureStatMultiplier) || 1) : 1;
@@ -12655,21 +12220,6 @@ bc_thetis: [BC_THETIS_1],
             const playPromise = sfx.play();
             if (playPromise && typeof playPromise.catch === 'function') playPromise.catch(() => {});
         }
-        const uiTapRipple = document.createElement('span');
-        uiTapRipple.className = 'ui-tap-ripple';
-        document.body.appendChild(uiTapRipple);
-        let uiTapRippleClearTimer = 0;
-        document.addEventListener('pointerdown', event => {
-            if (event.pointerType === 'mouse' && event.button !== 0) return;
-            if (event.target.closest?.('#arenaScreen, #arena, #arenaCanvas, .ui-tap-ripple')) return;
-            uiTapRipple.style.left = `${event.clientX}px`;
-            uiTapRipple.style.top = `${event.clientY}px`;
-            uiTapRipple.classList.remove('active');
-            void uiTapRipple.offsetWidth;
-            uiTapRipple.classList.add('active');
-            clearTimeout(uiTapRippleClearTimer);
-            uiTapRippleClearTimer = setTimeout(() => uiTapRipple.classList.remove('active'), 460);
-        }, { capture: true, passive: true });
         document.addEventListener('click', e => {
             const arenaScreen = document.getElementById('arenaScreen');
             if (!arenaScreen || arenaScreen.classList.contains('hidden')) {
@@ -12888,10 +12438,7 @@ bc_thetis: [BC_THETIS_1],
             { kind: 'chest', name: 'Superior Chest', chestId: 'superior', currency: 'gems', price: 50 },
             { kind: 'chest', name: 'Epic Chest', chestId: 'epic', currency: 'gems', price: 100 },
             { kind: 'chest', name: 'Legendary Chest', chestId: 'legendary', currency: 'gems', price: 250 },
-            { kind: 'chest', name: 'Paradise Chest', chestId: 'paradise', currency: 'gems', price: 500 },
-            { kind: 'repairKit', name: 'Repair Kits', repairKitType: 'light', rarity: 'Normal', amount: 1, currency: 'gold', price: 10000 },
-            { kind: 'repairKit', name: 'Repair Kits', repairKitType: 'good', rarity: 'Rare', amount: 1, currency: 'gold', price: 45000 },
-            { kind: 'repairKit', name: 'Repair Kits', repairKitType: 'perfect', rarity: 'Epic', amount: 1, currency: 'gems', price: 500 }
+            { kind: 'chest', name: 'Paradise Chest', chestId: 'paradise', currency: 'gems', price: 500 }
         ];
 
         function getNextShopResetTimestamp(now = trustedNow()) {
@@ -12907,7 +12454,7 @@ bc_thetis: [BC_THETIS_1],
             return nextReset.getTime();
         }
         function getShopCatalogParts() {
-            return Object.entries(PARTS).flatMap(([type, parts]) => (parts || []).filter(part => part && !NEW_PARTS_INTRODUCTION_EVENT_PART_IDS.has(part.id)).map(part => ({ type, part })));
+            return Object.entries(PARTS).flatMap(([type, parts]) => (parts || []).map(part => ({ type, part })));
         }
         function chooseShopRarity(allowAscended = false, allowedRarities = null) {
             const entries = Object.entries(SHOP_RARITY_WEIGHTS).filter(([rarity]) => (allowAscended || rarity !== 'Ascended') && (!allowedRarities || allowedRarities.includes(rarity)));
@@ -13126,8 +12673,7 @@ bc_thetis: [BC_THETIS_1],
                 const isGold = offer.kind === 'gold';
                 const isGems = offer.kind === 'gems';
                 const isChest = offer.kind === 'chest';
-                const isRepairKit = offer.kind === 'repairKit';
-                const rarity = isChest ? (offer.chestId === 'paradise' ? 'Ascended' : offer.chestId === 'legendary' ? 'Legendary' : offer.chestId === 'epic' ? 'Epic' : offer.chestId === 'superior' ? 'Rare' : 'Normal') : isRepairKit ? offer.rarity : 'Normal';
+                const rarity = isChest ? (offer.chestId === 'paradise' ? 'Ascended' : offer.chestId === 'legendary' ? 'Legendary' : offer.chestId === 'epic' ? 'Epic' : offer.chestId === 'superior' ? 'Rare' : 'Normal') : 'Normal';
                 const card = document.createElement('div');
                 card.className = 'shop-item-shell';
                 card.innerHTML = `
@@ -13136,7 +12682,7 @@ bc_thetis: [BC_THETIS_1],
                         <div class="shop-inner-part-card part-card" style="background:${getRarityBackground(rarity)};">
                             <div class="shop-item-type">${isGold ? getShopCurrencyMarkup('gold') : isGems ? getShopCurrencyMarkup('gems') : ''}</div>
                             <div class="part-visual-preview shop-gold-preview" data-world-shop-visual="${index}"></div>
-                            <div class="card-footer-info"><span class="shop-piece-label">${isChest || isRepairKit ? 'X1' : `${getShopCurrencyMarkup(offer.kind === 'gems' ? 'gems' : 'gold')}${offer.amount.toLocaleString()}`}</span></div>
+                            <div class="card-footer-info"><span class="shop-piece-label">${isChest ? 'X1' : `${getShopCurrencyMarkup(offer.kind === 'gems' ? 'gems' : 'gold')}${offer.amount.toLocaleString()}`}</span></div>
                         </div>
                     </div>
                     <button type="button" class="shop-buy-button shop-buy-strip" data-world-shop-offer="${index}" aria-label="Buy ${offer.name}${isChest ? '' : ` x${offer.amount}`} for ${offer.price} ${offer.currency}">${getShopCurrencyMarkup(offer.currency)}<span>${offer.price.toLocaleString()}</span></button>
@@ -13144,8 +12690,6 @@ bc_thetis: [BC_THETIS_1],
                 const visualContainer = card.querySelector(`[data-world-shop-visual="${index}"]`);
                 if (isChest) {
                     visualContainer.innerHTML = `<span class="home-chest-render ${offer.chestId} shop-daily-chest-render"><span class="home-chest-lid"></span><span class="home-chest-body"></span></span>`;
-                } else if (isRepairKit) {
-                    visualContainer.innerHTML = `<span class="repair-kit-inner" data-repair-kit="${offer.repairKitType}"></span>`;
                 } else {
                     visualContainer.innerHTML = getShopCurrencyMarkup(isGold ? 'gold' : 'gems');
                 }
@@ -13241,7 +12785,6 @@ bc_thetis: [BC_THETIS_1],
                 currencyState[offer.currency] = currentBalance - totalPrice;
                 if (offer.currency === 'gold') addMissionProgress('spendGold', totalPrice);
                 if (offer.kind === 'gold' || offer.kind === 'gems') addCurrency(offer.kind, offer.amount * quantity);
-                else if (offer.kind === 'repairKit') repairKitInventory[offer.repairKitType] = Math.max(0, Number(repairKitInventory[offer.repairKitType]) || 0) + quantity;
                 else for (let purchaseIndex = 0; purchaseIndex < quantity; purchaseIndex += 1) addChestToInventory(offer.chestId);
                 addMissionProgress('shopPurchase', quantity); addMissionProgress('shopPurchase100', quantity);
                 updateCurrencyUI();
@@ -13497,8 +13040,6 @@ bc_thetis: [BC_THETIS_1],
         let launchAimStart = null;
         let launchAimCurrent = null;
         let launchPowerProgress = 0; // 0 to 1 oscillating
-        let launchPowerResultTimer = null;
-        let launchPowerResultActive = false;
         let gamePaused = false;
         let gameSpeed = 1;
         let battleTimeSeconds = 0;
@@ -13547,66 +13088,6 @@ bc_thetis: [BC_THETIS_1],
         let centerY = VIRTUAL_SIZE / 2;
         let frameCounter = 0;
 
-        function getLaunchPowerGrade(progress = launchPowerProgress) {
-            const distanceFromCenter = Math.abs(progress - 0.5);
-            if (distanceFromCenter <= 0.05) return { label: 'Perfect', className: 'perfect' };
-            if (distanceFromCenter <= 0.23) return { label: 'Cool', className: 'cool' };
-            if (distanceFromCenter <= 0.38) return { label: 'Nice', className: 'nice' };
-            return { label: 'Bad', className: 'bad' };
-        }
-        // Launch quality now has a real gameplay effect through starting RPM.
-        // Perfect = +30%, Cool = +20%, Nice = +10%, Bad = +0%.
-        function getLaunchRpmBonus(progress = launchPowerProgress, bey = null) {
-            const launcher = getLauncherById(bey && bey.launcherId);
-            const baseCap = Math.max(0, Number(launcher && launcher.launchRpmBonusCap) || 0);
-            const ratingExtra = Math.max(0, Number(launcher && launcher.launchRatingRpmBonusCap) || 0) * getLaunchRatingFactor(progress);
-            if (baseCap <= 0 && ratingExtra <= 0) return 0;
-            const grade = getLaunchPowerGrade(progress).label;
-            if (grade === 'Perfect') return baseCap + ratingExtra;
-            if (grade === 'Cool') return baseCap * (2 / 3) + ratingExtra;
-            if (grade === 'Nice') return baseCap * (1 / 3) + ratingExtra;
-            return 0;
-        }
-        function applyLaunchRpmBonus(bey, progress = launchPowerProgress) {
-            if (!bey || !Number.isFinite(bey.maxRpm)) return 0;
-            bey.launchPowerProgress = Number.isFinite(progress) ? progress : 0;
-            bey.launchGrade = getLaunchPowerGrade(bey.launchPowerProgress).label;
-            const bonus = getLaunchRpmBonus(progress, bey);
-            // Keep maxRpm as the normal 100% reference so the bonus represents
-            // additional starting RPM and naturally drains during the battle.
-            bey.rpm = bey.maxRpm * (1 + bonus);
-            return bonus;
-        }
-        function showLaunchPowerGrade(progress = launchPowerProgress, keepVisible = false) {
-            const result = document.getElementById('launchPowerResult');
-            if (!result) return;
-            const grade = getLaunchPowerGrade(progress);
-            result.textContent = grade.label;
-            result.className = `visible ${grade.className}`;
-            result.setAttribute('aria-hidden', 'false');
-            launchPowerResultActive = true;
-            if (launchPowerResultTimer) clearTimeout(launchPowerResultTimer);
-            if (!keepVisible) {
-                launchPowerResultTimer = setTimeout(() => {
-                    result.className = '';
-                    result.textContent = '';
-                    result.setAttribute('aria-hidden', 'true');
-                    launchPowerResultActive = false;
-                    const powerMeter = getCachedElement('powerMeterBar');
-                    if (powerMeter) { powerMeter.classList.add('hidden'); powerMeter.style.display = 'none'; }
-                }, 900);
-            }
-        }
-        function hideLaunchPowerGrade() {
-            const result = document.getElementById('launchPowerResult');
-            if (launchPowerResultTimer) clearTimeout(launchPowerResultTimer);
-            launchPowerResultTimer = null;
-            launchPowerResultActive = false;
-            if (result) { result.className = ''; result.textContent = ''; result.setAttribute('aria-hidden', 'true'); }
-            const powerMeter = getCachedElement('powerMeterBar');
-            if (powerMeter) { powerMeter.classList.add('hidden'); powerMeter.style.display = 'none'; }
-        }
-
         function resizeCanvas() {
             const rect = arenaContainer.getBoundingClientRect();
             const size = Math.min(rect.width, rect.height);
@@ -13649,14 +13130,6 @@ bc_thetis: [BC_THETIS_1],
             
             // Power multiplier based on power meter (center red = 1.0 max power, edges yellow = 0.3 min power)
             let powerMultiplier = 0.3 + 0.7 * (1 - Math.abs(launchPowerProgress - 0.5) * 2);
-            const playerLaunchPowerProgress = launchPowerProgress;
-            // The computer receives its own simulated power-bar result rather
-            // than inheriting the player's timing. This makes its launch grade
-            // and starting RPM independent on every battle.
-            const enemyLaunchPowerProgress = Math.random();
-            showLaunchPowerGrade(playerLaunchPowerProgress);
-            applyLaunchRpmBonus(bey1, playerLaunchPowerProgress);
-            consumePlayerLauncherDurabilityOnLaunch();
 
             let launchSpeed = Math.min(22, Math.max(4, len * 0.18)) * powerMultiplier;
             if (len < 5) {
@@ -13670,7 +13143,6 @@ bc_thetis: [BC_THETIS_1],
 
             let enemyAngle = Math.random() * Math.PI * 2;
             let enemySpeed = 9 + Math.random() * 6;
-            applyLaunchRpmBonus(bey2, enemyLaunchPowerProgress);
             bey2.vx = Math.cos(enemyAngle) * enemySpeed;
             bey2.vy = Math.sin(enemyAngle) * enemySpeed;
             bey2.launchFlightVx = bey2.vx;
@@ -13698,6 +13170,7 @@ bc_thetis: [BC_THETIS_1],
             const enemyDOM = getCachedElement('enemyLauncherDOM');
             if (p1DOM) { p1DOM.classList.add('hidden'); p1DOM.style.display = 'none'; }
             if (enemyDOM) { enemyDOM.classList.add('hidden'); enemyDOM.style.display = 'none'; }
+            if (pMeter) { pMeter.classList.add('hidden'); pMeter.style.display = 'none'; }
             const occupationGuide = document.getElementById('launchOccupationGuide');
             if (occupationGuide) { occupationGuide.style.display = 'none'; occupationGuide.className = ''; }
 
@@ -13755,14 +13228,6 @@ bc_thetis: [BC_THETIS_1],
             
             // Power multiplier based on power meter (center red = 1.0 max power, edges yellow = 0.3 min power)
             let powerMultiplier = 0.3 + 0.7 * (1 - Math.abs(launchPowerProgress - 0.5) * 2);
-            const playerLaunchPowerProgress = launchPowerProgress;
-            // The computer receives its own simulated power-bar result rather
-            // than inheriting the player's timing. This makes its launch grade
-            // and starting RPM independent on every battle.
-            const enemyLaunchPowerProgress = Math.random();
-            showLaunchPowerGrade(playerLaunchPowerProgress);
-            applyLaunchRpmBonus(bey1, playerLaunchPowerProgress);
-            consumePlayerLauncherDurabilityOnLaunch();
 
             let launchSpeed = Math.min(22, Math.max(4, len * 0.18)) * powerMultiplier;
             if (len < 5) {
@@ -13776,7 +13241,6 @@ bc_thetis: [BC_THETIS_1],
 
             let enemyAngle = Math.random() * Math.PI * 2;
             let enemySpeed = 9 + Math.random() * 6;
-            applyLaunchRpmBonus(bey2, enemyLaunchPowerProgress);
             bey2.vx = Math.cos(enemyAngle) * enemySpeed;
             bey2.vy = Math.sin(enemyAngle) * enemySpeed;
             bey2.launchFlightVx = bey2.vx;
@@ -13804,6 +13268,7 @@ bc_thetis: [BC_THETIS_1],
             const enemyDOM = getCachedElement('enemyLauncherDOM');
             if (p1DOM) { p1DOM.classList.add('hidden'); p1DOM.style.display = 'none'; }
             if (enemyDOM) { enemyDOM.classList.add('hidden'); enemyDOM.style.display = 'none'; }
+            if (pMeter) { pMeter.classList.add('hidden'); pMeter.style.display = 'none'; }
             const occupationGuide = document.getElementById('launchOccupationGuide');
             if (occupationGuide) { occupationGuide.style.display = 'none'; occupationGuide.className = ''; }
 
@@ -14464,7 +13929,6 @@ bc_thetis: [BC_THETIS_1],
                 this.impactWindupTimer = 0;
                 this.impactTimer = 0;
                 this.impactCooldownTimer = getImpactIntervalFrames(parts, parts.driver.interval || 3);
-                this.codeStingNoImpactTimer = 0;
                 this.impactTrail = [];
                 this.aliceImpactAuraTimer = 0;
                 this.revengeProjectileTimer = 300;
@@ -14666,8 +14130,6 @@ bc_thetis: [BC_THETIS_1],
                 this.arenaOccupation = null;
                 this.arenaOccupationPending = false;
                 this.arenaOccupationTimer = 0;
-                // Launcher passives and occupation bonuses activate only after release.
-                this.launcherEffectsActive = false;
                 this.lurkLocked = false;
                 this.lurkLockX = this.x;
                 this.lurkLockY = this.y;
@@ -14694,9 +14156,6 @@ bc_thetis: [BC_THETIS_1],
             }
 
             beginArenaOccupationTracking() {
-                // The Bey is considered launched at this point; launcher passives
-                // now become active, while zone bonuses wait for landing resolution.
-                this.launcherEffectsActive = true;
                 this.arenaOccupation = null;
                 this.arenaOccupationPending = true;
                 this.arenaOccupationTimer = 0;
@@ -14891,29 +14350,11 @@ bc_thetis: [BC_THETIS_1],
                     s.atk -= convertedAttack;
                     s.stamina += convertedAttack;
                 }
-                // Arena Occupation: the equipped Launcher determines which stat
-                // is boosted and by how much after the landing zone is resolved.
-                const launcher = getLauncherById(this.launcherId);
-                if (this.launcherEffectsActive) {
-                    const launcherPassive = getLauncherPassiveBonuses(this);
-                    s.atk *= 1 + launcherPassive.attack;
-                    s.def *= 1 + launcherPassive.defense;
-                    s.stamina *= 1 + launcherPassive.stamina;
-                }
-                if (this.launcherEffectsActive && this.arenaOccupation === 'inner') {
-                    s.stamina *= 1 + Math.max(0, Number(launcher.innerStaminaBonus) || 0);
-                    s.atk *= 1 + Math.max(0, Number(launcher.innerAttackBonus) || 0);
-                } else if (this.launcherEffectsActive && this.arenaOccupation === 'outer') {
-                    s.atk *= 1 + Math.max(0, Number(launcher.outerAttackBonus) || 0);
-                }
-                const launchRatingFactor = getBeyLaunchRatingFactor(this);
-                if (launcher.id === 'launcher_mistletoe' && launchRatingFactor > 0) {
-                    const tradeoff = Math.max(0, Number(launcher.launchRatingStaminaCap) || 0) * launchRatingFactor;
-                    s.stamina *= 1 + tradeoff;
-                    s.atk *= Math.max(0, 1 - tradeoff);
-                } else if (launcher.id === 'launcher_kusanagi' && launchRatingFactor > 0) {
-                    const staminaPenalty = Math.max(0, Number(launcher.launchRatingImpactIntervalReductionCap) || 0) * launchRatingFactor;
-                    s.stamina *= Math.max(0, 1 - staminaPenalty);
+                // Arena Occupation: landing zone grants one 20% combat-stat bonus.
+                if (this.arenaOccupation === 'inner') {
+                    s.stamina *= 1.20;
+                } else if (this.arenaOccupation === 'outer') {
+                    s.atk *= 1.20;
                 }
                 const vortexEffect = allEffects.find(eff => eff.type === 'vortex_inner_stamina');
                 const liveInnerCircle = Math.hypot(this.x - centerX, this.y - centerY) <= ARENA_INNER_RADIUS;
@@ -15068,7 +14509,6 @@ bc_thetis: [BC_THETIS_1],
                 this.arenaOccupation = null;
                 this.arenaOccupationPending = false;
                 this.arenaOccupationTimer = 0;
-                this.launcherEffectsActive = false;
                 this.preemptiveAttack = false;
                 this.haloAttackBuffAmount = 0;
                 this.haloAttackBuffTimer = 0;
@@ -15324,7 +14764,6 @@ bc_thetis: [BC_THETIS_1],
                 this.arenaOccupation = null;
                 this.arenaOccupationPending = false;
                 this.arenaOccupationTimer = 0;
-                this.launcherEffectsActive = false;
                 this.movementRecoveryTimer = 0;
                 this.preemptiveAttack = false;
                 this.vx = (Math.random() - 0.5) * 3;
@@ -15346,7 +14785,6 @@ bc_thetis: [BC_THETIS_1],
                 this.impactWindupTimer = 0;
                 this.impactTimer = 0;
                 this.isUltimateImpact = false;
-                this.codeStingNoImpactTimer = 0;
                 this.impactTrail = [];
                 this.aliceImpactAuraTimer = 0;
                 this.revengeProjectileTimer = 300;
@@ -18281,13 +17719,6 @@ ctx.fill();
                     }
                 }
                 this.autoGaugeTickTimer += gameSpeed;
-                if (this.parts.battleCap && this.parts.battleCap.id === 'bc_code_sting') {
-                    const codeStingNoImpactEffect = this.getAllEffects().find(eff => eff.type === 'code_sting_no_impact_charge');
-                    const noImpactDuration = Math.max(1, Number(codeStingNoImpactEffect?.duration) || 300);
-                    this.codeStingNoImpactTimer = Math.min(noImpactDuration, Math.max(0, Number(this.codeStingNoImpactTimer) || 0) + gameSpeed);
-                } else {
-                    this.codeStingNoImpactTimer = 0;
-                }
                 if (this.autoGaugeTickTimer >= 30) { // 0.5 seconds at 60fps
                     this.autoGaugeTickTimer = 0;
                     if (!this.deathKnightRevelationActive) {
@@ -18324,12 +17755,6 @@ ctx.fill();
                     if (this.parts.battleCap && (this.parts.battleCap.id === 'bc_kaguyahime' || this.parts.battleCap.id === 'bc_laurel_wreath' || this.parts.battleCap.id === 'bc_code_sting')) {
                         addAmount *= 2.20; // Kaguyahime, Laurel Wreath, and Code Sting: +120% automatic Ultimate charging rate.
                     }
-                    const codeStingNoImpactEffect = this.getAllEffects().find(eff => eff.type === 'code_sting_no_impact_charge');
-                    if (codeStingNoImpactEffect && this.codeStingNoImpactTimer >= Math.max(1, Number(codeStingNoImpactEffect.duration) || 300)) {
-                        const baseCodeStingMultiplier = 2.20;
-                        const noImpactMultiplier = Math.max(baseCodeStingMultiplier, Number(codeStingNoImpactEffect.autoChargeMultiplier) || 3.20);
-                        addAmount *= noImpactMultiplier / baseCodeStingMultiplier;
-                    }
                     const venusAutoChargeEffect = this.getAllEffects().find(eff => eff.type === 'venus_auto_charge');
                     if (venusAutoChargeEffect) {
                         addAmount *= Number(venusAutoChargeEffect.autoChargeMultiplier) || 2.20;
@@ -18348,10 +17773,6 @@ ctx.fill();
                     const catalyzeEffect = this.getAllEffects().find(eff => eff.type === 'catalyze_break');
                     if (catalyzeEffect && target && !target.dead && target.breakTimer > 0) {
                         addAmount *= 1 + (Number(catalyzeEffect.chargeMultiplierPerBrokenEnemy) || 0.50);
-                    }
-                    const launcherForAutoCharge = getLauncherById(this.launcherId);
-                    if (launcherForAutoCharge && launcherForAutoCharge.id === 'launcher_principalities' && isPerfectLaunch(this)) {
-                        addAmount *= Math.max(0, Number(launcherForAutoCharge.perfectAutoChargeMultiplier) || 1.15);
                     }
                     if (this.rpm <= 0) {
                         addAmount *= 0.50; // At 0 RPM: automatic Ultimate charging rate is reduced by 50%.
@@ -19499,10 +18920,6 @@ ctx.fill();
                 let blockChance = 0.0;
                 if (this.parts.battleCap.type === 'Defense' && this.parts.battleCap.id !== 'bc_bubble' && this.parts.battleCap.id !== 'bc_pallas' && !(this.parts.battleCap.id === 'bc_phoenix' && this.phoenixRevived) && isImpactHit) {
                     blockChance = 0.24;
-                    const engineLauncher = getLauncherById(this.launcherId);
-                    if (engineLauncher && engineLauncher.id === 'launcher_engine' && isPerfectLaunch(this)) {
-                        blockChance += Math.max(0, Number(engineLauncher.perfectBlockChanceBonus) || 0.10);
-                    }
                     const angelEffect = this.getAllEffects().find(eff => eff.type === 'angel_lost_hp_scaling');
                     if (angelEffect && this.maxHealth > 0) {
                         const lostHpRatio = Math.max(0, Math.min(1, (this.maxHealth - this.health) / this.maxHealth));
@@ -19630,9 +19047,6 @@ ctx.fill();
                     return;
                 }
 
-                if (isBeyHit && isImpactHit && attacker && attacker !== this && this.parts.battleCap && this.parts.battleCap.id === 'bc_code_sting') {
-                    this.codeStingNoImpactTimer = 0;
-                }
                 const ariesEffect = attacker && typeof attacker.getAllEffects === 'function'
                     ? attacker.getAllEffects().find(eff => eff.type === 'aries_shield_damage')
                     : null;
@@ -19829,8 +19243,6 @@ ctx.fill();
         activeArenaBeys = [];
         var bey1 = new Beyblade(spawns.x1, spawns.y1, playerEquipped, 'left');
         var bey2 = new Beyblade(spawns.x2, spawns.y2, enemyEquipped, 'right');
-        bey1.launcherId = battlePlayerLauncherId;
-        bey2.launcherId = battleEnemyLauncherId;
         let puppetBeys = [];
         let wreathBey = null;
         let chronosTimeStopProtected = null;
@@ -19892,8 +19304,6 @@ ctx.fill();
             } else {
                 return false;
             }
-            const lostHp = Math.max(0, scorpio.maxHealth - scorpio.health);
-            if (lostHp > 0) scorpio.applyHeal(lostHp * (Number(effect.healLostHpRatio) || 0.25));
             return true;
         }
         function getActiveJusticeCaster() {
@@ -20146,7 +19556,8 @@ ctx.fill();
             let loser = null;
             if (beats[typeA] === typeB) loser = b;
             else if (beats[typeB] === typeA) loser = a;
-            if (loser && !loser.dead) {
+            if (!loser || loser.dead) return;
+
             const matchupDamage = loser.maxHealth * 0.15;
             loser.health = Math.max(0, loser.health - matchupDamage);
             if (loser.health <= 0) loser.dead = true;
@@ -20158,34 +19569,6 @@ ctx.fill();
                 life: 60,
                 color: '#FBEDA3',
                 stroke: '#000000'
-            });
-            }
-            [a, b].forEach(attacker => {
-                const target = attacker === a ? b : a;
-                if (!attacker || !target || attacker.dead || target.dead) return;
-                const launcher = getLauncherById(attacker.launcherId);
-                const ratingFactor = getBeyLaunchRatingFactor(attacker);
-                if (launcher.id === 'launcher_powers' && ratingFactor > 0) {
-                    const maxHpDamage = Math.max(0, target.maxHealth * (Number(launcher.preemptiveDamageMaxHpCap) || 0.05) * ratingFactor);
-                    if (maxHpDamage > 0) {
-                        target.health = Math.max(0, target.health - maxHpDamage);
-                        if (target.health <= 0) target.dead = true;
-                        target.updateUI();
-                        damageTexts.push({ x: target.x, y: target.y - 30, text: '-' + Math.round(maxHpDamage), life: 60, color: '#F7D45A', stroke: '#000000' });
-                    }
-                }
-                // Undine works when the caster is favorable OR neutral. It is blocked only
-                // when the caster itself is the type-disadvantaged Bey (loser === attacker).
-                const attackerIsTypeDisadvantaged = loser === attacker;
-                if (launcher.id === 'launcher_undine' && isPerfectLaunch(attacker) && !attackerIsTypeDisadvantaged && !target.dead) {
-                    target.breakTimer = target.getBreakDuration(240, attacker);
-                    target.breakTickTimer = 60;
-                    target.breakDmgPerTick = attacker.stats.atk * 0.25;
-                    target.breakVisualColor = null;
-                    addAilmentText(target.x, target.y, 'BREAK!');
-                    target.stats = target.calculateStats();
-                    target.updateUI();
-                }
             });
         }
 
@@ -20478,7 +19861,7 @@ ctx.fill();
                         if (link.caster === b && link.impactStarted) link.impactHit = true;
                     });
 
-                    let gB = (bWasUltimateImpact || bWasShuraImpact) ? 0 : (((b.parts.battleCap.type === 'Attack' ? 25 : 20) + (b.parts.driver && b.parts.driver.id === 'drv_rage' ? 10 : 0)) * getLauncherImpactGaugeMultiplier(b));
+                    let gB = (bWasUltimateImpact || bWasShuraImpact) ? 0 : ((b.parts.battleCap.type === 'Attack' ? 25 : 20) + (b.parts.driver && b.parts.driver.id === 'drv_rage' ? 10 : 0));
                     if (!bWasUltimateImpact && !bWasShuraImpact && b.parts.battleCap.id === 'bc_baldr' && bHpPercentageAtImpact > aHpPercentageAtImpact) gB = 35;
                     if (b.isPuppet && b.puppeteerOwner) {
                         if (!sameTeam) b.puppeteerOwner.gainUltimateCharge(20);
@@ -20546,7 +19929,7 @@ ctx.fill();
                         if (link.caster === a && link.impactStarted) link.impactHit = true;
                     });
 
-                    let gA = (aWasUltimateImpact || aWasShuraImpact) ? 0 : (((a.parts.battleCap.type === 'Attack' ? 25 : 20) + (a.parts.driver && a.parts.driver.id === 'drv_rage' ? 10 : 0)) * getLauncherImpactGaugeMultiplier(a));
+                    let gA = (aWasUltimateImpact || aWasShuraImpact) ? 0 : ((a.parts.battleCap.type === 'Attack' ? 25 : 20) + (a.parts.driver && a.parts.driver.id === 'drv_rage' ? 10 : 0));
                     if (!aWasUltimateImpact && !aWasShuraImpact && a.parts.battleCap.id === 'bc_baldr' && aHpPercentageAtImpact > bHpPercentageAtImpact) gA = 35;
                     if (a.isPuppet && a.puppeteerOwner) {
                         if (!sameTeam) a.puppeteerOwner.gainUltimateCharge(20);
@@ -22910,7 +22293,7 @@ function launchShuraRibbonProjectile(caster, target) {
 
             const powerMeter = getCachedElement('powerMeterBar');
 
-            if ((launchingPhase || launchPowerResultActive) && !bossBattleMode && !survivalBattleMode) {
+            if (launchingPhase && !bossBattleMode && !survivalBattleMode) {
                 aCtx.save();
                 aCtx.scale(scale, scale);
 
@@ -22918,8 +22301,7 @@ function launchShuraRibbonProjectile(caster, target) {
                 const p1DOM = getCachedElement('p1LauncherDOM');
                 const enemyDOM = getCachedElement('enemyLauncherDOM');
 
-                applyBattleLauncherArtwork();
-                if (p1DOM && bey1 && launchingPhase) {
+                if (p1DOM && bey1) {
                     p1DOM.classList.remove('hidden');
                     p1DOM.style.display = 'flex';
                     let p1Color = (bey1.parts && bey1.parts.top) ? bey1.parts.top.color : '#3498db';
@@ -22946,7 +22328,7 @@ function launchShuraRibbonProjectile(caster, target) {
                     }
                 }
 
-                if (enemyDOM && bey2 && launchingPhase) {
+                if (enemyDOM && bey2) {
                     enemyDOM.classList.remove('hidden');
                     enemyDOM.style.display = 'flex';
                     let p2Color = (bey2.parts && bey2.parts.top) ? bey2.parts.top.color : '#3498db';
@@ -22982,17 +22364,9 @@ function launchShuraRibbonProjectile(caster, target) {
                         );
                         if (occupationGuide) {
                             const isInnerTarget = arrowEndDistance <= ARENA_INNER_RADIUS;
-                            const guideLauncher = getLauncherById(battlePlayerLauncherId);
-                            const guidePercent = value => `${Math.round((Number(value) || 0) * 100)}%`;
-                            const innerGuide = [];
-                            if (Number(guideLauncher.innerAttackBonus) > 0) innerGuide.push(`Attack ${guidePercent(guideLauncher.innerAttackBonus)}`);
-                            if (Number(guideLauncher.innerStaminaBonus) > 0) innerGuide.push(`Stamina ${guidePercent(guideLauncher.innerStaminaBonus)}`);
-                            const outerGuide = Number(guideLauncher.outerAttackBonus) > 0
-                                ? `Attack ${guidePercent(guideLauncher.outerAttackBonus)}`
-                                : 'no stat bonus';
                             occupationGuide.textContent = isInnerTarget
-                                ? `Occupy the center: ${innerGuide.join(' + ') || 'no stat bonus'}`
-                                : `Occupy the outer circle: ${outerGuide}`;
+                                ? 'Occupy the center to increase 20% Stamina'
+                                : 'Occupy the outer circle to increase 20% Attack';
                             occupationGuide.className = isInnerTarget ? 'inner' : 'outer';
                             occupationGuide.style.display = 'block';
                         }
@@ -23028,12 +22402,8 @@ function launchShuraRibbonProjectile(caster, target) {
                 }
 
                 // Draw Launch Power Meter DOM only when holding/aiming (launchAimStart is active)
-                if (launchAimStart || launchPowerResultActive) {
-                    if (launchAimStart) {
-                        const powerBarLauncher = getLauncherById(bey1 && bey1.launcherId || battlePlayerLauncherId);
-                        const arrowSpeedMultiplier = Math.max(0.01, Number(powerBarLauncher.powerBarSpeedMultiplier) || 1);
-                        launchPowerProgress = (Math.sin(frameCounter * 0.08 * arrowSpeedMultiplier) + 1) / 2;
-                    }
+                if (launchAimStart) {
+                    launchPowerProgress = (Math.sin(frameCounter * 0.08) + 1) / 2;
                     if (powerMeter) {
                         powerMeter.classList.remove('hidden');
                         powerMeter.style.display = 'block';
@@ -23426,7 +22796,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
         }
 
         function getChestPartEntries(rarity) {
-            return Object.entries(PARTS).flatMap(([type, parts]) => (parts || []).filter(part => part && part.rarity === rarity && !NEW_PARTS_INTRODUCTION_EVENT_PART_IDS.has(part.id)).map(part => ({ type, part })));
+            return Object.entries(PARTS).flatMap(([type, parts]) => (parts || []).filter(part => part.rarity === rarity).map(part => ({ type, part })));
         }
 
         function chooseChestPart(rarity, allowedRarities) {
@@ -24121,7 +23491,6 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             if (homeCombatPower) homeCombatPower.textContent = getPlayerCombatPower().toLocaleString();
         }
         function updateGarageUI() {
-            updateGarageLauncherButton();
             updateLoadoutSelector();
             const previewBeyCanvas = document.getElementById('previewBeyCanvas');
             if (previewBeyCanvas && playerEquipped) {
@@ -24752,187 +24121,6 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 if (target === 'microchip' && modalTargetPart) renderMicrochipPanel(modalTargetPart.part);
             });
         });
-        let launcherListOpen = false;
-        function getLauncherUnlockState(launcher) {
-            if (!launcher || launcher.id === 'launcher_basic') return { unlocked: true, requirement: '' };
-            const requirements = {
-                launcher_mistletoe: { achievementId: 'unlockLauncherMistletoe', requirement: 'Reach GP Lv.10 and claim its achievement' },
-                launcher_kusanagi: { achievementId: 'unlockLauncherKusanagi', requirement: 'Clear Adventure Chapter 6 once and claim its achievement' },
-                launcher_engine: { achievementId: 'unlockLauncherEngine', requirement: 'Reach GP Lv.50 and claim its achievement' },
-                launcher_undine: { achievementId: 'unlockLauncherUndine', requirement: 'Clear Tower Floor 100 and claim its achievement' },
-                launcher_virtues: { achievementId: 'unlockLauncherVirtues', requirement: 'Reach GP Lv.100 and claim its achievement' },
-                launcher_powers: { achievementId: 'unlockLauncherPowers', requirement: 'Clear Adventure Chapter 6 100 times and claim its achievement' },
-                launcher_principalities: { achievementId: 'unlockLauncherPrincipalities', requirement: 'Clear Tower Floor 500 and claim its achievement' }
-            };
-            const requirement = requirements[launcher.id];
-            return requirement ? { unlocked: achievementsState.claimed[requirement.achievementId] === true, requirement: requirement.requirement } : { unlocked: true, requirement: '' };
-        }
-
-        function renderLauncherSelector() {
-            const selectedLauncher = getLauncherById(launcherSelectionId);
-            if (selectedLauncher && !getLauncherUnlockState(selectedLauncher).unlocked) launcherSelectionId = 'launcher_basic';
-            const row = document.getElementById('launcherSelectorRow');
-            if (!row) return;
-            row.innerHTML = (LAUNCHERS.launcher || []).slice(0, 8).map(launcher => {
-                const rarityClass = String(launcher.rarity || 'Common').toLowerCase();
-                const unlimited = launcher.unlimited === true || launcher.id === 'launcher_basic';
-                const durability = Math.max(0, Number(launcher.durability) || 0);
-                const maxDurability = Math.max(1, Number(launcher.maxDurability) || 100);
-                const depleted = !unlimited && durability <= 0;
-                const unlockState = getLauncherUnlockState(launcher);
-                return `<button type="button" class="launcher-selector-card ${rarityClass}${launcher.id === launcherSelectionId ? ' selected' : ''}${depleted ? ' depleted' : ''}${unlockState.unlocked ? '' : ' locked'}" style="background:${getRarityBackground(launcher.rarity)};" data-launcher-id="${launcher.id}" aria-disabled="${unlockState.unlocked ? 'false' : 'true'}" aria-label="${unlockState.unlocked ? (depleted ? 'Repair' : 'Select') + ' ' + launcher.name : 'Locked ' + launcher.name + ': ' + unlockState.requirement}" title="${unlockState.unlocked ? launcher.name : 'Locked: ' + unlockState.requirement}">
-                    ${getTypeIconSvg(launcher.type || 'Balance')}
-                    <span class="launcher-selector-visual"><img src="${launcher.image || './Images/Launchers/launcher_default.png'}" alt=""></span>
-                    <span class="launcher-selector-footer"><span class="launcher-selector-name">${launcher.name}</span><span class="launcher-selector-durability"><span class="launcher-selector-durability-fill" style="width:${unlimited ? 100 : Math.min(100, durability / maxDurability * 100)}%;"></span><span class="launcher-selector-durability-label">${unlimited ? '∞' : `${durability}/${maxDurability}`}</span></span></span>
-                </button>`;
-            }).join('');
-            row.querySelectorAll('[data-launcher-id]').forEach(card => card.addEventListener('click', () => {
-                const launcher = getLauncherById(card.dataset.launcherId);
-                if (!launcher || !getLauncherUnlockState(launcher).unlocked) return;
-                launcherSelectionId = launcher.id;
-                renderLauncherModal();
-            }));
-        }
-        function setLauncherListView(open) {
-            launcherListOpen = !!open;
-            const button = document.getElementById('launcherAllButton');
-            const selector = document.getElementById('launcherSelectorRow');
-            const actions = document.getElementById('launcherSelectorActions');
-            const tabs = document.getElementById('launcherModalTabs');
-            const info = document.getElementById('launcherInformationPanel');
-            const upgrade = document.getElementById('launcherUpgradePanel');
-            if (button) button.classList.toggle('active', launcherListOpen);
-            if (selector) selector.hidden = !launcherListOpen;
-            if (actions) actions.hidden = !launcherListOpen;
-            if (tabs) tabs.hidden = launcherListOpen;
-            if (info) info.hidden = launcherListOpen;
-            if (upgrade) upgrade.hidden = true;
-            if (launcherListOpen) renderLauncherSelector();
-        }
-        function renderLauncherEffectPoints(launcher) {
-            const list = document.getElementById('launcherEffectPoints');
-            if (!list) return;
-            const points = Array.isArray(launcher && launcher.effectPoints) && launcher.effectPoints.length
-                ? launcher.effectPoints
-                : ['No launcher effects listed.'];
-            list.replaceChildren(...points.map(point => {
-                const item = document.createElement('li');
-                item.textContent = String(point);
-                return item;
-            }));
-        }
-        function renderLauncherModal() {
-            const launcher = getLauncherById(launcherListOpen ? launcherSelectionId : currentLauncherId);
-            if (!launcher) return;
-            const name = document.getElementById('launcherModalName');
-            const rarity = document.getElementById('launcherModalRarity');
-            const icon = document.getElementById('launcherModalCategoryIcon');
-            const image = document.getElementById('launcherModalVisual');
-            const description = document.getElementById('launcherDescriptionBox');
-            const title = document.querySelector('#launcherModalTitle .modal-part-name-text');
-            const unlimited = launcher.unlimited === true || launcher.id === 'launcher_basic';
-            const durability = Math.max(0, Math.min(Number(launcher.maxDurability) || 100, Number(launcher.durability) || 0));
-            const maxDurability = Math.max(1, Number(launcher.maxDurability) || 100);
-            if (name) name.textContent = launcher.name;
-            if (rarity) {
-                const launcherRarity = String(launcher.rarity || 'Common');
-                rarity.className = `launcher-category-rarity modal-part-upgrade-title ${launcherRarity.toLowerCase()}`;
-                rarity.textContent = launcherRarity;
-            }
-            if (title) title.textContent = 'Launcher';
-            if (icon) icon.innerHTML = getTypeIconSvg(launcher.type || 'Balance');
-            if (image) { image.src = launcher.image || './Images/Launchers/launcher_default.png'; image.alt = launcher.name; }
-            if (description) description.textContent = launcher.description || '';
-            renderLauncherEffectPoints(launcher);
-            const label = document.getElementById('launcherDurabilityLabel');
-            const fill = document.getElementById('launcherDurabilityFill');
-            if (label) label.textContent = unlimited ? 'Durability ∞' : `Durability ${durability}/${maxDurability}`;
-            if (fill) fill.style.width = `${unlimited ? 100 : Math.min(100, durability / maxDurability * 100)}%`;
-            const depleted = !unlimited && durability <= 0;
-            const selectButton = document.getElementById('launcherSelectButton');
-            if (selectButton) selectButton.textContent = depleted ? 'Repair' : 'Select';
-            setLauncherListView(launcherListOpen);
-        }
-        function renderRepairKitsModal() {
-            const launcher = getRepairTargetLauncher();
-            const row = document.getElementById('repairKitsBoxRow');
-            const target = document.getElementById('repairKitsTarget');
-            const effect = document.getElementById('repairKitsEffect');
-            const repairButton = document.getElementById('repairKitsRepairButton');
-            if (!launcher || !row || !target || !effect || !repairButton) return;
-            const maxDurability = Math.max(1, Number(launcher.maxDurability) || 100);
-            const currentDurability = Math.max(0, Math.min(maxDurability, Number(launcher.durability) || 0));
-            target.textContent = launcher.name || 'Launcher';
-            row.innerHTML = Object.entries(REPAIR_KIT_TYPES).map(([type, kit]) => {
-                const amount = Math.max(0, Number(repairKitInventory[type]) || 0);
-                return `<button type="button" class="repair-kit-card${type === selectedRepairKitType ? ' selected' : ''}${amount <= 0 ? ' empty' : ''}" data-repair-kit="${type}" aria-label="Select ${kit.name}"><span class="repair-kit-inner"></span><span class="repair-kit-count">x${amount}</span></button>`;
-            }).join('');
-            row.querySelectorAll('[data-repair-kit]').forEach(card => card.addEventListener('click', () => {
-                selectedRepairKitType = card.dataset.repairKit;
-                renderRepairKitsModal();
-            }));
-            const selectedKit = REPAIR_KIT_TYPES[selectedRepairKitType] || REPAIR_KIT_TYPES.light;
-            const nextDurability = selectedRepairKitType === 'perfect' ? maxDurability : Math.min(maxDurability, currentDurability + selectedKit.amount);
-            effect.textContent = `${currentDurability} >> ${nextDurability}`;
-            const isUnlimited = launcher.unlimited === true || launcher.id === 'launcher_basic';
-            repairButton.disabled = isUnlimited || currentDurability >= maxDurability || (Number(repairKitInventory[selectedRepairKitType]) || 0) <= 0;
-        }
-        function openRepairKitsModal(event) {
-            event?.preventDefault();
-            event?.stopPropagation();
-            selectedRepairKitType = selectedRepairKitType in REPAIR_KIT_TYPES ? selectedRepairKitType : 'light';
-            renderRepairKitsModal();
-            document.getElementById('repairKitsModal')?.classList.remove('hidden');
-        }
-        function closeRepairKitsModal() { document.getElementById('repairKitsModal')?.classList.add('hidden'); }
-        function repairSelectedLauncher() {
-            const launcher = getRepairTargetLauncher();
-            const kit = REPAIR_KIT_TYPES[selectedRepairKitType];
-            if (!launcher || !kit || launcher.unlimited === true || launcher.id === 'launcher_basic') return;
-            const available = Math.max(0, Number(repairKitInventory[selectedRepairKitType]) || 0);
-            const maxDurability = Math.max(1, Number(launcher.maxDurability) || 100);
-            const currentDurability = Math.max(0, Math.min(maxDurability, Number(launcher.durability) || 0));
-            if (available <= 0 || currentDurability >= maxDurability) return;
-            launcher.durability = selectedRepairKitType === 'perfect' ? maxDurability : Math.min(maxDurability, currentDurability + kit.amount);
-            repairKitInventory[selectedRepairKitType] = available - 1;
-            renderLauncherModal();
-            renderRepairKitsModal();
-            updateGarageLauncherButton();
-            if (typeof manualSaveGame === 'function') manualSaveGame();
-        }
-        function openLauncherMenu(event) {
-            event?.preventDefault();
-            event?.stopPropagation();
-            playGameSfx(MENU_SFX_CLICK_GEAR);
-            launcherListOpen = false;
-            launcherSelectionId = currentLauncherId;
-            renderLauncherModal();
-            document.querySelectorAll('#launcherModal [data-launcher-tab]').forEach(tab => {
-                const active = tab.dataset.launcherTab === 'information';
-                tab.classList.toggle('active', active);
-                tab.setAttribute('aria-selected', String(active));
-            });
-            document.querySelectorAll('#launcherModal [data-launcher-panel]').forEach(panel => { panel.hidden = panel.dataset.launcherPanel !== 'information'; });
-            document.getElementById('launcherModal')?.classList.remove('hidden');
-        }
-        function closeLauncherMenu() { document.getElementById('launcherModal')?.classList.add('hidden'); }
-        window.openLauncherMenu = openLauncherMenu;
-        window.closeLauncherMenu = closeLauncherMenu;
-        document.querySelectorAll('#launcherModal [data-launcher-tab]').forEach(tab => tab.addEventListener('click', () => {
-            playGameSfx(MENU_SFX_CLICK_GEAR);
-            const target = tab.dataset.launcherTab;
-            document.querySelectorAll('#launcherModal [data-launcher-tab]').forEach(item => { const active = item === tab; item.classList.toggle('active', active); item.setAttribute('aria-selected', String(active)); });
-            document.querySelectorAll('#launcherModal [data-launcher-panel]').forEach(panel => { panel.hidden = panel.dataset.launcherPanel !== target; });
-        }));
-        document.getElementById('launcherModalClose')?.addEventListener('click', closeLauncherMenu);
-        document.getElementById('launcherDurabilityLabel')?.parentElement?.addEventListener('click', openRepairKitsModal);
-        document.getElementById('repairKitsClose')?.addEventListener('click', closeRepairKitsModal);
-        document.getElementById('repairKitsRepairButton')?.addEventListener('click', repairSelectedLauncher);
-        document.getElementById('repairKitsModal')?.addEventListener('click', event => { if (event.target === event.currentTarget) closeRepairKitsModal(); });
-        document.getElementById('launcherAllButton')?.addEventListener('click', event => { event.preventDefault(); event.stopPropagation(); playGameSfx(MENU_SFX_CLICK_GEAR); launcherListOpen = !launcherListOpen; if (launcherListOpen) launcherSelectionId = currentLauncherId; renderLauncherModal(); });
-        document.getElementById('launcherSelectButton')?.addEventListener('click', event => { event.preventDefault(); event.stopPropagation(); playGameSfx(MENU_SFX_CLICK_GEAR); const selectedLauncher = getLauncherById(launcherSelectionId); if (!selectedLauncher || !getLauncherUnlockState(selectedLauncher).unlocked) { launcherSelectionId = 'launcher_basic'; renderLauncherSelector(); return; } const selectedLauncherDepleted = selectedLauncher && selectedLauncher.unlimited !== true && selectedLauncher.id !== 'launcher_basic' && Number(selectedLauncher.durability) <= 0; if (selectedLauncherDepleted) { openRepairKitsModal(event); return; } currentLauncherId = selectedLauncher?.id || 'launcher_basic'; teamLauncherIds[activeTeamIndex] = currentLauncherId; launcherSelectionId = currentLauncherId; launcherListOpen = false; updateGarageLauncherButton(); renderLauncherModal(); if (typeof manualSaveGame === 'function') manualSaveGame(); });
-        document.getElementById('launcherModal')?.addEventListener('click', event => { if (event.target === event.currentTarget) closeLauncherMenu(); });
-
         function openPartModal(type, part) {
             modalShopOfferIndex = null;
             modalEquipBtn.style.display = '';
@@ -25190,9 +24378,6 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             survivalBattleMode = false;
             survivalRoundResultActive = false;
             survivalEnemyModuleStates = [null, null];
-            battlePlayerLauncherId = getLauncherIdFromBattleData({ launcherId: currentLauncherId });
-            battleEnemyLauncherId = 'launcher_basic';
-            applyBattleLauncherArtwork();
             const survivalEnemyPanelA = document.getElementById('stats-right');
             const survivalEnemyPanelB = document.getElementById('stats-survival-right');
             if (survivalEnemyPanelA) survivalEnemyPanelA.style.display = '';
@@ -25231,7 +24416,6 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             launchingPhase = true;
             launchAimStart = null;
             launchAimCurrent = null;
-            hideLaunchPowerGrade();
             gamePaused = false;
             battleTimeSeconds = 0;
             getCachedElement('battleTimer').textContent = '00:00';
@@ -25427,15 +24611,12 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 gym: { lastAccruedAt: gymState.lastAccruedAt, lastCollectedAt: gymState.lastCollectedAt, pending: { ...gymState.pending }, carry: { ...gymState.carry }, rewardDetails: gymState.rewardDetails.map(reward => ({ ...reward })), upgrades: { ...gymState.upgrades } },
                 spiralGacha: { ascendedPity: Math.max(0, Math.min(99, Math.floor(spiralGachaState.ascendedPity || 0))), totalDraws: Math.max(0, Math.floor(spiralGachaState.totalDraws || 0)) },
                 battlePreferences: { speed2x: gameSpeed === 2, autoUltimate: !!autoUltimateToggle.checked },
-                launcher: { equippedId: currentLauncherId, durability: getLauncherDurabilitySnapshot(), repairKits: { ...repairKitInventory } },
-                teamLauncherIds: normalizeTeamLauncherIds(teamLauncherIds, currentLauncherId),
                 partAmounts: { ...partAmounts },
                 acquiredPartIds: { ...acquiredPartIds },
                 microchips: { version: 2, inventory: JSON.parse(JSON.stringify(microchipInventory)), stars: { ...microchipStars }, levels: { ...microchipLevels }, experience: { ...microchipExperience }, slotsByPart: JSON.parse(JSON.stringify(microchipSlotsByPart)) },
                 playerName,
                 gp: { level: gpLevel, experience: gpExperience, claimedLevels: { ...gpClaimedLevels } },
                 missions: { daily: { cycleKey: missionsState.daily.cycleKey, missionIds: [...missionsState.daily.missionIds], progress: [...missionsState.daily.progress], claimed: [...missionsState.daily.claimed], rewardClaims: [...(missionsState.daily.rewardClaims || [])] }, weekly: { cycleKey: missionsState.weekly.cycleKey, missionIds: [...missionsState.weekly.missionIds], progress: [...missionsState.weekly.progress], claimed: [...missionsState.weekly.claimed], rewardClaims: [...(missionsState.weekly.rewardClaims || [])], rewardData: { ...(missionsState.weekly.rewardData || {}) } }, loginStreak: missionLoginStreak, lastLoginDate: missionLastLoginDate },
-                achievements: { claimed: { ...(achievementsState.claimed || {}) } },
                 playerUid,
                     playerChampionshipWins,
                     survivalModeWins: Math.max(0, Math.floor(Number(survivalModeWins) || 0)),
@@ -25464,7 +24645,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 allOrNothingBossDailyState: { dayKey: allOrNothingBossDailyState.dayKey, completed: { ...allOrNothingBossDailyState.completed } },
                 shop: { version: 3, expiresAt: shopBatchExpiresAt, dailyExpiresAt: shopDailyExpiresAt, refreshCost: shopRefreshCost, offers: serializeShopOffers() },
                 chests: { version: 3, slots: chestSlots.map(entry => entry ? { ...entry } : null), temporaryStorage: temporaryChestStorage.map(entry => ({ ...entry })) },
-                adventure: { contentVersion: adventureContentVersion, unlockedChapter: adventureUnlockedChapter, currentChapter: adventureCurrentChapter, runActive: adventureRunActive, chapterDeadline: adventureChapterDeadline, keys: adventureKeys, keyRefreshAt: adventureKeyRefreshAt, completedNodeIds: Array.from(adventureCompletedNodeIds), bossCompleted: adventureBossCompleted, bossDialogueNodeId: adventureBossDialogueNodeId, bossDialogueCompleted: adventureBossDialogueCompleted, loadouts: serializeAdventureLoadouts(adventureLoadoutsSnapshot), moduleStates: adventureModuleStates, selectedModules: adventureSelectedModules, moduleSelectionPending: adventureModuleSelectionPending, hpRatios: { ...adventurePlayerHpRatios }, defeatedIndices: Array.from(adventureDefeatedPlayerIndices), crystal: adventureCrystal, fightWins: adventureFightWins, rewardHistory: serializeAdventureRewards(), totalNodeCount: adventureTotalNodeCount, mapSnapshot: adventureMapSnapshot, chapter6ClearCount: adventureChapter6ClearCount }
+                adventure: { contentVersion: adventureContentVersion, unlockedChapter: adventureUnlockedChapter, currentChapter: adventureCurrentChapter, runActive: adventureRunActive, chapterDeadline: adventureChapterDeadline, keys: adventureKeys, keyRefreshAt: adventureKeyRefreshAt, completedNodeIds: Array.from(adventureCompletedNodeIds), bossCompleted: adventureBossCompleted, bossDialogueNodeId: adventureBossDialogueNodeId, bossDialogueCompleted: adventureBossDialogueCompleted, loadouts: serializeAdventureLoadouts(adventureLoadoutsSnapshot), moduleStates: adventureModuleStates, selectedModules: adventureSelectedModules, moduleSelectionPending: adventureModuleSelectionPending, hpRatios: { ...adventurePlayerHpRatios }, defeatedIndices: Array.from(adventureDefeatedPlayerIndices), crystal: adventureCrystal, fightWins: adventureFightWins, rewardHistory: serializeAdventureRewards(), totalNodeCount: adventureTotalNodeCount, mapSnapshot: adventureMapSnapshot }
             };
         }
         const CLOUD_AUTH_SESSION_KEY = 'bey_supabase_auth_session_v1';
@@ -25999,16 +25180,6 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 autoUltimateToggle.checked = savedBattlePreferences.autoUltimate === true;
                 if (speedToggleBtn) { speedToggleBtn.textContent = gameSpeed === 2 ? '2X' : '1X'; speedToggleBtn.classList.toggle('active', gameSpeed === 2); }
                 if (autoToggleBtn) autoToggleBtn.classList.toggle('active', autoUltimateToggle.checked);
-                const savedLauncherId = data.launcher?.equippedId || data.launcherId || 'launcher_basic';
-                restoreLauncherDurability(data.launcher?.durability);
-                repairKitInventory = data.launcher?.repairKits ? normalizeRepairKitInventory(data.launcher.repairKits) : { light: 0, good: 0, perfect: 0 };
-                currentLauncherId = getLauncherById(savedLauncherId)?.id || 'launcher_basic';
-                const loadedLauncher = getLauncherById(currentLauncherId);
-                if (loadedLauncher && loadedLauncher.unlimited !== true && loadedLauncher.id !== 'launcher_basic' && Number(loadedLauncher.durability) <= 0) {
-                    currentLauncherId = 'launcher_basic';
-                }
-                launcherSelectionId = currentLauncherId;
-                launcherListOpen = false;
                 partAmounts = Object.fromEntries(Object.entries(data.partAmounts || {}).map(([id, amount]) => [id, Math.max(0, Math.floor(Number(amount) || 0))]));
                 acquiredPartIds = Object.fromEntries(Object.entries(data.acquiredPartIds || {}).filter(([id, acquired]) => acquired === true));
                 const savedMicrochips = data.microchips || {};
@@ -26027,8 +25198,6 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 missionsState.daily.rewardClaims = Array.isArray(savedMissions.daily?.rewardClaims) ? savedMissions.daily.rewardClaims.slice(0, MISSION_MILESTONES.length) : [];
                 missionsState.weekly.rewardClaims = Array.isArray(savedMissions.weekly?.rewardClaims) ? savedMissions.weekly.rewardClaims.slice(0, MISSION_MILESTONES.length) : [];
                 missionsState.weekly.rewardData = savedMissions.weekly?.rewardData && typeof savedMissions.weekly.rewardData === 'object' ? { microchipId: String(savedMissions.weekly.rewardData.microchipId || '') } : {};
-                achievementsState = { claimed: {} };
-                if (data.achievements && typeof data.achievements === 'object' && data.achievements.claimed && typeof data.achievements.claimed === 'object') ACHIEVEMENT_DEFINITIONS.forEach(achievement => { achievementsState.claimed[achievement.id] = data.achievements.claimed[achievement.id] === true; });
                 missionLoginStreak = Math.max(0, Math.min(7, Math.floor(Number(savedMissions.loginStreak) || 0)));
                 missionLastLoginDate = String(savedMissions.lastLoginDate || '');
                 ensureMissionCycles();
@@ -26061,15 +25230,7 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                     });
                 });
                 activeTeamIndex = Math.max(0, Math.min(2, Number(data.activeTeamIndex) || 0));
-                teamLauncherIds = normalizeTeamLauncherIds(data.teamLauncherIds, currentLauncherId);
                 playerLoadouts = loadoutTeams[activeTeamIndex];
-                currentLauncherId = teamLauncherIds[activeTeamIndex] || currentLauncherId;
-                const activeTeamLauncher = getLauncherById(currentLauncherId);
-                if (activeTeamLauncher && activeTeamLauncher.unlimited !== true && activeTeamLauncher.id !== 'launcher_basic' && Number(activeTeamLauncher.durability) <= 0) {
-                    currentLauncherId = 'launcher_basic';
-                    teamLauncherIds[activeTeamIndex] = 'launcher_basic';
-                }
-                launcherSelectionId = currentLauncherId;
                 activeLoadoutIndex = Math.max(0, Math.min(2, Number(data.activeLoadoutIndex) || 0));
                 playerEquipped = playerLoadouts[activeLoadoutIndex];
                 const savedAllOrNothingBossDailyState = data.allOrNothingBossDailyState || {};
@@ -26102,16 +25263,9 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
                 (Array.isArray(savedAdventure.defeatedIndices) ? savedAdventure.defeatedIndices : []).forEach(index => adventureDefeatedPlayerIndices.add(Number(index)));
                 adventureCrystal = Math.max(0, Number(savedAdventure.crystal) || 0);
                 adventureFightWins = Math.max(0, Number(savedAdventure.fightWins) || 0);
-                adventureChapter6ClearCount = Math.max(0, Number(savedAdventure.chapter6ClearCount) || 0);
                 adventureRewardHistory = (Array.isArray(savedAdventure.rewardHistory) ? savedAdventure.rewardHistory : []).map(reward => reward.kind === 'gold' ? { kind: 'gold', amount: Number(reward.amount) || 0 } : { kind: 'part', type: reward.type, part: findPartById(reward.partId, null), amount: Number(reward.amount) || 0 }).filter(reward => reward.kind === 'gold' || reward.part);
                 adventureTotalNodeCount = Math.max(0, Number(savedAdventure.totalNodeCount) || 0);
                 adventureMapSnapshot = Array.isArray(savedAdventure.mapSnapshot) ? savedAdventure.mapSnapshot : null;
-                const restoredLauncher = getLauncherById(currentLauncherId);
-                if (restoredLauncher && !getLauncherUnlockState(restoredLauncher).unlocked) {
-                    currentLauncherId = 'launcher_basic';
-                    launcherSelectionId = 'launcher_basic';
-                    teamLauncherIds[activeTeamIndex] = 'launcher_basic';
-                }
                 adventureStoryInitialized = false;
                 loadChestState(data.chests || {});
                 updateChestCountdowns();
@@ -26156,7 +25310,6 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             gpExperience = 0;
             gpClaimedLevels = {};
             missionsState = { daily: { cycleKey: '', missionIds: [], progress: [], claimed: [], rewardClaims: [] }, weekly: { cycleKey: '', missionIds: [], progress: [], claimed: [], rewardClaims: [], rewardData: {} } };
-            achievementsState = { claimed: {} };
             missionLoginStreak = 0;
             missionLastLoginDate = '';
             ensureMissionCycles();
@@ -26203,15 +25356,6 @@ const fadeOut = Math.min(1, nilthotepSwordFlashFrames / 8);
             playerLoadouts = loadoutTeams[activeTeamIndex];
             activeLoadoutIndex = 0;
             playerEquipped = playerLoadouts[activeLoadoutIndex];
-            resetLauncherDurability();
-            repairKitInventory = { light: 0, good: 0, perfect: 0 };
-            currentLauncherId = 'launcher_basic';
-            teamLauncherIds = ['launcher_basic', 'launcher_basic', 'launcher_basic'];
-            launcherSelectionId = currentLauncherId;
-            launcherListOpen = false;
-            battlePlayerLauncherId = 'launcher_basic';
-            battleEnemyLauncherId = 'launcher_basic';
-            applyBattleLauncherArtwork();
             try { localStorage.removeItem(MANUAL_SAVE_KEY); localStorage.removeItem(SHOP_SAVE_KEY); } catch (e) {}
             shopOffers = [];
             shopBatchExpiresAt = 0;
