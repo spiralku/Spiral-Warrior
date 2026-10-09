@@ -10937,10 +10937,12 @@ const parts = {
             });
             return (Array.isArray(playerRows) ? playerRows : []).map(row => {
                 const uid = String(row && row.uid != null ? row.uid : '').trim();
+                const launcherId = getLauncherIdFromBattleData({ launcherId: row && row.launcher_id }, 'launcher_basic');
                 return {
                     uid,
                     player_name: String(row && row.player_name != null ? row.player_name : 'Player').trim() || 'Player',
-                    loadouts: (loadoutsByUid.get(uid) || []).filter(Boolean),
+                    launcher_id: launcherId,
+                    loadouts: (loadoutsByUid.get(uid) || []).filter(Boolean).map(loadout => ({ ...loadout, launcher_id: launcherId })),
                     total_wins: Math.max(0, Math.floor(Number(row && row.total_wins) || 0)),
                     combat_power: Math.max(0, Math.floor(Number(row && row.combat_power) || 0))
                 };
@@ -10963,7 +10965,7 @@ const parts = {
                 setChampionshipOnlineStatus('Loading online ranker...', '');
                 try {
                     const [playerRows, loadoutRows] = await Promise.all([
-                        fetchSupabaseChampionshipJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.playersUrl}?select=uid,player_name,total_wins,combat_power` , { headers: getSupabaseChampionshipHeaders() }),
+                        fetchSupabaseChampionshipJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.playersUrl}?select=uid,player_name,total_wins,combat_power,launcher_id` , { headers: getSupabaseChampionshipHeaders() }),
                         fetchSupabaseChampionshipJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.loadoutsUrl}?select=player_uid,loadout_index,battle_cap_id,battle_cap_level,weight_ring_id,weight_ring_level,driver_id,driver_level,microchips` , { headers: getSupabaseChampionshipHeaders() })
                     ]);
                     const onlineRecords = normalizeSupabaseRankerData(playerRows, loadoutRows);
@@ -11000,7 +11002,6 @@ const parts = {
                 battle_cap: loadout && loadout.battleCap ? { id: loadout.battleCap.id, level: getPartLevel(loadout.battleCap) } : null,
                 weight_ring: loadout && loadout.weightRing ? { id: loadout.weightRing.id, level: getPartLevel(loadout.weightRing) } : null,
                 driver: loadout && loadout.driver ? { id: loadout.driver.id, level: getPartLevel(loadout.driver) } : null,
-                launcher_id: getLauncherIdFromBattleData({ launcherId: currentLauncherId }),
                 microchips: getMicrochipSnapshotForLoadout(loadout)
             }));
         }
@@ -11020,6 +11021,7 @@ const parts = {
                     player_name: String(playerName || 'Player').trim().slice(0, 20) || 'Player',
                     total_wins: Math.max(0, Math.floor(Number(playerChampionshipWins) || 0)),
                     combat_power: Math.max(0, Math.floor(Number(getPlayerCombatPower()) || 0)),
+                    launcher_id: getLauncherIdFromBattleData({ launcherId: currentLauncherId }, 'launcher_basic'),
                     updated_at: now
                 };
                 await fetchSupabaseChampionshipJson(`${SUPABASE_CHAMPIONSHIP_CONFIG.playersUrl}?on_conflict=uid`, {
@@ -11562,11 +11564,12 @@ const parts = {
         }
         function normalizeSurvivalOpponentRow(row) {
             const rawLoadouts = Array.isArray(row?.loadouts) ? row.loadouts : [];
+            const playerLauncherId = getLauncherIdFromBattleData({ launcherId: row?.launcher_id }, 'launcher_basic');
             const loadouts = rawLoadouts.map(loadout => {
                 const battleCapId = loadout?.battle_cap_id || loadout?.battleCap?.id;
                 const weightRingId = loadout?.weight_ring_id || loadout?.weightRing?.id;
                 const driverId = loadout?.driver_id || loadout?.driver?.id;
-                const launcherId = getLauncherIdFromBattleData(loadout, 'launcher_basic');
+                const launcherId = playerLauncherId;
                 const battleCap = getPartById('battleCap', battleCapId);
                 const weightRing = getPartById('weightRing', weightRingId);
                 const driver = getPartById('driver', driverId);
@@ -11586,6 +11589,7 @@ const parts = {
             return {
                 player_uid: String(playerUid || '').trim(),
                 player_name: String(playerName || 'Player').trim().slice(0, 20) || 'Player',
+                launcher_id: getLauncherIdFromBattleData({ launcherId: currentLauncherId }, 'launcher_basic'),
                 loadouts: playerLoadouts.slice(0, 3).map(loadout => ({
                     battle_cap_id: loadout?.battleCap?.id || null,
                     weight_ring_id: loadout?.weightRing?.id || null,
@@ -11604,7 +11608,7 @@ const parts = {
                         await fetchSupabaseChampionshipJson(`${endpoint}?on_conflict=player_uid`, { method: 'POST', headers: getSupabaseChampionshipHeaders({ Prefer: 'resolution=merge-duplicates,return=minimal' }), body: JSON.stringify(snapshot) });
                     }
                     if (SUPABASE_CHAMPIONSHIP_ENABLED && endpoint) {
-                        const query = `${endpoint}?select=player_uid,player_name,loadouts&limit=64`;
+                        const query = `${endpoint}?select=player_uid,player_name,launcher_id,loadouts&limit=64`;
                         const rows = await fetchSupabaseChampionshipJson(query, { headers: getSupabaseChampionshipHeaders(), cache: 'no-store' });
                         const remote = uniqueSurvivalPlayers(shuffleSurvivalArray((Array.isArray(rows) ? rows : []).map(normalizeSurvivalOpponentRow).filter(Boolean).filter(player => player.uid !== snapshot.player_uid)));
                         survivalRunOpponents = remote.slice(0, 8);
